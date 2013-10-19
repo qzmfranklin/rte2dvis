@@ -1,0 +1,162 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      5362,        153]
+NotebookOptionsPosition[      4600,        121]
+NotebookOutlinePosition[      5208,        146]
+CellTagsIndexPosition[      5124,        141]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Install", "[", "\"\<LegendreRule.exe\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ResetDirectory", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"?", "LegendreRule"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"LegendreRule", "[", 
+    RowBox[{"3", ",", "0", ",", "1.0"}], "]"}], "//", "Transpose"}], "//", 
+  "TableForm"}]}], "Input",
+ CellChangeTimes->{{3.5907604423827753`*^9, 3.59076055109534*^9}, {
+   3.5907631095051117`*^9, 3.590763114830715*^9}, {3.590764139952313*^9, 
+   3.590764151216073*^9}, {3.590765046930551*^9, 3.590765058565476*^9}, 
+   3.590769074768599*^9, {3.590769349490243*^9, 3.590769362424465*^9}, {
+   3.590769443885475*^9, 3.590769457149439*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Global`LegendreRule", "Print", "PrintUsage",
+ CellChangeTimes->{3.590769457684597*^9},
+ CellTags->"Info3590755057-3509371"],
+
+Cell[BoxData[
+ InterpretationBox[GridBox[{
+    {GridBox[{
+       {
+        RowBox[{
+         RowBox[{"LegendreRule", "[", 
+          RowBox[{"order_", ",", "xmin_", ",", "xmax_"}], "]"}], ":=", 
+         RowBox[{"ExternalCall", "[", 
+          RowBox[{
+           RowBox[{"LinkObject", "[", 
+            
+            RowBox[{"\<\"/Users/qzmfrank/Codes/rte2dvis/quadrature_rules/\
+LegendreRule.exe\"\>", ",", "1739", ",", "18"}], "]"}], ",", 
+           RowBox[{"CallPacket", "[", 
+            RowBox[{"0", ",", 
+             RowBox[{"{", 
+              RowBox[{"order", ",", "xmin", ",", "xmax"}], "}"}]}], "]"}]}], 
+          "]"}]}]}
+      },
+      BaselinePosition->{Baseline, {1, 1}},
+      GridBoxAlignment->{
+       "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+        "RowsIndexed" -> {}},
+      GridBoxItemSize->{"Columns" -> {{
+           Scaled[0.999]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+        "RowsIndexed" -> {}}]}
+   },
+   BaselinePosition->{Baseline, {1, 1}},
+   GridBoxAlignment->{
+    "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+     "RowsIndexed" -> {}}],
+  Definition[$CellContext`LegendreRule],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.590769457716605*^9},
+ CellTags->"Info3590755057-3509371"]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"0.11270166537925835`", "0.2777777777777778`"},
+    {"0.5`", "0.44444444444444475`"},
+    {"0.8872983346207416`", "0.2777777777777777`"}
+   },
+   GridBoxAlignment->{
+    "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+     "RowsIndexed" -> {}},
+   GridBoxSpacings->{"Columns" -> {
+       Offset[0.27999999999999997`], {
+        Offset[2.0999999999999996`]}, 
+       Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+       Offset[0.2], {
+        Offset[0.4]}, 
+       Offset[0.2]}, "RowsIndexed" -> {}}],
+  Function[BoxForm`e$, 
+   TableForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{{3.590763115309888*^9, 3.5907631253757887`*^9}, 
+   3.5907632200105553`*^9, 3.590763687860918*^9, 3.590763929483313*^9, 
+   3.590763974151875*^9, {3.590764126018044*^9, 3.5907641518563538`*^9}, 
+   3.5907642003210697`*^9, {3.5907650522796288`*^9, 3.5907650592189503`*^9}, 
+   3.590765151197097*^9, 3.5907652443296957`*^9, 3.5907652919651318`*^9, 
+   3.590765372793775*^9, 3.59076550329529*^9, {3.590766933423491*^9, 
+   3.590766963202058*^9}, 3.590767134852079*^9, 3.5907671871537952`*^9, 
+   3.5907672315815973`*^9, 3.5907672659246073`*^9, 3.590767400758646*^9, 
+   3.590767617905918*^9, {3.590767765781144*^9, 3.5907677779689293`*^9}, {
+   3.590767960255374*^9, 3.590767964018352*^9}, {3.5907683113333178`*^9, 
+   3.590768338085432*^9}, 3.590768436335043*^9, 3.590768625040432*^9, 
+   3.5907687193608627`*^9, 3.59076886953538*^9, 3.590768908780908*^9, {
+   3.590768983614954*^9, 3.5907690876934032`*^9}, {3.590769320090048*^9, 
+   3.590769363063092*^9}, {3.59076942837197*^9, 3.590769457800408*^9}}]
+}, Open  ]]
+},
+WindowSize->{740, 752},
+WindowMargins->{{78, Automatic}, {16, Automatic}},
+ShowSelection->True,
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (November 20, \
+2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "Info3590755057-3509371"->{
+  Cell[1482, 46, 129, 2, 40, "Print",
+   CellTags->"Info3590755057-3509371"],
+  Cell[1614, 50, 1289, 34, 55, "Print",
+   CellTags->"Info3590755057-3509371"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"Info3590755057-3509371", 4942, 133}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 878, 20, 97, "Input"],
+Cell[CellGroupData[{
+Cell[1482, 46, 129, 2, 40, "Print",
+ CellTags->"Info3590755057-3509371"],
+Cell[1614, 50, 1289, 34, 55, "Print",
+ CellTags->"Info3590755057-3509371"]
+}, Open  ]],
+Cell[2918, 87, 1666, 31, 132, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

@@ -1,0 +1,6 @@
+derivation/
+msh/*
+!msh/*.msh
+mll-ml-c/MLL-demo
+mll-ml-c/MLL-lib
+mll-ml-c/ML-exe
