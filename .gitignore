@@ -1,6 +1,8 @@
 derivation/
 msh/*
 !msh/*.msh
+!msh/*.m
+!msh/*.geo
 mll-ml-c/MLL-demo
 mll-ml-c/MLL-lib
 mll-ml-c/ML-exe
