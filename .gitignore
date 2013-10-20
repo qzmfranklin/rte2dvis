@@ -6,3 +6,6 @@ msh/*
 MLL-demo
 MLL-lib
 ML-exe
+*.txt
+log
+*.log
