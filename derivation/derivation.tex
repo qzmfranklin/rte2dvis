@@ -1,0 +1,2551 @@
+\documentclass [10pt,letterpaper]{article}
+\usepackage{hyperref}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{latexsym,bm}
+\usepackage{geometry}
+\usepackage{graphics}
+\usepackage{framed}
+\usepackage{subfigure}
+\usepackage{multirow}
+%\usepackage{indentfirst}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{flafter}
+% page style
+\geometry{textwidth=17cm,textheight=22cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+% math
+\usepackage{mathabx}
+\usepackage{isomath}
+\renewcommand{\vec}{\vectorsym}
+\newcommand{\unitvec}[1]{\hat{\vec{#1}}}
+\newcommand{\grad}{\nabla}
+\renewcommand{\div}{\nabla\cdot}
+
+
+\begin{document}
+\title{2D RTE Volume Integral Solver}
+\author{\LaTeX\ by Zhongming Qu}
+\maketitle
+\tableofcontents
+\newpage
+\numberwithin{equation}{subsection}
+
+\section{Intro: From RTE to VIE}
+\label{sec:intro-from-rte-to-vie}
+\subsection{RTE}
+\label{sub:rte}
+	
+This paper follows the notations of Liemert. The radiative transport equation (RTE) reads
+
+\begin{equation}\label{eq:def-RTE}
+	\unitvec{s}\cdot\nabla\psi(\vec{r},\unitvec{s})
+	+\mu_t(\vec{r})\psi(\vec{r},\unitvec{s})
+	=
+	\mu_s(\vec{r})
+	\int d\unitvec{s}^\prime
+	f(\unitvec{s}\cdot\unitvec{s}^\prime)
+	\psi(\vec{r^\prime},\unitvec{s}^\prime)
+	+q(\vec{r},\unitvec{s})
+\end{equation}
+with
+\begin{center}\begin{tabular}{lll}
+      $\vec{r}$&$[L]^{+1}$&\text{position vector}
+\\    $\unitvec{s}$&$[L]^{0}$&\text{unit direction vector}
+\\    $\psi(\vec{r},\unitvec{s})$&$[L]^{0}$&\text{de-dimensionalized radiance}
+\\    $q(\vec{r},\unitvec{s})$&$[L]^{-1}$&\text{source term corresponding to the de-dimensionalized radiance}
+\\    $f(\unitvec{s}\cdot\unitvec{s}^\prime)$&$[L]^{0}$&\text{scattering phase function as a function of }$\unitvec{s}\cdot\unitvec{s}^\prime,f_m=g^{\lvert m\rvert}$
+\\    $\mu_s(\vec{r})$&$[L]^{-1}$&\text{scattering cross-section, independent of }$\unitvec{s}$
+\\    $\mu_a(\vec{r})$&$[L]^{-1}$&\text{absorption cross-section, independent of }$\unitvec{s}$
+\\    $\mu_t=\mu_s+\mu_a$&$[L]^{-1}$&\text{total cross-section, independent of }$\unitvec{s}$
+\end{tabular}\end{center}
+\subsection{VIE}
+\label{subsec:vie}
+
+For a single scatterer, the RTE can transform into the following volume integral equation (VIE)
+
+\begin{equation}\label{eq:def-VIE}\begin{split}
+\psi(\vec{r},\unitvec{s})
+&+
+\int d\vec{r}^\prime d\unitvec{s}^\prime g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+\mu_t(\vec{r}^\prime)\psi(\vec{r}^\prime,\unitvec{s}^\prime)
+\\ &-
+\int d\vec{r}^\prime d\unitvec{s}^\prime g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+\mu_s(\vec{r}^\prime)\int d\unitvec{s}^{\second}
+f(\unitvec{s}\cdot\unitvec{s}^{\second})\psi(\vec{r}^\prime,\unitvec{s}^{\second})
+\\ &=
+\int d\vec{r}^\prime d\unitvec{s}^\prime g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+q(\vec{r}^\prime,\unitvec{s}^\prime)
+\end{split}\end{equation}
+
+where $g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)$ is the free space, i.e., $\mu_s=\mu_a=0$, Green's function.
+Define two linear functionals:
+
+\begin{equation} \label{eq:def-psiI-general}
+    \psi^I[q](\vec{r},\unitvec{s})=
+    \int d\vec{r}^\prime d\unitvec{s}^\prime
+    g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+    q(\vec{r}^\prime,\unitvec{s}^\prime)
+\end{equation}
+
+\begin{equation} \label{eq:def-psiS-general}
+	\begin{split}
+	    \psi^S[\psi](\vec{r},\unitvec{s})=
+	    &-\int d\vec{r}^\prime d\unitvec{s}^\prime 
+	    g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+	    \mu_t(\vec{r}^\prime)
+	    \psi(\vec{r}^\prime,\unitvec{s}^\prime) \\
+	    &+\int d\vec{r}^\prime d\unitvec{s}^\prime 
+	    g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+	    \mu_s(\vec{r}^\prime)\int d\unitvec{s}^{\second}
+	    f(\unitvec{s}\cdot\unitvec{s}^{\second})
+	    \psi(\vec{r}^\prime,\unitvec{s}^{\second})
+	\end{split}
+\end{equation}
+
+
+Rewrite Eq.\eqref{eq:def-VIE} as
+
+\begin{equation}\label{eq:short-VIE}
+	\psi-\psi^S\psi=\psi^I q
+\end{equation}
+
+The explicit physical meaning of Eq.\eqref{eq:short-VIE} is: \emph{The total field is the sum of the incident field due to the source $q(\vec{r},\unitvec{s})$ in free space and the scattering field due to the excited sources in the scattering volume}.
+
+By definition, $\psi^S$ is a linear functional acting on $\psi$. $\psi^I(\vec{r}^\prime,\unitvec{s}^\prime)$ is a scalar field determined by the free space Green's function $g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)$ and the source $q(\vec{r}^\prime,\unitvec{s}^\prime)$.
+The free space Green's function is
+\begin{equation} \label{eq:exp-gf-general}
+	g_t(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+	=
+	\frac
+	{1}
+	{\lvert \vec{r}-\vec{r}^\prime \rvert}
+	\delta(\unitvec{s}-\unitvec{s}_{\vec{r}-\vec{r}^\prime})
+	\delta(\unitvec{s}^\prime-\unitvec{s}_{\vec{r}-\vec{r}^\prime})
+\end{equation}
+
+Discretization of Eq.\eqref{eq:def-VIE} will result in a set of linear equations. The solution to the resulting linear equations approximates the radiance field everywhere inside the scattering volume
+$\Omega$. The radiance field everywhere outside of $\Omega$ can be calculated using Eq.\eqref{eq:def-psiS-general}
+
+The goal of this paper is to calculate the scattering field due to \emph{plane wave incidence} coming in a given direction $\unitvec{s}$, i.e., this paper will use
+\begin{equation}\label{eq:exp-psiI-general}
+	\psi^I(\vec{r}^\prime,\unitvec{s}^\prime)=\delta(\unitvec{s}-\unitvec{s}^I)
+\end{equation}
+as the incident radiance field. The use of Eq.\eqref{eq:exp-psiI-general} sidestepped the explicit expression of the incident source $q(\vec{r},\unitvec{s})$, which has an infinitely large strength but is located at infinity to give a finite impact on the volume of interest.
+
+\section{2D and 3D Formalism}
+\label{sec:2d-and-3d-formalism}
+\subsection{3D Formalism}
+The equations in section \ref{sec:intro-from-rte-to-vie} are general. We need to specialize them into 2D and 3D. This paper focuses on 2D.
+Make the following substitution to equations in section \ref{sec:intro-from-rte-to-vie}:
+\begin{align*}
+	\vec{r} & \rightarrow(r,\theta_{\vec{r}},\phi_{\vec{r}}) & d\vec{r} &= r^2 \sin\theta_{\vec{r}} dr d\theta_{\vec{r}}d\phi_{\vec{r}} \\
+	\unitvec{s} & \rightarrow(\theta,\phi) & d\unitvec{s} &= \sin\theta d\theta d\phi \\
+	\unitvec{s}\cdot\unitvec{s}^\prime & \rightarrow \cos(\theta-\theta^\prime)+\cos(\phi-\phi^\prime)\sin\theta\sin\theta^\prime & & 
+\end{align*}
+
+\subsection{2D Formalism}
+\label{sub:2d-formalism}
+Make the following substitution to equations in section \ref{sec:intro-from-rte-to-vie}:
+\begin{align*}
+	\vec{r} & \rightarrow(r,\phi_{\vec{r}}) & d\vec{r} &= r dr d\phi_{\vec{r}} \\
+	\unitvec{s} & \rightarrow\phi & d\unitvec{s} &= d\phi \\
+	\unitvec{s}\cdot\unitvec{s}^\prime & \rightarrow \cos(\phi-\phi^\prime), \phi-\phi^\prime
+\end{align*}
+The 2D RTE, VIE, and related equations are:
+\begin{equation} \label{eq:def-rte-2d}
+	\unitvec{s}\cdot\grad\psi(\vec{r},\phi)
+	+\mu_t(\vec{r})\psi(\vec{r},\phi)
+	=\mu_s(\vec{r})\int d\phi^\prime f(\phi-\phi^\prime)\psi(\vec{r},\phi^\prime)
+	+q(\vec{r},\phi)
+\end{equation}
+\begin{equation} \label{eq:short-vie-2d}
+	\psi(\vec{r},\phi)
+	-\psi^S[\psi](\vec{r},\phi)
+	=\psi^I[q](\vec{r},\phi)
+\end{equation}
+\begin{equation} \label{eq:def-psiS-2d}
+	\begin{split}
+		\psi^S[\psi](\vec{r},\phi)=
+		&-\int d\vec{r}^\prime d\phi^\prime
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_t(\vec{r}^\prime) \psi(\vec{r}^\prime,\phi^\prime)
+		\\ 
+		&+\int d\vec{r}^\prime d\phi^\prime
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_s(\vec{r}^\prime)
+		\int d\phi^\second
+		f(\phi^\prime-\phi^\second) \psi(\vec{r}^\prime,\phi^\second)
+	\end{split}
+\end{equation}
+\begin{equation} \label{eq:def-psiI-2d}
+	\psi^I[q](\vec{r},\phi)=
+	\int d\vec{r}^\prime d\phi^\prime
+	g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+	q(\vec{r}^\prime,\phi^\prime)
+\end{equation}
+\begin{equation} \label{eq:exp-gf-2d}
+	g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+	=
+	\frac{1}{\lvert\vec{r}-\vec{r}^\prime\rvert}
+	\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+	\delta(\phi^\prime-\phi_{\vec{r}-\vec{r}^\prime})
+\end{equation}
+\begin{equation} \label{eq:exp-psiI-2d}
+	\psi^I(\vec{r},\phi) = \delta(\phi-\phi^I) 
+\end{equation}
+In Eq.\eqref{eq:exp-psiI-2d}, $\phi^I$ is the incidence angle.
+%\\
+\subsection{2D Heyney-Greenstein Phase Function}
+\label{sub:2d-heyney-greenstein-phase-function} 
+This paper uses the 2D Heyney-Greenstein (HG) phase function
+\begin{equation} \label{eq:hg-phase-function}
+	\begin{split}
+		f_g(\phi,\phi^\prime)
+		=&
+		f_g(\phi-\phi^\prime)
+		\\
+		=&
+		\frac{1}{2\pi}
+		\frac{1-g^2}{1+g^2-2g\cos(\phi-\phi^\prime)} 
+		\\
+		=&
+		\frac{1}{2\pi} 
+		\sum\limits_{m=-\infty}^{+\infty}
+		g^{\lvert m \rvert}
+		e^{+i m (\phi-\phi^\prime)} 
+	\end{split}
+\end{equation}
+The discrete Fourier components of the 2D HG phase function are
+\begin{equation} \label{eq:hg-phase-function-fm}
+	f_m
+	=
+	(f_g)_m
+	=
+	\int_0^{2\pi}
+	d\phi^\prime
+	e^{+i m (\phi^\prime-\phi)}
+	f_g(\phi-\phi^\prime)
+	=g^{\lvert m \rvert}
+\end{equation}
+The convolution of two 2D HG phase functions is another 2D HG phase function
+\begin{equation} \label{convolution-of-hg-phase-functions}
+	\begin{split}
+		f_{g_1}*f_{g_2}
+		=&
+		(f_{g_1}*f_{g_2})(\phi-\phi^\prime)
+		\\
+		=&
+		\int d\phi^\second
+		f_{g_1}(\phi-\phi^\second)
+		f_{g_2}(\phi^\second-\phi^\prime)
+		\\
+		=&
+		\int d\phi^\second
+		%f_{g_1}(\phi-\phi^\second)
+		\frac{1}{2\pi} 
+		\sum\limits_{m_1=-\infty}^{+\infty}
+		g_1^{\lvert m_1 \rvert}
+		e^{i m_1 (\phi-\phi^\second)}
+		%f_{g_2}(\phi^\second-\phi^\prime)
+		\frac{1}{2\pi} 
+		\sum\limits_{m_2=-\infty}^{+\infty}
+		g_2^{\lvert m_2 \rvert}
+		e^{i m_2 (\phi^\second-\phi^\prime)}
+		\\
+		=&
+		\frac{1}{2\pi} 
+		%\sum\limits_{m_1,m_2}
+		\sum\limits_{m_1=-\infty}^{+\infty}
+		%(
+		\sum\limits_{m_2=-\infty}^{+\infty}
+		\frac{1}{2\pi} 
+		\int d\phi^\second
+		e^{(m_2-m_1)\phi^\second}
+		%)
+		g_2^{\lvert m_2 \rvert}
+		g_1^{\lvert m_1 \rvert}
+		e^{+i m_1 \phi}
+		e^{-i m_2 \phi^\prime}
+		\\
+		=&
+		\frac{1}{2\pi} 
+		\sum\limits_{m_1=-\infty}^{+\infty}
+		\sum\limits_{m_2=-\infty}^{+\infty}
+		\delta_{m_1,m_2}
+		g_2^{\lvert m_2 \rvert}
+		g_1^{\lvert m_1 \rvert}
+		e^{+i m_1 \phi}
+		e^{-i m_2 \phi^\prime}
+		\\
+		%\overset{m_1=m_2=m}{=}
+		%&
+		=&
+		\frac{1}{2\pi} 
+		\sum\limits_{m=-\infty}^{+\infty}
+		(g_1 g_2)^{\lvert m \rvert}
+		e^{+i m (\phi-\phi^\prime)}
+		\\
+		=&
+		f_{g_1 g_2}
+		(\phi-\phi^\prime)
+		%\\
+		%=&
+		%f_{g_1 g_2}
+	\end{split}
+\end{equation}
+\subsection{Things to Do}
+\label{sub:things-to-do}
+
+To solve Eq.\eqref{eq:short-vie-2d}, the basic procedure is to
+\begin{enumerate}
+	\item discretize the scatterer
+	\item apply test procedure
+	\item calculate matrix elements
+	\item solve the linear equations 
+\end{enumerate}
+Possible accelerating techniques are
+\begin{enumerate}
+	\setcounter{enumi} 4
+	\item matrix compression using low rank tensors
+	\item iterative linear solver using M-V multiplication
+\end{enumerate}
+All the rest of this paper are devoted to each and all of the procedure and techniques mentioned above.
+
+
+\section{Discretizing the VIE}
+\label{sec:discretizing-the-vie}
+
+\subsection{Finite Element Expansion}
+\label{sub:finite-element-expansion}
+Grid the volume of interest using $N_s$ triangles, numbered as $n=1,2,3,\ldots,N_S$.
+Use the following finite series to approximate the true $\psi(\vec{s},\phi)$:
+\begin{equation} \label{eq:def-finite-expansion}
+	\psi(\vec{r},\phi)
+	=\sum\limits_{n=1}^{N_s}
+	\sum\limits_{m=-N_d}^{N_d}
+	X_{n m}
+	\xi_{n m}(\vec{r},\phi)
+	%S_n(\vec{r})
+	%e^{i m \phi}
+\end{equation}
+$\{\xi_{n m}\}$ is a set of chosen basis functions. This paper uses the following one:
+\begin{subequations} \begin{align} \label{eq:def-basis-function}
+	\xi_{n m}(\vec{r},\phi) 
+	&= 
+	S_n(\vec{r})e^{i m \phi}
+	\\
+	S_n(\vec{r}) &=
+	\begin{cases}
+		1, & \vec{r}\in S_n
+		\\
+		0, & \vec{r}\notin S_n
+	\end{cases}
+\end{align} \end{subequations}
+Eq.\eqref{eq:def-finite-expansion} is hereafter called \emph{the finite expansion} of $\psi(\vec{r},\phi)$.
+The number of the degree of freedom (d.o.f.) of this finite expansion is $N_s(2N_d+1)$.
+\\
+This paper will use the following notations:
+\begin{center} \begin{tabular}{lll}
+	$S_n(\vec{r})$	&\ & \text{the pulse function}
+	\\
+	$S_n$		&\ & \text{the n-th triangle}
+	\\
+	$S(n)$		&\ & \text{the area of the n-th triangle}
+	\\
+	$R(n)$		&\ & $\sqrt{S(n)/\pi}$
+	\\
+	$\sum\nolimits_{n,m}$	 &\ & $\sum\nolimits_{n=1}^{N_s} \sum\nolimits_{m=-N_d}^{N_d}$
+	\\
+	$\xi_{n m}(\vec{r},\phi)$ &\ & $S_n(\vec{r}) e^{i m \phi}$
+	\\
+	$N_n$		&\ & $N_s$
+	\\
+	$N_m$		&\ & $2N_d+1$
+	\\
+	$N_g$		&\ & $N_n N_m=N_s(2N_d+1)$
+\end{tabular} \end{center}
+
+
+\subsection{Garlekin Test Procedure}
+\label{sub:garlekin-test-procedure}
+We have, in short-hand notations, the finite expansion by Eq.\eqref{eq:def-finite-expansion}:
+\begin{equation} \label{eq:short-fintie-expansion}
+	\psi(\vec{r},\phi)=\sum\nolimits_{n,m}X_{n m}\xi_{n m}(\vec{r},\phi)
+\end{equation}
+Plug the finite expansion Eq.\eqref{eq:def-finite-expansion} into Eq.\eqref{eq:short-vie-2d}
+\begin{equation} \label{eq:short-vie-2d-finite-expansion}
+	\sum\nolimits_{n^\prime,m^\prime}
+	X_{n^\prime m^\prime}
+	\{
+		\xi_{n^\prime m^\prime}(\vec{r},\phi)
+		-\psi^S[\xi_{n^\prime m^\prime}](\vec{r},\phi)
+	\}
+	=\psi^I[q](\vec{r},\phi)
+\end{equation}
+To find out such a set of $X_{n m}$ that the finite expansion (Eq.\eqref{eq:def-finite-expansion}) best approximates the true $\psi(\vec{r},\phi)$, multiply $\xi^*_{n m}(\vec{r},\phi)$ on both sides of Eq.\eqref{eq:short-vie-2d-finite-expansion} and integrate over $d\vec{r}d\phi$ over the volume of the scatterer.
+\begin{equation} \label{eq:der-vie-2d-finite-expansion}
+	\begin{split}
+		\sum\nolimits_{n^\prime,m^\prime}
+		X_{n^\prime m^\prime}
+		\{&
+			\int d\vec{r} d\phi
+			\xi^*_{n m}(\vec{r},\phi)
+			\xi_{n^\prime m^\prime}(\vec{r},\phi)
+			\\
+		-&
+			\int d\vec{r} d\phi
+			\xi^*_{n m}(\vec{r},\phi)
+			\psi^S[\xi_{n^\prime m^\prime}](\vec{r},\phi)
+		\}
+		\\
+		=&
+		\int d\vec{r} d\phi
+		\xi^*_{n m}(\vec{r},\phi)
+		\psi^I(\vec{r},\phi)
+		\end{split}
+\end{equation}
+Plug Eq.\eqref{eq:def-psiS-2d} in Eq.\eqref{eq:der-vie-2d-finite-expansion}, define the following matrices:
+\begin{align} \label{eq:def-Z-A-B-V}
+	Z_{(n m)(n^\prime m^\prime)}
+	=&
+	A_{(n m)(n^\prime m^\prime)}
+	+B_{(n m)(n^\prime m^\prime)}
+	\\
+	A_{(n m)(n^\prime m^\prime)}
+	=&
+	\int d\vec{r}d\phi
+	\xi^*_{n m}(\vec{r},\phi)
+	\xi_{n^\prime m^\prime}
+	(\vec{r},\phi)
+	\\
+	B_{(n m)(n^\prime m^\prime)}
+	=&
+	-\int d\vec{r}d\phi
+	\xi^*_{n m}(\vec{r},\phi)
+	\psi^S
+	[\xi_{n^\prime m^\prime}]
+	(\vec{r},\phi)
+	\\
+	V_{(n m)(n^\prime m^\prime)}
+	=&
+	\int d\vec{r}d\phi
+	\xi^*_{n m}(\vec{r},\phi)
+	\psi^I(\vec{r},\phi) 
+\end{align}
+Let
+\begin{subequations} \label{eq:def-B-Bt-Bs}
+\begin{align}
+	B_{(n m)(n^\prime m^\prime)}
+	=& 
+	B^t_{(n m)(n^\prime m^\prime)}
+	+B^s_{(n m)(n^\prime m^\prime)}
+	\\
+	\begin{split}
+		B^t_{(n m)(n^\prime m^\prime)}
+		=&
+		\int d\vec{r}d\phi
+		\xi^*_{n m}(\vec{r},\phi)
+		\\
+		&\times
+		\int d\vec{r}^\prime d\phi^\prime
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_t(\vec{r}^\prime)
+		\xi_{n^\prime m^\prime}
+		(\vec{r}^\prime,\phi^\prime)
+	\end{split}
+	\\
+	\begin{split}
+		B^s_{(n m)(n^\prime m^\prime)}
+		=&
+		-\int d\vec{r}d\phi
+		\xi^*_{n m}(\vec{r},\phi)
+		\\
+		&\times
+		\int d\vec{r}^\prime d\phi^\prime
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_s(\vec{r}^\prime)
+		\\
+		&\times
+		\int d\phi^\second
+		f(\phi^\prime-\phi^\second)
+		\xi_{n^\prime m^\prime}
+		(\vec{r}^\prime,\phi^\second) 
+	\end{split}
+\end{align}
+\end{subequations}
+The VIE Eq.\eqref{eq:short-vie-2d} is converted to a a set of linear equations:
+\begin{equation} \label{eq:Z-X-V}
+	Z\cdot X=V
+\end{equation}
+The structure of $Z$ is:
+\begin{itemize}
+	\item $N_s\times N_s$ block matrices
+	\item each block is a $N_d\times N_d$ matrix
+\end{itemize}
+
+
+
+
+\section{Calculating Matrix Elements}
+\label{sec:calculate-matrix-elements}
+\subsection{Identity Term - $A_{(n m)(n^\prime m^\prime)}$ }
+\label{sub:identity-term-Anmnpmp}
+\begin{equation} \label{eq:der-calculate-Anmnpmp}
+	\begin{split}
+		A_{(n m)(n^\prime m^\prime)}
+		=&
+		\int d\vec{r} d\phi
+		\xi^*_{n m}
+		(\vec{r},\phi)
+		\xi_{n^\prime m^\prime}
+		(\vec{r},\phi) 
+		\\
+		=&
+		\int d\vec{r}
+		S_n(\vec{r})
+		S_{n^\prime}(\vec{r})
+		\int d\phi
+		e^{-i m \phi}
+		e^{+i m^\prime \phi} 
+	\end{split}
+\end{equation}
+Use the 1-point quadrature rule to do the integral over $\vec{r}$ and the fact that the integral over $\phi$ is a discrete delta function:
+\begin{align*}
+	\int d\vec{r}
+	S_n(\vec{r})
+	S_{n^\prime}(\vec{r})
+	=&
+	S(n)
+	\delta_{n n^\prime}
+	\\
+	\int d\phi
+	e^{-i m \phi}
+	e^{+i m^\prime \phi}
+	=&
+	2\pi
+	\delta_{m m^\prime}
+\end{align*}
+The 1-point result is
+\begin{equation} \label{eq:result-Anmnpmp-1pt}
+	A_{(n m)(n^\prime m^\prime)}
+	=
+	2\pi S(n)
+	\delta_{n n^\prime}
+	\delta_{m m^\prime}
+\end{equation}
+\subsection{Interaction Term - $B_{(n m)(n^\prime m^\prime)}$}
+\label{sub:interaction-term-Bnmnpmp}
+\subsubsection{$B^t_{(n m)(n^\prime m^\prime)} \ n\neq n^\prime$}
+\label{subsub:Btnmnpmp-off-diagonal}
+
+\begin{equation} \label{eq:result-Btnmnpmp-off-diagonal-1pt}
+	\begin{split}
+		B^t_{(n m)(n^\prime m^\prime)}
+		=&
+		\int d\vec{r} d\phi
+		S_n(\vec{r})
+		e^{-i m \phi}
+		\int d\vec{r}^\prime d\phi^\prime
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_t(\vec{r}^\prime)
+		S_{n^\prime}(\vec{r}^\prime)
+		e^{+i m^\prime \phi^\prime}
+		\\
+		=&
+		\int d\phi
+		S(n)
+		e^{-i m \phi}
+		\int d\phi^\prime
+		S(n^\prime)
+		g(\vec{r}_n,\phi;\vec{r}_{n^\prime},\phi^\prime)
+		\mu_t(n^\prime)
+		e^{+i m^\prime \phi^\prime} 
+		\\
+		=& 
+		\mu_t(n^\prime) S(n) S(n^\prime)
+		\int d\phi d\phi^\prime
+		e^{-i m \phi}
+		e^{+i m^\prime \phi^\prime} 
+		g(\vec{r}_n,\phi;\vec{r}_{n^\prime},\phi^\prime)
+		\\
+		=& 
+		\mu_t(n^\prime) S(n) S(n^\prime)
+		\int d\phi d\phi^\prime
+		e^{-i m \phi}
+		e^{+i m^\prime \phi^\prime} 
+		\frac{1}{\lvert\vec{r}_n-\vec{r}_{n^\prime}\rvert}
+		\delta(\phi-\phi_{\vec{r}_n-\vec{r}_{n^\prime}})
+		\delta(\phi^\prime-\phi_{\vec{r}_n-\vec{r}_{n^\prime}})
+		\\
+		=& 
+		\mu_t(n^\prime) S(n) S(n^\prime)
+		e^{-i m \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+		e^{+i m^\prime \phi_{\vec{r}_n-\vec{r}_{n^\prime}}} 
+		\frac{1}{\lvert\vec{r}_n-\vec{r}_{n^\prime}\rvert}
+		\\
+		=& 
+		\mu_t(n^\prime) 
+		\frac{S(n) S(n^\prime)}{\lvert\vec{r}_n-\vec{r}_{n^\prime}\rvert}
+		e^{-i (m-m^\prime) \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+		%e^{+i m^\prime \phi_{\vec{r}_n-\vec{r}_{n^\prime}}} 
+		%e^{+i m \phi_{\vec{r}_n-\vec{r}_{n^\prime}}} 
+	\end{split}
+\end{equation}
+
+\subsubsection{$B^s_{(n m)(n^\prime m^\prime)} \ n\neq n^\prime$}
+\label{subsub:Bsnmnpmp-off-diagonal}
+
+\begin{equation} \label{eq:der-Bsnmnpmp-off-diagonal}
+	\begin{split}
+		B^s_{(n m)(n^\prime m^\prime)}
+		=&
+		-\int d\vec{r} d\phi
+		S_n(\vec{r})
+		e^{-i m \phi}
+		\int d\vec{r}^\prime d\phi^\prime
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_s(\vec{r}^\prime)
+		\int d\phi^\second
+		f(\phi^\prime-\phi^\second)
+		S_{n^\prime}(\vec{r}^\prime)
+		e^{+i m^\prime \phi^\second}
+		\\
+		=&
+		-\int d\vec{r} d\phi
+		S_n(\vec{r})
+		e^{-i m \phi}
+		\int d\vec{r}^\prime d\phi^\prime
+		S_{n^\prime}(\vec{r}^\prime)
+		e^{+i m^\prime \phi^\prime}
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_s(\vec{r}^\prime)
+		\int d\phi^\second
+		f(\phi^\prime-\phi^\second)
+		e^{+i m^\prime (\phi^\second-\phi^\prime)}
+		\\
+		=&
+		-\int d\vec{r} d\phi
+		S_n(\vec{r})
+		e^{-i m \phi}
+		\int d\vec{r}^\prime d\phi^\prime
+		S_{n^\prime}(\vec{r}^\prime)
+		e^{+i m^\prime \phi^\prime}
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_s(\vec{r}^\prime)
+		g^{\lvert m^\prime \rvert}
+	\end{split}
+\end{equation}
+Compare the last line of Eq.\eqref{eq:der-Bsnmnpmp-off-diagonal} to the first line of Eq.\eqref{eq:result-Btnmnpmp-off-diagonal-1pt}. Make the following replacement in the calculation of $B^t$:
+\begin{align*}
+	-(minus)	 \rightarrow & +(plus)
+	\\
+	\mu_t(n^\prime)	 \rightarrow & \mu_s(n^\prime)g^{\lvert m^\prime \rvert}
+\end{align*}
+The final result for $B^s$ is just
+\begin{equation} \label{eq:result-Bsnmnpmp-off-diagonal-1pt}
+	B^s_{(n m)(n^\prime m^\prime)}
+	=
+	-
+	\mu_s(n^\prime)g^{\lvert m^\prime \rvert} 
+	\frac{S(n) S(n^\prime)}{\lvert\vec{r}_n-\vec{r}_{n^\prime}\rvert}
+	e^{-i (m-m^\prime) \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+\end{equation}
+
+\subsubsection{$B^t_{(n m)(n^\prime m^\prime)} \ n=n^\prime$}
+\label{subsub:Btnmnpmp-diagonal}
+Still do the 1 point quadrature for the field point $\vec{r}$, but treat the source point $\vec{r}^\prime$ with greater care:
+\begin{equation} \label{eq:der-Btnmnpmp-diagonal-1pt-1}
+	\begin{split}
+		B^t_{(n m)(n^\prime m^\prime)}
+		=&
+		\int d\vec{r} d\phi
+		S_n(\vec{r})
+		e^{-i m \phi}
+		\int d\vec{r}^\prime d\phi^\prime
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		\mu_t(\vec{r}^\prime)
+		S_n(\vec{r}^\prime)
+		e^{+i m^\prime \phi^\prime}
+		\\
+		=&
+		\mu_t(n) S(n)
+		\int d\vec{r}^\prime
+		\int d\phi d\phi^\prime
+		e^{-i m \phi}
+		e^{+i m^\prime \phi^\prime}
+		\frac{1}{\lvert\vec{r}_n-\vec{r}^\prime\rvert}
+		\delta(\phi-\phi_{\vec{r}_n-\vec{r}^\prime})
+		\delta(\phi^\prime-\phi_{\vec{r}_n-\vec{r}^\prime})
+		S_n(\vec{r}^\prime)
+		\\
+		=&
+		\mu_t(n) S(n)
+		\int d\vec{r}^\prime
+		e^{-i (m-m^\prime) \phi_{\vec{r}_n-\vec{r}^\prime}}
+		\frac{1}{\lvert\vec{r}_n-\vec{r}^\prime\rvert}
+		S_n(\vec{r}^\prime)
+	\end{split}
+\end{equation}
+Change variable
+\begin{equation} \label{eq:der-change-variable}
+	\begin{split}
+		\vec{r}_n-\vec{r}^\prime
+		=&
+		\vec{R}
+		\\
+		\lvert \vec{r}_n-\vec{r}^\prime \rvert 
+		=&
+		\lvert \vec{R} \rvert = R
+		\\
+		\phi_{\vec{r}_n-\vec{r}^\prime}
+		=&
+		\phi_{\vec{R}}
+		\\
+		d\vec{r}^\prime
+		=&
+		d\vec{R}=R\ dR\ d\phi_{\vec{R}}
+	\end{split}
+\end{equation}
+So that
+\begin{equation} \label{eq:der-Btnmnpmp-diagonal-1pt-2}
+	\begin{split}
+		B^t_{(n m)(n^\prime m^\prime)}
+		=& 
+		\mu_t(n) S(n)
+		\int \phi_{\vec{R}}\ 
+		e^{-i (m-m^\prime) \phi_{\vec{r}_n-\vec{r}^\prime}}
+		\int R\ dR 
+		\frac{1}{R}
+		S_n(\vec{r}^\prime)
+		\\
+		=&
+		\mu_t(n) S(n)
+		2\pi 
+		\delta_{m m^\prime}
+		\int dR\  
+		S_n(\vec{r}^\prime)
+	\end{split}
+\end{equation}
+Approximate the triangle domain $S_n$ by a circle of radius $R(n)=\sqrt{S(n)/\pi}$
+\begin{equation} \label{eq:result-Btnmnpmp-diagonal-1pt}
+	B^t_{(n m)(n^\prime m^\prime)}
+	=
+	2 
+	\pi^{1/2}
+	S(n)^{3/2}
+	\mu_t(n) 
+	\delta_{m m^\prime}
+\end{equation}
+
+\subsubsection{$B^s_{(n m)(n^\prime m^\prime)} \ n=n^\prime$}
+\label{subsub:Bsnmnpmp-diagonal}
+Similar to the derivation of off-diagonal $B^s$, the result is easily gotten
+\begin{equation} \label{eq:retsult-Bsnmnpmp-diagonal-1p}
+	B^s_{(n m)(n^\prime m^\prime)}
+	=
+	-2 
+	\pi^{1/2}
+	S(n)^{3/2}
+	\mu_s(n)g^{\lvert m\rvert} 
+	\delta_{m m^\prime}
+\end{equation}
+
+\subsection{Input Vector - $V_{n m}$}
+\label{input-vector-Vnm}
+Use the plane wave incidence field in Eq.\eqref{eq:exp-psiI-2d} to calculate the input vector
+\begin{equation} \label{eq:result-Vnm-1pt}
+	\begin{split}
+		V_{n m}
+		=&
+		\int d\vec{r} d\phi
+		\xi^*_{n m} (\vec{r},\phi)
+		\psi^I (\vec{r},\phi)
+		\\
+		=&
+		\int d\vec{r} d\phi
+		S_n(\vec{r})
+		e^{-i m \phi}
+		\delta(\phi-\phi^I)
+		\\
+		\approx&
+		S(n)e^{-i m \phi^I}
+	\end{split}
+\end{equation}
+Used 1 point quadrature rule in the last step.
+\subsection{$Z=A+B$}
+\label{sub:Z-A-B}
+For easy reference, list the result of section \ref{sec:calculate-matrix-elements}:
+\begin{align} \label{eq:list-of-Z-A-B}
+	A_{(n m)(n^\prime m^\prime)}
+	=&
+	2\pi S(n)
+	\delta_{n n^\prime}
+	\delta_{m m^\prime}
+	\\
+	B^t_{(n m)(n^\prime m^\prime)}
+	=& 
+	\mu_t(n^\prime) 
+	\frac{S(n) S(n^\prime)}{\lvert\vec{r}_n-\vec{r}_{n^\prime}\rvert}
+	e^{-i (m-m^\prime) \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+	,
+	\forall n\neq n^\prime
+	\\
+	B^s_{(n m)(n^\prime m^\prime)}
+	=&
+	-
+	\mu_s(n^\prime)g^{\lvert m^\prime \rvert} 
+	\frac{S(n) S(n^\prime)}{\lvert\vec{r}_n-\vec{r}_{n^\prime}\rvert}
+	e^{-i (m-m^\prime) \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+	,
+	\forall n\neq n^\prime
+	\\
+	B^t_{(n m)(n^\prime m^\prime)}
+	=&
+	2 
+	\pi^{1/2}
+	S(n)^{3/2}
+	\mu_t(n) 
+	\delta_{m m^\prime}
+	,
+	\forall n = n^\prime
+	\\
+	B^s_{(n m)(n^\prime m^\prime)}
+	=&
+	-2 
+	\pi^{1/2}
+	S(n)^{3/2}
+	\mu_s(n)g^{\lvert m\rvert} 
+	\delta_{m m^\prime}
+	,
+	\forall n = n^\prime
+	\\
+	V_{n m}
+	=&
+	S(n)e^{-i m \phi^I}
+\end{align}
+So that
+\begin{equation} \label{eq:result-Znmnpmp-1pt}
+	\begin{split}
+		Z_{(n m)(n^\prime m^\prime)}
+		=&
+		A_{(n m)(n^\prime m^\prime)}
+		+
+		B_{(n m)(n^\prime m^\prime)}
+		\\
+		=& 
+		\begin{cases}
+			2\pi S(n) 
+			\{
+			1+[ \mu_t(n) -\mu_s(n) g^{\lvert m \rvert} ] 
+			S(n)^{1/2}\pi^{-1/2}
+			%\sqrt{S(n)/\pi}
+			\}
+			&
+			n=n^\prime
+			\\
+			\frac{S(n)S(n^\prime)}{\lvert \vec{r}_n-\vec{r}_{n^\prime} \rvert}
+			[ \mu_t(n^\prime)-\mu_s(n^\prime) g^{\lvert m^\prime \rvert} ]
+			e^{-i(m-m^\prime)\phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+			&
+			n \neq n^\prime
+		\end{cases}
+	\end{split}
+\end{equation}
+
+
+
+\section{Accelerations}
+\label{sec:acceleration}
+	
+\subsection{Acceleration on $N_d$}
+\label{sub:acceleration-on-Nd}
+By the virtue of Eq.\eqref{eq:result-Znmnpmp-1pt} and Eq.\eqref{eq:result-Vnm-1pt}, in principle the system can be solved by direcetly inverting $Z$. 
+But  even for small $N_s$ and $N_d$, the size of matrix $Z$ could become excessively large for computers as of the year 2013.  
+This section explains a method for accelerating $N_d$ related calculation. 
+The number of floating point operations (flop) is reduced by a factor of $N_m=2N_d+1$. 
+That said, we achieved $O(N_d)$ scaling in both CPU and memory.
+\\
+Treat $Z_{(n m)(n^\prime m^\prime)}$ as $N_s\times N_s$ block matrices of size $N_d\times N_d$. The diagonal $Z$ block matrices are
+\begin{equation} \label{eq:def-Znnp-diagonal}
+	\begin{split}
+		Z(n,n)_{m m^\prime}
+		\equiv
+		& 
+		Z_{(n m)(n^\prime m^\prime)}
+		\\
+		=&
+		\delta_{m m^\prime}
+		[
+			2\pi S(n)
+			+
+			2\pi^{1/2}
+			\mu_t(n)
+			S(n)^{3/2}
+			-
+			2\pi^{1/2}
+			\mu_s(n)
+			S(n)^{3/2}
+			g^{\lvert m \rvert}
+		]
+		\\
+		=&
+		\delta_{m m^\prime}
+		[
+			Zon1(n)
+			+
+			Zon2(n)
+			g^{\lvert m \rvert}
+		]
+	\end{split}
+\end{equation}
+with two 1D vectors of length $N_s$
+\begin{subequations} \label{eq:def-Zon1-Zon2}
+	\begin{align}
+		Zon1(n)
+		=&
+		2\pi S(n)
+		+
+		2\pi^{1/2}
+		\mu_t(n)
+		S(n)^{3/2}
+		\label{eq:def-Zon1}
+		\\
+		Zon2(n)
+		=& 
+		-
+		2\pi^{1/2}
+		\mu_s(n)
+		S(n)^{3/2}
+		\label{eq:def_Zon2}
+	\end{align}
+\end{subequations}
+The off-diagonal $Z$ block matrices are
+\begin{equation} \label{eq:def-Znnp-off-diagonal}
+	\begin{split}
+		Z(n,n^\prime)_{m m^\prime}
+		\equiv &
+		Z_{(n m)(n^\prime m^\prime)}
+		\\
+		=& 
+		\frac{S(n) S(n^\prime)}{\lvert \vec{r}_n-\vec{r}_{n^\prime} \rvert} 
+		\mu_t(n^\prime)
+		e^{-i m \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+		e^{+i m^\prime \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+		\\
+		&- 
+		\frac{S(n) S(n^\prime)}{\lvert \vec{r}_n-\vec{r}_{n^\prime} \rvert} 
+		\mu_s(n^\prime)
+		e^{-i m \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+		g^{\lvert m^\prime \rvert} 
+		e^{+i m^\prime \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+		\\
+		=& 
+		Zoff(n,n^\prime)
+		\mu_t(n^\prime)
+		[
+			v_{n n^\prime}
+			\times
+			v^*_{n n^\prime} 
+		]
+		_{m m^\prime}
+		\\
+		&- 
+		Zoff(n,n^\prime)
+		\mu_s(n^\prime)
+		[
+			v_{n n^\prime}
+			\times
+			(g\ v^*_{n n^\prime})
+		]
+		_{m m^\prime}
+		\\
+		&- 
+		Zoff(n,n^\prime)
+		[
+			v_{n n^\prime}
+			\times
+			u_{n n^\prime}
+		]_{m m^\prime}
+	\end{split}
+\end{equation}
+with the following pre-computed quantities
+\begin{subequations} \label{eq:def-Zoff-v-u-g}
+	\begin{align}
+		Zoff(n,n^\prime)
+		=&
+		\begin{cases}
+			\frac
+			{S(n)S(n^\prime)}
+			{\lvert \vec{r}_n-\vec{r}_{n^\prime} \rvert} 
+			&
+			n \neq n^\prime
+			\\
+			0
+			&
+			n=n^\prime 
+		\end{cases}
+		\label{eq:def-Zoffnnp}
+		\\
+		(v_{n n^\prime})_m
+		=&
+		e^{- m \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+		\label{eq:def-vnnp}
+		\\
+		(u_{n n^\prime})_m
+		=&
+		[
+			\mu_t(n^\prime)
+			v^*_{n n^\prime}
+			-
+			\mu_s(n^\prime)
+			g
+			v^*_{n n^\prime}
+		]_m
+		\label{eq:def-unnp}
+		\\
+		(g)_m
+		=&
+		g^{\lvert m \rvert}
+		\\
+		(g\ v^*)_m
+		=&
+		(g)_m
+		(v^*_{n n^\prime})_m 
+		\label{eq:def-gm}
+	\end{align}
+\end{subequations}
+
+\subsection{Acceleration on $N_s$ (not yet)}
+\label{sub:acceleration-on-Ns}
+
+
+
+
+
+
+\subsection{Matrix-Vector Multiplication without Assembling the Matrix}
+\label{sub:matrix-vector-multiplication-without-assembling-the-matrix}
+So far, all discussions focus on \emph{how to calculate the full matrix faster}.
+However, when $N_g$ is greater than a few thousands, direct linear solvers fail. 
+In that regime, iterative solvers do the job. 
+An iterative solver requires not the full matrix, but only the matrix-vector (M-V) multiplication rule as the input. 
+Factors affecting the performance of an iterative solver include, but not limited to:
+\begin{itemize}
+	\item the time per call of the M-V multiplication
+	\item the condition number of the matrix
+	\item the iterative algorithm
+	\item possible use of preconditioner
+\end{itemize}
+The performance, i.e., the time per call, of the M-V multiplication to a very large extent determines the performance of the iterative solver.  
+In this subsection, we develop a fast M-V multiplication method for the 2D VIE.
+\\
+Using Einstein's convention to sum over repeated indices, the input vector $X$ and the output vector $Y=Z\cdot X$ can be expressed as
+\begin{subequations} %\label{eq:def-Xn-Yn}
+	\begin{align}
+		X(n^\prime)_{m^\prime}
+		\equiv
+		&
+		X_{n^\prime m^\prime}
+		\label{eq:def-Xn}
+		\\
+		Y(n)_{m}
+		\equiv
+		&
+		Y_{n m}
+		=
+		Z_{(n m)(n^\prime m^\prime)}
+		X_{n^\prime m^\prime}
+		\label{eq:def-Yn}
+	\end{align}
+\end{subequations}
+Use the $Z(n,n^\prime)$ defined in Eq.\eqref{eq:def-Znnp-diagonal} and Eq.\eqref{eq:def-Znnp-off-diagonal} to rewrite Eq.\eqref{eq:def-Yn} as
+\begin{equation} \label{eq:def-Yn-2}
+	\begin{split}
+		Y(n)_m
+		%=&
+		%Z(n,n^\prime)_{m m^\prime}
+		%X(n^\prime)_{m^\prime}
+		%\\
+		=& 
+		Z(n,n)_{m m^\prime}
+		X(n)_{m^\prime}
+		+
+		\sum\nolimits_{n\neq n^\prime}
+		Z(n,n^\prime)_{m m^\prime}
+		X(n^\prime)_m^\prime
+	\end{split}
+\end{equation}
+First, do the diagonal term:
+\begin{equation} \label{eq:result-Yn-diagonal}
+	\begin{split}
+		Z(n,n)_{m m^\prime}
+		X(n)_{m^\prime}
+		=&
+		\sum\nolimits_{m^\prime}
+		\delta_{m m^\prime}
+		[ Zon1(n)+Zon(2)g^{\lvert m \rvert} ]
+		X(n)_{m^\prime} 
+		\\
+		=&
+		[ Zon1(n)+Zon(2)g^{\lvert m \rvert} ]
+		X(n)_{m} 
+		\\
+		=&
+		Zon1(n)X(n)_m
+		+
+		Zon2(n)g^{\lvert m \rvert} X(n)_m
+		\\
+		=&
+		[Zon1(n)X(n)+Zon2(n)g\ X(n)]_m
+	\end{split}
+\end{equation}
+Second, do each of the off diagonal terms separately:
+\begin{equation} \label{eq:result-Yn-off-diagonal}
+	\begin{split}
+		Z(n,n^\prime)_{m m^\prime}
+		X(n^\prime)_m^\prime
+		=&
+		\sum\nolimits_{m^\prime}
+		Zoff(n,n^\prime)
+		(
+		v_{n n^\prime}
+		\times
+		u_{n n^\prime}
+		)_{m m^\prime}
+		X(n)_{m^\prime}
+		\\
+		=&
+		Zoff(n,n^\prime)
+		(v_{n n^\prime})_m
+		\sum\nolimits_{m^\prime}
+		(
+		u_{n n^\prime}
+		)_{m m^\prime}
+		X(n)_{m^\prime} 
+		\\
+		=&
+		Zoff(n,n^\prime)
+		(v_{n n^\prime})_m
+		[
+			u_{n n^\prime}
+			\cdot
+			X(n)
+		]
+	\end{split}
+\end{equation}
+Plug Eq.\eqref{eq:result-Yn-diagonal} and Eq.\eqref{eq:result-Yn-off-diagonal} into Eq.\eqref{eq:def-Yn-2} while noting Eq.\eqref{eq:def-Zoffnnp} that $Zoff(n,n)=0$, and write the result in the vectorial form:
+\begin{equation} \label{eq:result-Yn}
+	\begin{split}
+		Y(n)
+		&= 
+		Zon1(n) X(n)
+		+
+		Zon2(n) g\ X(n)
+		\\
+		&+
+		\sum \nolimits_{m=-N_d}^{+N_d}
+		Zoff(n,n^\prime)
+		[ X(n)\cdot u_{n n^\prime} ]
+		v_{n n^\prime}
+	\end{split}
+\end{equation}
+
+
+
+
+
+\section{Better Convergence}
+\label{sec:better-convergence}
+\subsection{Convergence Issue}
+\label{sub:convergence-issue}
+The true, unapproximated plane wave incidence
+\begin{equation} \label{eq:harmonic-expansion-of-psiI-2d}
+	\psi^I(\vec{r},\phi)
+	=
+	\delta(\phi-\phi^I)
+	=
+	\lim_{N_d \to \infty}
+	\frac{1}{2\pi} 
+	\sum\limits_{m=-N_d}^{N_d}
+	e^{i m (\phi-\phi^I)}
+\end{equation}
+has an infnitely extended discrete Fourier spectrum of equal strength $\frac{1}{2\pi}$.
+Thus, the leading order term in the solution also has the Dirac-delta function.
+Any truncation at finite $N_d$ would miss out the high frequency components.
+Any effort with a finite $N_d$ would run into the trouble of reconstructing a Dirac-delta function, 
+which failed us in terms of accuracy (how close were the numerical solutions to the true solution?) and precision (did the numericl solutions convergence to a common value?).
+\\
+Numerical experiment (awaiting completion) showed some sign of psuedo-convergence in the range $N_d=10\sim20$. 
+But the mechanism broke down as $N_d$ went higher - not a sign of convergence.
+This seemingly weird phenamenon is understood in detail (not detailed here) as a result of the singularity of the incidence wave.
+The way out is to extract whatever singularities in the true solution by hand before feeding the rest, expectedly smoother part into the numerical mechanism.
+\\
+Section \eqref{sec:better-convergence} notes down the attempt to eliminate the singular terms and achieve better accuracy and precision.
+Each following subsections consists of two parts.
+The first parts are general formalism.
+The second parts are 2D formalism.
+
+
+\subsection{Extracting $\psi_b$}
+\label{sub:extracting-psib}
+\subsubsection{General}
+\label{subsub:extracting-psib-general}
+The RTE reads, in its general form, as in Eq.\eqref{eq:def-RTE}
+\begin{equation*}
+	\unitvec{s}\cdot\nabla\psi(\vec{r},\unitvec{s})
+	+\mu_t(\vec{r})\psi(\vec{r},\unitvec{s})
+	=
+	\mu_s(\vec{r})
+	\int d\unitvec{s}^\prime
+	f(\unitvec{s}\cdot\unitvec{s}^\prime)
+	\psi(\vec{r^\prime},\unitvec{s}^\prime)
+	+q(\vec{r},\unitvec{s})
+\end{equation*}
+Let
+\begin{equation} \label{eq:def-psi-psib-psisc-general}
+	\psi(\vec{r},\unitvec{s})
+	=
+	\psi_b(\vec{r},\unitvec{s})
+	+\psi_{sc}(\vec{r},\unitvec{s})
+\end{equation}
+The subscript \emph{b} stands for \emph{\bf ballistic}.
+The subscript \emph{sc} stands for \emph{\bf scattering}.
+Plug Eq.\eqref{eq:def-psi-psib-psisc-general} into Eq.\eqref{eq:def-RTE}
+\begin{equation} \label{eq:der-extracting-psib-general-1}
+	\begin{split}
+		\unitvec{s}
+		\cdot
+		\psi_b(\vec{r},\unitvec{s})
+		+
+		\mu_t(\vec{r})
+		\psi_b(\vec{r},\unitvec{s})
+		+&
+		\unitvec{s}
+		\cdot
+		\psi_{sc}(\vec{r},\unitvec{s})
+		+
+		\mu_t(\vec{r})
+		\psi_{sc}(\vec{r},\unitvec{s})
+		%=
+		\\
+		=
+		q(\vec{r},\unitvec{s})
+		+&
+		\mu_s(\vec{r})
+		\int d\unitvec{s}^\prime
+		f(\unitvec{s}\cdot\unitvec{s}^\prime)
+		\psi_{sc}(\vec{r},\unitvec{s}^\prime) 
+		+ 
+		\mu_s(\vec{r})
+		\int d\unitvec{s}^\prime
+		f(\unitvec{s}\cdot\unitvec{s}^\prime)
+		\psi_{b}(\vec{r},\unitvec{s}^\prime) 
+	\end{split}
+\end{equation}
+Let
+\begin{subequations} \label{eq:def-psib-psisc-qb-general}
+	\begin{align} 
+		\unitvec{s}
+		\cdot
+		\psi_b(\vec{r},\unitvec{s})
+		+
+		\mu_t(\vec{r})
+		\psi_b(\vec{r},\unitvec{s})
+		=&
+		q(\vec{r},\unitvec{s})
+		\label{eq:def-psib-general}
+		\\ 
+		%\begin{split}
+			%\unitvec{s}
+			%\cdot
+			%\psi_{sc}(\vec{r},\unitvec{s})
+			%+
+			%\mu_t(\vec{r})
+			%\psi_{sc}(\vec{r},\unitvec{s})
+			%=&
+			%\mu_s(\vec{r})
+			%\int d\unitvec{s}^\prime
+			%f(\unitvec{s}\cdot\unitvec{s}^\prime)
+			%\psi_{sc}(\vec{r}^\prime,\unitvec{s}^\prime) 
+			%%q_b(\vec{r},\unitvec{s}^\prime)
+			%\\
+			%+& 
+			%\mu_s(\vec{r})
+			%\int d\unitvec{s}^\prime
+			%f(\unitvec{s}\cdot\unitvec{s}^\prime)
+			%\psi_{b}(\vec{r}^\prime,\unitvec{s}^\prime) 
+		%\end{split}
+		\unitvec{s}
+		\cdot
+		\psi_{sc}(\vec{r},\unitvec{s})
+		+
+		\mu_t(\vec{r})
+		\psi_{sc}(\vec{r},\unitvec{s})
+		=&
+		\mu_s(\vec{r})
+		\int d\unitvec{s}^\prime
+		f(\unitvec{s}\cdot\unitvec{s}^\prime)
+		\psi_{sc}(\vec{r},\unitvec{s}^\prime) 
+		+
+		q_b(\vec{r},\unitvec{s})
+		\label{eq:def-psisc-general}
+		\\
+		q_b(\vec{r},\unitvec{s})
+		=&
+		\mu_s(\vec{r})
+		\int d\unitvec{s}^\prime
+		f(\unitvec{s}\cdot\unitvec{s}^\prime)
+		\psi_{b}(\vec{r},\unitvec{s}^\prime) 
+		\label{eq:def-qb-general}
+	\end{align}
+\end{subequations}
+Eq.\eqref{eq:def-psib-psisc-qb-general} is completely equivalent to Eq.\eqref{eq:der-extracting-psib-general-1}.
+The solution to Eq.\eqref{eq:def-psib-general}, $\psi_b(\vec{r},\unitvec{s})$, can be calculated using the Green's function for Eq.\eqref{eq:def-psib-general}
+\begin{equation} \label{eq:exp-gft-general}
+	g_t(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+	=
+	\frac
+	{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+	{\lvert \vec{r}-\vec{r}^\prime \rvert}
+	\delta(\unitvec{s}-\unitvec{s}_{\vec{r}-\vec{r}^\prime})
+	\delta(\unitvec{s}^\prime-\unitvec{s}_{\vec{r}-\vec{r}^\prime})
+\end{equation}
+The $\tau(\vec{r}^\prime\to\vec{r})$ in Eq.\eqref{eq:exp-gft-general} is the \emph{optical length} from $\vec{r}^\prime$ to $\vec{r}$.
+The optical length is defined as the following path integrals:
+\begin{subequations} \label{eq:def-optical-length-general}
+	\begin{align}
+		\tau(\vec{r}^\prime\to\vec{r})
+		\equiv
+		&
+		\int_{
+			C_{\vec{r}^\prime\to\vec{r}}
+		}
+		\mu_t
+		dl
+		\label{eq:def-optical-length-rp-to-r}
+		\\
+		\tau(\vec{r},-\unitvec{s}^I)
+		\equiv
+		&
+		\int_{
+			C_{\vec{r},-\unitvec{s}^I}
+		}
+		\mu_t
+		dl
+		\label{eq:def-optical-length-rp-sI}
+	\end{align}
+\end{subequations}
+In Eq.\eqref{eq:def-optical-length-general},
+\begin{center}
+	\begin{tabular}{ll}
+		$C_{\vec{r}^\prime\to\vec{r}}$
+		&
+		\text{ is the straight line from $\vec{r}^\prime$ to $\vec{r}$ }
+		\\
+		$C_{\vec{r},-\unitvec{s}^I}$
+		&
+		\text{ is the ray that starts from $\vec{r}^\prime$ and in the direction $-\unitvec{s}^I$ }
+	\end{tabular}
+\end{center}
+List Eq.\eqref{eq:exp-gft-general}, Eq.\eqref{eq:exp-gf-general}, Eq.\eqref{eq:def-psiI-general}, and Eq.\eqref{eq:exp-psiI-general} together:
+\begin{subequations} \label{eq:der-psib-1}
+	\begin{align}
+		g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+		=&
+		\frac
+		{1}
+		{\lvert \vec{r}-\vec{r}^\prime \rvert}
+		\delta(\unitvec{s}-\unitvec{s}_{\vec{r}-\vec{r}^\prime})
+		\delta(\unitvec{s}^\prime-\unitvec{s}_{\vec{r}-\vec{r}^\prime})
+		\\
+		g_t(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+		=&
+		{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+		g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime) 
+		\\ 
+   		\psi^I[q](\vec{r},\unitvec{s})
+		=&
+   		\int d\vec{r}^\prime d\unitvec{s}^\prime
+   		g(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime)
+   		q(\vec{r}^\prime,\unitvec{s}^\prime)
+		\\
+		=&
+		\delta
+		(\unitvec{s}-\unitvec{s}^I)
+	\end{align}
+\end{subequations}
+The ballistic term $\psi_b$ is
+\begin{equation} \label{eq:result-psib-general}
+	\begin{split}
+		\psi_b(\vec{r},\unitvec{s})
+		=&
+		\int d\vec{r}^\prime d\unitvec{s}^\prime
+		g_t(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime) 
+		q(\vec{r}^\prime,\unitvec{s}^\prime)
+		\\
+		=&
+		e^{-\tau(\vec{r},-\unitvec{s}^I)}
+		\delta(\unitvec{s}-\unitvec{s}^I)
+	\end{split}
+\end{equation}
+
+\subsubsection{2D}
+\label{subsub:extracting-psib-2d}
+Write all the equations in section \ref{subsub:extracting-psib-general} in 2D:
+\begin{subequations} \label{eq:def-psib-psisc-qb-psiscI-result-psib-exp-gf-gft}
+	\begin{align}
+		\unitvec{s}
+		\cdot 
+		\psi_b(\vec{r},\phi)
+		+
+		\mu_t(\vec{r})
+		\psi_b(\vec{r},\phi)
+		=&
+		q(\vec{r},\phi)
+		\label{eq:def-psib-2d}
+		\\
+		\unitvec{s}
+		\cdot 
+		\psi_{sc}(\vec{r},\phi)
+		+
+		\mu_t(\vec{r})
+		\psi_{sc}(\vec{r},\phi)
+		=&
+		\mu_s(\vec{r})
+		\int d\phi^\prime
+		f(\phi-\phi^\prime)
+		\psi_{sc}(\vec{r},\phi^\prime)
+		+
+		q_b(\vec{r},\phi)
+		\label{eq:def-psisc-2d}
+		\\
+		q_b(\vec{r},\phi)
+		=&
+		\mu_s(\vec{r})
+		\int d\phi^\prime
+		f(\phi-\phi^\prime)
+		\psi_b(\vec{r},\phi^\prime) 
+		\label{eq:def-qb-2d}
+		\\
+		\begin{split}
+			\label{eq:result-psib-2d}
+			\psi_b(\vec{r},\phi)
+			=&
+			\int d\vec{r}^\prime d\phi^\prime
+			g_t(\vec{r},\phi;\vec{r}^\prime,\phi^\prime) 
+			q(\vec{r}^\prime,\phi^\prime)
+			\\
+			=&
+			e^{-\tau(\vec{r},-\unitvec{s}^I)}
+			\delta(\phi-\phi^I) 
+		\end{split} 
+		\\
+		\psi_{sc}^I[q_b](\vec{r},\phi)
+		=&
+		\int d\vec{r}^\prime d\phi^\prime
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		q_b(\vec{r}^\prime,\phi^\prime)
+		\label{eq:def-psiscI-2d} 
+		\\
+		g_t(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		=&
+		\frac
+		{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+		{\lvert \vec{r}-\vec{r}^\prime \rvert}
+		\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+		\delta(\phi^\prime-\phi_{\vec{r}-\vec{r}^\prime})
+		\label{eq:exp-gft-2d} 
+		\\
+		g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		=&
+		\frac
+		{1}
+		{\lvert \vec{r}-\vec{r}^\prime \rvert}
+		\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+		\delta(\phi^\prime-\phi_{\vec{r}-\vec{r}^\prime})
+		\label{eq:exp-gf-2d} 
+	\end{align}
+\end{subequations}
+Only need to calculate the new input vector, $(V_{sc})_{n m}$, to re-use the mechanism developed in the previous sections.
+\begin{equation} \label{eq:def-Vscnm-1pt}
+	\begin{split}
+		(V_{sc})_{n m}
+		=&
+		\int d\vec{r} d\phi
+		\ \xi^*_{n m}
+		(\vec{r},\phi)
+		\psi_{sc}^I
+		[q_b]
+		(\vec{r},\phi) 
+	\end{split}
+\end{equation}
+Calculate in the following order
+\begin{equation} \label{eq:order-in-which-Vscnm-1pt-is-calculated}
+	\psi_b(\vec{r},\phi)
+	\to
+	q_b(\vec{r},\phi)
+	\to
+	\psi_{sc}^I(\vec{r},\phi)
+	\to
+	(V_{sc})_{n m}
+\end{equation}
+\begin{subequations} \label{eq:result-qb-psiscI-2d-der-Vscnm-1pt}
+	\begin{align}
+		\begin{split}
+			q_b(\vec{r},\phi)
+			=&
+			\mu_s(\vec{r})
+			\int d\phi^\prime
+			f(\phi-\phi^\prime)
+			\psi_b(\vec{r},\phi^\prime) 
+			\\
+			=&
+			\mu_s(\vec{r})
+			\int d\phi^\prime
+			f(\phi-\phi^\prime)
+			%\psi_b(\vec{r},\phi^\prime) 
+			\delta(\phi-\phi^I)
+			e^{-\tau(\vec{r},-\unitvec{s}^I)} 
+			\\
+			=&
+			\mu_s(\vec{r})
+			f(\phi-\phi^I)
+			e^{-\tau(\vec{r},-\unitvec{s}^I)} 
+		\end{split}
+		\label{eq:result-qb-2d}
+		\\
+		\begin{split}
+			\psi_{sc}^I(\vec{r},\phi)
+			=&
+			\int d\vec{r}^\prime d\phi^\prime
+			g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+			q_b(\vec{r}^\prime,\phi^\prime)
+			\\
+			=&
+			\int d\vec{r}^\prime d\phi^\prime
+			%g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+			\frac
+			{1}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+			\delta(\phi^\prime-\phi_{\vec{r}-\vec{r}^\prime})
+			%\\
+			%&
+			%\times
+			%q_b(\vec{r}^\prime,\phi^\prime) 
+			\mu_s(\vec{r}^\prime)
+			f(\phi^\prime-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+			\\
+			=& 
+			\int d\vec{r}^\prime
+			\frac
+			{1}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+			%\\
+			%&
+			%\times
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		\end{split}
+		\label{eq:result-psiscI-2d}
+		\\
+		\begin{split}
+			(V_{sc})_{n m}
+			=&
+			\int d\vec{r} d\phi
+			\ \xi^*_{n m}(\vec{r},\phi)
+			\psi_{sc}^I(\vec{r},\phi)
+			\\
+			=&
+			\int d\vec{r} d\phi
+			%\xi^*_{n m}(\vec{r},\phi)
+			\ S_n(\vec{r})
+			e^{-i m \phi}
+			%\psi_{sc}^I(\vec{r},\phi)
+			\int d\vec{r}^\prime
+			\frac
+			{1}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+			\\
+			=&
+			\int d\vec{r}
+			S_n(\vec{r})
+			\int d\vec{r}^\prime
+			\frac
+			{
+				e^{-i m \phi_{\vec{r}-\vec{r}^\prime}}
+			}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+			\\
+			=&
+			S(n)
+			\int d\vec{r}^\prime
+			\frac
+			{
+				e^{-i m \phi_{\vec{r}_n-\vec{r}^\prime}}
+			}
+			{\lvert \vec{r}_n-\vec{r}^\prime \rvert}
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}_n-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		\end{split}
+		\label{eq:der-Vscnm-1pt}
+	\end{align}
+\end{subequations}
+%%We need to do Eq.\eqref{eq:der-Vscnm-1pt} more accurately than the existing shceme could provide.
+%Plug Eq.\eqref{eq:hg-phase-function} into Eq.\eqref{eq:der-Vscnm-1pt}
+%\begin{equation} \label{eq:der-Vscnm-non-discretized}
+	%\begin{split}
+		%(V_{sc})_{n m}
+		%=&
+		%S(n)
+		%\int d\vec{r}^\prime
+		%\frac
+		%{
+			%e^{-i m \phi_{\vec{r}_n-\vec{r}^\prime}}
+		%}
+		%{\lvert \vec{r}_n-\vec{r}^\prime \rvert}
+		%\mu_s(\vec{r}^\prime)
+		%f(\phi_{\vec{r}_n-\vec{r}^\prime}-\phi^I)
+		%e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		%\\
+		%=& 
+		%S(n)
+		%\int d\vec{r}^\prime
+		%\frac
+		%{
+			%e^{-i m \phi_{\vec{r}_n-\vec{r}^\prime}}
+		%}
+		%{\lvert \vec{r}_n-\vec{r}^\prime \rvert}
+		%\mu_s(\vec{r}^\prime)
+		%%f(\phi_{\vec{r}_n-\vec{r}^\prime}-\phi^I)
+		%\frac{1}{2\pi} 
+		%\sum\limits_{m^\prime=-\infty}^{+\infty}
+		%g^{\lvert m^\prime \rvert}
+		%e^{+i m^\prime (\phi_{\vec{r}_n-\vec{r}^\prime}-\phi^I)} 
+		%e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		%\\
+		%=& 
+		%S(n)
+		%e^{-i m \phi^I}
+		%\int R\ dR
+		%\frac {1} {R}
+		%\ \mu_s(\vec{r}^\prime)
+		%e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		%\sum\limits_{m^\prime=-\infty}^{+\infty}
+		%g^{\lvert m^\prime \rvert}
+		%\int_{0}^{2\pi}
+		%\frac {d\phi_{\vec{R}}} {2\pi}
+		%e^{+i (m^\prime-m) (\phi_{\vec{R}}-\phi^I)} 
+		%\\
+		%\neq
+		%& 
+		%S(n)
+		%e^{-i m \phi^I}
+		%\int dR
+		%\ \mu_s(\vec{r}^\prime)
+		%e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		%\sum\limits_{m^\prime=-\infty}^{+\infty}
+		%g^{\lvert m^\prime \rvert}
+		%%\int_{0}^{2\pi}
+		%%\frac {d\phi_{\vec{R}}} {2\pi}
+		%%e^{+i (m^\prime-m) (\phi_{\vec{R}}-\phi^I)} 
+		%\delta_{m m^\prime}
+		%%\\
+		%%=& 
+		%%S(n)
+		%%g^{\lvert m \rvert}
+		%%e^{-i m \phi^I}
+		%%\int dR
+		%%\ \mu_s(\vec{r}^\prime)
+		%%e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+	%\end{split}
+%\end{equation}
+%The unequal sign in Eq.\eqref{eq:der-Vscnm-non-discretized} is due to the non-constancy of $\mu_s(\vec{r}^\prime)$.  
+The integral over $\vec{r}^\prime$ shall be carried out over the entire volume of interest.
+\begin{equation} \label{eq:integral-over-rp-decomposition-into-selfterm-plus-interactionterm}
+	\begin{split}
+		\int d\vec{r}^\prime
+		%=&
+		=
+		\sum \limits_{n^\prime=1}^{N_s}
+		\int d\vec{r}^\prime
+		S_{n^\prime}(\vec{r}^\prime)
+		%\\
+		%=& 
+		=
+		\int d\vec{r}^\prime
+		S_n(\vec{r}^\prime)
+		+
+		\sum \limits_{n^\prime \neq n}
+		\int d\vec{r}^\prime
+		S_{n^\prime}(\vec{r}^\prime)
+	\end{split}
+\end{equation}
+The first term in Eq.\eqref{eq:integral-over-rp-decomposition-into-selfterm-plus-interactionterm} is the self-interaction/ diagonal term. Use the same change of variable as in Eq.\eqref{eq:der-change-variable}
+\begin{equation} \label{eq:result-diagonal-Vscnm-1pt}
+	\begin{split} 
+		&
+		S(n)
+		\int d\vec{r}^\prime
+		e^{-i m \phi_{\vec{r}_n-\vec{r}^\prime}}
+		\frac
+		{1}
+		{\lvert \vec{r}_n-\vec{r}^\prime \rvert}
+		\mu_s(\vec{r}^\prime)
+		f(\phi_{\vec{r}_n-\vec{r}^\prime}-\phi^I)
+		e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		\\
+		=& 
+		S(n)
+		\int d\vec{R}
+		%e^{-i m \phi_{\vec{r}_n-\vec{r}^\prime}}
+		\ e^{-i m \phi_{\vec{R}} }
+		\frac
+		{1}
+		%{\lvert \vec{r}_n-\vec{r}^\prime \rvert}
+		R
+		%\mu_s(\vec{r}^\prime)
+		\mu_s(n)
+		%f(\phi_{\vec{r}_n-\vec{r}^\prime}-\phi^I)
+		f(\phi_{\vec{R}}-\phi^I)
+		%e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		e^{-\tau(\vec{r}_n,-\unitvec{s}^I)} 
+		\\
+		=& 
+		S(n)
+		\mu_s(n)
+		e^{-i m \phi^I }
+		e^{-\tau(\vec{r}_n,-\unitvec{s}^I)} 
+		\int \ dR
+		\int \ d\phi_{\vec{R}}
+		\ e^{-i m (\phi_{\vec{R}} - \phi^I)}
+		f(\phi_{\vec{R}}-\phi^I)
+		\\
+		=& 
+		S(n)
+		\mu_s(n)
+		g^{\lvert m \rvert}
+		e^{-i m \phi^I }
+		e^{-\tau(\vec{r}_n,-\unitvec{s}^I)} 
+		\sqrt{S(n)/\pi}
+		\\
+		=& 
+		\pi^{-1/2}
+		S(n)^{3/2}
+		\mu_s(n)
+		g^{\lvert m \rvert}
+		e^{-i m \phi^I }
+		e^{-\tau(\vec{r}_n,-\unitvec{s}^I)} 
+	\end{split}
+\end{equation}
+The second terms in Eq.\eqref{eq:integral-over-rp-decomposition-into-selfterm-plus-interactionterm} are the other-interaction/ off-diagonal terms are each:
+\begin{equation} \label{eq:result-off-diagonal-Vscnm-1pt}
+	\begin{split} 
+		&
+		S(n)
+		\int d\vec{r}^\prime
+		e^{-i m \phi_{\vec{r}_n-\vec{r}^\prime}}
+		\frac
+		{1}
+		{\lvert \vec{r}_n-\vec{r}^\prime \rvert}
+		\mu_s(\vec{r}^\prime)
+		f(\phi_{\vec{r}_n-\vec{r}^\prime}-\phi^I)
+		e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		\\
+		=&
+		\frac
+		{S(n)S(n^\prime)}
+		{\lvert \vec{r}_n - \vec{r}_{n^\prime} \rvert} 
+		\mu_s(n^\prime)
+		e^{-i m \phi_{\vec{r}_n - \vec{r}_{n^\prime}}}
+		f(\phi_{\vec{r}_n - \vec{r}_{n^\prime}}-\phi^I)
+		e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)}
+	\end{split}
+\end{equation}
+For numerical computation, pre-compute the following two quantities:
+\begin{subequations} \label{eq:def-damp-r2rF} 
+	\begin{align}
+		damp(n)
+		=&
+		\exp
+		{
+			[-\tau(\vec{r}_n,-\unitvec{s}^I)]
+		}
+		\label{eq:def-tau}
+		\\
+		r2rF(n,n^\prime)
+		=&
+		f(\phi_{\vec{r}_n-\vec{r}_{n^\prime}} - \phi^I)
+		\label{eq:def-r2rR}
+	\end{align} 
+\end{subequations}
+Recall other pre-computed quantities defined in Eq.\eqref{eq:def-Zoff-v-u-g}, the new $(V_{sc})_{n m}$ can be expressed solely by the pre-computed quantities.
+\begin{equation} \label{eq:result-Vscnm-1pt}
+	\begin{split} 
+		(V_{sc})_{n m}
+		=&
+		\pi^{-1/2}
+		S(n)^{3/2}
+		\mu_s(n)
+		g^{\lvert m \rvert}
+		e^{-i m \phi^I }
+		e^{-\tau(\vec{r}_n,-\unitvec{s}^I)} 
+		\\
+		&+
+		\sum \nolimits_{n^\prime \neq n}
+		\frac
+		{S(n)S(n^\prime)}
+		{\lvert \vec{r}_n - \vec{r}_{n^\prime} \rvert} 
+		\mu_s(n^\prime)
+		e^{-i m \phi_{\vec{r}_n - \vec{r}_{n^\prime}}}
+		f(\phi_{\vec{r}_n - \vec{r}_{n^\prime}}-\phi^I)
+		e^{-\tau(\vec{r}_{n^\prime},-\unitvec{s}^I)} 
+		\\
+		=&
+		\pi^{-1/2}
+		S(n)^{1/2}
+		\mu_s(n)
+		damp(n)
+		g_m
+		V_{n m}
+		\\
+		&+
+		\sum \nolimits_{n^\prime \neq n}
+		Zoff(n,n^\prime)
+		r2rF(n,n^\prime)
+		damp(n^\prime)
+		\mu_s(n^\prime)
+		(v_{n n^\prime})_m
+		\\
+		=&
+		\pi^{-1/2}
+		S(n)^{1/2}
+		\mu_s(n)
+		damp(n)
+		g_m
+		V_{n m}
+		\\
+		&+
+		\sum \nolimits_{n^\prime=1}^{N_s}
+		Zoff(n,n^\prime)
+		r2rF(n,n^\prime)
+		damp(n^\prime)
+		\mu_s(n^\prime)
+		(v_{n n^\prime})_m
+	\end{split}
+\end{equation}
+The last line in Eq.\eqref{eq:result-Vscnm-1pt} used the fact that $Zoff(n,n)=0$.
+\\
+Solve
+\begin{equation} \label{eq:Z-Xsc-Vsc}
+	Z\cdot X_{sc}=V_{sc}
+\end{equation}
+for $X_{sc}$.
+Also, considering the contribution from $\psi_b$,
+\begin{equation} \label{eq:result-Xbnm-1pt}
+	\begin{split} 
+		(X_b)_{n m}
+		=&
+		\int d\vec{r} d\phi
+		\ \xi^*_{n m}(\vec{r},\phi)
+		\psi_b(\vec{r},\phi)
+		\\
+		=& 
+		\int d\vec{r} d\phi
+		%\ \xi^*_{n m}(\vec{r},\phi)
+		\ S_n(\vec{r})
+		e^{-i m \phi}
+		%\psi_b(\vec{r},\phi)
+		e^{-\tau(\vec{r},-\unitvec{s}^I)}
+		\delta(\phi-\phi^I) 
+		\\
+		=& 
+		S(n)
+		e^{-i m \phi^I}
+		e^{-\tau(\vec{r}_n,-\unitvec{s}^I)}
+	\end{split}
+\end{equation}
+The final solution vector $X$ is
+\begin{equation} \label{eq:X-Xb-Xsc}
+	X=X_b+X_{sc}
+\end{equation}
+%\\
+%Some Mathematica codes illustrating matrix and vector operations.
+%\\
+%Input:
+%\begin{equation*}
+	%\begin{array}{l}
+		%\text{ClearAll}[V,G,S,\text{Vnew},v,g,s]
+		%\\
+		%V=\text{Table}\left[v_{i,j},\{i,2\},\{j,3\}\right];
+		%\\
+		%G=\text{Table}\left[g_j,\{j,3\}\right];
+		%\\
+		%S=\text{Table}\left[s_i,\{i,2\}\right];
+		%\\
+		%\text{Vnew}=S \left(V^{\mathsf{T}} G\right)^{\mathsf{T}};
+		%\\ 
+		%\text{Vnew // MatrixForm}
+	%\end{array}
+%\end{equation*}
+%Output:
+%\begin{equation*}
+	%\left(
+	%\begin{array}{ccc}
+	 %g_1 s_1 v_{1,1} & g_2 s_1 v_{1,2} & g_3 s_1 v_{1,3} \\
+	 %g_1 s_2 v_{2,1} & g_2 s_2 v_{2,2} & g_3 s_2 v_{2,3} \\
+	%\end{array} 
+	%\right)
+%\end{equation*}
+
+
+\subsection{Extracting $\psi_b$ and $\psi_{sb}$}
+\label{sub:extracting-psib-and-psisb}
+\subsubsection{General}
+\label{subsub:extracting-psib-psisb-general}
+Numerical experiment showed that the fix in secion \ref{sub:extracting-psib} gets better convergence, but still not good enough.
+Besides the leading term $\psi_b$, let's extract the next leading term $\psi_{sb}$ as well.
+In this small section, we develop equations in the general case.
+In the next small section, we specialize to 2D.
+Let
+\begin{equation} \label{eq:def-psi-psib-psisb-psit} 
+	\psi(\vec{r},\unitvec{s})
+	= 
+	\psi_b(\vec{r},\unitvec{s})
+	+
+	\psi_{sb}(\vec{r},\unitvec{s})
+	+
+	\psi_t(\vec{r},\unitvec{s})
+\end{equation}
+The subscript \emph{sb} stands for \emph{\bf scattering ballistic}.
+The subscript \emph{t} stands for \emph{\bf true}.
+Expectation is that $\psi_t$ is smooth enough to be calculated numerically.
+\\
+Plug Eq.\eqref{eq:def-psi-psib-psisb-psit} into Eq.\eqref{eq:def-RTE} and decompose the resulted equation into the following equivalent set of equations:
+\begin{subequations} \label{eq:def-psi-2ndtime-psisb-psit-general-qb-2ndtime-qsb-general}
+	\begin{align}
+		\unitvec{s} \cdot \grad
+		\psi_b(\vec{r},\unitvec{s})
+		+&
+		\mu_t(\vec{r})
+		\psi_b(\vec{r},\unitvec{s})
+		=
+		q(\vec{r},\unitvec{s}) 
+		\label{eq:def-psib-general-2ndtime}
+		\\ 
+		\unitvec{s} \cdot \grad
+		\psi_{sb}(\vec{r},\unitvec{s})
+		+&
+		\mu_t(\vec{r})
+		\psi_{sb}(\vec{r},\unitvec{s})
+		=
+		q_b(\vec{r},\unitvec{s}) 
+		\label{eq:def-psisb-general}
+		\\
+		\begin{split}
+			\unitvec{s} \cdot \grad
+			\psi_t(\vec{r},\unitvec{s})
+			+&
+			\mu_t(\vec{r})
+			\psi_t(\vec{r},\unitvec{s})
+			\\
+			-&
+			\mu_s(\vec{r})
+			\int d\unitvec{s}^\prime
+			f(\unitvec{s} \cdot \unitvec{s}^\prime)
+			\psi_t(\vec{r},\unitvec{s}^\prime)
+			=
+			q_{sb}(\vec{r},\unitvec{s}) 
+		\end{split}
+		\label{eq:def-psit-general} 
+		\\
+		q_b(\vec{r},\unitvec{s})
+		=&
+		\mu_s(\vec{r})
+		\int d\unitvec{s}^\prime
+		f(\unitvec{s} \cdot \unitvec{s}^\prime)
+		\psi_b(\vec{r},\unitvec{s}^\prime)
+		\label{eq:def-qb-general-2ndtime}
+		\\ 
+		q_{sb}(\vec{r},\unitvec{s})
+		=&
+		\mu_s(\vec{r})
+		\int d\unitvec{s}^\prime
+		f(\unitvec{s} \cdot \unitvec{s}^\prime)
+		\psi_{sb}(\vec{r},\unitvec{s}^\prime)
+		\label{eq:def-qsb-general}
+	\end{align}
+\end{subequations}
+$\psi_b(\vec{r},\unitvec{s})$ is given by Eq.\eqref{eq:result-psib-general}:
+\begin{equation} \label{eq:result-psib-general-2ndtime}
+	\psi_b(\vec{r},\unitvec{s})
+	=
+	e^{-\tau(\vec{r},-\unitvec{s}^I)}
+	\delta(\unitvec{s}-\unitvec{s}^I)
+\end{equation}
+Similar to the calculation of $\psi(\vec{r},\unitvec{s})$, $\psi_{sb}(\vec{r},\unitvec{s})$ can be calculated using the following equations:
+\begin{equation} \label{eq:der-psisb-general}
+	\psi_{sb}(\vec{r},\unitvec{s})
+	=
+	\int d\vec{r}^\prime d\unitvec{s}^\prime
+	g_t(\vec{r},\unitvec{s};\vec{r}^\prime,\unitvec{s}^\prime) 
+	q_b(\vec{r}^\prime,\unitvec{s}^\prime) 
+\end{equation}
+The $g_t$ is defined in Eq.\eqref{eq:exp-gft-general}.
+
+\subsubsection{2D}
+\label{subsub:extracting-psib-psisb-2d}
+Write all the equations in section \ref{subsub:extracting-psib-psisb-general} in 2D:
+\begin{subequations} \label{eq:def-psi-2ndtime-psisb-psit-2d-qb-2ndtime-qsb-2d}
+	\begin{align}
+		\unitvec{s} \cdot \grad
+		\psi_b(\vec{r},\phi)
+		+&
+		\mu_t(\vec{r})
+		\psi_b(\vec{r},\phi)
+		=
+		q(\vec{r},\phi) 
+		\label{eq:def-psib-2d-2ndtime}
+		\\ 
+		\unitvec{s} \cdot \grad
+		\psi_{sb}(\vec{r},\phi)
+		+&
+		\mu_t(\vec{r})
+		\psi_{sb}(\vec{r},\phi)
+		=
+		q_b(\vec{r},\phi) 
+		\label{eq:def-psisb-2d}
+		\\
+		\begin{split}
+			\unitvec{s} \cdot \grad
+			\psi_t(\vec{r},\phi)
+			+&
+			\mu_t(\vec{r})
+			\psi_t(\vec{r},\phi)
+			\\
+			-&
+			\mu_s(\vec{r})
+			\int d\phi^\prime
+			f(\phi - \phi^\prime)
+			\psi_t(\vec{r},\phi^\prime)
+			=
+			q_{sb}(\vec{r},\phi) 
+		\end{split}
+		\label{eq:def-psit-2d} 
+		\\
+		\begin{split}
+			q_b(\vec{r},\phi)
+			=&
+			\mu_s(\vec{r})
+			\int d\phi^\prime
+			f(\phi - \phi^\prime)
+			\psi_b(\vec{r},\phi^\prime)
+			\\
+			=&
+			\mu_s(\vec{r})
+			f(\phi-\phi^I)
+			e^{-\tau(\vec{r},-\unitvec{s}^I)} 
+		\end{split}
+		\label{eq:result-qb-2d-2ndtime}
+		\\ 
+		q_{sb}(\vec{r},\phi)
+		=&
+		\mu_s(\vec{r})
+		\int d\phi^\prime
+		f(\phi - \phi^\prime)
+		\psi_{sb}(\vec{r},\phi^\prime)
+		\label{eq:def-qsb-2d}
+		\\
+		\psi_b(\vec{r},\phi)
+		=&
+		e^{-\tau(\vec{r},-\phi^I)}
+		\delta(\phi-\phi^I)
+		\label{eq:result-psib-2d-2ndtime} 
+		\\
+		\psi_{sb}(\vec{r},\phi)
+		=&
+		\int d\vec{r}^\prime d\phi^\prime
+		g_t(\vec{r},\phi;\vec{r}^\prime,\phi^\prime) 
+		q_b(\vec{r}^\prime,\phi^\prime) 
+		\label{eq:der-psisb-2d} 
+		\\
+		g_t(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+		=&
+		\frac
+		{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+		{\lvert \vec{r}-\vec{r}^\prime \rvert}
+		\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+		\delta(\phi^\prime-\phi_{\vec{r}-\vec{r}^\prime})
+		\label{eq:exp-gft-2d-2ndtime} 
+	\end{align}
+\end{subequations}
+The second line of Eq.\eqref{eq:result-qb-2d-2ndtime} comes from Eq.\eqref{eq:result-qb-2d}.
+\\
+Eq.\eqref{eq:result-psib-2d-2ndtime} is just Eq.\eqref{eq:result-psib-2d}.
+\\
+Eq.\eqref{eq:exp-gft-2d-2ndtime} is just Eq.\eqref{eq:exp-gft-2d}.
+\\
+Calculate to the new input vector $(V_t)_{n m}$ in the following order:
+\begin{equation} \label{eq:order-in-which-Vtnm-1pt-is-calculated}
+	\psi_b
+	\to
+	q_b
+	\to
+	\psi_{sb}
+	\to
+	q_{sb}
+	\to
+	\psi_{sb}^I
+	\to
+	(V_t)_{n m}
+\end{equation}
+
+\begin{subequations} \label{eq:result-psisb-qsb-psisbI-2d}
+	\begin{align} 
+		\begin{split}
+			\psi_{sb}(\vec{r},\phi)
+			=&
+			\int d\vec{r}^\prime d\phi^\prime
+			g_t(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+			q_b(\vec{r}^\prime,\phi^\prime)
+			\\
+			=& 
+			\int d\vec{r}^\prime d\phi^\prime
+			%g_t(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+			\frac
+			{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+			\delta(\phi^\prime-\phi_{\vec{r}-\vec{r}^\prime})
+			%q_b(\vec{r}^\prime,\phi^\prime)
+			\mu_s(\vec{r}^\prime)
+			f(\phi^\prime-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+			\\
+			=& 
+			\int d\vec{r}^\prime
+			\frac
+			{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		\end{split}
+		\label{eq:result-psisb-2d}
+		\\
+		\begin{split} 
+			q_{sb}(\vec{r},\phi)
+			=&
+			\mu_s(\vec{r})
+			\int d\phi^\prime
+			f(\phi-\phi^\prime)
+			\psi_{sb}(\vec{r},\phi^\prime)
+			\\
+			=&
+			\mu_s(\vec{r})
+			\int d\phi^\prime
+			f(\phi-\phi^\prime)
+			\\
+			&
+			\times
+			%\psi_{sb}(\vec{r},\phi^\prime) 
+			\int d\vec{r}^\prime
+			\frac
+			{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\delta(\phi^\prime-\phi_{\vec{r}-\vec{r}^\prime})
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+			\\
+			=& 
+			\mu_s(\vec{r})
+			\int d\vec{r}^\prime
+			f(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+			\frac
+			{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		\end{split}
+		\label{eq:result-qsb-2d}
+			\\
+		\begin{split}
+			\psi_{sb}^I(\vec{r},\phi)
+			=&
+			\int d\vec{r}^\prime d\phi^\prime
+			g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+			q_{sb}(\vec{r}^\prime,\phi^\prime)
+			\\
+			=& 
+			\int d\vec{r}^\prime d\phi^\prime
+			%g(\vec{r},\phi;\vec{r}^\prime,\phi^\prime)
+			\frac
+			{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+			\delta(\phi^\prime-\phi_{\vec{r}-\vec{r}^\prime})
+			\\
+			&
+			\times
+			%q_{sb}(\vec{r}^\prime,\phi^\prime)
+			\mu_s(\vec{r}^\prime)
+			\int d\vec{r}^\second
+			f(\phi^\prime-\phi_{\vec{r}^\prime-\vec{r}^\second})
+			\frac
+			{e^{-\tau(\vec{r}^\second\to\vec{r}^\prime)}}
+			{\lvert \vec{r}^\prime-\vec{r}^\second \rvert}
+			\mu_s(\vec{r}^\second)
+			f(\phi_{\vec{r}^\prime-\vec{r}^\second}-\phi^I)
+			e^{-\tau(\vec{r}^\second,-\unitvec{s}^I)} 
+			\\
+			=& 
+			\int d\vec{r}^\prime d\vec{r}^\second
+			\mu_s(\vec{r}^\prime)
+			\mu_s(\vec{r}^\second)
+			\frac
+			{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\frac
+			{e^{-\tau(\vec{r}^\second\to\vec{r}^\prime)}}
+			{\lvert \vec{r}^\prime-\vec{r}^\second \rvert}
+			e^{-\tau(\vec{r}^\second,-\unitvec{s}^I)} 
+			\\
+			&
+			\times
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi_{\vec{r}^\prime-\vec{r}^\second})
+			f(\phi_{\vec{r}^\prime-\vec{r}^\second}-\phi^I)
+			\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+		\end{split}
+		\label{eq:result-psisbI-2d}
+	\end{align}
+\end{subequations}
+The input vector:
+\begin{equation} \label{eq:der-Vtnm-1pt-1}
+	\begin{split}
+		(V_t)_{n m}
+		=&
+		\int d\vec{r} d\phi
+		\ \xi^*_{n m}(\vec{r},\phi)
+		\psi_{sb}^I(\vec{r},\phi)
+		\\
+		=&
+		\int d\vec{r} d\phi
+		%\ \xi^*_{n m}(\vec{r},\phi)
+		\ S_n(\vec{r})
+		e^{-i m \phi}
+		%\psi_{sb}^I(\vec{r},\phi)
+		\int d\vec{r}^\prime d\vec{r}^\second
+		\mu_s(\vec{r}^\prime)
+		\mu_s(\vec{r}^\second)
+		\frac
+		{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+		{\lvert \vec{r}-\vec{r}^\prime \rvert}
+		\frac
+		{e^{-\tau(\vec{r}^\second\to\vec{r}^\prime)}}
+		{\lvert \vec{r}^\prime-\vec{r}^\second \rvert}
+		\\
+		&
+		\times
+		e^{-\tau(\vec{r}^\second,-\unitvec{s}^I)} 
+		f(\phi_{\vec{r}-\vec{r}^\prime}-\phi_{\vec{r}^\prime-\vec{r}^\second})
+		f(\phi_{\vec{r}^\prime-\vec{r}^\second}-\phi^I)
+		\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+		\\
+		=&
+		\int d\vec{r}
+		\ S_n(\vec{r})
+		e^{-i m \phi_{\vec{r}-\vec{r}^\prime}}
+		\int d\vec{r}^\prime d\vec{r}^\second
+		\mu_s(\vec{r}^\prime)
+		\mu_s(\vec{r}^\second)
+		\frac
+		{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+		{\lvert \vec{r}-\vec{r}^\prime \rvert}
+		\frac
+		{e^{-\tau(\vec{r}^\second\to\vec{r}^\prime)}}
+		{\lvert \vec{r}^\prime-\vec{r}^\second \rvert}
+		\\
+		&
+		\times
+		e^{-\tau(\vec{r}^\second,-\unitvec{s}^I)} 
+		f(\phi_{\vec{r}-\vec{r}^\prime}-\phi_{\vec{r}^\prime-\vec{r}^\second})
+		f(\phi_{\vec{r}^\prime-\vec{r}^\second}-\phi^I)
+		\\
+		=&
+		S(n)
+		\int d\vec{r}^\prime d\vec{r}^\second
+		e^{-i m \phi_{\vec{r}_n-\vec{r}^\prime}}
+		\mu_s(\vec{r}^\prime)
+		\mu_s(\vec{r}^\second)
+		\frac
+		{e^{-\tau(\vec{r}^\prime\to\vec{r}_n)}}
+		{\lvert \vec{r}_n-\vec{r}^\prime \rvert}
+		\frac
+		{e^{-\tau(\vec{r}^\second\to\vec{r}^\prime)}}
+		{\lvert \vec{r}^\prime-\vec{r}^\second \rvert}
+		\\
+		&
+		\times
+		e^{-\tau(\vec{r}^\second,-\unitvec{s}^I)} 
+		f(\phi_{\vec{r}_n-\vec{r}^\prime}-\phi_{\vec{r}^\prime-\vec{r}^\second})
+		f(\phi_{\vec{r}^\prime-\vec{r}^\second}-\phi^I)
+	\end{split}
+\end{equation}
+After lengthy calculation,
+\begin{equation} \label{eq:result-Vtnm-1pt-sum}
+	(V_t)_{n m}
+	=
+	\sum \limits_{n^\prime, n^\second}
+	\text{\{terms to be summed\}}
+\end{equation}
+The terms to be summed in Eq.\eqref{eq:result-Vtnm-1pt-sum} are:
+\begin{subequations} \label{eq:result-Vtnm-1pt-components}
+	\begin{align}
+		\begin{split} \label{eq:result-Vtnm-1pt-np-n-npp-np}
+			n^\prime \neq n
+			,&
+			n^\second \neq n^\prime
+			\\
+			&
+			S(n)S(n^\prime)S(n^\second)
+			\mu_s(n^\prime)
+			\mu_s(n^\second) 
+			\frac
+			{e^{-i m \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}}
+			{\lvert \vec{r}_n - \vec{r}_{n^\prime} \rvert}
+			\frac
+			{e^{-\tau(\vec{r}_{n^\second} \to \vec{r}_{n^\prime})} }
+			{\lvert \vec{r}_{n^\prime} - \vec{r}_{n^\second} \rvert}
+			\\
+			&
+			\times
+			e^{-\tau(\vec{r}_{n^\second},-\unitvec{s}^I)}
+			f(
+			\phi_{\vec{r}_n-\vec{r}_{n^\prime}}
+			-
+			\phi_{\vec{r}_{n^\prime}-\vec{r}_{n^\second}}
+			)
+			f(
+			\phi_{\vec{r}_{n^\prime}-\vec{r}_{n^\second}}
+			-
+			\phi^I
+			)
+		\end{split}
+		\\
+		\begin{split} \label{eq:result-Vtnm-1pt-npn-npp-np}
+			n^\prime = n
+			,&
+			n^\second \neq n^\prime
+			\\
+			&
+			S(n)^{3/2}
+			S(n^\second)
+			\pi^{-1/2}
+			g^{\lvert m \rvert}
+			\mu_s(n^\prime)
+			\mu_s(n^\second) 
+			e^{-i m \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}
+			\frac
+			{e^{-\tau(\vec{r}_{n^\second} \to \vec{r}_{n^\prime})} }
+			{\lvert \vec{r}_{n^\prime} - \vec{r}_{n^\second} \rvert}
+			\\
+			&
+			\times
+			e^{-\tau(\vec{r}_{n^\second},-\unitvec{s}^I)}
+			f(
+			\phi_{\vec{r}_{n^\prime}-\vec{r}_{n^\second}}
+			-
+			\phi^I
+			) 
+		\end{split}
+		\\
+		\begin{split} \label{eq:result-Vtnm-1pt-np-n-nppnp}
+			n^\prime \neq n
+			,&
+			n^\second = n^\prime
+			\\
+			&
+			S(n)
+			S(n^\prime)^{3/2}
+			\pi^{-1/2}
+			\mu_s^2(n^\prime)
+			\frac
+			{e^{-i m \phi_{\vec{r}_n-\vec{r}_{n^\prime}}}}
+			{\lvert \vec{r}_n - \vec{r}_{n^\prime} \rvert}
+			\\
+			&
+			\times
+			e^{-\tau(\vec{r}_{n^\prime},-\unitvec{s}^I)}
+			f_{g^2}(
+			\phi_{\vec{r}_n-\vec{r}_{n^\prime}}
+			-
+			\phi^I
+			)
+		\end{split}
+		\\
+		\begin{split} \label{eq:result-Vtnm-1pt-npn-nppnp}
+			n^\prime = n
+			,&
+			n^\second = n^\prime
+			\\
+			&
+			S(n)^2
+			\pi^{-1}
+			g^{2 \lvert m \rvert}
+			\mu_s^2(n^\prime)
+			e^{-i m \phi^I}
+			e^{-\tau(\vec{r}_n,-\unitvec{s}^I)}
+		\end{split}
+	\end{align}
+\end{subequations}
+\\
+Solve
+\begin{equation} \label{eq:Z-Xt-Vt}
+	Z\cdot X_t = V_t
+\end{equation}
+for $X_t$.
+Also, considering the contributions from $\psi_b$ and $\psi_{sb}$:
+\begin{subequations} \label{eq:result-Xbnm-1pt-2ndtime-der-Xsbnm-1pt}
+	\begin{align} 
+		(X_b)_{n m}
+		=&
+		S(n)
+		e^{-i m \phi^I}
+		e^{-\tau(\vec{r}_n,-\unitvec{s}^I)}
+		\label{eq:result-Xbnm-1pt-2ndtime}
+		\\
+		\begin{split}
+			(X_{sb})_{n m}
+			=&
+			\int d\vec{r} d\phi
+			\ \xi^*_{n m}(\vec{r},\phi)
+			\psi_{sb}(\vec{r},\phi)
+			\\
+			=& 
+			\int d\vec{r} d\phi
+			\ S_n(\vec{r})
+			e^{-i m \phi}
+			\int d\vec{r}^\prime
+			\frac
+			{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\\
+			&
+			\times
+			\delta(\phi-\phi_{\vec{r}-\vec{r}^\prime})
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+			\\
+			=& 
+			S(n)
+			\int
+			d\vec{r}^\prime
+			e^{-i m \phi_{\vec{r}-\vec{r}^\prime}}
+			\frac
+			{e^{-\tau(\vec{r}^\prime\to\vec{r})}}
+			{\lvert \vec{r}-\vec{r}^\prime \rvert}
+			\\
+			&
+			\times
+			\mu_s(\vec{r}^\prime)
+			f(\phi_{\vec{r}-\vec{r}^\prime}-\phi^I)
+			e^{-\tau(\vec{r}^\prime,-\unitvec{s}^I)} 
+		\end{split}
+		\label{eq:der-Xsbnm-1pt}
+	\end{align}
+\end{subequations}
+Eq.\eqref{eq:result-Xbnm-1pt-2ndtime} is just Eq.\eqref{eq:result-Xbnm-1pt}.
+\\
+The last line of Eq.\eqref{eq:der-Xsbnm-1pt} looks very much the same as Eq.\eqref{eq:der-Vscnm-1pt}, except for the additional factor of $e^{-\tau(\vec{r}^\prime \to \vec{r})}$. 
+Go through the similar procedure as from Eq.\eqref{eq:result-diagonal-Vscnm-1pt} to Eq.\eqref{eq:result-Vscnm-1pt} to get the following result:
+\begin{equation} \label{eq:result-Xsbnm-1pt}
+	\begin{split} 
+		(X_{sb})_{n m}
+		=&
+		\pi^{-1/2}
+		S(n)^{3/2}
+		\mu_s(n)
+		g^{\lvert m \rvert}
+		e^{-i m \phi^I }
+		e^{-\tau(\vec{r}_n,-\unitvec{s}^I)} 
+		\\
+		&+
+		\sum \nolimits_{n^\prime \neq n}
+		\frac
+		{S(n)S(n^\prime)}
+		{\lvert \vec{r}_n - \vec{r}_{n^\prime} \rvert} 
+		\mu_s(n^\prime)
+		e^{-i m \phi_{\vec{r}_n - \vec{r}_{n^\prime}}}
+		f(\phi_{\vec{r}_n - \vec{r}_{n^\prime}}-\phi^I)
+		e^{-\tau(\vec{r}_{n^\prime},-\unitvec{s}^I)} 
+		e^{-\tau(\vec{r}_{n^\prime} \to \vec{r}_n)} 
+		\\
+		=&
+		\pi^{-1/2}
+		S(n)^{1/2}
+		\mu_s(n)
+		damp(n)
+		g_m
+		V_{n m}
+		\\
+		&+
+		\sum \nolimits_{n^\prime=1}^{N_s}
+		Zoff(n,n^\prime)
+		r2rF(n,n^\prime)
+		damp(n^\prime)
+		\mu_s(n^\prime)
+		(v_{n n^\prime})_m
+		r2rdamp(n,n^\prime)
+	\end{split}
+\end{equation}
+In addition to quantities defined in Eq.\eqref{eq:def-Zoff-v-u-g} and Eq.\eqref{eq:def-damp-r2rF}, Eq.\eqref{eq:result-Xsbnm-1pt} defined the following quantity:
+\begin{equation}
+	r2rdamp(n,n^\prime)
+	=
+	e^{-\tau(\vec{r}_{n^\prime} \to \vec{r}_n)} 
+\end{equation}
+The final solution vector is
+\begin{equation} \label{eq:X-Xb-Xsb-Xt}
+	X=X_b+X_{sb}+X_t
+\end{equation}
+
+%\section{Code Implementation}
+%\label{sec:code-implementation}
+%%\subsection{Summary of Formulae}
+%%\label{sub:summary-of-formulae}
+%\subsection{Mesh Generation}
+%\label{sub:mesh-generation}
+%%Used Gmsh to generate mesh file in .msh format.
+%%Wrote Mathematica functions to dump .msh files into .dat files containing nodes and triangles.
+%\subsection{Pre-Computation}
+%\label{sub:pre-computation}
+%\subsection{Fast M-V Multiplication}
+%\label{sub:fast-M-V-multiplication}
+%\subsection{Iterative Solver}
+%\label{sub:iterative-solver}
+%\subsection{First Order - $\psi_b$}
+%\label{sub:first-order-psib}
+%\subsection{Second Order - $\psi_b$ and $\psi_{sb}$}
+%\label{sub:second-order-psib-and-psisb} 
+%\section{What's Next?}
+%\label{sec:whats-next}
+\end{document}

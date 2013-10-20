@@ -1,4 +1,4 @@
-derivation/
+/derivation/*.pdf
 msh/*
 !msh/*.msh
 !msh/*.m
