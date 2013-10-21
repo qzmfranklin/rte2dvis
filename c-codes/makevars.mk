@@ -27,7 +27,7 @@ MLL_LIBS:= -L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 INCS	:=
 LIBS	:= 
 ###############################################################################
-.PHONY:
+#.PHONY:
 .PHONY: all 						\
 	clean cleanx cleanxx 				\
 	install uninstall				\
