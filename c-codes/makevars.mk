@@ -31,6 +31,7 @@ LIBS	:=
 .PHONY: all 						\
 	clean cleanx cleanxx 				\
 	install uninstall				\
+	test
 clean:
 	rm -rf *.o *_tm.c a.out *.d
 cleanx: clean

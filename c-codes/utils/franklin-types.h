@@ -20,8 +20,4 @@
 
 /******************************************************************************/
 
-// Filename typedef and macro
-typedef const char * t_filename;
-
-
 #endif /*_FRANKLIN_TYPES_H_*/
