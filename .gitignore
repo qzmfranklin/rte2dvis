@@ -10,3 +10,4 @@ ML-exe
 log
 *.log
 tags
+notebook/mesh/

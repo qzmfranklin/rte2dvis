@@ -21,8 +21,7 @@
 /******************************************************************************/
 
 // Filename typedef and macro
-typedef const char * const t_filename;
-#define MAX_FILENAME_LENGTH 255
+typedef const char * t_filename;
 
 
 #endif /*_FRANKLIN_TYPES_H_*/
