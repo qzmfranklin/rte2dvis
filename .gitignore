@@ -1,4 +1,4 @@
-/derivation/*.pdf
+derivation/*.pdf
 msh/*
 !msh/*.msh
 !msh/*.m
@@ -11,3 +11,5 @@ log
 *.log
 tags
 notebook/mesh/
+c-codes/utils/*.msh
+c-codes/utils/*_dat*
