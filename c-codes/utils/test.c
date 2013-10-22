@@ -174,11 +174,21 @@ static int test03(int argc, char *argv[]) {
 				break;
 			}
 		}
+		// Read triangles
 		int num_elements;
 		fscanf(fp,"%d",&num_elements);
 		printf("	Number of elements is\n");
 		printf("		%d\n",num_elements);
-		// Read triangles
+		int tri[5],n1,n2,n3;
+		i=0;
+		while (  fscanf(fp,"%d %d %d %d %d",&tri[0],&tri[1],&tri[2],&tri[3],&tri[4])  ) {
+				i++;
+				fgets(buff,BUFSIZ,fp);
+				if (  (tri[1]==2) && (tri[4]==6)  ) {
+					sscanf(buff," %d %d %d\n",&n1,&n2,&n3);
+					printf("\t\t\t%3d\t%d\t%d\t%d\n",i,n1,n2,n3);
+				}
+		}
 		fclose(fp); 
 	}
 	free(cwd);
