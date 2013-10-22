@@ -13,3 +13,4 @@ tags
 notebook/mesh/
 c-codes/utils/*.msh
 c-codes/utils/*_dat*
+c-codes/utils/*.pdf
