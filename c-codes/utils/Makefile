@@ -1,22 +1,21 @@
+# Comment the following line to enable 
 # automatic function inlining
 #NOINLINE := True
-# generat universal binary usig -fPIC instead of fpic
-#UNIVERSAL_BINARY := True
 include ../makevars.mk
-#INCS	:= ${MLL_INCS} ${ML_INCS}
-#LIBS	:= ${MLL_LIBS} ${ML_LIBS} ${MKL_LIBS}
+#INCS	:= ${ML_INCS}
+#LIBS	:= $(MKL_LIBS) $(ML_LIBS) 
 ############################################################################### 
+# This section are the phony targets
 all: test.exe
 test: test.exe
-	@echo "###############################################################################"
-	./$< Makefile MathLink
-	@echo "###############################################################################"
+	./test.exe Makefile test02.log
 	make cleanxx
-############################################################################### 
-test.exe: test.o file-io.o
+###############################################################################
+# Directory-specific targets
+test.exe: file-io.o test.o
 
-test.o: file-io-test.c
-include file-io-test.d
+test.o: test.c
+include test.d
 
 file-io.o: file-io.c
-include file-io.d 
+include file-io.d
