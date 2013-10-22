@@ -6,16 +6,18 @@ int main(int argc, char *argv[]);
 static int test01(int argc, char *argv[]);
 static int test02(int argc, char *argv[]);
 static int test03(int argc, char *argv[]);
+/*static int test04(int argc, char *argv[]);*/
 /******************************************************************************/
 int main(int argc, char *argv[]) {
 	int err=0;
 	printf("###############################################################################\n");
 	printf("START TESTING\n");
-	printf("	FILE IO\n");
+	printf("	FILE I/O\n");
 	printf("\n");
 	err += test01(argc,argv);
 	err += test02(argc,argv);
 	err += test03(argc,argv);
+	/*err += test04(argc,argv);*/
 	if (!err)
 		printf("NORMAL END OF EXECUTION\n");
 	else {
@@ -26,13 +28,12 @@ int main(int argc, char *argv[]) {
 	printf("\n");
 	return err;
 }
-
 /******************************************************************************/
 static int test01(int argc, char *argv[]) {
 	int err = 0;
 	printf("TEST01\n");
 	printf("	Read the system-dependent constant\n");
-	printf("		FILENAME_MAX\n");
+	printf("		FILENAME_MAX = %d\n",FILENAME_MAX);
 	printf("	Read the first augument and the\n");
 	printf("	current working directory (cwd).\n");
 	printf("	Join them into a full path filename\n");
@@ -43,7 +44,6 @@ static int test01(int argc, char *argv[]) {
 	getcwd(cwd,FILENAME_MAX);
 	int n1=strlen(cwd);
 	int n2=strlen(argv[1]);
-	printf("	FILENAME_MAX = %d\n",FILENAME_MAX);
 	printf("	The lengths of cwd and argv[1] are:\n");
 	printf("			%d	%d\n",n1,n2);
 	printf("	The last letters of cwd and argv[1] are:\n");
@@ -99,8 +99,6 @@ static int test02(int argc, char *argv[]) {
 		printf("	Calling system command to read:\n");
 		printf("		$%s\n",cmd);
 		system(cmd);
-	}
-	if (!fp)  {
 		printf("	Close file.\n");
 		fclose(fp); 
 	}
@@ -113,43 +111,74 @@ static int test02(int argc, char *argv[]) {
 static int test03(int argc, char *argv[]) { 
 	int err=0;
 	printf("TEST03\n");
+	printf("	Read the system-dependent constant\n");
+	printf("		BUFSIZ = %d\n",BUFSIZ);
+	printf("	Read out nodes and triangles from\n");
+	printf("		\"%s\"\n",argv[3]);
+	printf("	Dump nodes and triangles.\n");
 	printf("\n");
 
 	char *cwd;
 	cwd = (char*) malloc ( FILENAME_MAX * sizeof(char) );
 	getcwd(cwd,FILENAME_MAX);
 	strcat(cwd,"/");
-	strcat(cwd,argv[2]);
-	printf("	Open file for write:\n");
+	strcat(cwd,argv[3]);
+	printf("	Open file for scan:\n");
 	printf("		%s\n",cwd); 
+
+
+	int num_nodes;
+	int num_triangles;
+	char str_Nodes[]="Nodes";
+	char str_EndNodes[]="EndNodes";
+	char str_Elements[]="Elements"; 
+	char str_EndElements[]="EndElements"; 
+	char buff[BUFSIZ];
 	FILE *fp;
-	if (  !(fp=fopen(cwd,"w+"))  ) { 
+	if (  !(fp=fopen(cwd,"r"))  ) { 
 		// Cannot open file
-		printf("	Cannot open file for write:\n");
+		printf("	Cannot open file for read:\n");
 		printf("		%s\n",cwd);
 		printf("	Abort this test...\n");
-		err = 2;
+		err = 4;
 	}	
 	else {
-		// write to file
-		printf("	Write to the file.\n");
-		fprintf(fp,"Hello World\n");
-		// read and print content
+		int i=0;
+		// Find nodes
+		printf("	Search for \"%s\"...\n",str_Nodes);
+		while (  (fgets(buff,BUFSIZ,fp))  ) {
+			i++;
+			if ( strstr(buff,str_Nodes)  ) {
+				printf("		Found \"%s\" at line %d\n",str_Nodes,i); 
+				break;
+			}
+		}
+		// Read nodes
+		fscanf(fp,"%d",&num_nodes);
+		printf("	Number of nodes is\n");
+		printf("		%d\n",num_nodes);
+		for (i = 0; i < num_nodes; i++) { 
+			int ip,z_zero;
+			double x,y;
+			fscanf(fp,"%d %lf %lf %d\n",&ip,&x,&y,&z_zero);
+			printf("\t\t\t%3d\t%12.8E\t%12.8E\n",ip,x,y);
+		} 
+		// Find triangles
 		rewind(fp);
-		printf("	Read out the content:\n");
-		char a[10],b[10];
-		fscanf(fp,"%s %s\n",a,b);
-		printf("	The first word is:	%s\n",a);
-		printf("	The second word is:	%s\n",b);
-		char cmd[80];
-		strcat(cmd,"cat ");
-		strcat(cmd,argv[2]);
-		printf("	Calling system command to read:\n");
-		printf("		$%s\n",cmd);
-		system(cmd);
-	}
-	if (!fp)  {
-		printf("	Close file.\n");
+		i=0;
+		printf("	Search for \"%s\"...\n",str_Elements);
+		while (  (fgets(buff,BUFSIZ,fp))  ) {
+			i++;
+			if ( strstr(buff,str_Elements)  ) {
+				printf("		Found \"%s\" at line %d\n",str_Elements,i); 
+				break;
+			}
+		}
+		int num_elements;
+		fscanf(fp,"%d",&num_elements);
+		printf("	Number of elements is\n");
+		printf("		%d\n",num_elements);
+		// Read triangles
 		fclose(fp); 
 	}
 	free(cwd);
