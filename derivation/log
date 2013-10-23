@@ -1,5 +1,5 @@
 latex derivation.tex
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_2)
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_3)
  restricted \write18 enabled.
 entering extended mode
 (./derivation.tex
@@ -69,22 +69,26 @@ Package hyperref Warning: Rerun to get /PageLabels entry.
 (/opt/local/share/texmf-texlive/tex/latex/base/ulasy.fd) [1]
 (/opt/local/share/texmf-texlive/tex/latex/base/omlcmr.fd)
 
-LaTeX Warning: Reference `eq:def-VIE' on page 2 undefined on input line 110.
+LaTeX Warning: Reference `eq:def-VIE' on page 2 undefined on input line 109.
 
 
-LaTeX Warning: Reference `eq:short-VIE' on page 2 undefined on input line 116.
+LaTeX Warning: Reference `eq:short-VIE' on page 2 undefined on input line 115.
 
 
-LaTeX Warning: Reference `eq:def-VIE' on page 2 undefined on input line 130.
+LaTeX Warning: Reference `eq:def-VIE' on page 2 undefined on input line 129.
 
 
 LaTeX Warning: Reference `eq:def-psiS-general' on page 2 undefined on input lin
-e 131.
+e 130.
 
 [2]
 
 LaTeX Warning: Reference `eq:exp-psiI-general' on page 3 undefined on input lin
-e 137.
+e 136.
+
+
+LaTeX Warning: Reference `sec:intro-from-rte-to-vie' on page 3 undefined on inp
+ut line 141.
 
 
 LaTeX Warning: Reference `sec:intro-from-rte-to-vie' on page 3 undefined on inp
@@ -92,252 +96,248 @@ ut line 142.
 
 
 LaTeX Warning: Reference `sec:intro-from-rte-to-vie' on page 3 undefined on inp
-ut line 143.
+ut line 151.
 
 
-LaTeX Warning: Reference `sec:intro-from-rte-to-vie' on page 3 undefined on inp
-ut line 152.
-
-
-LaTeX Warning: Reference `eq:exp-psiI-2d' on page 3 undefined on input line 200
+LaTeX Warning: Reference `eq:exp-psiI-2d' on page 3 undefined on input line 199
 .
 
 [3]
 
 LaTeX Warning: Reference `eq:short-vie-2d' on page 4 undefined on input line 30
-3.
+2.
 
 [4]
 
 LaTeX Warning: Reference `eq:def-finite-expansion' on page 5 undefined on input
- line 348.
+ line 347.
 
 
 LaTeX Warning: Reference `eq:def-finite-expansion' on page 5 undefined on input
- line 375.
+ line 374.
 
 
 LaTeX Warning: Reference `eq:def-finite-expansion' on page 5 undefined on input
- line 379.
+ line 378.
 
 
 LaTeX Warning: Reference `eq:short-vie-2d' on page 5 undefined on input line 37
-9.
+8.
 
 
 LaTeX Warning: Reference `eq:def-finite-expansion' on page 5 undefined on input
- line 389.
+ line 388.
 
 
 LaTeX Warning: Reference `eq:short-vie-2d-finite-expansion' on page 5 undefined
- on input line 389.
+ on input line 388.
 
 
-LaTeX Warning: Reference `eq:def-psiS-2d' on page 5 undefined on input line 411
+LaTeX Warning: Reference `eq:def-psiS-2d' on page 5 undefined on input line 410
 .
 
 
 LaTeX Warning: Reference `eq:der-vie-2d-finite-expansion' on page 5 undefined o
-n input line 411.
+n input line 410.
 
 [5]
 
-LaTeX Warning: Reference `eq:short-vie-2d' on page 6 undefined on input line 48
-0.
+LaTeX Warning: Reference `eq:short-vie-2d' on page 6 undefined on input line 47
+9.
 
 (/opt/local/share/texmf-texlive/tex/latex/base/omscmr.fd)
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 495.
+(hyperref)                removing `math shift' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 495.
+(hyperref)                removing `subscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 495.
+(hyperref)                removing `superscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 495.
+(hyperref)                removing `\prime' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 495.
+(hyperref)                removing `superscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 495.
+(hyperref)                removing `\prime' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 495.
+(hyperref)                removing `math shift' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 540.
+(hyperref)                removing `math shift' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 540.
+(hyperref)                removing `subscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 540.
+(hyperref)                removing `superscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 540.
+(hyperref)                removing `\prime' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 540.
+(hyperref)                removing `superscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 540.
+(hyperref)                removing `\prime' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 540.
+(hyperref)                removing `math shift' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 542.
+(hyperref)                removing `math shift' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 542.
+(hyperref)                removing `subscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\neq' on input line 542.
+(hyperref)                removing `\neq' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 542.
+(hyperref)                removing `math shift' on input line 541.
 
 [6]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 599.
+(hyperref)                removing `math shift' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 599.
+(hyperref)                removing `subscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\neq' on input line 599.
+(hyperref)                removing `\neq' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 599.
+(hyperref)                removing `math shift' on input line 598.
 
 
 LaTeX Warning: Reference `eq:der-Bsnmnpmp-off-diagonal' on page 7 undefined on 
-input line 642.
+input line 641.
 
 
 LaTeX Warning: Reference `eq:result-Btnmnpmp-off-diagonal-1pt' on page 7 undefi
-ned on input line 642.
+ned on input line 641.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 658.
+(hyperref)                removing `math shift' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 658.
+(hyperref)                removing `subscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 658.
+(hyperref)                removing `math shift' on input line 657.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -348,354 +348,432 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [7]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 744.
+(hyperref)                removing `math shift' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 744.
+(hyperref)                removing `subscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 744.
+(hyperref)                removing `math shift' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 757.
+(hyperref)                removing `math shift' on input line 756.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 757.
+(hyperref)                removing `subscript' on input line 756.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 757.
+(hyperref)                removing `math shift' on input line 756.
 
 
-LaTeX Warning: Reference `eq:exp-psiI-2d' on page 8 undefined on input line 759
+LaTeX Warning: Reference `eq:exp-psiI-2d' on page 8 undefined on input line 758
 .
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 779.
+(hyperref)                removing `math shift' on input line 778.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 779.
+(hyperref)                removing `math shift' on input line 778.
 
 
 LaTeX Warning: Reference `sec:calculate-matrix-elements' on page 8 undefined on
- input line 781.
+ input line 780.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 864.
+(hyperref)                removing `math shift' on input line 863.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 864.
+(hyperref)                removing `subscript' on input line 863.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 864.
+(hyperref)                removing `math shift' on input line 863.
 
 
 LaTeX Warning: Reference `eq:result-Znmnpmp-1pt' on page 8 undefined on input l
-ine 866.
+ine 865.
 
 
 LaTeX Warning: Reference `eq:result-Vnm-1pt' on page 8 undefined on input line 
-866.
+865.
 
 [8]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1022.
+(hyperref)                removing `math shift' on input line 1021.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1022.
+(hyperref)                removing `subscript' on input line 1021.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1022.
+(hyperref)                removing `math shift' on input line 1021.
 
 [9]
 
 LaTeX Warning: Reference `eq:def-Znnp-diagonal' on page 10 undefined on input l
-ine 1065.
+ine 1064.
 
 
 LaTeX Warning: Reference `eq:def-Znnp-off-diagonal' on page 10 undefined on inp
-ut line 1065.
+ut line 1064.
 
 
-LaTeX Warning: Reference `eq:def-Yn' on page 10 undefined on input line 1065.
+LaTeX Warning: Reference `eq:def-Yn' on page 10 undefined on input line 1064.
 
 
 LaTeX Warning: Reference `eq:result-Yn-diagonal' on page 10 undefined on input 
-line 1140.
+line 1139.
 
 
 LaTeX Warning: Reference `eq:result-Yn-off-diagonal' on page 10 undefined on in
-put line 1140.
+put line 1139.
 
 
-LaTeX Warning: Reference `eq:def-Yn-2' on page 10 undefined on input line 1140.
+LaTeX Warning: Reference `eq:def-Yn-2' on page 10 undefined on input line 1139.
 
 
 
 LaTeX Warning: Reference `eq:def-Zoffnnp' on page 10 undefined on input line 11
-40.
+39.
 
 
 LaTeX Warning: Reference `sec:better-convergence' on page 10 undefined on input
- line 1187.
+ line 1186.
 
 [10]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1193.
+(hyperref)                removing `math shift' on input line 1192.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1193.
+(hyperref)                removing `\psi' on input line 1192.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1193.
+(hyperref)                removing `subscript' on input line 1192.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1193.
+(hyperref)                removing `math shift' on input line 1192.
 
 
-LaTeX Warning: Reference `eq:def-RTE' on page 11 undefined on input line 1197.
+LaTeX Warning: Reference `eq:def-RTE' on page 11 undefined on input line 1196.
 
 
 LaTeX Warning: Reference `eq:def-psi-psib-psisc-general' on page 11 undefined o
-n input line 1217.
+n input line 1216.
 
 
-LaTeX Warning: Reference `eq:def-RTE' on page 11 undefined on input line 1217.
+LaTeX Warning: Reference `eq:def-RTE' on page 11 undefined on input line 1216.
 
 
 LaTeX Warning: Reference `eq:def-psib-psisc-qb-general' on page 11 undefined on
- input line 1306.
+ input line 1305.
 
 
 LaTeX Warning: Reference `eq:der-extracting-psib-general-1' on page 11 undefine
-d on input line 1306.
+d on input line 1305.
 
 
 LaTeX Warning: Reference `eq:def-psib-general' on page 11 undefined on input li
-ne 1307.
+ne 1306.
 
 
 LaTeX Warning: Reference `eq:def-psib-general' on page 11 undefined on input li
-ne 1307.
+ne 1306.
 
 
 LaTeX Warning: Reference `eq:exp-gft-general' on page 11 undefined on input lin
-e 1317.
+e 1316.
 
 
 LaTeX Warning: Reference `eq:def-optical-length-general' on page 11 undefined o
-n input line 1342.
+n input line 1341.
 
 
 LaTeX Warning: Reference `eq:exp-gft-general' on page 11 undefined on input lin
-e 1354.
+e 1353.
 
 
 LaTeX Warning: Reference `eq:exp-gf-general' on page 11 undefined on input line
- 1354.
+ 1353.
 
 
 LaTeX Warning: Reference `eq:def-psiI-general' on page 11 undefined on input li
-ne 1354.
+ne 1353.
 
 
 LaTeX Warning: Reference `eq:exp-psiI-general' on page 11 undefined on input li
-ne 1354.
+ne 1353.
 
 [11]
 
 LaTeX Warning: Reference `subsub:extracting-psib-general' on page 12 undefined 
-on input line 1398.
+on input line 1397.
 
 [12]
 
 LaTeX Warning: Reference `eq:integral-over-rp-decomposition-into-selfterm-plus-
-interactionterm' on page 13 undefined on input line 1699.
+interactionterm' on page 13 undefined on input line 1698.
 
 
 LaTeX Warning: Reference `eq:der-change-variable' on page 13 undefined on input
- line 1699.
+ line 1698.
 
 
 LaTeX Warning: Reference `eq:integral-over-rp-decomposition-into-selfterm-plus-
-interactionterm' on page 13 undefined on input line 1756.
+interactionterm' on page 13 undefined on input line 1755.
 
 
 LaTeX Warning: Reference `eq:def-Zoff-v-u-g' on page 13 undefined on input line
- 1797.
+ 1796.
 
 [13]
 
 LaTeX Warning: Reference `eq:result-Vscnm-1pt' on page 14 undefined on input li
-ne 1852.
+ne 1851.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `math shift' on input line 1916.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1917.
+(hyperref)                removing `\psi' on input line 1916.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1917.
+(hyperref)                removing `subscript' on input line 1916.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `math shift' on input line 1916.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `math shift' on input line 1916.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1917.
+(hyperref)                removing `\psi' on input line 1916.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1917.
+(hyperref)                removing `subscript' on input line 1916.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `math shift' on input line 1916.
 
 
 LaTeX Warning: Reference `sub:extracting-psib' on page 14 undefined on input li
-ne 1921.
+ne 1920.
 
 
 LaTeX Warning: Reference `eq:def-psi-psib-psisb-psit' on page 14 undefined on i
-nput line 1939.
+nput line 1938.
 
 
-LaTeX Warning: Reference `eq:def-RTE' on page 14 undefined on input line 1939.
+LaTeX Warning: Reference `eq:def-RTE' on page 14 undefined on input line 1938.
 
 
 LaTeX Warning: Reference `eq:result-psib-general' on page 14 undefined on input
- line 1994.
+ line 1993.
 
 [14]
 
 LaTeX Warning: Reference `eq:exp-gft-general' on page 15 undefined on input lin
-e 2009.
+e 2008.
 
 
 LaTeX Warning: Reference `subsub:extracting-psib-psisb-general' on page 15 unde
-fined on input line 2013.
+fined on input line 2012.
 
 
 LaTeX Warning: Reference `eq:result-qb-2d-2ndtime' on page 15 undefined on inpu
-t line 2097.
+t line 2096.
 
 
 LaTeX Warning: Reference `eq:result-qb-2d' on page 15 undefined on input line 2
-097.
+096.
 
 
 LaTeX Warning: Reference `eq:result-psib-2d-2ndtime' on page 15 undefined on in
-put line 2099.
+put line 2098.
 
 
 LaTeX Warning: Reference `eq:result-psib-2d' on page 15 undefined on input line
- 2099.
+ 2098.
 
 
 LaTeX Warning: Reference `eq:exp-gft-2d-2ndtime' on page 15 undefined on input 
-line 2101.
+line 2100.
 
 
 LaTeX Warning: Reference `eq:exp-gft-2d' on page 15 undefined on input line 210
-1.
+0.
 
 [15]
 
 LaTeX Warning: Reference `eq:result-Vtnm-1pt-sum' on page 16 undefined on input
- line 2319.
+ line 2318.
 
 [16]
 
 LaTeX Warning: Reference `eq:result-Xbnm-1pt-2ndtime' on page 17 undefined on i
-nput line 2476.
+nput line 2475.
 
 
 LaTeX Warning: Reference `eq:result-Xbnm-1pt' on page 17 undefined on input lin
-e 2476.
+e 2475.
 
 
 LaTeX Warning: Reference `eq:der-Xsbnm-1pt' on page 17 undefined on input line 
-2478.
+2477.
 
 
 LaTeX Warning: Reference `eq:der-Vscnm-1pt' on page 17 undefined on input line 
-2478.
+2477.
 
 
 LaTeX Warning: Reference `eq:result-diagonal-Vscnm-1pt' on page 17 undefined on
- input line 2479.
+ input line 2478.
 
 
 LaTeX Warning: Reference `eq:result-Vscnm-1pt' on page 17 undefined on input li
-ne 2479.
+ne 2478.
 
 
 LaTeX Warning: Reference `eq:def-Zoff-v-u-g' on page 17 undefined on input line
- 2520.
+ 2519.
 
 
 LaTeX Warning: Reference `eq:def-damp-r2rF' on page 17 undefined on input line 
-2520.
+2519.
 
 
 LaTeX Warning: Reference `eq:result-Xsbnm-1pt' on page 17 undefined on input li
-ne 2520.
+ne 2519.
 
-[17] (./derivation.aux)
+[17] [18]
+
+LaTeX Warning: Reference `eq:singular-near-singular-rotate' on page 19 undefine
+d on input line 2740.
+
+
+LaTeX Warning: Reference `eq:def-singular-near-singular-transform-u-v-xp-yp' on
+ page 19 undefined on input line 2741.
+
+
+LaTeX Warning: Reference `eq:general-1D-integral-dt' on page 19 undefined on in
+put line 2799.
+
+
+LaTeX Warning: Reference `eq:singular-near-singular-integral-result' on page 19
+ undefined on input line 2820.
+
+
+LaTeX Warning: Reference `eq:singular-near-singular-integral-result' on page 19
+ undefined on input line 2830.
+
+[19]
+
+LaTeX Warning: Reference `eq:result-singular-near-singular-x1p-x2p-y1p-y2p' on 
+page 20 undefined on input line 2895.
+
+
+LaTeX Warning: Reference `eq:def-singular-near-singular-xmin-xmax' on page 20 u
+ndefined on input line 2896.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+[20] (./derivation.aux)
 
 Package rerunfilecheck Warning: File `derivation.out' has changed.
 (rerunfilecheck)                Rerun to get outlines right
@@ -708,10 +786,10 @@ LaTeX Warning: There were undefined references.
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  )
-Output written on derivation.dvi (17 pages, 119756 bytes).
+Output written on derivation.dvi (20 pages, 137944 bytes).
 Transcript written on derivation.log.
 latex derivation.tex
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_2)
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_3)
  restricted \write18 enabled.
 entering extended mode
 (./derivation.tex
@@ -778,193 +856,193 @@ LaTeX Warning: Label `eq:exp-gf-2d' multiply defined.
 *geometry* detected driver: dvips
 (/opt/local/share/texmf-texlive/tex/latex/amsfonts/umsa.fd)
 (/opt/local/share/texmf-texlive/tex/latex/amsfonts/umsb.fd)
-(/opt/local/share/texmf-texlive/tex/latex/base/ulasy.fd) (./derivation.toc)
-[1] (/opt/local/share/texmf-texlive/tex/latex/base/omlcmr.fd) [2] [3] [4]
-[5] (/opt/local/share/texmf-texlive/tex/latex/base/omscmr.fd)
+(/opt/local/share/texmf-texlive/tex/latex/base/ulasy.fd) (./derivation.toc
+[1]) [2] (/opt/local/share/texmf-texlive/tex/latex/base/omlcmr.fd) [3] [4]
+[5] [6] (/opt/local/share/texmf-texlive/tex/latex/base/omscmr.fd)
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 495.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 495.
+(hyperref)                removing `math shift' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 495.
+(hyperref)                removing `subscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 495.
+(hyperref)                removing `superscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 495.
+(hyperref)                removing `\prime' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 495.
+(hyperref)                removing `superscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 495.
+(hyperref)                removing `\prime' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 540.
+(hyperref)                removing `math shift' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 540.
+(hyperref)                removing `math shift' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 540.
+(hyperref)                removing `subscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 540.
+(hyperref)                removing `superscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 540.
+(hyperref)                removing `\prime' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 540.
+(hyperref)                removing `superscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 540.
+(hyperref)                removing `\prime' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 542.
+(hyperref)                removing `math shift' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `math shift' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `subscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\neq' on input line 542.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `\neq' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 542.
-
-[6]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 599.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `math shift' on input line 541.
+
+[7]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `subscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\neq' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `\neq' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 658.
+(hyperref)                removing `math shift' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `math shift' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `subscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 657.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -972,151 +1050,200 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[7]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 757.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 757.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 757.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 779.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 779.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 864.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 864.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 864.
-
 [8]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1022.
+(hyperref)                removing `math shift' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1022.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1022.
-
-[9] [10]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1193.
+(hyperref)                removing `subscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1193.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1193.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1193.
-
-[11] [12] [13]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1917.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1917.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `math shift' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1917.
+(hyperref)                removing `math shift' on input line 756.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1917.
+(hyperref)                removing `subscript' on input line 756.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `math shift' on input line 756.
 
-[14] [15] [16] [17] (./derivation.aux)
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 778.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 778.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 863.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 863.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 863.
+
+[9]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1021.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 1021.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1021.
+
+[10] [11]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1192.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 1192.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 1192.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1192.
+
+[12] [13] [14]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1916.
+
+[15] [16] [17] [18] [19] [20]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+[21] (./derivation.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  )
-Output written on derivation.dvi (17 pages, 155816 bytes).
+Output written on derivation.dvi (21 pages, 183616 bytes).
 Transcript written on derivation.log.
 latex derivation.tex
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_2)
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_3)
  restricted \write18 enabled.
 entering extended mode
 (./derivation.tex
@@ -1183,193 +1310,193 @@ LaTeX Warning: Label `eq:exp-gf-2d' multiply defined.
 *geometry* detected driver: dvips
 (/opt/local/share/texmf-texlive/tex/latex/amsfonts/umsa.fd)
 (/opt/local/share/texmf-texlive/tex/latex/amsfonts/umsb.fd)
-(/opt/local/share/texmf-texlive/tex/latex/base/ulasy.fd) (./derivation.toc)
-[1] (/opt/local/share/texmf-texlive/tex/latex/base/omlcmr.fd) [2] [3] [4]
-[5] (/opt/local/share/texmf-texlive/tex/latex/base/omscmr.fd)
+(/opt/local/share/texmf-texlive/tex/latex/base/ulasy.fd) (./derivation.toc
+[1]) [2] (/opt/local/share/texmf-texlive/tex/latex/base/omlcmr.fd) [3] [4]
+[5] [6] (/opt/local/share/texmf-texlive/tex/latex/base/omscmr.fd)
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 495.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 495.
+(hyperref)                removing `math shift' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 495.
+(hyperref)                removing `subscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 495.
+(hyperref)                removing `superscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 495.
+(hyperref)                removing `\prime' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 495.
+(hyperref)                removing `superscript' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 495.
+(hyperref)                removing `\prime' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 540.
+(hyperref)                removing `math shift' on input line 494.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 540.
+(hyperref)                removing `math shift' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 540.
+(hyperref)                removing `subscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 540.
+(hyperref)                removing `superscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 540.
+(hyperref)                removing `\prime' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 540.
+(hyperref)                removing `superscript' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 540.
+(hyperref)                removing `\prime' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 542.
+(hyperref)                removing `math shift' on input line 539.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `math shift' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `subscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\neq' on input line 542.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 542.
+(hyperref)                removing `\neq' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 542.
+(hyperref)                removing `superscript' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 542.
-
-[6]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 599.
+(hyperref)                removing `\prime' on input line 541.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `math shift' on input line 541.
+
+[7]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `subscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\neq' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 599.
+(hyperref)                removing `\neq' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 599.
+(hyperref)                removing `superscript' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 599.
+(hyperref)                removing `\prime' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 658.
+(hyperref)                removing `math shift' on input line 598.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `math shift' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `subscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 658.
+(hyperref)                removing `superscript' on input line 657.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 658.
+(hyperref)                removing `\prime' on input line 657.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 657.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1377,148 +1504,197 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[7]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\prime' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 744.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 757.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 757.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 757.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 779.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 779.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 864.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 864.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 864.
-
 [8]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1022.
+(hyperref)                removing `math shift' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1022.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1022.
-
-[9] [10]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1193.
+(hyperref)                removing `subscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1193.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1193.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1193.
-
-[11] [12] [13]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1917.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1917.
+(hyperref)                removing `superscript' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `\prime' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `math shift' on input line 743.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\psi' on input line 1917.
+(hyperref)                removing `math shift' on input line 756.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 1917.
+(hyperref)                removing `subscript' on input line 756.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1917.
+(hyperref)                removing `math shift' on input line 756.
 
-[14] [15] [16] [17] (./derivation.aux)
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 778.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 778.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 863.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 863.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 863.
+
+[9]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1021.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 1021.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1021.
+
+[10] [11]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1192.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 1192.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 1192.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1192.
+
+[12] [13] [14]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 1916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1916.
+
+[15] [16] [17] [18] [19] [20]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2916.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\psi' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 2918.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2918.
+
+[21] (./derivation.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  )
-Output written on derivation.dvi (17 pages, 155816 bytes).
+Output written on derivation.dvi (21 pages, 183620 bytes).
 Transcript written on derivation.log.
 dvipdf derivation.dvi
 #dvipdf derivation.dvi
@@ -1528,7 +1704,7 @@ dvipdf derivation.dvi
 #dvipdf derivation.dvi
 #dvipdf derivation.dvi
 latex notes1.tex
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_2)
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_3)
  restricted \write18 enabled.
 entering extended mode
 (./notes1.tex
@@ -1627,7 +1803,7 @@ dvipdf notes1.dvi
 #dvipdf notes1.dvi
 #dvipdf notes1.dvi
 latex notes2.tex
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_2)
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/MacPorts 2013_3)
  restricted \write18 enabled.
 entering extended mode
 (./notes2.tex
