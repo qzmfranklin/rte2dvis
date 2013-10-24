@@ -3023,21 +3023,51 @@ The observation point is $(x_0,y_0,z)$ with possible non-vanishing $z$.
 Use cylindrical coordinates:
 \begin{subequations} \label{eq:def-radial-angular-method-xp-yp-rp-varphip}
 	\begin{align} 
-		x^{\prime} =& = x-x_0 = r^{\prime} \cos{\varphi^{\prime}}	\\
-		y^{\prime} =& = y-y_0 = r^{\prime} \sin{\varphi^{\prime}}
+		x^{\prime} =& x-x_0 = r^{\prime} \cos{\varphi^{\prime}}	\\
+		y^{\prime} =& y-y_0 = r^{\prime} \sin{\varphi^{\prime}}
 	\end{align}
 \end{subequations}
 The radial-angular method used the following transorm for singularity cancellation:
 \begin{subequations} \label{eq:def-radial-angular-method-u-v-J}
 	\begin{align}
-		u =& \ln{\tan{\frac{\varphi}{2}}}				\\
-		v =& R = \sqrt{ {x^{\prime}}^2 + {y^{\prime}}^2 + z^2 }		\\
-		J =& \frac{R}{\cosh{u}}
+		\begin{split} 
+			u 
+			=&
+				-
+				\ln{\tan{\frac{\varphi^{\prime}}{2}}}
+			\\
+			=&
+				\ln\bigg(
+					\sqrt{ 1 + \bigg(
+						\frac{x^{\prime}}{y^{\prime}} \bigg)^2 }
+					+
+					\frac{x^{\prime}}{y^{\prime}}
+				\bigg) 
+			\\
+			=&
+				\sinh^{-1} \bigg(
+					\frac{x^{\prime}}{y^{\prime}}
+				\bigg)
+		\end{split}
+		\\
+		v
+		=&
+			R
+			= 
+			\sqrt{ {x^{\prime}}^2 + {y^{\prime}}^2 + z^2 }	
+		\\
+		J
+		=&
+			\frac{R}{\cosh{u}}
 	\end{align}
 \end{subequations}
 Note that
-\begin{equation} \label{eq:radial-angular-method-tanvarphiover2-eu}
-	\tan{\frac{\varphi^{\prime}}{2}} = e^{u}
+\begin{equation} \label{eq:radial-angular-method-tanvarphiover2-eu-xp2-yp2-rp2}
+	\begin{split} 
+		\tan{\frac{\varphi^{\prime}}{2}}	=&	e^{-u}
+		\\
+		{x^{\prime}}^2 + {y^{\prime}}^2		=&	{r^{\prime}}^2
+	\end{split}
 \end{equation}
 The inverse transform is:
 \begin{subequations} \label{eq:radial-angular-method-xp-yp-u-v}
@@ -3049,7 +3079,6 @@ The inverse transform is:
 			{ 1-{\tan{\frac{\varphi^{\prime}}{2}}}^2 }
 			{ 1+{\tan{\frac{\varphi^{\prime}}{2}}}^2 }
 		=
-			-
 			\frac{ \sqrt{v^2-z^2} } { \cosh{u} }
 			\sinh{u}
 		\\
@@ -3063,6 +3092,61 @@ The inverse transform is:
 			\frac{ \sqrt{v^2-z^2} } { \cosh{u} }
 	\end{align}
 \end{subequations}
+With $z$, the integral domain in the $u-v$ plane is nolong rectangular:
+\begin{equation} \label{eq:radial-angular-method-uL-uU-vL-uU}
+	\begin{split} 
+		u_L	=&
+			-\ln{\tan{\frac{\varphi^{\prime}_L}{2}}}
+			= 
+			\ln\bigg(
+				\sqrt{1+\bigg(\frac{x_L}{h}\bigg)^2}
+				+ \frac{x_L}{h}
+			\bigg)
+		\\
+		u_U	=&
+			-\ln{\tan{\frac{\varphi^{\prime}_U}{2}}}
+			= 
+			\ln\bigg(
+				\sqrt{1+\bigg(\frac{x_U}{h}\bigg)^2}
+				+ \frac{x_U}{h}
+			\bigg)
+		\\
+		v_L	=&	\lvert z \rvert				\\
+		v_U(u)	=&	\sqrt{ z^2 + (h \cosh{u})^2 }		\\ 
+	\end{split}
+\end{equation}
+The integral $I$ can be evaluated:
+\begin{equation} \label{eq:radial-angular-method-quadrature-rule-result}
+	\begin{split} 
+		I
+		=&
+		\iint \limits_{\Delta P_0 P_1 P_2}
+		dx dy
+		\frac{ f(x,y) } { \sqrt{ (x-x_0)^2 + (y-y_0)^2 + z^2 } }
+		\\
+		=&
+		(u_U-u_L)
+		\sum \nolimits_{i,j}^{N_u,N_v} 
+		\frac{ v_U-v_L }{ \cosh{u^i} }
+		w_u^i w_v^j
+		f(x,y)
+		\big\vert
+		_{ (u^i,v^{i,j}) }
+		\\
+		=&
+		(u_U-u_L)
+		\sum \nolimits_{i,j}^{N_u,N_v} 
+		\bigg [
+			\sqrt{ h^2 + \bigg(
+				\frac{ \lvert z \rvert } { \cosh{u^i} } \bigg)^2 }
+			- \frac{ \lvert z \rvert } { \cosh{u^i} }
+		\bigg ]
+		w_u^i w_v^j
+		f(x,y)
+		\big\vert
+		_{ (u^i,v^{i,j}) }
+	\end{split}
+\end{equation}
 The resulted summary of equations is:
 \begin{subequations} \label{eq:radial-angular-method-summary-of-equations}
 	\begin{align}
@@ -3075,12 +3159,16 @@ The resulted summary of equations is:
 			\\
 			=&
 			(u_U-u_L)
-			(v_U-v_L)
 			\sum \nolimits_{i,j}^{N_u,N_v} 
+			\bigg [
+				\sqrt{ h^2 + \bigg(
+					\frac{ \lvert z \rvert } { \cosh{u^i} } \bigg)^2 }
+				- \frac{ \lvert z \rvert } { \cosh{u^i} }
+			\bigg ]
 			w_u^i w_v^j
-			\frac{ f(x,y) }{ \cosh{u} }
+			f(x,y)
 			\big\vert
-			_{ (u^i,v^j) }
+			_{ (u^i,v^{i,j}) }
 		\end{split}
 		\\
 		x_1^{\prime}	
@@ -3135,16 +3223,26 @@ The resulted summary of equations is:
 			\lvert x_2^{\prime} \rvert
 		\}
 		\\
-		u_L	=&	\ln{\tan{\frac{\varphi_L}{2}}}		\\
-		u_U	=&	\ln{\tan{\frac{\varphi_U}{2}}}		\\
+		u_L	=&
+			\ln\bigg(
+				\sqrt{1+\bigg(\frac{x_L}{h}\bigg)^2}
+				+ \frac{x_L}{h}
+			\bigg)
+		\\
+		u_U	=&
+			\ln\bigg(
+				\sqrt{1+\bigg(\frac{x_U}{h}\bigg)^2}
+				+ \frac{x_U}{h}
+			\bigg)
+		\\
 		v_L	=&	\lvert z \rvert				\\
-		v_U	=&	\sqrt{ z^2 + (h \cosh{u})^2 }		\\ 
+		v_U(u)	=&	\sqrt{ z^2 + (h \cosh{u})^2 }		\\ 
 		\begin{split} 
 			\begin{pmatrix} 
 				x					\\
 				y
 			\end{pmatrix}
-			\bigg\vert _{ (u^i,v^j) }
+			\bigg\vert _{ (u^i,v^{i,j}) }
 			=& 
 			\begin{pmatrix}
 				x_0					\\
@@ -3158,7 +3256,7 @@ The resulted summary of equations is:
 			\end{pmatrix}
 			\frac{ \sqrt{{v^j}^2-z^2} } { \cosh{u^i} } 
 			\begin{pmatrix}
-				-\sinh{u^i}				\\
+				\sinh{u^i}				\\
 				1
 			\end{pmatrix}
 		\end{split}
@@ -3166,22 +3264,34 @@ The resulted summary of equations is:
 		\begin{split} 
 			\begin{pmatrix}
 				u^i					\\
-				v^j
+				v^{i,j}
 			\end{pmatrix}
 			=&
-			\begin{pmatrix}
+			%\begin{pmatrix}
+				%u_L
+				%+ 
+				%u_U
+				%\ \xi_u^i				\\
+				%v_L
+				%+ 
+				%v_U^i
+				%\ \xi_v^j				
+			%\end{pmatrix}
+			=
+			\begin{pmatrix} 
 				u_L
 				+ 
 				u_U
 				\ \xi_u^i				\\
 				v_L
 				+ 
-				v_U
-				\ \xi_v^j				\\
+				\sqrt{ z^2 + (h \cosh{u^i})^2 }
+				\ \xi_v^j				
 			\end{pmatrix}
 		\end{split}
 	\end{align}
 \end{subequations}
+
 
 
 
