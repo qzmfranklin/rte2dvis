@@ -14,3 +14,6 @@ notebook/mesh/
 c-codes/utils/*.msh
 c-codes/utils/*_dat*
 c-codes/utils/*.pdf
+c-codes/utils/*.info
+c-codes/utils/*.nodes
+c-codes/utils/*.triangles

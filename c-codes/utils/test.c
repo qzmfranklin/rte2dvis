@@ -6,7 +6,7 @@ int main(int argc, char *argv[]);
 static int test01(int argc, char *argv[]);
 static int test02(int argc, char *argv[]);
 static int test03(int argc, char *argv[]);
-/*static int test04(int argc, char *argv[]);*/
+static int test04(int argc, char *argv[]);
 /******************************************************************************/
 int main(int argc, char *argv[]) {
 	int err=0;
@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
 	err += test01(argc,argv);
 	err += test02(argc,argv);
 	err += test03(argc,argv);
+	err += test04(argc,argv);
 	/*err += test04(argc,argv);*/
 	if (!err)
 		printf("NORMAL END OF EXECUTION\n");
@@ -32,11 +33,11 @@ int main(int argc, char *argv[]) {
 static int test01(int argc, char *argv[]) {
 	int err = 0;
 	printf("TEST01\n");
-	printf("	Read the system-dependent constant\n");
-	printf("		FILENAME_MAX = %d\n",FILENAME_MAX);
-	printf("	Read the first augument and the\n");
-	printf("	current working directory (cwd).\n");
-	printf("	Join them into a full path filename\n");
+	printf("	|Read the system-dependent constant\n");
+	printf("	|	FILENAME_MAX = %d\n",FILENAME_MAX);
+	printf("	|Read the FIRST augument and the\n");
+	printf("	|current working directory (cwd).\n");
+	printf("	|Join them into a full path filename\n");
 	printf("\n");
 
 	char *cwd;
@@ -61,10 +62,10 @@ static int test01(int argc, char *argv[]) {
 static int test02(int argc, char *argv[]) {
 	int err=0;
 	printf("TEST02\n");
-	printf("	Read the second argument as the\n");
-	printf("	filename. Create the file. Write\n");
-	printf("	\"Hello World\" into it. Read and\n");
-	printf("	print out the content.\n");
+	printf("	|Read the SECOND argument as the\n");
+	printf("	|filename. Create the file. Write\n");
+	printf("	|\"Hello World\" into it. Read and\n");
+	printf("	|print out the content.\n");
 	printf("\n");
 
 	char *cwd;
@@ -111,11 +112,13 @@ static int test02(int argc, char *argv[]) {
 static int test03(int argc, char *argv[]) { 
 	int err=0;
 	printf("TEST03\n");
-	printf("	Read the system-dependent constant\n");
-	printf("		BUFSIZ = %d\n",BUFSIZ);
-	printf("	Read out nodes and triangles from\n");
-	printf("		\"%s\"\n",argv[3]);
-	printf("	Dump nodes and triangles.\n");
+	printf("	|Read the system-dependent constant\n");
+	printf("	|	BUFSIZ = %d\n",BUFSIZ);
+	printf("	|Read out nodes and triangles from\n");
+	printf("	|	argv[3] = \"%s\"\n",argv[3]);
+	printf("	|Dump nodes and triangles.\n");
+	printf("	|This test also serves as the trial\n");
+	printf("	|for fileio_dump_msh_file().\n");
 	printf("\n");
 
 	char *cwd;
@@ -193,6 +196,38 @@ static int test03(int argc, char *argv[]) {
 	}
 	free(cwd);
 	printf("END OF TEST03\n");
+	printf("\n");
+	return err;
+}
+
+static int test04(int argc, char *argv[]) {
+	int err = 0;
+	printf("TEST04\n");
+	printf("	|Test fileio_dump_msh_file()\n");
+	printf("	|	filename_in = argv[3] = %s\n",argv[3]);
+	printf("	|	filename_out= argv[4] = %s\n",argv[4]);
+
+	char *file_in;
+	char *file_out;
+	file_in = (char*) malloc ( FILENAME_MAX * sizeof(char) );
+	file_out= (char*) malloc ( FILENAME_MAX * sizeof(char) );
+	getcwd(file_in, FILENAME_MAX);
+	getcwd(file_out,FILENAME_MAX);
+	strcat(file_in, "/");
+	strcat(file_out,"/");
+	strcat(file_in, argv[3]);
+	strcat(file_out,argv[4]); 
+	printf("\n"); 
+
+	printf("	Calling fileio_dump_msh_file(  file_in,	file_out  )...\n");
+	printf("		file_in  = %s\n",file_in);
+	printf("		file_out = %s\n",file_out);
+	fileio_dump_msh_file(file_in,file_out);
+	printf("	Finished running fileio_dump_msh_file.\n"); 
+
+	free(file_in);
+	free(file_out);
+	printf("END OF TEST04\n");
 	printf("\n");
 	return err;
 }

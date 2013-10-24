@@ -35,8 +35,8 @@ LIBS	:=
 clean:
 	rm -rf *.o *_tm.c a.out *.d
 cleanx: clean
-	rm -rf log *.s
-cleanxx: cleanx
+	rm -rf log *.log *.s
+cleanxx: clean
 	rm -rf *.dylib *.so *.a *.exe a.out 
 ############################################################################### 
 .SUFFIXES:

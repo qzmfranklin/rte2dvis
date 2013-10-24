@@ -8,8 +8,10 @@ include ../makevars.mk
 # This section are the phony targets
 all: test.exe
 test: test.exe
-	./test.exe Makefile test02.log example.msh
+	./test.exe Makefile test02.log example.msh dump_msh_example
 	make cleanxx
+cleanx: clean
+	rm -rf log *.log *.s *.info *.nodes *.triangles
 ###############################################################################
 # Directory-specific targets
 test.exe: test.o file-io.o 
