@@ -2531,7 +2531,7 @@ The final solution vectorsymtor is
 \label{sec:quadrature-rules}
 This section documents the equations good for code implementation.
 \subsection{Gaussian Quadrature Rules (not finished yet)}
-\label{subsec:gaussian-quadrature-rules}
+\label{sub:gaussian-quadrature-rules}
 A general 1D integral
 \begin{equation} \label{eq:general-1D-integral-dx}
 	\int \nolimits_{a}^{b}
@@ -2580,8 +2580,8 @@ The integrand is singular at $P_0$
 Usually $\sqrt{(x-x_0)^2+(y-y_0)^2}$ is denoted as $R$. 
 The above integrand is called $R^{-1}$ singular.
 \\
-Rotate the axis (passive perspective of rotation) so that the $y^{\prime}$-axis align with the normal direction of $\overrightarrow{P_1 P_2}$, namely $\unitvectorsym{n}$.
-The new coordinates are
+Shift the origin to $P_0$, then rotate the axes (passive perspective of rotation) so that the $y^{\prime}$-axis align with the normal direction of $\overrightarrow{P_1 P_2}$, namely $\unitvectorsym{n}$.
+The transformed coordinates are
 \begin{equation} \label{eq:singular-near-singular-rotate}
 	\begin{pmatrix}
 		x^{\prime}					\\
@@ -2598,7 +2598,7 @@ The new coordinates are
 		y-y_0
 	\end{pmatrix}
 \end{equation}
-So that $P_1$ and $P_2$ have the following new coordinates:
+$P_1$ and $P_2$ have the following transormed coordinates:
 \begin{subequations} \label{eq:result-singular-near-singular-x1p-x2p-y1p-y2p}
 	\begin{align}
 		x_1^{\prime}	
@@ -2638,36 +2638,56 @@ So that $P_1$ and $P_2$ have the following new coordinates:
 		\lvert y_2^{\prime} \rvert
 	\end{align}
 \end{subequations}
-Do the following transform
-\begin{subequations}  \label{eq:def-singular-near-singular-transform-u-v-xp-yp}
-	\begin{align} 
-		\begin{split}
-		       u
-		       =&
-		       \sinh^{-1}
-		       (
-				\frac
-				{x^{\prime}}
-				{y^{\prime}}
-		       )
-		       \\
-		       v
-		       =&
-		       y^{\prime}
-		\end{split}
+Define
+\begin{equation} \label{eq:def-singular-near-singular-xL-xU}
+	\begin{split} 
+		x_L
+		=&
+		\min
+		\{
+			\lvert x_1^{\prime} \rvert,
+			\lvert x_2^{\prime} \rvert
+		\}
 		\\
-		\begin{split}
-			x^{\prime}
-			=& 
-			v
-			\sinh(u)
-			\\
-			y^{\prime}
-			=&
-			v
-		\end{split}
-	\end{align}
-\end{subequations}
+		x_U
+		=&
+		\max
+		\{
+			\lvert x_1^{\prime} \rvert,
+			\lvert x_2^{\prime} \rvert
+		\}
+	\end{split} 
+\end{equation}
+Do the following $\sinh^{-1}$ transform
+\begin{equation}  \label{eq:def-singular-near-singular-transform-u-v-xp-yp}
+	\begin{split}
+	       u
+	       =&
+	       \sinh^{-1}
+	       (
+			\frac
+			{x^{\prime}}
+			{y^{\prime}}
+	       )
+	       \\
+	       v
+	       =&
+	       y^{\prime}
+	\end{split}
+\end{equation}
+The inverse trnsform is:
+\begin{equation}  \label{eq:def-singular-near-singular-transform-xp-yp-u-v}
+	\begin{split}
+		x^{\prime}
+		=& 
+		v
+		\sinh(u)
+		\\
+		y^{\prime}
+		=&
+		v
+	\end{split}
+\end{equation}
 $u$ and $v$ are called the transverse and the radial coordinates, respectively.
 \\
 The Jacobian cancels the $R^{-1}$ divergence in the original integrand:
@@ -2685,6 +2705,8 @@ The Jacobian cancels the $R^{-1}$ divergence in the original integrand:
 		+
 		{y^{\prime}}^2
 	}
+	=
+	R
 \end{equation}
 The triangular area defined by $P_0 P_1 P_2$ in $x-y,x^{\prime}-y^{\prime}$ plane is thus transformed into a rectangular area in $u-v$ plane.
 \begin{equation} \label{eq:singular-near-singular-integral-result}
@@ -2707,38 +2729,25 @@ The triangular area defined by $P_0 P_1 P_2$ in $x-y,x^{\prime}-y^{\prime}$ plan
 		\\
 		=&
 		\int 
-		\nolimits
-		_{\sinh^{-1}(\frac{x_{\min}}{h})}
-		^{\sinh^{-1}(\frac{x_{\max}}{h})}
+		\nolimits_{u_L}^{u_U}
 		du
 		\int 
-		\nolimits_{0}^{h} 
+		\nolimits_{v_L}^{v_U}
 		dv
 		\ f(x,y)
 	\end{split}
 \end{equation}
-Where
-\begin{equation} \label{eq:def-singular-near-singular-xmin-xmax}
-	\begin{split} 
-		x_{\min}
-		=&
-		\min
-		\{
-			\lvert x_1^{\prime} \rvert,
-			\lvert x_2^{\prime} \rvert
-		\}
-		\\
-		x_{\max}
-		=&
-		\max
-		\{
-			\lvert x_1^{\prime} \rvert,
-			\lvert x_2^{\prime} \rvert
-		\}
-	\end{split} 
+where
+\begin{equation} \label{eq:def-singular-near-singular-uL-uU-vL-vU}
+	\begin{split}
+		u_L	=&	\sinh^{-1}(x_L/h)		\\
+		u_U	=&	\sinh^{-1}(x_U/h)		\\
+		v_L	=&	0				\\
+		v_U	=&	h				
+	\end{split}
 \end{equation}
 Use Eq.\eqref{eq:singular-near-singular-rotate} 
-and Eq.\eqref{eq:def-singular-near-singular-transform-u-v-xp-yp} 
+and Eq.\eqref{eq:def-singular-near-singular-transform-xp-yp-u-v} 
 to express $x,y$ in terms of $u,v$:
 \begin{equation} \label{eq:singular-near-singular-x-y-u-v}
 	\begin{split} 
@@ -2747,6 +2756,22 @@ to express $x,y$ in terms of $u,v$:
 			y
 		\end{pmatrix}
 		=&
+		%\begin{pmatrix}
+			%x_0					\\
+			%y_0
+		%\end{pmatrix}
+		%+
+		%\frac{1}{\lvert \overrightarrow{P_1 P_2} \rvert}
+		%\begin{pmatrix} 
+			%x_2-x_1 	& 	-y_2+y_1	\\
+			%y_2-y_1 	& 	x_2-x_1		
+		%\end{pmatrix}
+		%\begin{pmatrix}
+			%x^{\prime}				\\
+			%y^{\prime}					
+		%\end{pmatrix}
+		%\\
+		%=& 
 		\begin{pmatrix}
 			x_0					\\
 			y_0
@@ -2758,34 +2783,18 @@ to express $x,y$ in terms of $u,v$:
 			y_2-y_1 	& 	x_2-x_1		
 		\end{pmatrix}
 		\begin{pmatrix}
-			x^{\prime}				\\
-			y^{\prime}					
-		\end{pmatrix}
-		\\
-		=& 
-		\begin{pmatrix}
-			x_0					\\
-			y_0
-		\end{pmatrix}
-		+
-		\frac{1}{\lvert \overrightarrow{P_1 P_2} \rvert}
-		\begin{pmatrix} 
-			x_2-x_1 	& 	-y_2+y_1	\\
-			y_2-y_1 	& 	x_2-x_1		
-		\end{pmatrix}
-		\begin{pmatrix}
-			v \sinh(u)				\\
+			v \sinh{u}				\\
 			v
 		\end{pmatrix}
 	\end{split}
 \end{equation}
-The standard Gaussian quadrature rules are often given for $(-1,1)$ as $\{\xi^i,w^i\}$,
+The standard Gaussian quadrature rules are often given for $(0,1)$ as $\{\xi^i,w^i\}$,
 where $\xi^i$ is the $i$-th abscissas an the $w^i$ is the $i$-th weight.
 \\
 As an example, the $n$-th order Gauss-Legendre rule 
 \begin{equation} \label{eq:singular-near-singular-gauss-legendre-rule-example}
 	\begin{split} 
-		\int \nolimits_{0}^{+1}
+		\int \nolimits_{0}^{1}
 		f(x)
 		dx
 		=&
@@ -2819,12 +2828,12 @@ For an integral from $a$ to $b$, similar to Eq.\eqref{eq:general-1D-integral-dt}
 For a rectangular area in $u-v$ plane, 
 as in Eq.\eqref{eq:singular-near-singular-integral-result},
 simply use the product of two independent Gauss-Legendre rules.
-Construct two Gaussian quadrature rules for $u$- and $v$- axis, respectively.
+Construct two standard Gaussian quadrature rules, i.e., for $(0,1)$, for $u$- and $v$- axis, respectively.
 \begin{equation} \label{eq:singular-near-singular-xiu-xiv}
 	\begin{split} 
-		\{ \xi_u^i, w_u^i \}
+		\{ \xi_u^i, w_u^i \}_{i=1}^{N_u}
 		\\
-		\{ \xi_v^j, w_v^j \}
+		\{ \xi_v^j, w_v^j \}_{j=1}^{N_v}
 	\end{split}
 \end{equation}
 Eq.\eqref{eq:singular-near-singular-integral-result} becomes
@@ -2833,15 +2842,8 @@ Eq.\eqref{eq:singular-near-singular-integral-result} becomes
 		I
 		=&
 		h
-		\ [
-			\sinh^{-1}(\frac{x_{\max}}{h})
-			-
-			\sinh^{-1}(\frac{x_{\min}}{h})
-		]
-		\\
-		\times
-		&
-		\sum \nolimits_{i,j}^{n_u,n_v} 
+		(x_U-x_L)
+		\sum \nolimits_{i,j}^{N_u,N_v} 
 		w_u^i w_v^j
 		f(x,y)
 		\big\vert
@@ -2869,7 +2871,7 @@ The $(x,y)$ coordinates can be obtained by:
 				y_2-y_1 	& 	x_2-x_1		
 			\end{pmatrix}
 			\begin{pmatrix}
-				v^j \sinh(u^i)				\\
+				v^j \sinh{u^i}				\\
 				v^j
 			\end{pmatrix}
 		\end{split}
@@ -2881,9 +2883,9 @@ The $(x,y)$ coordinates can be obtained by:
 			\end{pmatrix}
 			=&
 			\begin{pmatrix}
-				\sinh^{-1}(x_{\min})
+				u_L
 				+ 
-				\sinh^{-1}(x_{\max})
+				u_U
 				\ \xi_u^i				\\
 				h
 				\ \xi_v^j
@@ -2891,11 +2893,297 @@ The $(x,y)$ coordinates can be obtained by:
 		\end{split}
 	\end{align}
 \end{subequations}
-Note that $x_{\max}$ and $x_{\min}$ are calculated
+Note that $x_L$ and $x_U$ are calculated
 by Eq.\eqref{eq:result-singular-near-singular-x1p-x2p-y1p-y2p}
-and Eq.\eqref{eq:def-singular-near-singular-xmin-xmax}.
+and Eq.\eqref{eq:def-singular-near-singular-xL-xU}.  
 \\
-Done with integrals for a single triangle!
+Summary of equations for the $\sinh^{-1}$ transform method:
+\begin{subequations} \label{eq:singular-near-singular-summary-of-arsh-equations}
+	\begin{align}
+		\begin{split} 
+			I
+			=&
+			\iint \limits_{\Delta P_0 P_1 P_2}
+			dx dy
+			\frac{ f(x,y) } { \sqrt{ (x-x_0)^2 + (y-y_0)^2 } }
+			\\
+			=&
+			h
+			(u_U-u_L)
+			\sum \nolimits_{i,j}^{N_u,N_v} 
+			w_u^i w_v^j
+			f(x,y)
+			\big\vert
+			_{ (u^i,v^j) }
+		\end{split}
+		\\
+		x_1^{\prime}	
+		=&	
+		[
+			(x_2-x_1)(x_1-x_0)
+			+ 
+			(y_2-y_1)(y_1-y_0)
+		]
+		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+		\\ 
+		x_2^{\prime}	
+		=&	
+		[
+			(x_2-x_1)(x_2-x_0)
+			+ 
+			(y_2-y_1)(y_2-y_0)
+		]
+		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+		\\
+		y_1^{\prime}
+		=y_2^{\prime}
+		=& 
+		[
+			(x_1-x_2)y_0
+			+
+			(x_2-x_0)y_1
+			+
+			(x_0-x_1)y_2 
+		]
+		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+		\\
+		h
+		=&
+		\lvert y_1^{\prime} \rvert
+		=
+		\lvert y_2^{\prime} \rvert
+		\\
+		x_L
+		=&
+		\min
+		\{
+			\lvert x_1^{\prime} \rvert,
+			\lvert x_2^{\prime} \rvert
+		\}
+		\\
+		x_U
+		=&
+		\max
+		\{
+			\lvert x_1^{\prime} \rvert,
+			\lvert x_2^{\prime} \rvert
+		\}
+		\\
+		u_L	=&	\sinh^{-1}(x_L/h)		\\
+		u_U	=&	\sinh^{-1}(x_U/h)		\\
+		v_L	=&	0				\\
+		v_U	=&	h				
+		\\ 
+		\begin{split} 
+			\begin{pmatrix} 
+				x					\\
+				y
+			\end{pmatrix}
+			\bigg\vert _{ (u^i,v^j) }
+			=& 
+			\begin{pmatrix}
+				x_0					\\
+				y_0
+			\end{pmatrix}
+			+
+			\frac{1}{\lvert \overrightarrow{P_1 P_2} \rvert}
+			\begin{pmatrix} 
+				x_2-x_1 	& 	-y_2+y_1	\\
+				y_2-y_1 	& 	x_2-x_1		
+			\end{pmatrix}
+			\begin{pmatrix}
+				v^j \sinh{u^i}				\\
+				v^j
+			\end{pmatrix}
+		\end{split}
+		\\
+		\begin{split} 
+			\begin{pmatrix}
+				u^i					\\
+				v^j
+			\end{pmatrix}
+			=&
+			\begin{pmatrix}
+				u_L
+				+ 
+				u_U
+				\ \xi_u^i				\\
+				h
+				\ \xi_v^j
+			\end{pmatrix}
+		\end{split}
+	\end{align}
+\end{subequations}
+\subsection{Radial-Angular Method}
+\label{sub:radial-angular-method}
+We may also use the radial-angular method proposed by Khayat and Wilton [Khayat, Wilton, 2005 Oct].
+The $R$ is general 3D.
+The observation point is $(x_0,y_0,z)$ with possible non-vanishing $z$.
+\\
+Use cylindrical coordinates:
+\begin{subequations} \label{eq:def-radial-angular-method-xp-yp-rp-varphip}
+	\begin{align} 
+		x^{\prime} =& = x-x_0 = r^{\prime} \cos{\varphi^{\prime}}	\\
+		y^{\prime} =& = y-y_0 = r^{\prime} \sin{\varphi^{\prime}}
+	\end{align}
+\end{subequations}
+The radial-angular method used the following transorm for singularity cancellation:
+\begin{subequations} \label{eq:def-radial-angular-method-u-v-J}
+	\begin{align}
+		u =& \ln{\tan{\frac{\varphi}{2}}}				\\
+		v =& R = \sqrt{ {x^{\prime}}^2 + {y^{\prime}}^2 + z^2 }		\\
+		J =& \frac{R}{\cosh{u}}
+	\end{align}
+\end{subequations}
+Note that
+\begin{equation} \label{eq:radial-angular-method-tanvarphiover2-eu}
+	\tan{\frac{\varphi^{\prime}}{2}} = e^{u}
+\end{equation}
+The inverse transform is:
+\begin{subequations} \label{eq:radial-angular-method-xp-yp-u-v}
+	\begin{align}
+		x^{\prime} 
+		=& 
+			r^{\prime}
+			\frac
+			{ 1-{\tan{\frac{\varphi^{\prime}}{2}}}^2 }
+			{ 1+{\tan{\frac{\varphi^{\prime}}{2}}}^2 }
+		=
+			-
+			\frac{ \sqrt{v^2-z^2} } { \cosh{u} }
+			\sinh{u}
+		\\
+		y^{\prime}
+		=& 
+			r^{\prime}
+			\frac
+			{ 2 \tan{\frac{\varphi^{\prime}}{2}} }
+			{ 1+{\tan{\frac{\varphi^{\prime}}{2}}}^2 }
+		= 
+			\frac{ \sqrt{v^2-z^2} } { \cosh{u} }
+	\end{align}
+\end{subequations}
+The resulted summary of equations is:
+\begin{subequations} \label{eq:radial-angular-method-summary-of-equations}
+	\begin{align}
+		\begin{split} 
+			I
+			=&
+			\iint \limits_{\Delta P_0 P_1 P_2}
+			dx dy
+			\frac{ f(x,y) } { \sqrt{ (x-x_0)^2 + (y-y_0)^2 + z^2 } }
+			\\
+			=&
+			(u_U-u_L)
+			(v_U-v_L)
+			\sum \nolimits_{i,j}^{N_u,N_v} 
+			w_u^i w_v^j
+			\frac{ f(x,y) }{ \cosh{u} }
+			\big\vert
+			_{ (u^i,v^j) }
+		\end{split}
+		\\
+		x_1^{\prime}	
+		=&	
+		[
+			(x_2-x_1)(x_1-x_0)
+			+ 
+			(y_2-y_1)(y_1-y_0)
+		]
+		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+		\\ 
+		x_2^{\prime}	
+		=&	
+		[
+			(x_2-x_1)(x_2-x_0)
+			+ 
+			(y_2-y_1)(y_2-y_0)
+		]
+		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+		\\
+		y_1^{\prime}
+		=y_2^{\prime}
+		=& 
+		[
+			(x_1-x_2)y_0
+			+
+			(x_2-x_0)y_1
+			+
+			(x_0-x_1)y_2 
+		]
+		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+		\\
+		h
+		=&
+		\lvert y_1^{\prime} \rvert
+		=
+		\lvert y_2^{\prime} \rvert
+		\\
+		x_L
+		=&
+		\min
+		\{
+			\lvert x_1^{\prime} \rvert,
+			\lvert x_2^{\prime} \rvert
+		\}
+		\\
+		x_U
+		=&
+		\max
+		\{
+			\lvert x_1^{\prime} \rvert,
+			\lvert x_2^{\prime} \rvert
+		\}
+		\\
+		u_L	=&	\ln{\tan{\frac{\varphi_L}{2}}}		\\
+		u_U	=&	\ln{\tan{\frac{\varphi_U}{2}}}		\\
+		v_L	=&	\lvert z \rvert				\\
+		v_U	=&	\sqrt{ z^2 + (h \cosh{u})^2 }		\\ 
+		\begin{split} 
+			\begin{pmatrix} 
+				x					\\
+				y
+			\end{pmatrix}
+			\bigg\vert _{ (u^i,v^j) }
+			=& 
+			\begin{pmatrix}
+				x_0					\\
+				y_0
+			\end{pmatrix}
+			+
+			\frac{1}{\lvert \overrightarrow{P_1 P_2} \rvert}
+			\begin{pmatrix} 
+				x_2-x_1 	& 	-y_2+y_1	\\
+				y_2-y_1 	& 	x_2-x_1		
+			\end{pmatrix}
+			\frac{ \sqrt{{v^j}^2-z^2} } { \cosh{u^i} } 
+			\begin{pmatrix}
+				-\sinh{u^i}				\\
+				1
+			\end{pmatrix}
+		\end{split}
+		\\
+		\begin{split} 
+			\begin{pmatrix}
+				u^i					\\
+				v^j
+			\end{pmatrix}
+			=&
+			\begin{pmatrix}
+				u_L
+				+ 
+				u_U
+				\ \xi_u^i				\\
+				v_L
+				+ 
+				v_U
+				\ \xi_v^j				\\
+			\end{pmatrix}
+		\end{split}
+	\end{align}
+\end{subequations}
+
+
 
 
 
