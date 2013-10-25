@@ -224,7 +224,7 @@ static int test04(int argc, char *argv[]) {
 	printf("		file_in  = %s\n",file_in);
 	printf("		file_out = %s\n",file_out);
 	fileio_dump_msh_file(file_in,file_out);
-	printf("	Finished running fileio_dump_msh_file.\n"); 
+	printf("	Finished running fileio_dump_msh_file().\n"); 
 
 	free(file_in);
 	free(file_out);

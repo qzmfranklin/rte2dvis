@@ -2645,16 +2645,20 @@ Define
 		=&
 		\min
 		\{
-			\lvert x_1^{\prime} \rvert,
-			\lvert x_2^{\prime} \rvert
+			%\lvert x_1^{\prime} \rvert,
+			%\lvert x_2^{\prime} \rvert
+			x_1^{\prime},
+			x_2^{\prime}
 		\}
 		\\
 		x_U
 		=&
 		\max
 		\{
-			\lvert x_1^{\prime} \rvert,
-			\lvert x_2^{\prime} \rvert
+			%\lvert x_1^{\prime} \rvert,
+			%\lvert x_2^{\prime} \rvert
+			x_1^{\prime},
+			x_2^{\prime}
 		\}
 	\end{split} 
 \end{equation}
@@ -2675,7 +2679,7 @@ Do the following $\sinh^{-1}$ transform
 	       y^{\prime}
 	\end{split}
 \end{equation}
-The inverse trnsform is:
+The inverse transform is:
 \begin{equation}  \label{eq:def-singular-near-singular-transform-xp-yp-u-v}
 	\begin{split}
 		x^{\prime}
@@ -2746,6 +2750,8 @@ where
 		v_U	=&	h				
 	\end{split}
 \end{equation}
+Note that due to the monotinicity of the $\sinh^{-1}$ function, $u_U-u_L>0$.
+\\
 Use Eq.\eqref{eq:singular-near-singular-rotate} 
 and Eq.\eqref{eq:def-singular-near-singular-transform-xp-yp-u-v} 
 to express $x,y$ in terms of $u,v$:
@@ -2829,7 +2835,7 @@ For a rectangular area in $u-v$ plane,
 as in Eq.\eqref{eq:singular-near-singular-integral-result},
 simply use the product of two independent Gauss-Legendre rules.
 Construct two standard Gaussian quadrature rules, i.e., for $(0,1)$, for $u$- and $v$- axis, respectively.
-\begin{equation} \label{eq:singular-near-singular-xiu-xiv}
+\begin{equation} \label{eq:singular-near-singular-xiui-wui-xivj-wvj}
 	\begin{split} 
 		\{ \xi_u^i, w_u^i \}_{i=1}^{N_u}
 		\\
@@ -2957,16 +2963,16 @@ Summary of equations for the $\sinh^{-1}$ transform method:
 		=&
 		\min
 		\{
-			\lvert x_1^{\prime} \rvert,
-			\lvert x_2^{\prime} \rvert
+			x_1^{\prime},
+			x_2^{\prime}
 		\}
 		\\
 		x_U
 		=&
 		\max
 		\{
-			\lvert x_1^{\prime} \rvert,
-			\lvert x_2^{\prime} \rvert
+			x_1^{\prime},
+			x_2^{\prime}
 		\}
 		\\
 		u_L	=&	\sinh^{-1}(x_L/h)		\\
@@ -3016,7 +3022,7 @@ Summary of equations for the $\sinh^{-1}$ transform method:
 \end{subequations}
 \subsection{Radial-Angular Method}
 \label{sub:radial-angular-method}
-We may also use the radial-angular method proposed by Khayat and Wilton [Khayat, Wilton, 2008 Oct].
+We may also use the radial-angular method proposed by Khayat and Wilton [Khayat, Wilton, 2008].
 The $R$ is general 3D.
 The observation point is $(x_0,y_0,z)$ with possible non-vanishing $z$.
 \\
@@ -3092,7 +3098,7 @@ The inverse transform is:
 			\frac{ \sqrt{v^2-z^2} } { \cosh{u} }
 	\end{align}
 \end{subequations}
-With $z$, the integral domain in the $u-v$ plane is nolong rectangular:
+With $z$, the integral domain in the $u-v$ plane is no longer rectangular.  
 \begin{equation} \label{eq:radial-angular-method-uL-uU-vL-uU}
 	\begin{split} 
 		u_L	=&
@@ -3115,7 +3121,7 @@ With $z$, the integral domain in the $u-v$ plane is nolong rectangular:
 		v_U(u)	=&	\sqrt{ z^2 + (h \cosh{u})^2 }		\\ 
 	\end{split}
 \end{equation}
-The integral $I$ can be evaluated:
+However, the integral $I$ can still be evaluated using the same set of basic 1D quadrature rules as in Eq.\eqref{eq:singular-near-singular-xiui-wui-xivj-wvj}
 \begin{equation} \label{eq:radial-angular-method-quadrature-rule-result}
 	\begin{split} 
 		I
@@ -3215,16 +3221,16 @@ The resulted summary of equations is:
 		=&
 		\min
 		\{
-			\lvert x_1^{\prime} \rvert,
-			\lvert x_2^{\prime} \rvert
+			x_1^{\prime},
+			x_2^{\prime}
 		\}
 		\\
 		x_U
 		=&
 		\max
 		\{
-			\lvert x_1^{\prime} \rvert,
-			\lvert x_2^{\prime} \rvert
+			x_1^{\prime},
+			x_2^{\prime}
 		\}
 		\\
 		u_L	=&
@@ -3258,7 +3264,7 @@ The resulted summary of equations is:
 				x_2-x_1 	& 	-y_2+y_1	\\
 				y_2-y_1 	& 	x_2-x_1		
 			\end{pmatrix}
-			\frac{ \sqrt{{v^j}^2-z^2} } { \cosh{u^i} } 
+			\frac{ \sqrt{{v^{i,j}}^2-z^2} } { \cosh{u^i} } 
 			\begin{pmatrix}
 				\sinh{u^i}				\\
 				1
