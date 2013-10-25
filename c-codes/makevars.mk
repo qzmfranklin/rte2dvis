@@ -25,7 +25,7 @@ MLL_LIBS:= -L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 # The default empty include directories and 
 # linking libraries for specific directories
 INCS	:=
-LIBS	:= 
+LIBS	:= ${MKL_LIBS}
 ###############################################################################
 #.PHONY:
 .PHONY: all 						\
@@ -33,7 +33,7 @@ LIBS	:=
 	install uninstall				\
 	test
 clean:
-	rm -rf *.o *_tm.c a.out *.d
+	rm -rf *.o *_tm.c a.out *.d*
 cleanx: clean
 	rm -rf log *.log *.s
 cleanxx: clean
@@ -42,17 +42,17 @@ cleanxx: clean
 .SUFFIXES:
 .SUFFIXES: .tm .c .cpp .o .exe .s .d
 %.o: %.c
-	$(CC) $(CFLAGS) ${INCS} -c $<
+	$(CC) -c $< $(CFLAGS) ${INCS}
+%.s: %.c 
+	$(CC) -S $< $(CFLAGS) ${INCS}
+%.exe: %.o 
+	$(CC) $(filter %.o,$^) -o $@ ${INCS} $(LIBS) 
+%.dylib: %.o
+	$(CC) -dynamiclib $(filter %.o,$^) -o $@ ${INCS} $(LIBS)
+%.a: %.o
+	$(CC) -staticlib $(filter %.o,$^) -o $@ ${INCS} $(LIBS)
 %.d: %.c
 	@set -e; rm -f $@; \
 	${CC} -M ${CFLAGS} ${INCS} $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
-%.s: %.c 
-	$(CC) $(CFLAGS) ${INCS} -S $< 
-%.exe: %.o 
-	$(CC) $(filter %.o,$^) ${INCS} $(LIBS) -o $@ 
-%.dylib: %.o
-	$(CC) -dynamiclib $(filter %.o,$^) ${INCS} $(LIBS) -o $@ 
-%.a: %.o
-	$(CC) -staticlib $(filter %.o,$^) ${INCS} $(LIBS) -o $@ 

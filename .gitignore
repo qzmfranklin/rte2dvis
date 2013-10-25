@@ -8,7 +8,6 @@ MLL-lib
 ML-exe
 *.txt
 log
-*.log
 tags
 notebook/mesh/
 c-codes/utils/*.msh
@@ -22,4 +21,4 @@ derivation/*.aux
 derivation/*.out
 derivation/*.pdf
 derivation/*.dvi
-derivation/*.toc
+derivation/*.toc 

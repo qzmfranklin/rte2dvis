@@ -3,7 +3,7 @@
 #NOINLINE := True
 include ../makevars.mk
 #INCS	:= ${ML_INCS}
-#LIBS	:= $(MKL_LIBS) $(ML_LIBS) 
+LIBS	:= ${MKL_LIBS}	# $(ML_LIBS) 
 ############################################################################### 
 # This section are the phony targets
 all: test.exe

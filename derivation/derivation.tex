@@ -3016,7 +3016,7 @@ Summary of equations for the $\sinh^{-1}$ transform method:
 \end{subequations}
 \subsection{Radial-Angular Method}
 \label{sub:radial-angular-method}
-We may also use the radial-angular method proposed by Khayat and Wilton [Khayat, Wilton, 2005 Oct].
+We may also use the radial-angular method proposed by Khayat and Wilton [Khayat, Wilton, 2008 Oct].
 The $R$ is general 3D.
 The observation point is $(x_0,y_0,z)$ with possible non-vanishing $z$.
 \\
@@ -3160,16 +3160,20 @@ The resulted summary of equations is:
 			=&
 			(u_U-u_L)
 			\sum \nolimits_{i,j}^{N_u,N_v} 
-			\bigg [
-				\sqrt{ h^2 + \bigg(
-					\frac{ \lvert z \rvert } { \cosh{u^i} } \bigg)^2 }
-				- \frac{ \lvert z \rvert } { \cosh{u^i} }
-			\bigg ]
-			w_u^i w_v^j
+			W^{i,j}
 			f(x,y)
 			\big\vert
 			_{ (u^i,v^{i,j}) }
 		\end{split}
+		\\
+		W^{i,j}
+		=& 
+			\big [
+				\sqrt{ h^2 + (
+					{ \lvert z \rvert } / { \cosh{u^i} } )^2 }
+				- { \lvert z \rvert } / { \cosh{u^i} }
+			\big ]
+			w_u^i w_v^j
 		\\
 		x_1^{\prime}	
 		=&	
@@ -3224,16 +3228,16 @@ The resulted summary of equations is:
 		\}
 		\\
 		u_L	=&
-			\ln\bigg(
-				\sqrt{1+\bigg(\frac{x_L}{h}\bigg)^2}
-				+ \frac{x_L}{h}
-			\bigg)
+			\ln\big[
+				\sqrt{1+({x_L}/{h})^2}
+				+ {x_L}/{h}
+			\big]
 		\\
 		u_U	=&
-			\ln\bigg(
-				\sqrt{1+\bigg(\frac{x_U}{h}\bigg)^2}
-				+ \frac{x_U}{h}
-			\bigg)
+			\ln\big[
+				\sqrt{1+({x_U}/{h})^2}
+				+ {x_U}/{h}
+			\big]
 		\\
 		v_L	=&	\lvert z \rvert				\\
 		v_U(u)	=&	\sqrt{ z^2 + (h \cosh{u})^2 }		\\ 
@@ -3267,16 +3271,6 @@ The resulted summary of equations is:
 				v^{i,j}
 			\end{pmatrix}
 			=&
-			%\begin{pmatrix}
-				%u_L
-				%+ 
-				%u_U
-				%\ \xi_u^i				\\
-				%v_L
-				%+ 
-				%v_U^i
-				%\ \xi_v^j				
-			%\end{pmatrix}
 			=
 			\begin{pmatrix} 
 				u_L
@@ -3291,6 +3285,9 @@ The resulted summary of equations is:
 		\end{split}
 	\end{align}
 \end{subequations}
+
+\subsection{Duffy Transform}
+\label{sub:duffy-transform}
 
 
 

@@ -1,6 +1,7 @@
 #include "file-io.h"
 #include <stdio.h>
 #include <string.h>
+#include <mkl.h>
 
 int main(int argc, char *argv[]);
 static int test01(int argc, char *argv[]);

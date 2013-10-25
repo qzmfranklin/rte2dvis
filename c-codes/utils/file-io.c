@@ -1,8 +1,9 @@
-#include "franklin-types.h" 
+#include "franklin-types.h"
 #include <stdio.h>
 #include <assert.h>
 #include <limits.h>
 #include <float.h>
+#include <mkl.h>
 
 typedef const char * t_filename;
 /******************************************************************************/ 
