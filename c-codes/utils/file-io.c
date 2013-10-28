@@ -19,11 +19,19 @@ int	fileio_dump_msh_file(			const char * filename_msh,
 void fileio_read_rte2dvis_input_file( t_filename filename ){
 }
 
-int	fileio_read_info_nodes_triangles(					
-					const char * filename_base,		
-					double * nodes,		int num_nodes,
-					int * triangles,	int num_triangles )
+int	fileio_read_info_nodes_triangles(	const char * filename_base,		
+						double * nodes,		int num_nodes,
+						int * triangles,	int num_triangles )
 {
+	// This function shall be used WITH the 
+	// corresponding fileio_dump_msh_file()
+	// function. Otherwise the fscanf format
+	// string, i.e., the %25.19E part, might
+	// not match.
+	//
+	// In the future, I might be able to make
+	// this function to auto-detect the proper
+	// fscanf format string.
 	int err=0;
 	printf("--------------------------------------------------\n");
 	printf("BEGIN:	FILEIO_READ_INFO_NODES_TRIANGLES\n");
@@ -35,10 +43,16 @@ int	fileio_read_info_nodes_triangles(
 	printf("		filename_base.info\n");
 	printf("	Inputs:\n");
 	printf("		const char * filename_base:	base name of ASCII files to read\n");
+	printf("	Outputs:\n");
 	printf("		double * nodes:			array to store nodes\n");
 	printf("		int num_nodes:			number of nodes\n");
 	printf("		double * triangles:		array to store triangles\n");
 	printf("		int num_triangles:		number of triangles\n");
+	printf("	Ownership:\n");
+	printf("		Used MKL_MALLOC to allocate memory for\n");
+	printf("		double * nodes and double * triangles.\n");
+	printf("		But did NOT free them. Need to free the\n");
+	printf("		two pointers manually by the user.\n");
 
 
 
@@ -50,6 +64,11 @@ int	fileio_read_info_nodes_triangles(
 }
 
 int fileio_dump_msh_file( const char * filename_in, const char * filename_out ) {
+	// This function is expressibly made suitable 
+	// for being integrated into a standalone 
+	// program that reads an MSH file and dumps 
+	// the nodes and triangles into separate ASCII 
+	// files.
 	int err=0;
 	printf("--------------------------------------------------\n");
 	printf("BEGIN:	FILEIO_DUMP_MSH_FILE\n");

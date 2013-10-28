@@ -6,7 +6,7 @@ include ../makevars.mk
 LIBS	:= ${MKL_LIBS}	# $(ML_LIBS) 
 ############################################################################### 
 # This section are the phony targets
-all: test.exe
+all: file-io.o
 test: test.exe
 	./test.exe Makefile test02.log example.msh dump_msh_example
 	make cleanxx
@@ -16,8 +16,8 @@ cleanx: clean
 # Directory-specific targets
 test.exe: test.o file-io.o 
 
-test.o: test.c
+test.o: test.c				
 include test.d
 
-file-io.o: file-io.c
+file-io.o: file-io.c			
 include file-io.d

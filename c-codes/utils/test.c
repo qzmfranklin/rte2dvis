@@ -1,4 +1,4 @@
-#include "file-io.h"
+#include "file-io.h" 
 #include <stdio.h>
 #include <string.h>
 #include <mkl.h>
@@ -8,6 +8,7 @@ static int test01(int argc, char *argv[]);
 static int test02(int argc, char *argv[]);
 static int test03(int argc, char *argv[]);
 static int test04(int argc, char *argv[]);
+static int test05(int argc, char *argv[]);
 /******************************************************************************/
 int main(int argc, char *argv[]) {
 	int err=0;
@@ -19,6 +20,7 @@ int main(int argc, char *argv[]) {
 	err += test02(argc,argv);
 	err += test03(argc,argv);
 	err += test04(argc,argv);
+	err += test05(argc,argv);
 	/*err += test04(argc,argv);*/
 	if (!err)
 		printf("NORMAL END OF EXECUTION\n");
@@ -204,7 +206,7 @@ static int test03(int argc, char *argv[]) {
 static int test04(int argc, char *argv[]) {
 	int err = 0;
 	printf("TEST04\n");
-	printf("	|Test fileio_dump_msh_file()\n");
+	printf("	|Test FILEIO_DUMP_MSH_FILE()\n");
 	printf("	|	filename_in = argv[3] = %s\n",argv[3]);
 	printf("	|	filename_out= argv[4] = %s\n",argv[4]);
 
@@ -220,15 +222,39 @@ static int test04(int argc, char *argv[]) {
 	strcat(file_out,argv[4]); 
 	printf("\n"); 
 
-	printf("	Calling fileio_dump_msh_file(  file_in,	file_out  )...\n");
+	printf("	Calling FILEIO_DUMP_MSH_FILE(  file_in,	file_out  )...\n");
 	printf("		file_in  = %s\n",file_in);
 	printf("		file_out = %s\n",file_out);
-	fileio_dump_msh_file(file_in,file_out);
-	printf("	Finished running fileio_dump_msh_file().\n"); 
+	err += fileio_dump_msh_file(file_in,file_out);
+	printf("	Finished running FILEIO_DUMP_MSH_FILE().\n"); 
 
 	free(file_in);
 	free(file_out);
 	printf("END OF TEST04\n");
+	printf("\n");
+	return err;
+}
+
+static int test05(int argc, char *argv[]) {
+	int err = 0;
+	printf("TEST05\n");
+	printf("	|Test FILEIO_READ_INFO_NODES_TRIANGLES()\n");
+	printf("	|	filename_base = argv[4] = %s\n",argv[4]);
+
+	char *filename_base;
+	filename_base = (char*) malloc ( FILENAME_MAX * sizeof(char) );
+	getcwd(filename_base, FILENAME_MAX);
+	strcat(filename_base, "/");
+	strcat(filename_base, argv[4]);
+	printf("\n"); 
+
+	printf("	Calling FILEIO_READ_INFO_NODES_TRIANGLES(  filename_base, file_out  )...\n");
+	printf("		filename_base  = %s\n",filename_base);
+	/*fileio_read_info_nodes_triangles(filename_base,);*/
+	printf("	Finished running FILEIO_READ_INFO_NODES_TRIANGLES().\n"); 
+
+	free(filename_base);
+	printf("END OF TEST05\n");
 	printf("\n");
 	return err;
 }
