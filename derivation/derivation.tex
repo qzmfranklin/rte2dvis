@@ -2633,50 +2633,27 @@ $P_1$ and $P_2$ have the following transormed coordinates:
 		\\
 		h
 		=&
-		\lvert y_1^{\prime} \rvert
+		y_1^{\prime}
 		=
-		\lvert y_2^{\prime} \rvert
+		y_2^{\prime}
 	\end{align}
 \end{subequations}
 Define
-\begin{equation} \label{eq:def-singular-near-singular-xL-xU}
-	\begin{split} 
-		x_L
-		=&
-		\min
-		\{
-			%\lvert x_1^{\prime} \rvert,
-			%\lvert x_2^{\prime} \rvert
-			x_1^{\prime},
-			x_2^{\prime}
-		\}
-		\\
-		x_U
-		=&
-		\max
-		\{
-			%\lvert x_1^{\prime} \rvert,
-			%\lvert x_2^{\prime} \rvert
-			x_1^{\prime},
-			x_2^{\prime}
-		\}
-	\end{split} 
-\end{equation}
 Do the following $\sinh^{-1}$ transform
 \begin{equation}  \label{eq:def-singular-near-singular-transform-u-v-xp-yp}
 	\begin{split}
 	       u
 	       =&
-	       \sinh^{-1}
-	       (
-			\frac
-			{x^{\prime}}
-			{y^{\prime}}
-	       )
+		       \sinh^{-1}
+		       \left(
+				\frac
+				{x^{\prime}}
+				{y^{\prime}}
+		       \right)
 	       \\
 	       v
 	       =&
-	       y^{\prime}
+	       		y^{\prime}
 	\end{split}
 \end{equation}
 The inverse transform is:
@@ -2684,12 +2661,12 @@ The inverse transform is:
 	\begin{split}
 		x^{\prime}
 		=& 
-		v
-		\sinh(u)
+			v
+			\sinh{u}
 		\\
 		y^{\prime}
 		=&
-		v
+			v
 	\end{split}
 \end{equation}
 $u$ and $v$ are called the transverse and the radial coordinates, respectively.
@@ -2717,41 +2694,45 @@ The triangular area defined by $P_0 P_1 P_2$ in $x-y,x^{\prime}-y^{\prime}$ plan
 	\begin{split} 
 		I
 		=&
-		\iint 
-		\limits_{\Delta P_0 P_1 P_2}
-		dx dy
-		\frac{ f(x,y) }
-		{ \sqrt{(x-x_0)^2+(y-y_0)^2} }
+			\iint 
+			\limits_{\Delta P_0 P_1 P_2}
+			dx dy
+			\frac{ f(x,y) }
+			{ \sqrt{(x-x_0)^2+(y-y_0)^2} }
 		\\
 		=& 
-		\iint 
-		\limits_{\Delta P_0 P_1 P_2}
-		\frac
-		{  dx^{\prime} dy^{\prime}  }
-		{ \sqrt{{x^{\prime}}^2+{y^{\prime}}^2} }
-		f(x(x^{\prime},y^{\prime}),y(x^{\prime},y^{\prime}))
+			\iint 
+			\limits_{\Delta P_0 P_1 P_2}
+			\frac
+			{  dx^{\prime} dy^{\prime}  }
+			{ \sqrt{{x^{\prime}}^2+{y^{\prime}}^2} }
+			f(x(x^{\prime},y^{\prime}),y(x^{\prime},y^{\prime}))
 		\\
 		=&
-		\int 
-		\nolimits_{u_L}^{u_U}
-		du
-		\int 
-		\nolimits_{v_L}^{v_U}
-		dv
-		\ f(x,y)
+			\int 
+			\nolimits_{u_<}^{u_>}
+			du
+			\int 
+			\nolimits_{v_<}^{v_>}
+			dv
+			\ f(x,y)
 	\end{split}
 \end{equation}
-where
-\begin{equation} \label{eq:def-singular-near-singular-uL-uU-vL-vU}
+where $u_<(u_>)$ and $v_<(v_>)$ are the smaller(larger) 
+one of $u_1,u_2$ and $v_1,v_2$, respectively:
+\begin{equation} \label{eq:def-singular-near-singular-u1-u2-v1-v2}
 	\begin{split}
-		u_L	=&	\sinh^{-1}(x_L/h)		\\
-		u_U	=&	\sinh^{-1}(x_U/h)		\\
-		v_L	=&	0				\\
-		v_U	=&	h				
+		\begin{cases}
+			u_1	=	\sinh^{-1}(x_1^{\prime}/h)		\\
+			u_2	=	\sinh^{-1}(x_2^{\prime}/h)
+		\end{cases}
+		\ \ \ \ \ \ \ \ 
+		\begin{cases} 
+			v_1	=	0					\\
+			v_2	=	h
+		\end{cases}
 	\end{split}
 \end{equation}
-Note that due to the monotinicity of the $\sinh^{-1}$ function, $u_U-u_L>0$.
-\\
 Use Eq.\eqref{eq:singular-near-singular-rotate} 
 and Eq.\eqref{eq:def-singular-near-singular-transform-xp-yp-u-v} 
 to express $x,y$ in terms of $u,v$:
@@ -2762,22 +2743,6 @@ to express $x,y$ in terms of $u,v$:
 			y
 		\end{pmatrix}
 		=&
-		%\begin{pmatrix}
-			%x_0					\\
-			%y_0
-		%\end{pmatrix}
-		%+
-		%\frac{1}{\lvert \overrightarrow{P_1 P_2} \rvert}
-		%\begin{pmatrix} 
-			%x_2-x_1 	& 	-y_2+y_1	\\
-			%y_2-y_1 	& 	x_2-x_1		
-		%\end{pmatrix}
-		%\begin{pmatrix}
-			%x^{\prime}				\\
-			%y^{\prime}					
-		%\end{pmatrix}
-		%\\
-		%=& 
 		\begin{pmatrix}
 			x_0					\\
 			y_0
@@ -2817,17 +2782,17 @@ For an integral from $a$ to $b$, similar to Eq.\eqref{eq:general-1D-integral-dt}
 		\int \nolimits_{a}^{b}
 		f(x)
 		dx
-		=& 
-		(b-a)
-		\int \nolimits_{-1}^{+1} 
-		f(a+b\ t)
-		dt
+		=&
+			(b-a)
+			\int \nolimits_{-1}^{+1} 
+			f[a+(b-a)t]
+			dt
 		\\
 		=&
-		(b-a)
-		\sum \limits_{i}^{n}
-		w^i
-		f(a+b\ \xi^i)
+			(b-a)
+			\sum \limits_{i}^{n}
+			w^i
+			f[a+(b-a)\xi^i]
 	\end{split}
 \end{equation}
 \\
@@ -2836,6 +2801,27 @@ as in Eq.\eqref{eq:singular-near-singular-integral-result},
 simply use the product of two independent Gauss-Legendre rules.
 Construct two standard Gaussian quadrature rules, i.e., for $(0,1)$, for $u$- and $v$- axis, respectively.
 \begin{equation} \label{eq:singular-near-singular-xiui-wui-xivj-wvj}
+	\begin{split} 
+		\begin{pmatrix}
+			u^i					\\
+			v^j
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			u_1
+			+ 
+			\left( u_2 - u_1 \right)
+			\ \xi_u^i				\\
+			h
+			%v_1
+			%+
+			%\left( v_2 - v_1 \right) 
+			\ \xi_v^j
+		\end{pmatrix}
+	\end{split}
+	\ \ \ \ \ \ \ \ 
+	\text{with}
+	\ \ \ \ \ \ \ \ 
 	\begin{split} 
 		\{ \xi_u^i, w_u^i \}_{i=1}^{N_u}
 		\\
@@ -2846,14 +2832,25 @@ Eq.\eqref{eq:singular-near-singular-integral-result} becomes
 \begin{equation} \label{eq:singular-near-singular-general-quadrature}
 	\begin{split} 
 		I
+		=& 
+			(v_>-v_<)
+			(u_>-u_<)
+			\sum \nolimits_{i,j}^{N_u,N_v} 
+			w_u^i w_v^j
+			f(x,y)
+			\big\vert
+			_{ (i,j) }
+		\\
 		=&
-		h
-		(x_U-x_L)
-		\sum \nolimits_{i,j}^{N_u,N_v} 
-		w_u^i w_v^j
-		f(x,y)
-		\big\vert
-		_{ (u^i,v^j) }
+			\lvert
+				h
+				\left( u_1 - u_2 \right)
+			\rvert
+			\sum \nolimits_{i,j}^{N_u,N_v} 
+			w_u^i w_v^j
+			f(x,y)
+			\big\vert
+			_{ (i,j) }
 	\end{split}
 \end{equation}
 The $(x,y)$ coordinates can be obtained by:
@@ -2864,7 +2861,7 @@ The $(x,y)$ coordinates can be obtained by:
 				x					\\
 				y
 			\end{pmatrix}
-			\bigg\vert _{ (u^i,v^j) }
+			\bigg\vert _{ (i,j) }
 			=& 
 			\begin{pmatrix}
 				x_0					\\
@@ -2881,27 +2878,11 @@ The $(x,y)$ coordinates can be obtained by:
 				v^j
 			\end{pmatrix}
 		\end{split}
-		\\
-		\begin{split} 
-			\begin{pmatrix}
-				u^i					\\
-				v^j
-			\end{pmatrix}
-			=&
-			\begin{pmatrix}
-				u_L
-				+ 
-				u_U
-				\ \xi_u^i				\\
-				h
-				\ \xi_v^j
-			\end{pmatrix}
-		\end{split}
 	\end{align}
 \end{subequations}
-Note that $x_L$ and $x_U$ are calculated
-by Eq.\eqref{eq:result-singular-near-singular-x1p-x2p-y1p-y2p}
-and Eq.\eqref{eq:def-singular-near-singular-xL-xU}.  
+Note that Eq.\eqref{eq:singular-near-singular-x-y-ui-vj} made no assumption
+that $h>0$ or $u_1<u_2$.
+This is very suitable for numerical implementation.
 \\
 Summary of equations for the $\sinh^{-1}$ transform method:
 \begin{subequations} \label{eq:singular-near-singular-summary-of-arsh-equations}
@@ -2909,83 +2890,75 @@ Summary of equations for the $\sinh^{-1}$ transform method:
 		\begin{split} 
 			I
 			=&
-			\iint \limits_{\Delta P_0 P_1 P_2}
-			dx dy
-			\frac{ f(x,y) } { \sqrt{ (x-x_0)^2 + (y-y_0)^2 } }
+				\iint \limits_{\Delta P_0 P_1 P_2}
+				dx dy
+				\frac{ f(x,y) } { \sqrt{ (x-x_0)^2 + (y-y_0)^2 } }
 			\\
 			=&
-			h
-			(u_U-u_L)
-			\sum \nolimits_{i,j}^{N_u,N_v} 
-			w_u^i w_v^j
-			f(x,y)
-			\big\vert
-			_{ (u^i,v^j) }
+				\lvert
+					h
+					(u_1-u_2)
+				\rvert
+				\sum \nolimits_{i,j}^{N_u,N_v} 
+				w_u^i w_v^j
+				f(x,y)
+				\big\vert
+				_{ (i,j) }
 		\end{split}
 		\\
 		x_1^{\prime}	
 		=&	
-		[
-			(x_2-x_1)(x_1-x_0)
-			+ 
-			(y_2-y_1)(y_1-y_0)
-		]
-		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+			[
+				(x_2-x_1)(x_1-x_0)
+				+ 
+				(y_2-y_1)(y_1-y_0)
+			]
+			/{\lvert \overrightarrow{P_1 P_2} \rvert}
 		\\ 
 		x_2^{\prime}	
 		=&	
-		[
-			(x_2-x_1)(x_2-x_0)
-			+ 
-			(y_2-y_1)(y_2-y_0)
-		]
-		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+			[
+				(x_2-x_1)(x_2-x_0)
+				+ 
+				(y_2-y_1)(y_2-y_0)
+			]
+			/{\lvert \overrightarrow{P_1 P_2} \rvert}
 		\\
 		y_1^{\prime}
 		=y_2^{\prime}
 		=& 
-		[
-			(x_1-x_2)y_0
-			+
-			(x_2-x_0)y_1
-			+
-			(x_0-x_1)y_2 
-		]
-		/{\lvert \overrightarrow{P_1 P_2} \rvert}
+			[
+				(x_1-x_2)y_0
+				+
+				(x_2-x_0)y_1
+				+
+				(x_0-x_1)y_2 
+			]
+			/{\lvert \overrightarrow{P_1 P_2} \rvert}
 		\\
 		h
 		=&
-		\lvert y_1^{\prime} \rvert
+			y_1^{\prime}
 		=
-		\lvert y_2^{\prime} \rvert
+			y_2^{\prime}
 		\\
-		x_L
-		=&
-		\min
-		\{
-			x_1^{\prime},
-			x_2^{\prime}
-		\}
-		\\
-		x_U
-		=&
-		\max
-		\{
-			x_1^{\prime},
-			x_2^{\prime}
-		\}
-		\\
-		u_L	=&	\sinh^{-1}(x_L/h)		\\
-		u_U	=&	\sinh^{-1}(x_U/h)		\\
-		v_L	=&	0				\\
-		v_U	=&	h				
+		&
+		\begin{cases} 
+			u_1	=	\sinh^{-1}(x_1^{\prime}/h)		\\
+			u_2	=	\sinh^{-1}(x_2^{\prime}/h)
+		\end{cases}
+		\ \ \ \ 
+		\begin{cases} 
+			v_1	=	0					\\
+			v_2	=	h				
+		\end{cases}
 		\\ 
 		\begin{split} 
 			\begin{pmatrix} 
 				x					\\
 				y
 			\end{pmatrix}
-			\bigg\vert _{ (u^i,v^j) }
+			\bigg\vert _{ (i,j) }
 			=& 
 			\begin{pmatrix}
 				x_0					\\
@@ -2997,6 +2970,11 @@ Summary of equations for the $\sinh^{-1}$ transform method:
 				x_2-x_1 	& 	-y_2+y_1	\\
 				y_2-y_1 	& 	x_2-x_1		
 			\end{pmatrix}
+				%h
+			%\begin{pmatrix}
+				%\xi_v^j \sinh{u^i}				\\
+				%\xi_v^j 
+			%\end{pmatrix}
 			\begin{pmatrix}
 				v^j \sinh{u^i}				\\
 				v^j
@@ -3010,9 +2988,9 @@ Summary of equations for the $\sinh^{-1}$ transform method:
 			\end{pmatrix}
 			=&
 			\begin{pmatrix}
-				u_L
+				u_1
 				+ 
-				u_U
+				( u_2 - u_1 )
 				\ \xi_u^i				\\
 				h
 				\ \xi_v^j
