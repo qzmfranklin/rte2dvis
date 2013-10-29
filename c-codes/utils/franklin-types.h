@@ -18,6 +18,9 @@
 	#define __has_extension __has_feature 
 #endif 
 
+// MKL_malloc alignment
+#define DATA_ALIGNMENT 64
+
 /******************************************************************************/
 
 #endif /*_FRANKLIN_TYPES_H_*/

@@ -21,7 +21,6 @@ int main(int argc, char *argv[]) {
 	err += test03(argc,argv);
 	err += test04(argc,argv);
 	err += test05(argc,argv);
-	/*err += test04(argc,argv);*/
 	if (!err)
 		printf("NORMAL END OF EXECUTION\n");
 	else {
@@ -250,10 +249,17 @@ static int test05(int argc, char *argv[]) {
 
 	printf("	Calling FILEIO_READ_INFO_NODES_TRIANGLES(  filename_base, file_out  )...\n");
 	printf("		filename_base  = %s\n",filename_base);
-	/*fileio_read_info_nodes_triangles(filename_base,);*/
+	double *nodes;
+	int num_nodes;
+	int *triangles;
+	int num_triangles;
+	fileio_read_info_nodes_triangles( filename_base, 
+			&nodes, &num_nodes, &triangles, &num_triangles );
 	printf("	Finished running FILEIO_READ_INFO_NODES_TRIANGLES().\n"); 
 
 	free(filename_base);
+	if (nodes) { mkl_free(nodes); }
+	if (triangles) { mkl_free(triangles); }
 	printf("END OF TEST05\n");
 	printf("\n");
 	return err;

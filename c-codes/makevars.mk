@@ -6,7 +6,8 @@ ifdef UNIVERSAL_BINARY
 endif 
 ###############################################################################
 CC	:= icc
-CFLAGS 	:= -Wall -Werror -O3				\
+CFLAGS 	:= -Wall -O3					\
+	-Werror						\
 	${FPIC}						\
 	${NOINLINEOPT}					\
 	-prec-div -no-ftz				\
