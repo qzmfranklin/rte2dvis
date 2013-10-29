@@ -5,7 +5,6 @@
 #include <float.h>
 #include <mkl.h>
 
-typedef const char * t_filename;
 /******************************************************************************/ 
 void	fileio_read_rte2dvis_input_file( 	const char * filename ); 
 int	fileio_read_info_nodes_triangles(	const char * filename_base,		
@@ -16,8 +15,14 @@ int	fileio_dump_msh_file(			const char * filename_msh,
 /******************************************************************************/ 
 /******************************************************************************/ 
 
-void fileio_read_rte2dvis_input_file( t_filename filename )
+void fileio_read_rte2dvis_input_file( const char* filename )
 {
+	// This function is supposed to read 
+	// some kind of input file to the 
+	// rte2dvis machineray to avoid fre-
+	// quent re-compilation.
+	//
+	// Not implemented yet
 }
 
 int	fileio_read_info_nodes_triangles(	const char * filename_base,		
@@ -55,6 +60,7 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 	printf("	|	double * nodes and double * triangles.\n");
 	printf("	|	But did NOT free them. Need to free the\n");
 	printf("	|	two pointers manually by the user.\n");
+	printf("	|	All data are 64 bytes aligned.\n");
 	printf("	------------------------------\n");
 	printf("\n");
 
@@ -143,9 +149,9 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 				printf("	Further output suppressed...\n");
 			}
 		}
-	}
-
-
+	} 
+	printf("	Successfully read out nodes and triangles!\n");
+	printf("\n");
 
 	printf("	Free memory.\n");
 	free(filename_info);

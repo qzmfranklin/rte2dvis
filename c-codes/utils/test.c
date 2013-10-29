@@ -257,6 +257,7 @@ static int test05(int argc, char *argv[]) {
 			&nodes, &num_nodes, &triangles, &num_triangles );
 	printf("	Finished running FILEIO_READ_INFO_NODES_TRIANGLES().\n"); 
 
+	printf("	Free memory using MKL_FREE.\n");
 	free(filename_base);
 	if (nodes) { mkl_free(nodes); }
 	if (triangles) { mkl_free(triangles); }
