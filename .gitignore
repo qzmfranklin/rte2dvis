@@ -16,9 +16,11 @@ c-codes/utils/*.pdf
 c-codes/utils/*.info
 c-codes/utils/*.nodes
 c-codes/utils/*.triangles
+c-codes/msh
 derivation/log
 derivation/*.aux
 derivation/*.out
 derivation/*.pdf
 derivation/*.dvi
 derivation/*.toc 
+derivation/~*

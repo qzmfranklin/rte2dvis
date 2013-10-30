@@ -36,7 +36,7 @@ LIBS	:= ${MKL_LIBS}
 clean:
 	rm -rf *.o *_tm.c a.out *.d*
 cleanx: clean
-	rm -rf log *.log *.s
+	rm -rf log *.log *.s *.txt OUTPUT
 cleanxx: clean
 	rm -rf *.dylib *.so *.a *.exe a.out 
 ############################################################################### 

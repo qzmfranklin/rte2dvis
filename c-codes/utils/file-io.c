@@ -1,17 +1,24 @@
-#include "franklin-types.h"
 #include <stdio.h>
 #include <assert.h>
 #include <limits.h>
 #include <float.h>
+#include <string.h>
 #include <mkl.h>
 
 /******************************************************************************/ 
-void	fileio_read_rte2dvis_input_file( 	const char * filename ); 
-int	fileio_read_info_nodes_triangles(	const char * filename_base,		
+#ifndef EXTERN_C 
+	#ifdef __cplusplus
+		#define EXTERN_C extern "C"
+	#else
+		#define EXTERN_C extern
+	#endif
+#endif
+EXTERN_C void	fileio_read_rte2dvis_input_file( const char * filename ); 
+EXTERN_C int	fileio_read_info_nodes_triangles(const char * filename_base,		
 						double **nodes,		int *num_nodes,
 						int **triangles,	int *num_triangles );
-int	fileio_dump_msh_file(			const char * filename_msh,		
-						const char * filename_dat	);
+EXTERN_C int	fileio_dump_msh_file(		const char * filename_msh,		
+						const char * filename_dat	); 
 /******************************************************************************/ 
 /******************************************************************************/ 
 
@@ -70,9 +77,12 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 	filename_info 		= (char*) malloc( FILENAME_MAX * sizeof(char) );
 	filename_nodes 		= (char*) malloc( FILENAME_MAX * sizeof(char) );
 	filename_triangles 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
-	strcpy(filename_info,(void*)filename_base);
-	strcpy(filename_nodes,(void*)filename_base);
-	strcpy(filename_triangles,(void*)filename_base);
+	strcpy(filename_info,		filename_base);
+	strcpy(filename_nodes,		filename_base);
+	strcpy(filename_triangles,	filename_base);
+	/*strcpy(filename_info,		(void*)filename_base);*/
+	/*strcpy(filename_nodes,	(void*)filename_base);*/
+	/*strcpy(filename_triangles,	(void*)filename_base);*/
 	strcat(filename_info,".info");
 	strcat(filename_nodes,".nodes");
 	strcat(filename_triangles,".triangles");
@@ -232,9 +242,12 @@ int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 	assert(  filename_out_nodes  	);
 	assert(  filename_out_triangles );
 	assert(  filename_out_info  	);
-	strcpy(  filename_out_nodes, 	(void*)filename_out  	);
-	strcpy(  filename_out_triangles,(void*)filename_out  	);
-	strcpy(  filename_out_info,	(void*)filename_out  	);
+	strcpy(  filename_out_nodes, 	filename_out  	);
+	strcpy(  filename_out_triangles,filename_out  	);
+	strcpy(  filename_out_info,	filename_out  	);
+	/*strcpy(  filename_out_nodes, 	(void*)filename_out  	);*/
+	/*strcpy(  filename_out_triangles,(void*)filename_out  	);*/
+	/*strcpy(  filename_out_info,	(void*)filename_out  	);*/
 	strcat(  filename_out_nodes,	".nodes"  	);
 	strcat(  filename_out_triangles,".triangles"  	);
 	strcat(  filename_out_info,	".info"  	);

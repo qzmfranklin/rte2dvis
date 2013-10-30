@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "file-io.h" 
 #include <stdio.h>
 #include <string.h>
