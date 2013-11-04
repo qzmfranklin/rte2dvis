@@ -17,6 +17,7 @@ c-codes/utils/*.info
 c-codes/utils/*.nodes
 c-codes/utils/*.triangles
 c-codes/msh
+c-codes/Book-SPCA
 derivation/log
 derivation/*.aux
 derivation/*.out
