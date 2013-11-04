@@ -3400,7 +3400,7 @@ The standard triangle is the triangle formed by joining the three nodes
 
 The standard weights, $w_i$, are normalized to unity:
 \begin{equation} \label{eq:standard-weights-normalized-to-one}
-	\sum \limits_{i=1}^{N} w_i = 1
+	\sum \limits_{i=1}^{M} w_i = 1
 \end{equation}
 
 The integration on general triangle $P_0(x_0,y_0),P_1(x_1,y_1),P_2(x_2,y_2)$ is approximated using the quadrature rule as:
@@ -3408,13 +3408,13 @@ The integration on general triangle $P_0(x_0,y_0),P_1(x_1,y_1),P_2(x_2,y_2)$ is 
 	\int dxdy f(x,y)
 	=
 		\text{Area}
-		\sum \limits_{i=1}^{N}
+		\sum \limits_{i=1}^{M}
 		w_i
 		f(x_i,y_i)
 \end{equation}
 
 The abscissas are given by
-\begin{equation}
+\begin{equation} \label{eq:transform-xi-yi-xii-zetai}
 	\begin{pmatrix}
 		x_i	\\
 		y_i
@@ -3530,6 +3530,42 @@ In Eq.\eqref{eq:der-Bnmnpmp-quadrature}, there is a \emph{testing} integral
 $\int d\vectorsym{r}$, and a \emph{source} integral $\int d\vectorsym{r^\prime}$.
 In previous sections, we dealt extensively with single-point testing and single-point source.
 In this section, we advance to single-point testing and multi-point source.
+
+\begin{equation} \label{eq:result-Bnmnpmp-quadrature}
+	\begin{split}
+		B_{(nm)(n^\prime m^\prime)}
+		=& 
+			S(n)
+			S(n^\prime)
+			\sum \limits_{j_{n^\prime}=1}^{M_{n^\prime}}
+			w_{j_{n^\prime}}
+			\left[
+				\mu_t(\vectorsym{r}_{{j_{n^\prime}}})
+				-
+				\mu_s(\vectorsym{r}_{{j_{n^\prime}}})
+				g^{\lvert m^\prime \rvert}
+			\right]
+			\frac
+			{ e^{+i (m^\prime - m)\phi_{\vectorsym{r}_n
+			-\vectorsym{r}_{{j_{n^\prime}}}}} }
+			{\lvert\vectorsym{r}_n-\vectorsym{r}_{{j_{n^\prime}}}\rvert}
+	\end{split}
+\end{equation}
+The $M_{n^\prime}$ is the number of sampling points for $S_{n^\prime}$.
+\\
+
+The precision for any specific $B_{(nm)(n^\prime m^\prime)}$ depends on the following three factors:
+\begin{itemize}
+	\item	the distance between the source and the testing triangle, and
+	\item	the order of the simple harmonics involved, $\lvert m - m^\prime \rvert$, and
+	\item	the quadrature rule, i.e., 
+		$\left\{ (\xi_i,\zeta_i), w_i \right\} _{i=1}^{M}$,
+		being employed.
+\end{itemize}
+
+Dunavant and Wandzura methods are good for non-singular integrals,
+and the Arcsinh method is good for near-singular and singular integrals.
+Both methods are already implemented in Mathematica, not in C/C++ yet.
 
 
 
