@@ -139,7 +139,8 @@ DLLEXPORT int DunavantRule_MLL( WolframLibraryData libData, mint Argc, MArgument
 	for (i = 0; i < order_num; i++) {
 		res[i+0*order_num] = (mreal) xy2[0+i*2];
 		res[i+1*order_num] = (mreal) xy2[1+i*2];
-		res[i+2*order_num] = (mreal) w[i]*fabs(area2);
+		res[i+2*order_num] = (mreal) w[i];		// normalized to 1.0
+		/*res[i+2*order_num] = (mreal) w[i]*fabs(area2);*/
 	}
 	MArgument_setMTensor(Res,RES);
 
