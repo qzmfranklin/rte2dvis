@@ -1,15 +1,19 @@
-
 include ../makevars.mk
-
-#########
+#NOINLINEOPT := True 		# disable automatic function inlining
+#UNIVERSAL_BINARY := True	# produce universal binary -fPIC
+# The MKL library is already linked. Need not to be specified.
+#INCS	:= ${INCS} ${MLL_INCS} 
+#LIBS	:= ${LIBS} ${MLL_LIBS}
+###############################################################################
 all: file-io.o
 
-test: test-file-io.exe 
-	./test-file-io.exe TimeStamp.cpp HelloWorld.txt example.msh example_out
-
-cleanx: clean
-	rm -rf log *.log *.s *.txt OUTPUT *.info *.nodes *.triangles
-
+test: test-file-io.exe dump-msh-file.exe
+	./test-file-io.exe TimeStamp.cpp 				\
+		HelloWorld.txt example.msh 				\
+		DEBUG/example_out					\
+		> OUTPUT/OUTPUT.txt
+	./dump-msh-file.exe example.msh DEBUG/test-dump-msh-file 
+###############################################################################
 file-io.o: file-io.c
 include file-io.d
 
@@ -17,5 +21,9 @@ test-file-io.exe: test-file-io.o file-io.o
 
 test-file-io.o: test-file-io.c
 include test-file-io.d
-#########
 
+dump-msh-file.exe: dump-msh-file.o file-io.o
+
+dump-msh-file.o: dump-msh-file.c
+include dump-msh-file.d
+###############################################################################

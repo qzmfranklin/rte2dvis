@@ -1,3 +1,11 @@
+# The template Makefile header in subdirectories:
+#include ../makevars.mk
+##NOINLINEOPT := True 		# disable automatic function inlining
+##UNIVERSAL_BINARY := True	# produce universal binary -fPIC
+## The MKL library is already linked. Need not to be specified.
+##INCS	:= ${INCS} ${MLL_INCS} 
+##LIBS	:= ${LIBS} ${MLL_LIBS}
+###############################################################################
 ifdef NOINLINE
 	NOINLINEOPT := -fno-inline-functions
 endif 
@@ -6,14 +14,13 @@ ifdef UNIVERSAL_BINARY
 endif 
 ###############################################################################
 CC	:= icc
-CPP	:= icpc
+CXX	:= icpc
 CFLAGS 	:= -Wall -O3					\
-	-Werror						\
 	${FPIC}						\
 	${NOINLINEOPT}					\
 	-prec-div -no-ftz				\
 	-restrict
-CFLAGSXX:= 
+CFLAGSXX:= ${CFLAGS}
 # Intel Math Kernel Library
 MKL_INCS:= 
 MKL_LIBS:= -mkl 
@@ -27,7 +34,7 @@ MLL_INCS:= -I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C
 MLL_LIBS:= -L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 # The default empty include directories and 
 # linking libraries for specific directories
-INCS	:=
+INCS	:= ${MKL_INCS}
 LIBS	:= ${MKL_LIBS}
 ###############################################################################
 #.PHONY:
@@ -38,7 +45,7 @@ LIBS	:= ${MKL_LIBS}
 clean:
 	rm -rf *.o *_tm.c a.out *.d*
 cleanx: clean
-	rm -rf log *.log *.s *.txt OUTPUT
+	rm -rf log *.log *.s *.txt DEBUG/* OUPUT/*
 cleanxx: clean
 	rm -rf *.dylib *.so *.a *.exe a.out 
 ############################################################################### 
@@ -54,23 +61,23 @@ cleanxx: clean
 	${CC} -c $< ${CFLAGS} ${INCS}
 %.s: %.c 
 	${CC} -S $< ${CFLAGS} ${INCS}
-# CPP sources
+# CXX sources
 %.d: %.cpp
 	@set -e; rm -f $@; \
-	${CPP} -M ${CFLAGS} ${INCS} $< > $@.$$$$; \
+	${CXX} -M ${CFLAGSXX} ${INCS} $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 %.o: %.cpp
-	${CPP} -c $< ${CFLAGS} ${INCS}
+	${CXX} -c $< ${CFLAGSXX} ${INCS}
 %.s: %.cpp
-	${CPP} -S $< ${CFLAGS} ${INCS}
+	${CXX} -S $< ${CFLAGSXX} ${INCS}
 
 
-# CPP linking at the top level
+# CXX linking at the top level
 %.exe: %.o 
-	${CPP} ${filter %.o,$^} -o $@ ${INCS} ${LIBS} 
+	${CXX} ${filter %.o,$^} -o $@ ${INCS} ${LIBS} 
 %.dylib: %.o
-	${CPP} -dynamiclib ${filter %.o,$^} -o $@ ${INCS} ${LIBS}
+	${CXX} -dynamiclib ${filter %.o,$^} -o $@ ${INCS} ${LIBS}
 %.a: %.o
-	${CPP} -staticlib ${filter %.o,$^} -o $@ ${INCS} ${LIBS}
+	${CXX} -staticlib ${filter %.o,$^} -o $@ ${INCS} ${LIBS}
 

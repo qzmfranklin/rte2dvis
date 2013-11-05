@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
-using namespace std;
+//using namespace std;
 
 void array_abs(double *v, int n){
 	for(int i=0; i < n; i++)
