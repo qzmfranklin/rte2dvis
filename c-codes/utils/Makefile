@@ -1,27 +1,19 @@
 include ../makevars.mk
 
 #########
-all: utils.o Table.o
+all: Utils.o
 
-test: test_stat.exe test_table.exe
-	./test_stat.exe
-	./test_table.exe
+test: test-Utils.exe
+	./$< > OUTPUT/test-Utils.txt
+	cat OUTPUT/test-Utils.txt
 
+Utils.o: Utils.cpp
+include Utils.d
 
-utils.o: utils.cpp
-include utils.d
+test-Utils.exe: test-Utils.o Utils.o
 
-Table.o: Table.cpp
-include Table.d
+test-Utils.o: test-Utils.cpp
+include test-Utils.d
 
-test_stat.o: test_stat.cpp
-include test_stat.d
-
-test_stat.exe: test_stat.o
-
-test_table.o: test_table.cpp
-include test_table.d
-
-test_table.exe: test_table.o Table.o
 #########
 
