@@ -1,4 +1,5 @@
 #include "StatVector.hh"
+using namespace std;
 
 //n=number of items to be inserted
 //all numbers inserted are from 0 to 255

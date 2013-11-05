@@ -25,3 +25,4 @@ derivation/*.pdf
 derivation/*.dvi
 derivation/*.toc 
 derivation/~*
+*.orig

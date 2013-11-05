@@ -44,16 +44,16 @@ cleanxx: clean
 ############################################################################### 
 .SUFFIXES:
 .SUFFIXES: .tm .c .cpp .o .exe .s .d
-# C sources are treated as CPP sources
+# C sources are 
 %.d: %.c
 	@set -e; rm -f $@; \
-	${CPP} -M ${CFLAGS} ${INCS} $< > $@.$$$$; \
+	${CC} -M ${CFLAGS} ${INCS} $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 %.o: %.c
-	${CPP} -c $< ${CFLAGS} ${INCS}
+	${CC} -c $< ${CFLAGS} ${INCS}
 %.s: %.c 
-	${CPP} -S $< ${CFLAGS} ${INCS}
+	${CC} -S $< ${CFLAGS} ${INCS}
 # CPP sources
 %.d: %.cpp
 	@set -e; rm -f $@; \
