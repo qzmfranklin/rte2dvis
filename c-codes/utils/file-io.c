@@ -15,11 +15,12 @@
 #endif
 EXTERN_C void	fileio_read_rte2dvis_input_file( const char * filename ); 
 EXTERN_C int	fileio_read_info_nodes_triangles(const char * filename_base,		
-						double **nodes,		int *num_nodes,
-						int **triangles,	int *num_triangles );
+						double **nodes,		int *nodes_num,
+						int **triangles,	int *triangles_num );
 EXTERN_C int	fileio_dump_msh_file(		const char * filename_msh,		
 						const char * filename_dat	); 
 /******************************************************************************/ 
+#define MALLOC_ALIGNMENT 64	// mkl_malloc( size_t, 64 )
 /******************************************************************************/ 
 
 void fileio_read_rte2dvis_input_file( const char* filename )
@@ -33,8 +34,8 @@ void fileio_read_rte2dvis_input_file( const char* filename )
 }
 
 int	fileio_read_info_nodes_triangles(	const char * filename_base,		
-						double **nodes,		int *num_nodes,
-						int **triangles,	int *num_triangles )
+						double **nodes,		int *nodes_num,
+						int **triangles,	int *triangles_num )
 {
 	// This function shall be used WITH the 
 	// corresponding fileio_dump_msh_file()
@@ -58,9 +59,9 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 	printf("	|	const char * filename_base:	base name of ASCII files to read\n");
 	printf("	|Outputs:\n");
 	printf("	|	double **nodes:			array to store nodes\n");
-	printf("	|	int *num_nodes:			number of nodes\n");
+	printf("	|	int *nodes_num:			number of nodes\n");
 	printf("	|	int **triangles:		array to store triangles\n");
-	printf("	|	int *num_triangles:		number of triangles\n");
+	printf("	|	int *triangles_num:		number of triangles\n");
 	printf("	|	Notice the passing by pointers.\n");
 	printf("	|Ownership:\n");
 	printf("	|	Used MKL_MALLOC to allocate memory for\n");
@@ -100,14 +101,15 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 	} else { 
 		// Scan fin_info
 		printf("	Scanning filename_info...\n");
-		fscanf(fin_info, "%d\t\t# number of nodes", num_nodes );
-		fscanf(fin_info, "%d\t\t# number of triangles", num_triangles );
-		printf("		number of nodes:	%d\n", *num_nodes);
-		printf("		number of triangles:	%d\n", *num_triangles); 
+		fscanf(fin_info, "%d\t\t# number of nodes", nodes_num );
+		fscanf(fin_info, "%d\t\t# number of triangles", triangles_num );
+		printf("		number of nodes:	%d\n", *nodes_num);
+		printf("		number of triangles:	%d\n", *triangles_num); 
+		fclose(fin_info);
 	}
 	printf("	Allocating memory...\n");
-	*nodes = (double*) mkl_malloc( 2 * (*num_nodes) * sizeof(double), 64 );
-	*triangles= (int*) mkl_malloc( 3 * (*num_triangles) * sizeof(int), 64 );
+	*nodes = (double*) mkl_malloc( 2 * (*nodes_num) * sizeof(double), MALLOC_ALIGNMENT );
+	*triangles= (int*) mkl_malloc( 3 * (*triangles_num) * sizeof(int), MALLOC_ALIGNMENT );
 	assert(*nodes!=NULL);
 	assert(*triangles!=NULL);
 	// Open fin_nodes for read
@@ -122,7 +124,7 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 		printf("	Scanning filename_nodes...\n");
 		int i=0;
 		printf("		\t\tx\t\t\ty\n");
-		for (i = 0; i < *num_nodes; i++)  {
+		for (i = 0; i < *nodes_num; i++)  {
 			fscanf(fin_nodes,"%lf %lf\n",
 					(*nodes)+2*i,
 					(*nodes)+2*i+1		);
@@ -133,6 +135,7 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 				printf("	Further outputs suppressed...\n");
 			}
 		}
+		fclose(fin_nodes);
 	}
 	// Open fin_triangles for read
 	FILE *fin_triangles;
@@ -145,7 +148,7 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 		// Scan fin_triangles
 		printf("	Scanning filename_triangles...\n");
 		int i=0;
-		for (i = 0; i < *num_nodes; i++)  {
+		for (i = 0; i < *nodes_num; i++)  {
 			fscanf(fin_triangles,"%d %d %d\n",
 					(*triangles)+3*i,
 					(*triangles)+3*i+1,
@@ -159,6 +162,7 @@ int	fileio_read_info_nodes_triangles(	const char * filename_base,
 				printf("	Further output suppressed...\n");
 			}
 		}
+		fclose(fin_triangles);
 	} 
 	printf("	Successfully read out nodes and triangles!\n");
 	printf("\n");
@@ -245,9 +249,6 @@ int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 	strcpy(  filename_out_nodes, 	filename_out  	);
 	strcpy(  filename_out_triangles,filename_out  	);
 	strcpy(  filename_out_info,	filename_out  	);
-	/*strcpy(  filename_out_nodes, 	(void*)filename_out  	);*/
-	/*strcpy(  filename_out_triangles,(void*)filename_out  	);*/
-	/*strcpy(  filename_out_info,	(void*)filename_out  	);*/
 	strcat(  filename_out_nodes,	".nodes"  	);
 	strcat(  filename_out_triangles,".triangles"  	);
 	strcat(  filename_out_info,	".info"  	);
@@ -302,9 +303,9 @@ int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 		printf("	Successfully opened all 4 files!\n");
 	/*printf("	------------------------------\n");*/
 
-	int num_nodes;
+	int nodes_num;
 	int num_elements;
-	int num_triangles;
+	int triangles_num;
 	char str_Nodes[]="Nodes";
 	char str_EndNodes[]="EndNodes";
 	char str_Elements[]="Elements";
@@ -321,11 +322,11 @@ int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 		}
 	}
 	// Scan nodes and write to fout_nodes
-	fscanf(fin,"%d",&num_nodes);
+	fscanf(fin,"%d",&nodes_num);
 	printf("	Number of nodes is\n");
-	printf("		%d\n",num_nodes);
+	printf("		%d\n",nodes_num);
 	printf("	Start scanning nodes and writing to filename_out_nodes...\n");
-	for (i = 0; i < num_nodes; i++) {
+	for (i = 0; i < nodes_num; i++) {
 		int ip,z_zero;
 		double x,y;
 		fscanf(fin,"%d %lf %lf %d\n",&ip,&x,&y,&z_zero);
@@ -350,7 +351,7 @@ int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 	i++;
 	printf("	Number of elements is\n");
 	printf("		%d\n",num_elements);
-	num_triangles=0;
+	triangles_num=0;
 	printf("	Start Scanning elements and writing triangles to filename_out_triangles...\n");
 	int j;
 	for ( j = 0; j < num_elements; j++) {
@@ -359,8 +360,8 @@ int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 		fgets(buff,BUFSIZ,fin);
 		i++;
 		if (  (tri[1]==2) && (tri[4]==6)  ) {
-			num_triangles++;
-			if (  num_triangles == 1  ) {
+			triangles_num++;
+			if (  triangles_num == 1  ) {
 				printf("		Found first triangle\n");
 				printf("			at line %d\n",i);
 				printf("			as element #%d\n",j+1);
@@ -371,12 +372,12 @@ int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 		}
 	}
 	printf("	Finished scanning elements and writing triangles.\n");
-	printf("	Found %d triangles.\n",num_triangles);
+	printf("	Found %d triangles.\n",triangles_num);
 	// Write to fout_info
 	/*printf("	------------------------------\n"); */
 	printf("	Start writing into filename_out_info...\n");
-	fprintf(fout_info,"%d\t\t# number of nodes\n",num_nodes);
-	fprintf(fout_info,"%d\t\t# number of triangles\n",num_triangles);
+	fprintf(fout_info,"%d\t\t# number of nodes\n",nodes_num);
+	fprintf(fout_info,"%d\t\t# number of triangles\n",triangles_num);
 	fprintf(fout_info,"\n");
 	fprintf(fout_info,"\n");
 	fprintf(fout_info,"\n");

@@ -133,8 +133,8 @@ static int test03(int argc, char *argv[]) {
 	printf("		%s\n",cwd); 
 
 
-	int num_nodes;
-	int num_triangles;
+	int nodes_num;
+	int triangles_num;
 	char str_Nodes[]="Nodes";
 	char str_EndNodes[]="EndNodes";
 	char str_Elements[]="Elements"; 
@@ -160,10 +160,10 @@ static int test03(int argc, char *argv[]) {
 			}
 		}
 		// Read nodes
-		fscanf(fp,"%d",&num_nodes);
+		fscanf(fp,"%d",&nodes_num);
 		printf("	Number of nodes is\n");
-		printf("		%d\n",num_nodes);
-		for (i = 0; i < num_nodes; i++) { 
+		printf("		%d\n",nodes_num);
+		for (i = 0; i < nodes_num; i++) { 
 			int ip,z_zero;
 			double x,y;
 			fscanf(fp,"%d %lf %lf %d\n",&ip,&x,&y,&z_zero);
@@ -251,11 +251,11 @@ static int test05(int argc, char *argv[]) {
 	printf("	Calling FILEIO_READ_INFO_NODES_TRIANGLES(  filename_base, file_out  )...\n");
 	printf("		filename_base  = %s\n",filename_base);
 	double *nodes;
-	int num_nodes;
+	int nodes_num;
 	int *triangles;
-	int num_triangles;
+	int triangles_num;
 	fileio_read_info_nodes_triangles( filename_base, 
-			&nodes, &num_nodes, &triangles, &num_triangles );
+			&nodes, &nodes_num, &triangles, &triangles_num );
 	printf("	Finished running FILEIO_READ_INFO_NODES_TRIANGLES().\n"); 
 
 	printf("	Free memory using MKL_FREE.\n");
