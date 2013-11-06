@@ -45,16 +45,31 @@ INCS	:= ${MKL_INCS}
 LIBS	:= ${MKL_LIBS}
 ###############################################################################
 HDRFILES := $(shell find . -type f -name "*.h") $(shell find . -type f -name "*.h")
-CFILES	 := $(shell find . -type f -name "*.c")
-CPPFILES := $(shell find . -type f -name "*.cpp")
 TSTFILES := $(shell find . -type f -name "test.cpp")
-SRCFILES := $(filter-out ${TSTFILES}, ${CFILES} ${CPPFILES})
+CFILES	 := $(shell find . -type f -name "*.c")
+CPPFILES := $(filter-out ${TSTFILES}, $(shell find . -type f -name "*.cpp"))
+SRCFILES := ${CFILES} ${CPPFILES}
 OBJFILES := ${CFILES:%.c=%.o} ${CPPFILES:%.cpp=%.o}
 DEPFILES := ${CFILES:%.c=%.d} ${CPPFILES:%.cpp=%.d}
 AUXFILES := 
 ALLFILES := ${SRCFILES} ${HDRFILES} ${AUXFILES}
 ###############################################################################
-#.PHONY:
+# Colorful echo!
+NONE		:=\033[00m
+RED		:=\033[01;31m
+GREEN		:=\033[01;32m
+YELLOW		:=\033[01;33m
+PURPLE		:=\033[01;35m
+CYAN		:=\033[01;36m
+WHITE		:=\033[01;37m
+BOLD		:=\033[1m
+UNDERLINE	:=\033[4m
+#echo -e "This text is ${RED}red${NONE} 		\
+		and ${GREEN}green${NONE} 		\
+		and ${BOLD}bold${NONE} 			\
+		and ${UNDERLINE}			\
+		underlined${NONE}."
+###############################################################################
 .PHONY: all 						\
 	clean cleanx cleanxx 				\
 	dist						\
@@ -65,7 +80,6 @@ ALLFILES := ${SRCFILES} ${HDRFILES} ${AUXFILES}
 
 all: ${OBJFILES}
 	@make clean
-	@echo ${OBJFILES}
 clean:
 	@rm -rf *_tm.c *.d*
 cleanx: 
@@ -74,6 +88,14 @@ cleanxx: clean
 	@rm -rf *.dylib *.so *.a *.exe a.out *.o
 dist:
 	@tar czf pdclib.tgz ${ALLFILES}
+test: ${TSTFILES:%.cpp=%.exe}
+	@echo Running "${RED}$<${NONE}"...
+	@./$< > DEBUG/test.txt
+	@echo Debug information is in "${GREEN}DEBUG/test.txt${NONE}".
+check:
+	@echo ${TSTFILES}
+	@echo ${SRCFILES}
+	@echo ${OBJFILES}
 install: all
 	mv ${OBJFILES} ${BIN}
 todolist:
@@ -85,7 +107,7 @@ todolist:
 .SUFFIXES: .tm .c .cpp .o .exe .s .d
 # C sources are 
 %.o: %.c
-	@echo Compiling $@...
+	@echo Compiling "${PURPLE}$@${NONE}"...
 	@${CC} -c $< -MD -MP ${CFLAGS} ${INCS}
 %.s: %.c 
 	@echo Generating source-commented assembly list $@...
@@ -93,7 +115,7 @@ todolist:
 
 # CXX sources
 %.o: %.cpp
-	@echo Compiling $@...
+	@echo Compiling "${PURPLE}$@${NONE}"...
 	@${CXX} -c $< -MD -MP ${CFLAGSXX} ${INCS}
 %.s: %.cpp
 	@echo Generating source-commented assembly list $@...
@@ -101,13 +123,13 @@ todolist:
 
 # CXX linking at the top level
 %.exe: %.o 
-	@echo Linking executable $@...
+	@echo Linking executable "${RED}$@${NONE}"...
 	@${CXX} ${filter %.o,$^} -o $@ ${INCS} ${LIBS} 
 %.dylib: %.o
 	@echo Generating source-commented assembly list $@...
-	@echo Linking dynamic library $@...
+	@echo Linking dynamic library "${RED}$@${NONE}"...
 	@${CXX} -dynamiclib ${filter %.o,$^} -o $@ ${INCS} ${LIBS}
 %.a: %.o
-	@echo Linking static library $@...
+	@echo Linking static library "${RED}$@${NONE}"...
 	@${CXX} -staticlib ${filter %.o,$^} -o $@ ${INCS} ${LIBS}
 
