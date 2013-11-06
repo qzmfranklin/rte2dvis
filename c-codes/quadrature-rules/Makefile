@@ -1,27 +1,32 @@
-# Comment the following line to enable 
-# automatic function inlining
-#NOINLINE := True
+#NOINLINEOPT := True 		# Disable automatic function inlining.
+#UNIVERSAL_BINARY := True	# Produce universal binary -fPIC.
+# Suppress warning messages about deprecated or antiquated headers.
+CFLAGS 	:=  -Wno-deprecated	
 include ../makevars.mk
-#INCS	:= ${ML_INCS}
-LIBS	:= ${MKL_LIBS}	# $(ML_LIBS) 
+#The MKL library is already linked. Need not to be specified.
+#INCS	:= ${INCS} ${MLL_INCS} 
+#LIBS	:= ${LIBS} ${MLL_LIBS}
 ############################################################################### 
 # This section are the phony targets
-all: file-io.o dump-msh-file.exe
-test: test.exe dump-msh-file.exe
-	./test.exe Makefile test02.log example.msh dump_msh_example
-	./dump-msh-file.exe example.msh
-cleanx: clean
-	rm -rf log *.log *.s *.info *.nodes *.triangles
+all: DunavantRule.o GaussQuadratures.o
+test: test-DunavantRule.exe test-GaussQuadratures.exe
+	./test-DunavantRule.exe > DEBUG/test-DunavantRule.txt
+	./test-GaussQuadratures.exe > DEBUG/test-GaussQuadratures.txt
+	@echo DEBUG information in the ./DEBUG directory
 ###############################################################################
 # Directory-specific targets
-test.exe: test.o file-io.o 
+test-DunavantRule.exe: DunavantRule.o test-DunavantRule.o
 
-dump-msh-file.exe: dump-msh-file.o file-io.o
+test-DunavantRule.o: test-DunavantRule.cpp
+include test-DunavantRule.d
 
-dump-msh-file.o: dump-msh-file.c
+DunavantRule.o: DunavantRule.cpp
+include DunavantRule.d
 
-test.o: test.c				
-include test.d
+test-GaussQuadratures.exe: GaussQuadratures.o test-GaussQuadratures.o
 
-file-io.o: file-io.c			
-include file-io.d
+test-GaussQuadratures.o: test-GaussQuadratures.cpp
+include test-GaussQuadratures.d
+
+GaussQuadratures.o: GaussQuadratures.cpp
+include GaussQuadratures.d
