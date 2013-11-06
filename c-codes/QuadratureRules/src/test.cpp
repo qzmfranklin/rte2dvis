@@ -1,6 +1,6 @@
-#include "DunavantRule.h"
-#include "WandzuraRule.h"
-#include "GaussQuadratures.h"
+#include "../include/DunavantRule.h"
+#include "../include/WandzuraRule.h"
+#include "../include/GaussQuadratures.h"
 /*****************************************************************************/
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -21,6 +21,7 @@ int main(int argc, char const* argv[])
 } 
 
 void test01( int n ){
+	printf("	Test Dunavant rules.\n");
 	n = MIN(n,20);
 	n = MAX(n,1);
 	int rule;
@@ -28,12 +29,14 @@ void test01( int n ){
 	double *xy;
 	double *w;
 	for (rule = 1; rule <= n; rule++) {
+		printf("rule = %d\n",rule);
 		gDunavantRule.Generate( rule, &xy, &w, &order_num );
 		print_rule( xy, w, order_num ); 
 	}
 }
 
 void test02( int n ){
+	printf("	Test Wandzura rules.\n");
 	n = MIN(n,6);
 	n = MAX(n,1);
 	int rule;
@@ -41,6 +44,7 @@ void test02( int n ){
 	double *xy;
 	double *w;
 	for (rule = 1; rule <= n; rule++) {
+		printf("rule = %d\n",rule);
 		gWandzuraRule.Generate( rule, &xy, &w, &order_num );
 		print_rule( xy, w, order_num ); 
 	}

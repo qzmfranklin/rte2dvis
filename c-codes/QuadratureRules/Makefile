@@ -19,11 +19,11 @@ test: 	test.exe
 # Directory-specific targets 
 test.exe: test.o DunavantRule.o WandzuraRule.o GaussQuadratures.o
 
-DunavantRule.o: DunavantRule.cpp
-include DunavantRule.d
+DunavantRule.o: src/DunavantRule.cpp
+include src/DunavantRule.d
 
-WandzuraRule.o: WandzuraRule.cpp
-include WandzuraRule.d
+WandzuraRule.o: src/WandzuraRule.cpp
+include src/WandzuraRule.d
 
-GaussQuadratures.o: GaussQuadratures.cpp
-include GaussQuadratures.d
+GaussQuadratures.o: src/GaussQuadratures.cpp
+include src/GaussQuadratures.d

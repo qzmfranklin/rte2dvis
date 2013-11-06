@@ -8,6 +8,10 @@
 ##INCS	:= ${INCS} ${MLL_INCS} 
 ##LIBS	:= ${LIBS} ${MLL_LIBS}
 ###############################################################################
+SRC	:= ./src	# Source C CXX file dirctory
+BIN	:= ./bin	# Binary output directory 
+INCLUDE	:= ./include	# Header file directory
+###############################################################################
 ifdef NOINLINE
 	NOINLINEOPT := -fno-inline-functions
 endif 
@@ -36,7 +40,7 @@ MLL_INCS:= -I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C
 MLL_LIBS:= -L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 # The default empty include directories and 
 # linking libraries for specific directories
-INCS	:= ${MKL_INCS}
+INCS	:= -I./${INCLUDE} ${MKL_INCS}
 LIBS	:= ${MKL_LIBS}
 ###############################################################################
 #.PHONY:
@@ -45,11 +49,11 @@ LIBS	:= ${MKL_LIBS}
 	install uninstall				\
 	test
 clean:
-	rm -rf *.o *_tm.c a.out *.d*
-cleanx: clean
-	rm -rf *.s DEBUG/* OUPUT/*
-cleanxx: clean
-	rm -rf *.dylib *.so *.a *.exe a.out 
+	rm -rf bin/*.o
+cleanx: 
+	rm -rf src/*.d src/*.s DEBUG/* OUTPUT/*
+cleanxx:
+	rm -rf bin/*
 ############################################################################### 
 .SUFFIXES:
 .SUFFIXES: .tm .c .cpp .o .exe .s .d
