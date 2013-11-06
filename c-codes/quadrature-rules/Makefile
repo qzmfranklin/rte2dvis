@@ -12,39 +12,18 @@ all: 	DunavantRule.o 			\
 	WandzuraRule.o			\
 	GaussQuadratures.o		
 
-test: 	test-DunavantRule.exe 		\
-	test-GaussQuadratures.exe	\
-	test-WandzuraRule.exe
-	./test-DunavantRule.exe > DEBUG/test-DunavantRule.txt
-	./test-WandzuraRule.exe > DEBUG/test-WandzuraRule.txt
-	./test-GaussQuadratures.exe > DEBUG/test-GaussQuadratures.txt
+test: 	test.exe
+	./$< > DEBUG/test.txt
 	@echo DEBUG information in the ./DEBUG directory
 ###############################################################################
-# Directory-specific targets
-
-########################
-test-DunavantRule.exe: DunavantRule.o test-DunavantRule.o
-
-test-DunavantRule.o: test-DunavantRule.cpp
-include test-DunavantRule.d
+# Directory-specific targets 
+test.exe: test.o DunavantRule.o WandzuraRule.o GaussQuadratures.o
 
 DunavantRule.o: DunavantRule.cpp
 include DunavantRule.d
 
-########################
-test-WandzuraRule.exe: WandzuraRule.o test-WandzuraRule.o
-
-test-WandzuraRule.o: test-WandzuraRule.cpp
-include test-WandzuraRule.d
-
 WandzuraRule.o: WandzuraRule.cpp
 include WandzuraRule.d
-
-########################
-test-GaussQuadratures.exe: GaussQuadratures.o test-GaussQuadratures.o
-
-test-GaussQuadratures.o: test-GaussQuadratures.cpp
-include test-GaussQuadratures.d
 
 GaussQuadratures.o: GaussQuadratures.cpp
 include GaussQuadratures.d
