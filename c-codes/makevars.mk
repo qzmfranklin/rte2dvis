@@ -55,7 +55,7 @@ AUXFILES :=
 ALLFILES := ${SRCFILES} ${HDRFILES} ${AUXFILES}
 ###############################################################################
 # Colorful echo!
-NONE		:=\033[00m
+NONE		:=\033[00m 
 RED		:=\033[01;31m
 GREEN		:=\033[01;32m
 YELLOW		:=\033[01;33m
@@ -64,11 +64,6 @@ CYAN		:=\033[01;36m
 WHITE		:=\033[01;37m
 BOLD		:=\033[1m
 UNDERLINE	:=\033[4m
-#echo -e "This text is ${RED}red${NONE} 		\
-		and ${GREEN}green${NONE} 		\
-		and ${BOLD}bold${NONE} 			\
-		and ${UNDERLINE}			\
-		underlined${NONE}."
 ###############################################################################
 .PHONY: all 						\
 	clean cleanx cleanxx 				\
@@ -87,7 +82,7 @@ cleanx:
 cleanxx: clean
 	@rm -rf *.dylib *.so *.a *.exe a.out *.o
 dist:
-	@tar czf pdclib.tgz ${ALLFILES}
+	@tar czf "${CYAN}pdclib.tgz${NONE}" ${ALLFILES}
 test: ${TSTFILES:%.cpp=%.exe}
 	@echo Running "${RED}$<${NONE}"...
 	@./$< > DEBUG/test.txt
