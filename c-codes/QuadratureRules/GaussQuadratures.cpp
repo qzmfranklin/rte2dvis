@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
-#include "../include/GaussQuadratures.h"
+#include "GaussQuadratures.h"
 
 namespace QuadratureRules {
 	

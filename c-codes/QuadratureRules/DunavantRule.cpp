@@ -2,7 +2,7 @@
 # include <fstream>
 # include <cmath>
 # include <ctime>
-# include "../include/DunavantRule.h"
+# include "DunavantRule.h"
 using namespace std; 
 namespace QuadratureRules { 
 	DunavantRule gDunavantRule;
