@@ -9,9 +9,10 @@ all: file-io.o
 
 test: test-file-io.exe dump-msh-file.exe
 	./test-file-io.exe TimeStamp.cpp 				\
-		HelloWorld.txt example.msh 				\
+		DEBUG/HelloWorld.txt 					\
+		example.msh 						\
 		DEBUG/example_out					\
-		> OUTPUT/OUTPUT.txt
+		> DEBUG/OUTPUT.txt
 	./dump-msh-file.exe example.msh DEBUG/test-dump-msh-file 
 ###############################################################################
 file-io.o: file-io.c

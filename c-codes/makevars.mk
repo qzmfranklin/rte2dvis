@@ -1,7 +1,9 @@
 # The template Makefile header in subdirectories:
+##NOINLINEOPT := True 		# Disable automatic function inlining.
+##UNIVERSAL_BINARY := True	# Produce universal binary -fPIC.
+## Suppress warning messages about deprecated or antiquated headers.
+#CFLAGS 	:=  -Wno-deprecated	
 #include ../makevars.mk
-##NOINLINEOPT := True 		# disable automatic function inlining
-##UNIVERSAL_BINARY := True	# produce universal binary -fPIC
 ## The MKL library is already linked. Need not to be specified.
 ##INCS	:= ${INCS} ${MLL_INCS} 
 ##LIBS	:= ${LIBS} ${MLL_LIBS}
@@ -15,12 +17,12 @@ endif
 ###############################################################################
 CC	:= icc
 CXX	:= icpc
-CFLAGS 	:= -Wall -O3					\
+CFLAGS 	:= ${CFLAGS} -Wall -O3					\
 	${FPIC}						\
 	${NOINLINEOPT}					\
 	-prec-div -no-ftz				\
 	-restrict
-CFLAGSXX:= ${CFLAGS}
+CFLAGSXX:= ${CFLAGSXX} ${CFLAGS}
 # Intel Math Kernel Library
 MKL_INCS:= 
 MKL_LIBS:= -mkl 

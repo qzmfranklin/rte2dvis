@@ -3,17 +3,17 @@ include ../makevars.mk
 #########
 all: Utils.o
 
-test: test-Utils.exe
+test: test-utils.exe
 	./$< > OUTPUT/test-Utils.txt
 	cat OUTPUT/test-Utils.txt
 
-Utils.o: Utils.cpp
-include Utils.d
+utils.o: utils.cpp
+include utils.d
 
-test-Utils.exe: test-Utils.o Utils.o
+test-utils.exe: test-utils.o utils.o
 
-test-Utils.o: test-Utils.cpp
-include test-Utils.d
+test-utils.o: test-utils.cpp
+include test-utils.d
 
 #########
 

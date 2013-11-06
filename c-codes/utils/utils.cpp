@@ -8,9 +8,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <errno.h>
-
+#include <errno.h> 
 using namespace std;
+
 namespace Utils { 
 
 	static void drawline(int width, int n){
@@ -247,4 +247,4 @@ namespace Utils {
 		sprintf(fname, "/proc/%d/status", pid);
 		box_file(fname, mesg);
 	}
-} // namespace Utils
+} // namespace Utils 
