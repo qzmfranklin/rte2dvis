@@ -8,13 +8,21 @@ include ../makevars.mk
 #LIBS	:= ${LIBS} ${MLL_LIBS}
 ############################################################################### 
 # This section are the phony targets
-all: DunavantRule.o GaussQuadratures.o
-test: test-DunavantRule.exe test-GaussQuadratures.exe
+all: 	DunavantRule.o 			\
+	WandzuraRule.o			\
+	GaussQuadratures.o		
+
+test: 	test-DunavantRule.exe 		\
+	test-GaussQuadratures.exe	\
+	test-WandzuraRule.exe
 	./test-DunavantRule.exe > DEBUG/test-DunavantRule.txt
+	./test-WandzuraRule.exe > DEBUG/test-WandzuraRule.txt
 	./test-GaussQuadratures.exe > DEBUG/test-GaussQuadratures.txt
 	@echo DEBUG information in the ./DEBUG directory
 ###############################################################################
 # Directory-specific targets
+
+########################
 test-DunavantRule.exe: DunavantRule.o test-DunavantRule.o
 
 test-DunavantRule.o: test-DunavantRule.cpp
@@ -23,6 +31,16 @@ include test-DunavantRule.d
 DunavantRule.o: DunavantRule.cpp
 include DunavantRule.d
 
+########################
+test-WandzuraRule.exe: WandzuraRule.o test-WandzuraRule.o
+
+test-WandzuraRule.o: test-WandzuraRule.cpp
+include test-WandzuraRule.d
+
+WandzuraRule.o: WandzuraRule.cpp
+include WandzuraRule.d
+
+########################
 test-GaussQuadratures.exe: GaussQuadratures.o test-GaussQuadratures.o
 
 test-GaussQuadratures.o: test-GaussQuadratures.cpp
