@@ -42,7 +42,7 @@ MPREP	:= ${ML_DIR}/mprep
 MLL_INCS:= -I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C/
 MLL_LIBS:= -L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 # Project include directories
-INCLUDES:= $(foreach dir, $(shell find . -type d -name "include"), -I${dir})
+INCLUDES:= $(foreach dir, $(shell find . -type d -name "include"), -iquote ${dir})
 # The default empty include directories and 
 # linking libraries for specific directories
 INCS	:= ${INCLUDES} ${MKL_INCS}
