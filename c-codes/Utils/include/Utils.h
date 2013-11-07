@@ -277,6 +277,6 @@ namespace Utils {
 	 */
 	void print_proc_status(const char* mesg);
 
-#endif
 
 } // namespace Utils
+#endif
