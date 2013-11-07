@@ -153,8 +153,6 @@ dist:
 	@tar czf ${TARBALL_NAME} ${ALLFILES}
 distclean:
 	@rm -rf *.tgz
-test: ${TSTFILES:%.cpp=%.exe}
-	@echo "${BLK_MAGENTA}Testing information is in${NONE}""${B_GREEN}DEBUG/${NONE}".  
 check:
 	@echo "${B_BROWN}INCLUDES${NONE}" = ${INCLUDES}
 	@echo "${B_BROWN}TSTFILES${NONE}" = ${TSTFILES}
@@ -162,6 +160,20 @@ check:
 	@echo "${B_BROWN}OBJFILES${NONE}" = ${OBJFILES}
 	@echo "${B_BROWN}DEPFILES${NONE}" = ${DEPFILES}
 	@echo "${B_BROWN}BINFILES${NONE}" = ${BINFILES}
+test: ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe
+	@echo Running "${B_BROWN}./file-io/mshtodat.exe${NONE}"...
+	@./file-io/mshtodat.exe		./file-io/example.msh			\
+					> DEBUG/test-mshtodat.txt
+	@echo Running "${B_BROWN}./file-io/test.exe${NONE}"...
+	@./file-io/test.exe 		DEBUG/arg1 DEBUG/helloworld.txt 	\
+					./file-io/example.msh 			\
+					DEBUG/test-file-io-example		\
+					> DEBUG/test-file-io.txt
+	@echo Running "${B_BROWN}./QuadratureRules/test.exe${NONE}"...
+	@./QuadratureRules/test.exe 	> DEBUG/test-QuadratureRules.txt
+	@echo Running "${B_BROWN}./utils/test.exe${NONE}"...
+	@./utils/test.exe		> DEBUG/test-utils.txt
+	@echo Testing information is in "${B_GREEN}DEBUG/${NONE}".
 install: all
 
 todolist: 

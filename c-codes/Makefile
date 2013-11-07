@@ -10,9 +10,6 @@ TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
 -include Makefile.var
 ###############################################################################
 # Dependencies for executables
-test: ${TSTFILES:%.cpp=%.exe} 
-	@sh runtest.sh
-	@echo "${BLK_MAGENTA}Testing information is in${NONE}""${B_GREEN}DEBUG/${NONE}".  
 ./file-io/mshtodat.exe:		./file-io/mshtodat.o 			\
 				./file-io/file-io.o 
 ./file-io/test.exe: 		./file-io/test.o			\

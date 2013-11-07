@@ -11,8 +11,7 @@ log
 tags
 notebook/mesh/
 c-codes/msh
-c-codes/Book-SPCA
-c-codes/file-io/DEBUG/*
+c-codes/DEBUG/*
 c-codes/doc/*
 !c-codes/doc/Doxyfile
 derivation/log
