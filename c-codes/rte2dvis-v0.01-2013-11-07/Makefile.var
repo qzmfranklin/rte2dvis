@@ -1,19 +1,19 @@
 ###############################################################################
-HDRFILES:= $(shell find . -type f -name "*.h") # Header Files
-TSTFILES:= $(shell find . -type f -name "test.cpp") # Testing Files
-CFILES	:= $(shell find . -type f -name "*.c") # C Source Fils
-CPPFILES:= $(filter-out ${TSTFILES}, $(shell find . -type f -name "*.cpp")) # CPP Source Files
-SRCFILES:= ${CFILES} ${CPPFILES} # Source Files
-OBJFILES:= ${CFILES:%.c=%.o} ${CPPFILES:%.cpp=%.o} # Object Files
-DEPFILES:= ${OBJFILES:%.o=%.d} # Dependency Files
-ASMFILES:= ${OBJFILES:%.o=%.s} # Commented Assembly Codes
+HDRFILES:= $(shell find . -type f -name "*.h") # Header
+TSTFILES:= $(shell find . -type f -name "test.cpp") # Test
+CFILES	:= $(shell find . -type f -name "*.c") # C Source
+CPPFILES:= $(filter-out ${TSTFILES}, $(shell find . -type f -name "*.cpp")) # CPP Source
+SRCFILES:= ${CFILES} ${CPPFILES} # Source
+OBJFILES:= ${CFILES:%.c=%.o} ${CPPFILES:%.cpp=%.o} # Object
+DEPFILES:= ${OBJFILES:%.o=%.d} # Dependency
+ASMFILES:= ${OBJFILES:%.o=%.s} # Assembly
 DOCFILES:= # Documentation
-MANFILES:= # Manuals
-EXPFILES:= ./file-io/example.msh # Example and Demo Files
-MAKFILES:= ./Makefile ./Makefile.var # Makfile and Related File(s)
-AUXFILES:= ${DOCFILES} ${EXPFILES} ${MANFILES} ${MAKFILES} # Auxilliary Files
+EXPFILES:= ./file-io/example.msh # Example and demo files
+MANFILES:= # Manual
+MAKFILES:= ./Makefile ./Makefile.var
+AUXFILES:= ${DOCFILES} ${EXPFILES} ${MANFILES} ${MAKFILES} # Auxilliary files
 ALLFILES:= ${SRCFILES} ${HDRFILES} ${AUXFILES} # All Files for Distribution
-BINFILES:= ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe # All EXE Files
+BINFILES:= ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe # All EXE files
 ###############################################################################
 # Compilation options
 CC	:= icc
@@ -26,6 +26,7 @@ CFLAGS 	:= -O3						\
 	# 						\
 	-fPIC						\
 	-fno-inline-functions				\
+	-iquote ${}					\
 
 CFLAGSXX:= ${CFLAGS}
 ###############################################################################
@@ -97,7 +98,7 @@ REV_CYAN	:=\033[07;36m
 REV_GREY	:=\033[07;37m 
 ############################################################################### 
 # Pattern rules
-.SUFFIXES:
+.SUFFIXES: #Undefine existing pattern rules
 .SUFFIXES: .tm .c .cpp .o .exe .s .d 
 # CXX linking at the top level
 %.exe: %.o 
@@ -133,7 +134,6 @@ REV_GREY	:=\033[07;37m
 	check						\
 	test						\
 	install uninstall				\
-	commit						\
 	todolist
 
 all: ${OBJFILES}
@@ -177,11 +177,6 @@ test: ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe
 	@./utils/test.exe		> DEBUG/test-utils.txt
 	@echo Testing information is in "${B_GREEN}DEBUG/${NONE}".
 install: all
-
-commit:
-	@echo Git committing...
-	@cd ../; git add --all; git commit -m "$(shell date "+%Y%m%d %H:%M:%S")"; cd -
-
 
 todolist: 
 	-@for file in ${ALLFILES:Makefile=};		\
