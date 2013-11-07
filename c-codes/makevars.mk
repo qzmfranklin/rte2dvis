@@ -1,19 +1,19 @@
 ###############################################################################
-HDRFILES:= $(shell find . -type f -name "*.h") # Header Files
-TSTFILES:= $(shell find . -type f -name "test.cpp") # Testing Files
-CFILES	:= $(shell find . -type f -name "*.c") # C Source Fils
-CPPFILES:= $(filter-out ${TSTFILES}, $(shell find . -type f -name "*.cpp")) # CPP Source Files
-SRCFILES:= ${CFILES} ${CPPFILES} # Source Files
-OBJFILES:= ${CFILES:%.c=%.o} ${CPPFILES:%.cpp=%.o} # Object Files
-DEPFILES:= ${OBJFILES:%.o=%.d} # Dependency Files
-ASMFILES:= ${OBJFILES:%.o=%.s} # Commented Assembly Codes
-DOCFILES:= # Documentation
-MANFILES:= # Manuals
-EXPFILES:= ./file-io/example.msh # Example and Demo Files
-MAKFILES:= ./Makefile ./Makefile.var # Makfile and Related File(s)
-AUXFILES:= ${DOCFILES} ${EXPFILES} ${MANFILES} ${MAKFILES} # Auxilliary Files
-ALLFILES:= ${SRCFILES} ${HDRFILES} ${AUXFILES} # All Files for Distribution
-BINFILES:= ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe # All EXE Files
+#HDRFILES:= $(shell find . -type f -name "*.h") # Header Files
+#TSTFILES:= $(shell find . -type f -name "test.cpp") # Testing Files
+#CFILES	:= $(shell find . -type f -name "*.c") # C Source Fils
+#CPPFILES:= $(filter-out ${TSTFILES}, $(shell find . -type f -name "*.cpp")) # CPP Source Files
+#SRCFILES:= ${CFILES} ${CPPFILES} # Source Files
+#OBJFILES:= ${CFILES:%.c=%.o} ${CPPFILES:%.cpp=%.o} # Object Files
+#DEPFILES:= ${OBJFILES:%.o=%.d} # Dependency Files
+#ASMFILES:= ${OBJFILES:%.o=%.s} # Commented Assembly Codes
+#DOCFILES:= # Documentation
+#MANFILES:= # Manuals
+#EXPFILES:= ./file-io/example.msh # Example and Demo Files
+#MAKFILES:= ./Makefile ./Makefile.var # Makfile and Related File(s)
+#AUXFILES:= ${DOCFILES} ${EXPFILES} ${MANFILES} ${MAKFILES} # Auxilliary Files
+#ALLFILES:= ${SRCFILES} ${HDRFILES} ${AUXFILES} # All Files for Distribution
+#BINFILES:= ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe # All EXE Files
 ###############################################################################
 # Compilation options
 CC	:= icc
@@ -27,7 +27,7 @@ CFLAGS 	:= -O3						\
 	-fPIC						\
 	-fno-inline-functions				\
 
-CFLAGSXX:= ${CFLAGS}
+CXXFLAGS:= ${CFLAGS}
 ###############################################################################
 # Linkage options
 # Intel Math Kernel Library
@@ -100,29 +100,29 @@ REV_GREY	:=\033[07;37m
 .SUFFIXES:
 .SUFFIXES: .tm .c .cpp .o .exe .s .d 
 # CXX linking at the top level
-%.exe: %.o 
-	@echo Linking executable "${B_MAGENTA}$@${NONE}"...
-	@${CXX} -o $@ ${filter %.o,$^} ${LIBS} 
-%.dylib: %.o
-	@echo Linking dynamic library "${B_MAGENTA}$@${NONE}"...
-	@${CXX} -o $@ -dynamiclib ${filter %.o,$^} ${LIBS}
-%.a: %.o
-	@echo Linking static library "${B_MAGENTA}$@${NONE}"...
-	@${CXX} -o $@ -staticlib ${filter %.o,$^} ${LIBS} 
-# C sources are 
-%.o: %.c
-	@echo Compiling "${B_RED}$@${NONE}"...
-	@${CC} -o $@ -c $< -MD -MP ${CFLAGS} ${INCS}
-%.s: %.c 
-	@echo Generating source-commented assembly list "${BROWN}$@${NONE}"...
-	@${CC} -o $@ -S $< ${CFLAGS} -fsource-asm ${INCS} 
-# CXX sources
-%.o: %.cpp
-	@echo Compiling "${B_RED}$@${NONE}"...
-	@${CXX} -o $@ -c $< -MD -MP ${CFLAGSXX} ${INCS}
-%.s: %.cpp
-	@echo Generating source-commented assembly list "${BROWN}$@${NONE}"...
-	@${CXX} -o $@ -S $< ${CFLAGSXX} -fsource-asm ${INCS} 
+#%.exe: %.o 
+	#@echo Linking executable "${B_MAGENTA}$@${NONE}"...
+	#@${CXX} -o $@ ${filter %.o,$^} ${LIBS} 
+#%.dylib: %.o
+	#@echo Linking dynamic library "${B_MAGENTA}$@${NONE}"...
+	#@${CXX} -o $@ -dynamiclib ${filter %.o,$^} ${LIBS}
+#%.a: %.o
+	#@echo Linking static library "${B_MAGENTA}$@${NONE}"...
+	#@${CXX} -o $@ -staticlib ${filter %.o,$^} ${LIBS} 
+## C sources are 
+#%.o: %.c
+	#@echo Compiling "${B_RED}$@${NONE}"...
+	#@${CC} -o $@ -c $< -MD -MP ${CFLAGS} ${INCS}
+#%.s: %.c 
+	#@echo Generating source-commented assembly list "${BROWN}$@${NONE}"...
+	#@${CC} -o $@ -S $< ${CFLAGS} -fsource-asm ${INCS} 
+## CXX sources
+#%.o: %.cpp
+	#@echo Compiling "${B_RED}$@${NONE}"...
+	#@${CXX} -o $@ -c $< -MD -MP ${CXXFLAGS} ${INCS}
+#%.s: %.cpp
+	#@echo Generating source-commented assembly list "${BROWN}$@${NONE}"...
+	#@${CXX} -o $@ -S $< ${CXXFLAGS} -fsource-asm ${INCS} 
 ###############################################################################
 -include ${DEPFILES} # Dependency files (*.d files)
 ###############################################################################

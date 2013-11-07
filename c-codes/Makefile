@@ -7,7 +7,14 @@ VERSION		:= v0.01
 DATE_TIME	:= $(shell date "+%Y-%m-%d")
 TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
 ###############################################################################
--include Makefile.var
+-include makevars.mk
+-include QuadratureRules/makevars.mk
+%.o: %.cpp
+	@echo Compiling "${B_RED}$@${NONE}"...
+	@${CXX} -o $@ -c $< -MD -MP ${CXXFLAGS} ${INCS}
+%.s: %.cpp
+	@echo Generating source-commented assembly list "${BROWN}$@${NONE}"...
+	@${CXX} -o $@ -S $< ${CXXFLAGS} -fsource-asm ${INCS} 
 ###############################################################################
 # Dependencies for executables
 ./file-io/mshtodat.exe:		./file-io/mshtodat.o 			\
