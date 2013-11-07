@@ -6,44 +6,13 @@ TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
 ###############################################################################
 -include makevars.mk
 ###############################################################################
--include ${DEPFILES}
-###############################################################################
-.PHONY: all 						\
-	clean cleanx cleanxx 				\
-	dist						\
-	distclean					\
-	check						\
-	test						\
-	install uninstall				\
-	todolist
-
-all: ${OBJFILES}
-
-clean:
-	@rm -rf ${ASMFILES} 
-cleanx: 
-	@rm -rf *.s DEBUG/* OUPUT/*
-cleanxx: clean
-	@rm -rf ${OBJFILES} ${DEPFILES} ${BINFILES}
-dist:
-	@echo Compressing into "${CYAN}${TARBALL_NAME}${NONE}"...
-	@tar czf ${TARBALL_NAME} ${ALLFILES}
-distclean:
-	@rm -rf *.tgz
-test: ${TSTFILES:%.cpp=%.exe}
-	@echo Running "${RED}$<${NONE}"...
-	@./$< > DEBUG/test.txt
-	@echo Debug information is in "${GREEN}DEBUG/test.txt${NONE}".
-check:
-	@echo "${YELLOW}INCLUDES${NONE}" = ${INCLUDES}
-	@echo "${YELLOW}TSTFILES${NONE}" = ${TSTFILES}
-	@echo "${YELLOW}SRCFILES${NONE}" = ${SRCFILES}
-	@echo "${YELLOW}OBJFILES${NONE}" = ${OBJFILES}
-	@echo "${YELLOW}DEPFILES${NONE}" = ${DEPFILES}
-install: all
-	mv ${OBJFILES} ${BIN}
-todolist:
-	-@for file in ${ALLFILES:Makefile=};		\
-	do fgrep -H -e TODO -e FIXME -e UNFINISHED	\
-	$$file;	done; true 
-###############################################################################
+./file-io/mshtodat.exe:		./file-io/mshtodat.o 			\
+				./file-io/file-io.o 
+./file-io/test.exe: 		./file-io/test.o			\
+				./file-io/file-io.o 
+./QuadratureRules/test.exe:	./QuadratureRules/test.o		\
+				./QuadratureRules/DunavantRule.o	\
+				./QuadratureRules/WandzuraRule.o	\
+				./QuadratureRules/GaussQuadratures.o 
+./utils/test.exe: 		./utils/test.o				\
+				./utils/utils.o
