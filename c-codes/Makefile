@@ -18,5 +18,5 @@ TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
 				./QuadratureRules/DunavantRule.o	\
 				./QuadratureRules/WandzuraRule.o	\
 				./QuadratureRules/GaussQuadratures.o 
-./utils/test.exe: 		./utils/test.o				\
-				./utils/utils.o
+./Utils/test.exe: 		./Utils/test.o				\
+				./Utils/Utils.o

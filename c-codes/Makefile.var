@@ -147,8 +147,9 @@ cleanx:
 		${TSTFILES:%.cpp=%.s}
 cleanxx: 
 	@echo "${REV_RED}Deleting everything but the sources...${NONE}"
-	@rm -rf ${OBJFILES} ${DEPFILES} ${BINFILES}	\
+	@rm -rf ./DEBUG/* ${OBJFILES} ${DEPFILES} ${BINFILES}	\
 		${TSTFILES:%.cpp=%.o} ${TSTFILES:%.cpp=%.d}
+
 dist:
 	@echo Compressing into "${B_CYAN}${TARBALL_NAME}${NONE}"...
 	@tar czf ${TARBALL_NAME} ${ALLFILES}
@@ -165,6 +166,7 @@ check:
 test: ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe
 	@echo Running "${B_BROWN}./file-io/mshtodat.exe${NONE}"...
 	@./file-io/mshtodat.exe		./file-io/example.msh			\
+					DEBUG/test-mshtodat			\
 					> DEBUG/test-mshtodat.txt
 	@echo Running "${B_BROWN}./file-io/test.exe${NONE}"...
 	@./file-io/test.exe 		DEBUG/arg1 DEBUG/helloworld.txt 	\
