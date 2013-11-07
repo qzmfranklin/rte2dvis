@@ -180,8 +180,11 @@ install: all
 
 commit:
 	@echo Git committing...
-	@cd ../; git add --all; git commit -m "$(shell date "+%Y%m%d %H:%M:%S")"; cd -
-
+	@cd ../; \
+		open .gitignore; \
+		git add --all; 	\
+		git commit -m "$(shell date "+%Y%m%d %H:%M:%S")"; \
+		cd - 
 
 todolist: 
 	-@for file in ${ALLFILES:Makefile=};		\
