@@ -1,52 +1,63 @@
 ###############################################################################
-#HDRFILES:= $(shell find . -type f -name "*.h") # Header Files
-#TSTFILES:= $(shell find . -type f -name "test.cpp") # Testing Files
-#CFILES	:= $(shell find . -type f -name "*.c") # C Source Fils
-#CPPFILES:= $(filter-out ${TSTFILES}, $(shell find . -type f -name "*.cpp")) # CPP Source Files
-#SRCFILES:= ${CFILES} ${CPPFILES} # Source Files
-#OBJFILES:= ${CFILES:%.c=%.o} ${CPPFILES:%.cpp=%.o} # Object Files
-#DEPFILES:= ${OBJFILES:%.o=%.d} # Dependency Files
-#ASMFILES:= ${OBJFILES:%.o=%.s} # Commented Assembly Codes
-#DOCFILES:= # Documentation
-#MANFILES:= # Manuals
-#EXPFILES:= ./file-io/example.msh # Example and Demo Files
-#MAKFILES:= ./Makefile ./Makefile.var # Makfile and Related File(s)
-#AUXFILES:= ${DOCFILES} ${EXPFILES} ${MANFILES} ${MAKFILES} # Auxilliary Files
-#ALLFILES:= ${SRCFILES} ${HDRFILES} ${AUXFILES} # All Files for Distribution
-#BINFILES:= ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe # All EXE Files
+INCLUDE	:=include
+BUILD	:=build# Out-of-source build - object, dependency, and assembly files
+DEBUG	:=DEBUG# Profiling and debugging files
+OUTPUT	:=OUTPUT# Testing result files
+############################################################################### 
+# Source and build files
+CFILES	:=# *.c
+CPPFILES:=# *.cpp
+OBJFILES:=# *.o
+DEPFILES:=# *.d
+ASMFILES:=# *.s: source code commented
+BINFILES:=# *.exe 
+############################################################################### 
+# Distribution files
+SRCFILES:=# All source files
+HDRFILES:=$(shell find . -type f -name "*.h") # All header files 
+MAKFILES:=Makefile $(shell find . -type f -name "makevars.mk") # Makefile and related file(s)
+DOCFILES:=# Documentation
+MANFILES:=# Manuals
+EXPFILES:=# Examples
+DISTFILES:=${SRCFILES} ${HDRFILES} ${MAKFILES} ${MANFILES} ${EXPFILES}
+############################################################################### 
+# Testing and debuggin files
+#TSTFILES:=
 ###############################################################################
 # Compilation options
-CC	:= icc
-CXX	:= icpc
-CFLAGS 	:= -O3						\
+CC	:=icc
+CXX	:=icpc
+CFLAGS 	:=-O3						\
 	-Wall						\
-	-Wno-deprecated					\
 	-prec-div -no-ftz				\
+	-MD -MP						\
 	-restrict
 	# 						\
 	-fPIC						\
 	-fno-inline-functions				\
+	-Wno-deprecated					\
 
-CXXFLAGS:= ${CFLAGS}
+CXXFLAGS:=${CFLAGS}
+
+ASMFLAGS:=-S -fsource-asm# Generate source code commented assembly code
 ###############################################################################
-# Linkage options
+# Include and linkage options
 # Intel Math Kernel Library
-MKL_INCS:= 
-MKL_LIBS:= -mkl
+MKL_INCS:=
+MKL_LIBS:=-mkl
 # MathLink 
-ML_DIR	:= /Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
-ML_INCS	:= -I${ML_DIR}
-ML_LIBS	:= -L${ML_DIR} -lMLi3 -lstdc++ -framework Foundation
-MPREP	:= ${ML_DIR}/mprep
+ML_DIR	:=/Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
+ML_INCS	:=-I${ML_DIR}
+ML_LIBS	:=-L${ML_DIR} -lMLi3 -lstdc++ -framework Foundation
+MPREP	:=${ML_DIR}/mprep
 # LibraryLink 
-MLL_INCS:= -I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C/
-MLL_LIBS:= -L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
+MLL_INCS:=-I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C/
+MLL_LIBS:=-L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 # Project include directories
-INCLUDES:= $(foreach dir, $(shell find . -type d -name "include"), -iquote ${dir})
 # The default empty include directories and 
 # linking libraries for specific directories
-INCS	:= ${INCLUDES} ${MKL_INCS}
-LIBS	:= ${MKL_LIBS}
+INCS	:=${MKL_INCS} $(foreach dir, $(shell find . -type d -name "include"), -iquote ${dir})
+LIBS	:=${MKL_LIBS}
 ###############################################################################
 # Colorful shell echo!
 NONE		:=\033[00m 
@@ -96,9 +107,7 @@ REV_MAGENTA	:=\033[07;35m
 REV_CYAN	:=\033[07;36m
 REV_GREY	:=\033[07;37m 
 ############################################################################### 
-# Pattern rules
-.SUFFIXES:
-.SUFFIXES: .tm .c .cpp .o .exe .s .d 
+# Pattern rules template
 # CXX linking at the top level
 #%.exe: %.o 
 	#@echo Linking executable "${B_MAGENTA}$@${NONE}"...
@@ -123,73 +132,3 @@ REV_GREY	:=\033[07;37m
 #%.s: %.cpp
 	#@echo Generating source-commented assembly list "${BROWN}$@${NONE}"...
 	#@${CXX} -o $@ -S $< ${CXXFLAGS} -fsource-asm ${INCS} 
-###############################################################################
--include ${DEPFILES} # Dependency files (*.d files)
-###############################################################################
-.PHONY: all 						\
-	clean cleanx cleanxx 				\
-	dist						\
-	distclean					\
-	check						\
-	test						\
-	install uninstall				\
-	commit						\
-	todolist
-
-all: ${OBJFILES}
-
-clean:
-	@echo "${REV_BLUE}Deleting testing outputs...${NONE}"
-	@rm -rf DEBUG/*
-cleanx: 
-	@echo "${REV_GREEN}Deleting commented assembly codes...${NONE}"
-	@rm -rf ${ASMFILES} 				\
-		${TSTFILES:%.cpp=%.s}
-cleanxx: 
-	@echo "${REV_RED}Deleting everything but the sources...${NONE}"
-	@rm -rf ./DEBUG/* ${OBJFILES} ${DEPFILES} ${BINFILES}	\
-		${TSTFILES:%.cpp=%.o} ${TSTFILES:%.cpp=%.d}
-
-dist:
-	@echo Compressing into "${B_CYAN}${TARBALL_NAME}${NONE}"...
-	@tar czf ${TARBALL_NAME} ${ALLFILES}
-distclean:
-	@rm -rf *.tgz
-check:
-	@echo "${B_BROWN}INCLUDES${NONE}" = ${INCLUDES}
-	@echo "${B_BROWN}TSTFILES${NONE}" = ${TSTFILES}
-	@echo "${B_BROWN}SRCFILES${NONE}" = ${SRCFILES}
-	@echo "${B_BROWN}OBJFILES${NONE}" = ${OBJFILES}
-	@echo "${B_BROWN}DEPFILES${NONE}" = ${DEPFILES}
-	@echo "${B_BROWN}BINFILES${NONE}" = ${BINFILES}
-	@echo "${B_BROWN}ALLFILES${NONE}" = ${ALLFILES}
-test: ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe
-	@echo Running "${B_BROWN}./file-io/mshtodat.exe${NONE}"...
-	@./file-io/mshtodat.exe		./file-io/example.msh			\
-					DEBUG/test-mshtodat			\
-					> DEBUG/test-mshtodat.txt
-	@echo Running "${B_BROWN}./file-io/test.exe${NONE}"...
-	@./file-io/test.exe 		DEBUG/arg1 DEBUG/helloworld.txt 	\
-					./file-io/example.msh 			\
-					DEBUG/test-file-io-example		\
-					> DEBUG/test-file-io.txt
-	@echo Running "${B_BROWN}./QuadratureRules/test.exe${NONE}"...
-	@./QuadratureRules/test.exe 	> DEBUG/test-QuadratureRules.txt
-	@echo Running "${B_BROWN}./utils/test.exe${NONE}"...
-	@./utils/test.exe		> DEBUG/test-utils.txt
-	@echo Testing information is in "${B_GREEN}DEBUG/${NONE}".
-install: all
-
-commit:
-	@echo Git committing...
-	@cd ../; \
-		open .gitignore; \
-		git add --all; 	\
-		git commit -m "$(shell date "+%Y%m%d %H:%M:%S")"; \
-		cd - 
-
-todolist: 
-	-@for file in ${ALLFILES:Makefile=};		\
-	do fgrep -H -e TODO -e FIXME -e UNFINISHED	\
-	$$file;	done; true 
-###############################################################################
