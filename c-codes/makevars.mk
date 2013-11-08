@@ -56,7 +56,7 @@ MLL_LIBS:=-L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 # Project include directories
 # The default empty include directories and 
 # linking libraries for specific directories
-INCS	:=${MKL_INCS} $(foreach dir, $(shell find . -type d -name "include"), -iquote ${dir})
+INCS	:=${MKL_INCS} -iquote ${INCLUDE}#$(foreach dir, $(shell find . -type d -name "include"), -iquote ${dir})
 LIBS	:=${MKL_LIBS}
 ###############################################################################
 # Colorful shell echo!

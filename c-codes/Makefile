@@ -8,7 +8,7 @@ DATE_TIME	:= $(shell date "+%Y-%m-%d")
 TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
 ###############################################################################
 -include makevars.mk
--include QuadratureRules/makevars.mk
+-include src/QuadratureRules/makevars.mk
 -include ${DEPFILES} # Dependency files (*.d files)
 ###############################################################################
 .SUFFIXES:
