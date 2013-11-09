@@ -7,73 +7,41 @@ VERSION		:= v0.01
 DATE_TIME	:= $(shell date "+%Y-%m-%d")
 TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
 ###############################################################################
-TARGET_ALL	:=
-TARGET_TEST	:=
-TARGET_LIST	:=
-###############################################################################
--include makevars.mk# The main makevars.mk
--include src/QuadratureRules/makevars.mk# Sub-makevars.mk
--include ${DEPFILES} # Dependency files (*.d files)
+-include Makefile.vars# The top level vars file
+-include ${MKVFILES}#
+-include ${DEPFILES}# Dependency files (*.d files)
+DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} ./Makefile
 ###############################################################################
 .PHONY: all 						\
-	clean cleanx cleanxx 				\
-	dist						\
-	distclean					\
-	check						\
 	test						\
-	install uninstall				\
-	commit						\
-	todolist
+	asm						\
+	list						\
+	clean cleanx cleanxx 				\
+	dist distclean					\
+	check						\
+	todolist 
 
-all: 
-
+all:	${TARGET_ALL} 
+test:	${TARGET_TEST} 
+asm:	${TARGET_ASM} 
+list:	${TARGET_LIST} 
 clean:
 	@echo "${REV_RED}Deleting ${BUILD}/*...${NONE}"
-	@rm -rf ${BUILD}/*
-cleanx: 
+	@rm -f ${BUILD}/*
+cleanx:
 	@echo "${REV_GREEN}Deleting ${DEBUG}/*...${NONE}"
-	@rm -rf ${DEBUG}/*
-cleanxx: 
-	@echo So far in disuse...
-
+	@rm -f ${DEBUG}/*
+cleanxx:
+	@echo "${REV_GREY}Deleting ${TARBALL_NAME}...${NONE}"
+	@rm -f ${TARBALL_NAME}
 dist:
 	@echo Compressing into "${B_CYAN}${TARBALL_NAME}${NONE}"...
-	@tar czf ${TARBALL_NAME} ${ALLFILES}
+	@tar czf ${TARBALL_NAME} ${DISTFILES}
 distclean:
-	@rm -rf *.tgz
+	#TODO
 check:
-	@echo "${B_BROWN}INCLUDES${NONE}" = ${INCLUDES}
-	@echo "${B_BROWN}TSTFILES${NONE}" = ${TSTFILES}
-	@echo "${B_BROWN}SRCFILES${NONE}" = ${SRCFILES}
-	@echo "${B_BROWN}OBJFILES${NONE}" = ${OBJFILES}
-	@echo "${B_BROWN}DEPFILES${NONE}" = ${DEPFILES}
-	@echo "${B_BROWN}BINFILES${NONE}" = ${BINFILES}
-	@echo "${B_BROWN}ALLFILES${NONE}" = ${ALLFILES}
-test: ${TSTFILES:%.cpp=%.exe} ./file-io/mshtodat.exe
-	@echo Running "${B_BROWN}./file-io/mshtodat.exe${NONE}"...
-	@./file-io/mshtodat.exe		./file-io/example.msh			\
-					DEBUG/test-mshtodat			\
-					> DEBUG/test-mshtodat.txt
-	@echo Running "${B_BROWN}./file-io/test.exe${NONE}"...
-	@./file-io/test.exe 		DEBUG/arg1 DEBUG/helloworld.txt 	\
-					./file-io/example.msh 			\
-					DEBUG/test-file-io-example		\
-					> DEBUG/test-file-io.txt
-	@echo Running "${B_BROWN}./QuadratureRules/test.exe${NONE}"...
-	@./QuadratureRules/test.exe 	> DEBUG/test-QuadratureRules.txt
-	@echo Running "${B_BROWN}./utils/test.exe${NONE}"...
-	@./utils/test.exe		> DEBUG/test-utils.txt
-	@echo Testing information is in "${B_GREEN}DEBUG/${NONE}".
-install: all
-
-commit:
-	@echo Git committing...
-	@cd ../; \
-		open .gitignore; \
-		git add --all; 	\
-		git commit -m "$(shell date "+%Y%m%d %H:%M:%S")"; \
-		cd - 
-
+	#TODO
+	@echo Checking integrity...
 todolist: 
 	-@for file in ${ALLFILES:Makefile=};		\
 	do fgrep -H -e TODO -e FIXME -e UNFINISHED	\

@@ -16,6 +16,11 @@ DIR		:=src/QuadratureRules# Please, NO SPACE
 #  NOT include any *.d file in this file. All the *.d files are included in the
 #  Makefile in the root directory AFTER all the makevars.mk's are include.
 #  	b) So far, only supports CPP files. C support will be added TODO
+#  	c) Please refrain from using $(wildcard) command. It only helps when not
+#  really nessaccery and complicates the situation when we have forgotten about
+#  it. Yes, be explicit. Manually list all the source files here.
+#  	d) Dependencies are readily dealt with by the setup of the Makefile. One
+#  NEVER needs to specify the dependency for any .o file.
 ${DIR}CFILES	:=
 ${DIR}CPPFILES	:=		${DIR}/DunavantRule.cpp 			\
 				${DIR}/WandzuraRule.cpp				\
@@ -41,8 +46,7 @@ ${DIR}TSTOBJ	:=		${${DIR}TSTCPP:${DIR}%.cpp=${BUILD}%.o}
 ${DIR}TSTDEP	:=		${${DIR}TSTOBJ:%.o=%.d}
 ${DIR}TSTEXE	:=		${${DIR}TSTOBJ:%.o=%.exe}
 ${DIR}TSTASM	:=		${${DIR}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
-CFILES		:=		${CFILES} ${${DIR}CFILES}
-CPPFILES	:=		${CFILES} ${${DIR}CPPFILES}
+SRCFILES	:=		${SRCFILES} ${${DIR}CFILES} ${${DIR}CPPFILES}
 DEPFILES	:=		${DEPFILES} ${${DIR}DEPFILES} ${${DIR}TSTDEP}
 ################## DO NOT MODIFY ################
 ###############################################################################
@@ -113,8 +117,8 @@ ${DIR}LIBS	:=${LIBS}
 ############################################################################### 
 #DIRECTORY-SPECIFIC PATTERN RULES
 #  C++ linkage at the top level
-${BUILD}/%.exe: ${BUILD}/%.o 
-	@echo Linking executable "${RED}$@${NONE}"...
+${BUILD}/%.exe: ${BUID}/%.o 
+	@echo Linking  "${RED}$@${NONE}"...
 	@${CXX} -o $@ ${filter %.o,$^} ${${DIR}LIBS} 
 #  C++ sources
 ${BUILD}/%.o: ${DIR}/%.cpp
@@ -131,14 +135,17 @@ ${DEBUG}/%.s: ${DIR}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	@${CC} -o $@ $< ${ASMFLAGS} ${${DIR}CFLAGS} ${${DIR}INCS} 
 #DIRECTORY-SPECIFIC PHONY TARGETS
-.PHONY: ${DIR}-all ${DIR}-test ${DIR}-list
+.PHONY: ${DIR}-all ${DIR}-test ${DIR}-asm ${DIR}-list
 TARGET_ALL	:=${TARGET_ALL} ${DIR}-all
 TARGET_TEST	:=${TARGET_TEST} ${DIR}-test
+TARGET_ASM	:=${TARGET_ASM} ${DIR}-asm
 TARGET_LIST	:=${TARGET_LIST} ${DIR}-list
 ${DIR}-all: ${${DIR}OBJFILES} ${${DIR}BINFILES}
 	@echo Finished building "${B_BLUE}$@${NONE}".
 ${DIR}-test: ${${DIR}TSTEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".  
+${DIR}-asm: ${${DIR}ASMFILES} ${${DIR}TSTASM}
+	@echo Finished generating "${B_BLUE}$@${NONE}".  
 ${DIR}-list:
 	@echo \#\#\#\#\#\#\#\#"${B_BROWN}BEGIN $@${NONE}"\#\#\#\#\#\#\#\#
 	@echo "${BROWN}CPPFILES${NONE}":${${DIR}CPPFILES}
