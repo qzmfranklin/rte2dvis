@@ -26,17 +26,17 @@ test:	${TARGET_TEST}
 asm:	${TARGET_ASM} 
 list:	${TARGET_LIST} 
 clean:
-	@echo "${REV_RED}Deleting ${BUILD}/*...${NONE}"
+	@echo "Deleting ${REV_RED}${BUILD}/*${NONE}..."
 	@rm -rf ${BUILD}/*
 cleanx:
-	@echo "${REV_GREEN}Deleting ${DEBUG}/*...${NONE}"
+	@echo "Deleting ${REV_GREEN}${DEBUG}/*${NONE}..."
 	@rm -rf ${DEBUG}/*
 cleanxx:
-	@echo "${REV_GREY}Deleting ${TARBALL_NAME}...${NONE}"
-	@rm -rf ${RELEASE_NAME}.tgz
+	@echo "Deleting ${REV_GREY}${RELEASE_NAME}.*${NONE}..."
+	@rm -rf ${RELEASE_NAME}.*
 dist:
-	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.*${NONE}"...
-	@tar czf ${RELEASE_NAME}.*
+	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.tgz${NONE}"...
+	@rm -f ${RELEASE_NAME}.tgz; tar czf ${RELEASE_NAME}.tgz ${DISTFILES}
 distclean:
 	#TODO
 check:
