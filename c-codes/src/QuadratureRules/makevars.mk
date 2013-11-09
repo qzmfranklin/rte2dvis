@@ -46,7 +46,7 @@ ${DIR}TSTOBJ	:=		${${DIR}TSTCPP:${DIR}%.cpp=${BUILD}%.o}
 ${DIR}TSTDEP	:=		${${DIR}TSTOBJ:%.o=%.d}
 ${DIR}TSTEXE	:=		${${DIR}TSTOBJ:%.o=%.exe}
 ${DIR}TSTASM	:=		${${DIR}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
-SRCFILES	:=		${SRCFILES} ${${DIR}CFILES} ${${DIR}CPPFILES}
+SRCFILES	:=		${SRCFILES} ${${DIR}CFILES} ${${DIR}CPPFILES} ${${DIR}TSTCPP}
 DEPFILES	:=		${DEPFILES} ${${DIR}DEPFILES} ${${DIR}TSTDEP}
 ################## DO NOT MODIFY ################
 ###############################################################################
@@ -87,17 +87,7 @@ ${DIR}LIBS	:=${LIBS}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+###############################################################################
 ###############################################################################
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build

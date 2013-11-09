@@ -5,12 +5,12 @@
 PROJECT_NAME	:= rte2dvis
 VERSION		:= v0.01
 DATE_TIME	:= $(shell date "+%Y-%m-%d")
-TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
+RELEASE_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}
 ###############################################################################
 -include Makefile.vars# The top level vars file
 -include ${MKVFILES}#
 -include ${DEPFILES}# Dependency files (*.d files)
-DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} ./Makefile
+DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} Makefile
 ###############################################################################
 .PHONY: all 						\
 	test						\
@@ -27,21 +27,22 @@ asm:	${TARGET_ASM}
 list:	${TARGET_LIST} 
 clean:
 	@echo "${REV_RED}Deleting ${BUILD}/*...${NONE}"
-	@rm -f ${BUILD}/*
+	@rm -rf ${BUILD}/*
 cleanx:
 	@echo "${REV_GREEN}Deleting ${DEBUG}/*...${NONE}"
-	@rm -f ${DEBUG}/*
+	@rm -rf ${DEBUG}/*
 cleanxx:
 	@echo "${REV_GREY}Deleting ${TARBALL_NAME}...${NONE}"
-	@rm -f ${TARBALL_NAME}
+	@rm -rf ${RELEASE_NAME}.tgz
 dist:
-	@echo Compressing into "${B_CYAN}${TARBALL_NAME}${NONE}"...
-	@tar czf ${TARBALL_NAME} ${DISTFILES}
+	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.*${NONE}"...
+	@tar czf ${RELEASE_NAME}.*
 distclean:
 	#TODO
 check:
 	#TODO
 	@echo Checking integrity...
+	@echo ${DISTFILES}
 todolist: 
 	-@for file in ${ALLFILES:Makefile=};		\
 	do fgrep -H -e TODO -e FIXME -e UNFINISHED	\
