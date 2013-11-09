@@ -1,12 +1,12 @@
+###############################################################################
+#				STEP 1
 #DIRECTORY NAME FROM THE ROOT DIRECTORY
 #  Be very careful:
 # 	NO SPACE ( tab is OK )
 # 	NO DEFERRED-EVALUATION ( always use colon-equal, i.e., := ) #
-DIR		:=src/QuadratureRules# Please, NO SPACE
-
-
-
-
+DIR		:=src/QuadratureRules# Please, NO SPACE 
+###############################################################################
+#				STEP 2
 #DIRECTORY-SPECIFIC SOURCE FILES
 #  	Remember to add the ${DIR}/ to whatever source files(s) you wish to add.
 #  The dependencies are automatically resolved by the dependency files (*.d 
@@ -15,65 +15,46 @@ DIR		:=src/QuadratureRules# Please, NO SPACE
 #  	a) The GNU make does NOT support recursive include directive. So we must
 #  NOT include any *.d file in this file. All the *.d files are included in the
 #  Makefile in the root directory AFTER all the makevars.mk's are include.
-#  	b) ${DIR}TSTFILES are various testing files for the subdirectory it
-#  resides. Usually we can pack up all the neccessary testing functions into
-#  a single test file. But in case multiple test files are a must, please name
-#  each and all of the test files in the following pattern:
-#
-#  				test-[description].cpp
-#
-#  		i)    [description] must be distinct in the entire project;
-#  		ii)   Must use CPP as the extension name, even with some other
-#  		source C files.
-#  		iii)  The output EXE file will be in the ${BUILD} directory.
+#  	b) So far, only supports CPP files. C support will be added TODO
+${DIR}CFILES	:=
 ${DIR}CPPFILES	:=		${DIR}/DunavantRule.cpp 			\
 				${DIR}/WandzuraRule.cpp				\
 				${DIR}/GaussQuadratures.cpp
-
-${DIR}TSTFILES :=${DIR}/${DIR}-test.cpp# Testing source files
-
-
-
-#DIRECTORY-SPECIFIC BINARIES TO BE PUT INTO ${BIN}
-#  	These binaries are oftern small tool executables that does a specific 
-#  job. For example: file-io/mshtodat.exe (scans MSH file, export nodes and 
-#  triangles). Note that:
-# 	a) The ${BUILD}/${DIR}-test.exe files should NOT be included;
-# 	b) It is the programmer's job (at least for now) to make sure that all
-#  the files listed in ${DIR}BINFILES have proper build rules, which are usally 
-#  specified in the binary targets region;
-#  	c) The binary files should be put into the ${BIN} directory and with
-#  the required EXE extension. For example:
+################## DO NOT MODIFY ################
+${DIR}OBJFILES	:=		${${DIR}CPPFILES:${DIR}%.cpp=${BUILD}%.o}	\
+				${${DIR}CFILES:${DIR}%.c=${BUILD}%.o}
+${DIR}DEPFILES	:=		${${DIR}OBJFILES:%.o=%.d}
+${DIR}ASMFILES	:=		${${DIR}OBJFILES:${BUILD}%.o=${DEBUG}%.s}
+################## DO NOT MODIFY ################ 
+###############################################################################
+#				STEP 3
+#DIRECTORY-SPECIFIC TEST FILES
+#	Speicify all the test files. All test files must be CPP files. But when
+#  listing the them in ${DIR}TST, do NOT write the .cpp extension. For example:
+#  if one wishes to add test-mytest.cpp, he should write:
 #
-#  				${BIN}/binarytarget1.exe
+#  		${DIR}TST:=test-mytest
+${DIR}TST	:=		test-QuadratureRules
+################## DO NOT MODIFY ################
+${DIR}TSTCPP	:=		${${DIR}TST:%=${DIR}/%.cpp}
+${DIR}TSTOBJ	:=		${${DIR}TSTCPP:${DIR}%.cpp=${BUILD}%.o}
+${DIR}TSTDEP	:=		${${DIR}TSTOBJ:%.o=%.d}
+${DIR}TSTEXE	:=		${${DIR}TSTOBJ:%.o=%.exe}
+${DIR}TSTASM	:=		${${DIR}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
+CFILES		:=		${CFILES} ${${DIR}CFILES}
+CPPFILES	:=		${CFILES} ${${DIR}CPPFILES}
+DEPFILES	:=		${DEPFILES} ${${DIR}DEPFILES} ${${DIR}TSTDEP}
+################## DO NOT MODIFY ################
+###############################################################################
+#				STEP 4
+#	The default build rule for all the files specified in ${DIR}TST is
 #
-#  	d) The default compiling and linking options for ${DIR}BINFILES are the
-#  same as that of the directory, stated by the pattern rule:
+#		${${DIR}TSTEXE}: ${${DIR}TSTOBJ} ${${DIR}OBJFILES} 
 #
-#  				${BIN}/%.exe: ${DIR}/*.o
-#
-#  If one wishes to assign different compiling and linking options to any
-#  spcific binary, he/she will have to specify the complete TARGET-PREREQUISITE
-#  rule for that binary in the next part, i.e., DIRECTORY-SPECIFIC BINARY
-#  TARGETS.
-${DIR}BINFILES	:=
-
-
-
-
-#DIRECTORY-SPECIFIC BINARY TARGETS
-#  	The first target is by default the ${BUILD}/${DIR}-test.exe. It should 
-#  test all the major functionalities of source files in this directory. The 
-#  second and later targets, if any, should correspond to each and all of the 
-#  files listed in ${DIR}BINFILES. It is the programmer's job to keep it up.
-${BUILD}/${DIR}-test.exe: 	${BUILD}/${${DIR}:src/%=%}-test.o		\
-				${BUILD}/GaussQuadratures.o 			\
-				${BUILD}/DunavantRule.o 			\
-				${BUILD}/WandzuraRule.o 
-
-
-
-
+#	This is using all the object files generated in this directory plus the
+#  object files of the test CPP files. In case where this is either not enough
+#  or too much, please modify the following line.
+${${DIR}TSTEXE}: ${${DIR}TSTOBJ} ${${DIR}OBJFILES} 
 #DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
 #  	By default, the local options inherits the corresponding global ones 
 #  from the makevars.mk in the root directory. If one wishes to add any 
@@ -84,15 +65,41 @@ ${BUILD}/${DIR}-test.exe: 	${BUILD}/${${DIR}:src/%=%}-test.o		\
 #  the build in this directory does not require some extra libraries and/or 
 #  hearder files. But in case it did, free at ease to modify these two 
 #  variables.
+###############################################################################
+#				STEP 5
+#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
+#	Options specified here are used in this directory. By default, all 
+#  builds use the same options. When different compiling and/or linking options 
+#  need to be assigned to different targets, the programmer needs to list all
+#  the speical target-prerequisite dependencies manually.
 ${DIR}CFLAGS 	:=${CFLAGS}
 ${DIR}CXXFLAGS	:=${CXXFLAGS} \
 	-Wno-deprecated # No warning on deprecated and/or antiquiated headers
 ${DIR}INCS	:=${INCS}
-${DIR}LIBS	:=${LIBS}
+${DIR}LIBS	:=${LIBS} 
+###############################################################################
+#				STEP 6
+#	Write whatever dependencies here:
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+###############################################################################
+###############################################################################
+#	Congratulations! You have completed everything you need to do to build
+#  this directory. You do not need to modify this file unless some C and/or
+#  CPP source files are added, removed, or renamed. In that case, just go over
+#  STEP 1-6 again and it is done!
 ###############################################################################
 ###############################################################################
 ###############################################################################
@@ -103,31 +110,11 @@ ${DIR}LIBS	:=${LIBS}
 #				WANRING
 ###############################################################################
 ###############################################################################
-###############################################################################
-
-
-
-#DIRECTORY-SPECIFIC FILES
-${DIR}OBJFILES :=${${DIR}CPPFILES:${DIR}%.cpp=${BUILD}%.o}# Object Files
-${DIR}DEPFILES :=${${DIR}OBJFILES:%.o=%.d}# Dependency Files in the same directory as .o files
-${DIR}ASMFILES :=${${DIR}CPPFILES:${DIR}%.cpp=${DEBUG}%.s}# Commented Assembly Codes
-
-OBJFILES:=${OBJFILES} ${${DIR}OBJFILES}
-DEPFILES:=${DEPFILES} ${${DIR}DEPFILES}
-ASMFILES:=${ASMFILES} ${${DIR}ASMFILES}
-
-
-
-
+############################################################################### 
 #DIRECTORY-SPECIFIC PATTERN RULES
 #  C++ linkage at the top level
-#  Default pattern rule for binaries in this directory
-${BIN}/%.exe: ${BUILD}/%.o
-	@echo Linking executable "${B_RED}$@${NONE}"...
-	@${CXX} -o $@ ${filter %.o,$^} ${${DIR}LIBS} 
-
 ${BUILD}/%.exe: ${BUILD}/%.o 
-	@echo Linking executable "${B_RED}$@${NONE}"...
+	@echo Linking executable "${RED}$@${NONE}"...
 	@${CXX} -o $@ ${filter %.o,$^} ${${DIR}LIBS} 
 #  C++ sources
 ${BUILD}/%.o: ${DIR}/%.cpp
@@ -143,21 +130,23 @@ ${BUILD}/%.o: ${DIR}/%.c
 ${DEBUG}/%.s: ${DIR}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	@${CC} -o $@ $< ${ASMFLAGS} ${${DIR}CFLAGS} ${${DIR}INCS} 
-
-
-
-
 #DIRECTORY-SPECIFIC PHONY TARGETS
-.PHONY: ${DIR}-all ${DIR}-check ${DIR}-test
+.PHONY: ${DIR}-all ${DIR}-test ${DIR}-list
+TARGET_ALL	:=${TARGET_ALL} ${DIR}-all
+TARGET_TEST	:=${TARGET_TEST} ${DIR}-test
+TARGET_LIST	:=${TARGET_LIST} ${DIR}-list
 ${DIR}-all: ${${DIR}OBJFILES} ${${DIR}BINFILES}
-	@echo Finished building "${RED}${DIR}${NONE}".
-${DIR}-check:
-	@echo \#\#\#\#\#\#\#\#"${B_BROWN}${DIR}${NONE}"\#\#\#\#\#\#\#\#
-	@echo "${BROWN}${DIR}CPPFILES${NONE}"= ${${DIR}CPPFILES}
-	@echo "${BROWN}${DIR}OBJFILES${NONE}"= ${${DIR}OBJFILES}
-	@echo "${BROWN}${DIR}DEPFILES${NONE}"= ${${DIR}DEPFILES}
-	@echo "${BROWN}${DIR}ASMFILES${NONE}"= ${${DIR}ASMFILES}
-${DIR}-test: ${BUILD}/${DIR}-test.exe
-	@echo Running "${B_BROWN}$<${NONE}"...
-	@./$< > ${DEBUG}/${DIR}-test.txt
-	@echo Output to "${GREEN}${DEBUG}/${DIR}-test.txt${NONE}".
+	@echo Finished building "${B_BLUE}$@${NONE}".
+${DIR}-test: ${${DIR}TSTEXE}
+	@echo Finished building "${B_BLUE}$@${NONE}".  
+${DIR}-list:
+	@echo \#\#\#\#\#\#\#\#"${B_BROWN}BEGIN $@${NONE}"\#\#\#\#\#\#\#\#
+	@echo "${BROWN}CPPFILES${NONE}":${${DIR}CPPFILES}
+	@echo "${BROWN}OBJFILES${NONE}":${${DIR}OBJFILES}
+	@echo "${BROWN}DEPFILES${NONE}":${${DIR}DEPFILES}
+	@echo "${BROWN}ASMFILES${NONE}":${${DIR}ASMFILES}
+	@echo "${BROWN}TSTCPP${NONE}":${${DIR}TSTCPP}
+	@echo "${BROWN}TSTOBJ${NONE}":${${DIR}TSTOBJ}
+	@echo "${BROWN}TSTDEP${NONE}":${${DIR}TSTDEP}
+	@echo "${BROWN}TSTASM${NONE}":${${DIR}TSTASM}
+	@echo \#\#\#\#\#\#\#\#"${B_BROWN}END $@${NONE}"\#\#\#\#\#\#\#\#

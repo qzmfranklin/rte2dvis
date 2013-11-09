@@ -4,17 +4,14 @@ BUILD	:=build# Out-of-source build - object, dependency, and assembly files
 DEBUG	:=DEBUG# Profiling and debugging files
 OUTPUT	:=OUTPUT# Testing result files
 ############################################################################### 
-# Source and build files
+# Source and dependency files
 CFILES	:=# *.c
 CPPFILES:=# *.cpp
-OBJFILES:=# *.o
 DEPFILES:=# *.d
-ASMFILES:=# *.s: source code commented
-BINFILES:=# *.exe 
 ############################################################################### 
 # Distribution files
 SRCFILES:=# All source files
-HDRFILES:=$(shell find . -type f -name "*.h") # All header files 
+HDRFILES:=$(wildcard ${INCLUDE}/*)
 MAKFILES:=Makefile $(shell find . -type f -name "makevars.mk") # Makefile and related file(s)
 DOCFILES:=# Documentation
 MANFILES:=# Manuals
@@ -107,6 +104,8 @@ REV_MAGENTA	:=\033[07;35m
 REV_CYAN	:=\033[07;36m
 REV_GREY	:=\033[07;37m 
 ############################################################################### 
+.SUFFIXES:
+.SUFFIXES: .tm .c .cpp .o .exe .s .d 
 # Pattern rules template
 # CXX linking at the top level
 #%.exe: %.o 

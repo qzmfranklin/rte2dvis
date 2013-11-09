@@ -7,12 +7,14 @@ VERSION		:= v0.01
 DATE_TIME	:= $(shell date "+%Y-%m-%d")
 TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
 ###############################################################################
--include makevars.mk
--include src/QuadratureRules/makevars.mk
+TARGET_ALL	:=
+TARGET_TEST	:=
+TARGET_LIST	:=
+###############################################################################
+-include makevars.mk# The main makevars.mk
+-include src/QuadratureRules/makevars.mk# Sub-makevars.mk
 -include ${DEPFILES} # Dependency files (*.d files)
 ###############################################################################
-.SUFFIXES:
-.SUFFIXES: .tm .c .cpp .o .exe .s .d 
 .PHONY: all 						\
 	clean cleanx cleanxx 				\
 	dist						\
@@ -23,17 +25,16 @@ TARBALL_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}.tgz
 	commit						\
 	todolist
 
-all: ${OBJFILES}
+all: 
 
 clean:
-	@echo "${REV_BLUE}Deleting testing outputs...${NONE}"
-	@rm -rf ${DEBUG}/*
+	@echo "${REV_RED}Deleting ${BUILD}/*...${NONE}"
+	@rm -rf ${BUILD}/*
 cleanx: 
-	@echo "${REV_GREEN}Deleting commented assembly codes...${NONE}"
+	@echo "${REV_GREEN}Deleting ${DEBUG}/*...${NONE}"
 	@rm -rf ${DEBUG}/*
 cleanxx: 
-	@echo "${REV_RED}Deleting everything but the sources...${NONE}"
-	@rm -rf ${BUILD}/*
+	@echo So far in disuse...
 
 dist:
 	@echo Compressing into "${B_CYAN}${TARBALL_NAME}${NONE}"...
