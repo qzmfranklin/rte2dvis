@@ -57,11 +57,11 @@ clean:
 	@echo "Deleting ${REV_RED}${BUILD}/*${NONE}..."
 	@rm -rf ${BUILD}/*
 cleanx:
-	@echo "Deleting ${REV_GREEN}${DEBUG}/*${NONE}..."
-	@rm -rf ${DEBUG}/*
-cleanxx:
-	@echo "Deleting ${REV_GREY}${RELEASE_NAME}.*${NONE}..."
-	@rm -rf ${RELEASE_NAME}.*
+	@echo "Deleting ${REV_GREEN}${OUTPUT}/*${NONE}..."
+	@rm -rf ${OUTPUT}/*
+cleanxx: clean
+	@echo "Deleting ${REV_BLUE}${BIN}/*${NONE}..."
+	@rm -rf ${BIN}/*
 dist:
 	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.tgz${NONE}"...
 	@rm -f ${RELEASE_NAME}.tgz; tar czf ${RELEASE_NAME}.tgz ${DISTFILES}
