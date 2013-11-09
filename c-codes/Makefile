@@ -12,14 +12,15 @@ RELEASE_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}
 -include ${DEPFILES}# Dependency files (*.d files)
 DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} Makefile
 ###############################################################################
-.PHONY: all 						\
-	test						\
-	asm						\
-	list						\
-	clean cleanx cleanxx 				\
-	dist distclean					\
-	check						\
-	todolist 
+.PHONY: all 							\
+	test							\
+	asm							\
+	list							\
+	clean cleanx cleanxx 					\
+	dist distclean						\
+	check							\
+	todolist						\
+	mkdir							
 
 all:	${TARGET_ALL} 
 test:	${TARGET_TEST} 
@@ -44,7 +45,16 @@ check:
 	@echo Checking integrity...
 	@echo ${DISTFILES}
 todolist: 
-	-@for file in ${ALLFILES:Makefile=};		\
-	do fgrep -H -e TODO -e FIXME -e UNFINISHED	\
+	-@for file in ${ALLFILES:Makefile=};			\
+	do fgrep -H -e TODO -e FIXME -e UNFINISHED		\
 	$$file;	done; true 
+mkdir: 
+	@echo Creating structurual directories:
+	@$(foreach dir,${STRUCTURAL_DIRS},if [ ! -d ${dir} ]; 	\
+		then echo Creating "${GREEN}${dir}/${NONE}"...; \
+		mkdir ${dir}; else echo Already exists:		\
+		"${GREY}${dir}${NONE}".; fi;)
+rmdir: 
+	@echo "${B_RED}WARNING: Deleting ${STRUCTURAL_DIRS}${NONE}"
+	@rm -rf ${STRUCTURAL_DIRS}
 ###############################################################################
