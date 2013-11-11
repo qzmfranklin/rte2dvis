@@ -37,7 +37,7 @@ RELEASE_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}
 -include Makefile.vars# The top level vars file
 -include ${MKVFILES}#
 -include ${DEPFILES}# Dependency files (*.d files)
-DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} Makefile
+DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} ${MAKFILES}
 ###############################################################################
 .PHONY: all 							\
 	test							\
@@ -65,11 +65,9 @@ cleanxx: clean
 dist:
 	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.tgz${NONE}"...
 	@rm -f ${RELEASE_NAME}.tgz; tar czf ${RELEASE_NAME}.tgz ${DISTFILES}
-distclean:
-	#TODO
 check:
 	#TODO
-	@echo Checking integrity...
+	@echo Checking distribution integrity:
 	@echo ${DISTFILES}
 todolist: 
 	-@for file in ${DISTFILES:=};			\
