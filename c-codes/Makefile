@@ -78,7 +78,7 @@ mkdir:
 	@$(foreach dir,${STRUCTURAL_DIRS},if [ ! -d ${dir} ]; 	\
 		then echo Creating "${GREEN}${dir}/${NONE}"...; \
 		mkdir ${dir}; else echo Already exists:		\
-		"${GREY}${dir}${NONE}".; fi;)
+		"${GREY}${dir}${NONE}"; fi;)
 rmdir: 
 	@echo "${B_RED}WARNING: Deleting ${STRUCTURAL_DIRS}${NONE}"
 	@rm -rf ${STRUCTURAL_DIRS}

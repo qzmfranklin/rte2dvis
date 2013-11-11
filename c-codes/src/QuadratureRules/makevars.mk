@@ -42,15 +42,15 @@ DIR001		:=src/QuadratureRules# Please, NO SPACE
 #  	a) The GNU make does NOT support recursive include directive. So we must
 #  NOT include any *.d file in this file. All the *.d files are included in the
 #  Makefile in the root directory AFTER all the makevars.mk's are include.
-#  	b) So far, only supports CPP files. C support will be added TODO
+#  	b) So far, only supports C/C++ files. Maybe Fortran support is needed TODO
 #  	c) Please refrain from using $(wildcard) command. It only helps when not
 #  really nessaccery and complicates the situation when we have forgotten about
 #  it. Yes, be explicit. Manually list all the source files here.
 #  	d) Dependencies are readily dealt with by the setup of the Makefile. One
 #  NEVER needs to specify the dependency for any .o file.
-${DIR001}CFILES	:=
+${DIR001}CFILES		:=
 ${DIR001}CPPFILES	:=	${DIR001}/DunavantRule.cpp 			\
-				${DIR001}/WandzuraRule.cpp				\
+				${DIR001}/WandzuraRule.cpp			\
 				${DIR001}/GaussQuadratures.cpp
 ################## DO NOT MODIFY ################
 ${DIR001}OBJFILES	:=	${${DIR001}CPPFILES:${DIR001}%.cpp=${BUILD}%.o}	\
@@ -63,14 +63,21 @@ ${DIR001}ASMFILES	:=	${${DIR001}OBJFILES:${BUILD}%.o=${DEBUG}%.s}
 #DIRECTORY-SPECIFIC BINARY FILES
 #	Executables listed in ${DIR}BINFILES are considered the final output of
 #  this project. All of them should be built into ${BIN} instead of ${BUILD}
-#  for all other executables. The default build rule for building these
-#  output executables is:
-#
-#		${${DIR001}BINFILES}: ${${DIR001}TSTOBJ} ${${DIR001}OBJFILES} 
-#
-#  If this is not satisfactory, please specify the build rule(s) manually here.
-${DIR001}BINFILES	:=		
-${${DIR001}BINFILES}: ${${DIR001}TSTOBJ} ${${DIR001}OBJFILES} 
+#  for all other executables. 
+#  	So far, only supports CPP source files. TODO
+${DIR001}BIN	:=		
+################## DO NOT MODIFY ################
+${DIR001}BINCPP	:=		${${DIR001}BIN:%=${DIR001}/%.cpp}
+${DIR001}BINOBJ	:=		${${DIR001}BINCPP:${DIR001}%.cpp=${BUILD}%.o}
+${DIR001}BINDEP	:=		${${DIR001}BINOBJ:%.o=%.d}
+${DIR001}BINEXE	:=		${${DIR001}BINOBJ:${BUILD}%.o=${BIN}%.exe}
+${DIR001}BINASM	:=		${${DIR001}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
+################## DO NOT MODIFY ################
+#  The default build rule for ${DIR001}BINEXE is:
+#${${DIR001}BINEXE}: ${${DIR001}BINOBJ} ${${DIR001}OBJFILES} 
+#  Comment the above line and specify your own rules here:
+#  Note that we can take advantage of the following pattern rule:
+#		rule ${BIN}/%.exe: ${BUILD}/%.o
 ###############################################################################
 #				STEP 4
 #DIRECTORY-SPECIFIC TEST FILES
@@ -87,20 +94,25 @@ ${DIR001}TSTOBJ	:=		${${DIR001}TSTCPP:${DIR001}%.cpp=${BUILD}%.o}
 ${DIR001}TSTDEP	:=		${${DIR001}TSTOBJ:%.o=%.d}
 ${DIR001}TSTEXE	:=		${${DIR001}TSTOBJ:%.o=%.exe}
 ${DIR001}TSTASM	:=		${${DIR001}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
-SRCFILES	:=		${SRCFILES} ${${DIR001}CFILES} ${${DIR001}CPPFILES} ${${DIR001}TSTCPP}
-DEPFILES	:=		${DEPFILES} ${${DIR001}DEPFILES} ${${DIR001}TSTDEP}
+SRCFILES	:=		${SRCFILES} ${${DIR001}CFILES} ${${DIR001}CPPFILES} ${${DIR001}TSTCPP} ${${DIR001}BINCPP}
+DEPFILES	:=		${DEPFILES} ${${DIR001}DEPFILES} ${${DIR001}TSTDEP} ${${DIR001}BINDEP}
 ################## DO NOT MODIFY ################
-###############################################################################
-#				STEP 5
-#	The default build rule for all the files specified in ${DIR001}TST is
-#
-#		${${DIR001}TSTEXE}: ${${DIR001}TSTOBJ} ${${DIR001}OBJFILES} 
-#
-#	This is using all the object files generated in this directory plus the
+#  The default build rule for ${DIR001}BINEXE is:
+${${DIR001}TSTEXE}: ${${DIR001}TSTOBJ} ${${DIR001}OBJFILES} 
+#  This is using all the object files generated in this directory plus the
 #  object files of the test CPP files. In case where this is either not enough
 #  or too much, please modify the following line.
-${${DIR001}TSTEXE}: ${${DIR001}TSTOBJ} ${${DIR001}OBJFILES} 
+#  Comment the default build rule and specify your own rules here:
+#  Note that we can take advantage of the following pattern rule:
+#		rule ${BIN}/%.exe: ${BUILD}/%.o
+${BIN}/mshtodat.exe: ${BUILD}/mshtodat.o ${BUILD}/file-io.o 
+###############################################################################
+#				STEP 5
 #DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
+#	Options specified here are used in this directory. By default, all 
+#  builds use the same options. When different compiling and/or linking options 
+#  need to be assigned to different targets, the programmer needs to list all
+#  the speical target-prerequisite dependencies manually.
 #  	By default, the local options inherits the corresponding global ones 
 #  from the makevars.mk in the root directory. If one wishes to add any 
 #  additional options that are specific to this very directory, add them after 
@@ -110,21 +122,13 @@ ${${DIR001}TSTEXE}: ${${DIR001}TSTOBJ} ${${DIR001}OBJFILES}
 #  the build in this directory does not require some extra libraries and/or 
 #  hearder files. But in case it did, free at ease to modify these two 
 #  variables.
-###############################################################################
-#				STEP 6
-#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-#	Options specified here are used in this directory. By default, all 
-#  builds use the same options. When different compiling and/or linking options 
-#  need to be assigned to different targets, the programmer needs to list all
-#  the speical target-prerequisite dependencies manually.
 ${DIR001}CFLAGS 	:=${CFLAGS}
-${DIR001}CXXFLAGS	:=${CXXFLAGS} \
-	-Wno-deprecated # No warning on deprecated and/or antiquiated headers
+${DIR001}CXXFLAGS	:=${CXXFLAGS}
 ${DIR001}INCS		:=${INCS}
 ${DIR001}LIBS		:=${LIBS} 
 ###############################################################################
-#				STEP 7
-#	Write whatever dependencies here:
+#				STEP 6
+#	Write whatever extra dependencies here:
 
 
 
@@ -148,7 +152,10 @@ ${DIR001}LIBS		:=${LIBS}
 ############################################################################### 
 #DIR001ECTORY-SPECIFIC PATTERN RULES
 #  C++ linkage at the top level
-${BUILD}/%.exe: ${BUID}/%.o 
+${BIN}/%.exe: ${BUILD}/%.o 
+	@echo Linking  "${B_RED}$@${NONE}"...
+	@${CXX} -o $@ ${filter %.o,$^} ${${DIR001}LIBS} 
+${BUILD}/%.exe: ${BUILD}/%.o 
 	@echo Linking  "${RED}$@${NONE}"...
 	@${CXX} -o $@ ${filter %.o,$^} ${${DIR001}LIBS} 
 #  C++ sources
@@ -171,7 +178,7 @@ TARGET_ALL	:=${TARGET_ALL} ${DIR001}-all
 TARGET_TEST	:=${TARGET_TEST} ${DIR001}-test
 TARGET_ASM	:=${TARGET_ASM} ${DIR001}-asm
 TARGET_LIST	:=${TARGET_LIST} ${DIR001}-list
-${DIR001}-all: ${${DIR001}OBJFILES} ${${DIR001}BINFILES}
+${DIR001}-all: ${${DIR001}OBJFILES} ${${DIR001}BINEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".
 ${DIR001}-test: ${${DIR001}TSTEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".  
