@@ -247,4 +247,31 @@ namespace Utils {
 		sprintf(fname, "/proc/%d/status", pid);
 		box_file(fname, mesg);
 	}
+
+	void init_vector(double* v, int n, int incx) {
+		srand(time(NULL));
+		for (int i = 0; i < n; i++)
+			v[n*incx] = 10.0 * rand()/RAND_MAX;
+	}
+
+	void init_matrix(double* a, int m, int n, int lda) {
+		srand(time(NULL));
+		for (int j = 0; j < n; j++)
+			for (int i = 0; i < m; i++)
+				a[i+j*lda] = 10.0 * rand()/RAND_MAX;
+	}
+	void print_vector(double* v, int n, int incx) {
+		for (int i = 0; i < n; i++)
+			printf(" %6.2f",v[n*incx]);
+		printf("\n");
+	}
+
+	void print_matrix(double* a, int m, int n, int lda) {
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++)
+				printf(" %6.2f",a[i+j*lda]);
+			printf("\n");
+		}
+	}
+	
 } // namespace Utils 

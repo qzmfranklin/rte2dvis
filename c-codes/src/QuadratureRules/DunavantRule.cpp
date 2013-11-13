@@ -1,8 +1,9 @@
 //****************************************************************************80
-# include <fstream>
-# include <cmath>
-# include <ctime>
-# include "DunavantRule.h"
+#include <fstream>
+#include <cmath>
+#include <ctime>
+#include <iostream>
+#include "DunavantRule.h"
 using namespace std; 
 namespace QuadratureRules { 
 	DunavantRule gDunavantRule;

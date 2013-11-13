@@ -1,7 +1,7 @@
 #ifndef _GAUSS_QUADRATURES_H_
 #define _GAUSS_QUADRATURES_H_
 
-#include <vector.h>
+#include <stack>
 #include <mkl.h>
 #include <cassert>
 #include <cstdio>
@@ -42,11 +42,11 @@ namespace QuadratureRules {
 
 	class GaussQuadratures {
 		private: 
-			std::vector<double*>	fx;
-			std::vector<double*>	fw;
+			std::stack<double*>	fx;
+			std::stack<double*>	fw;
 
 		public: 
-			GaussQuadratures(): fx(0), fw(0) {};
+			GaussQuadratures(): fx(), fw() {};
 			~GaussQuadratures() { Free(); }
 
 			void Generate(	
@@ -63,8 +63,8 @@ namespace QuadratureRules {
 				*w = (double*) mkl_malloc( order * sizeof(double), MALLOC_ALIGNMENT );
 				assert( (*x) && (*w) ); 
 				cgqf ( order, kind, alpha, beta, a, b, *x, *w ); 
-				fx.push_back(*x);
-				fw.push_back(*w);
+				fx.push(*x);
+				fw.push(*w);
 			}
 
 			/*
@@ -74,11 +74,13 @@ namespace QuadratureRules {
 			 * Free() explicitly.
 			 */
 			void Free() {
-				assert( fx.size() == fw.size() );
-				int i , n = fx.size();
-				for (i = 0; i < n; i++) {
-					mkl_free( fx[i] );
-					mkl_free( fw[i] );
+				while ( !fx.empty() ) { 
+					mkl_free( fx.top() );
+					fx.pop();
+				}
+				while ( !fw.empty() ) { 
+					mkl_free( fw.top() );
+					fw.pop();
 				}
 			}
 

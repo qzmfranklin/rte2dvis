@@ -1,7 +1,7 @@
 #ifndef _WANDZURA_RULE_H_
 #define _WANDZURA_RULE_H_
 
-#include <vector.h>
+#include <stack>
 #include <cassert>
 #include <mkl.h>
 #define MALLOC_ALIGNMENT 64
@@ -10,10 +10,10 @@ namespace QuadratureRules {
 
 	class WandzuraRule {
 		private:
-			std::vector<double*> 	fxy;
-			std::vector<double*> 	fw;
+			std::stack<double*> 	fxy;
+			std::stack<double*> 	fw;
 		public:
-			WandzuraRule() : fxy(0), fw(0) {}
+			WandzuraRule() : fxy(), fw() {}
 			~WandzuraRule() { Free(); }
 
 			void Generate( int rule, double **xy, double **w, int *order_num ) {
@@ -23,8 +23,8 @@ namespace QuadratureRules {
 				*w = (double*) mkl_malloc( (*order_num) * sizeof(double), MALLOC_ALIGNMENT); 
 				assert( (*xy) && (*w) );
 				wandzura_rule ( rule, *order_num, *xy, *w );
-				fxy.push_back(*xy);
-				fw.push_back(*w);
+				fxy.push(*xy);
+				fw.push(*w);
 			} 
 
 			/*
@@ -34,11 +34,13 @@ namespace QuadratureRules {
 			 * Free() explicitly.
 			 */
 			void Free() {
-				assert( fxy.size() == fw.size() );
-				int i, n = fw.size();
-				for (i = 0; i < n; i++) {
-					mkl_free( fxy[i] );
-					mkl_free( fw[i] );
+				while ( !fxy.empty() ) { 
+					mkl_free( fxy.top() );
+					fxy.pop();
+				}
+				while ( !fw.empty() ) { 
+					mkl_free( fw.top() );
+					fw.pop();
 				}
 			}
 

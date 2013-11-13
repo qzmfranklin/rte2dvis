@@ -277,6 +277,26 @@ namespace Utils {
 	 */
 	void print_proc_status(const char* mesg);
 
+	/*
+	 * initialize a vector randomly
+	 */
+	void init_vector(double *v, int n, int incx=1);
+
+	/*
+	 * initialize a matrix randomly
+	 */
+	void init_matrix(double *a, int m, int n, int lda);
+	/*
+	 * print the content of a vector
+	 */
+	void print_vector(double* v, int n, int incx=1);
+
+	/*
+	 * print the content of a matrix in col-major
+	 */
+	void print_matrix(double* a, int m, int n, int lda);
+	
+
 
 } // namespace Utils
 #endif
