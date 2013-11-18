@@ -9,11 +9,6 @@ int test01(void);
 int test02(void);
 int test03(void);
 int test04(void);
-//void init_vector( double *v, int n, int incx=1 );
-//void init_matrix( double *a, int m, int n, int lda );
-//void print_vector( double *a, int n, int incx=1 );
-//void print_matrix( double *a, int m, int n, int lda );
-
 /*******************************************************************************/
 int main(int argc, char const* argv[])
 { 
@@ -47,14 +42,10 @@ int test02(void) {
 	double y[5];
 	int n=5; 
 	int incx=1;
-	for ( int i = 0; i < 5; i++) {
-		x[i] = 5.0 * rand()/RAND_MAX;
-		y[i] = 5.0 * rand()/RAND_MAX;
-	} 
-	printf("x=  ");
-	print_vector(x,n);
-	printf("y=  ");
-	print_vector(y,n); 
+	init_vector(x,n);
+	init_vector(y,n);
+	print_vector("x",x,n);
+	print_vector("y",y,n); 
 	double res;
 	res = ddot(&n,x,&incx,y,&incx);
 	printf("res = x*y = %lf\n",res);
@@ -95,12 +86,9 @@ int test03( void ) {
 #undef M
 #undef N
 #undef K
-	//printf("a = \n");
-	//print_matrix( a, m, k, lda );
-	//printf("b = \n");
-	//print_matrix( b, k, n, ldb );
-	//printf("c = \n");
-	//print_matrix( c, m, n, ldc );
+	//print_matrix( "a", a, m, k, lda );
+	//print_matrix( "b", b, k, n, ldb );
+	//print_matrix( "c", c, m, n, ldc );
 	//printf("alpha=%lf\n",alpha);
 	//printf("beta=%lf\n",beta); 
 
@@ -119,8 +107,7 @@ int test03( void ) {
 	printf("\n");
 	printf("FLOPS/cycle = %lf\n",flops/stat.median());
 	//printf("\n");
-	//printf("alpha*(a.b)+beta*c= \n");
-	//print_matrix( c, m, n, ldc );
+	//print_matrix(""alpha*(a.b)+beta*c" c, m, n, ldc );
 	
         printf("END OF TEST03\n");
         printf("\n");
@@ -147,6 +134,7 @@ int test04( void ) {
 	double s[N], u[LDU*M], vt[LDVT*N];
 	double a[LDA*N];
 	init_matrix( a, m, n, lda );
+	print_matrix("a",a,m,n,lda);
 	/* Executable statements */
 	printf( " DGESDD Example Program Results\n" );
 	/* Query and allocate the optimal workspace */
@@ -163,12 +151,9 @@ int test04( void ) {
 		printf( "The algorithm computing SVD failed to converge.\n" );
 		exit( 1 );
 	}
-	printf("Singular Value List = \n");
-	print_vector( s, n );
-	printf("Left Singular Vectors = \n");
-	print_matrix( u, m, n, ldu );
-	printf("Right Singular Vectors = \n");
-	print_matrix( vt, n, n, ldvt );
+	print_vector( "SVL", s, n );
+	print_matrix( "LSV(col-maj)", u, m, n, ldu );
+	print_matrix( "RSV(row-maj)", vt, n, n, ldvt );
 	/* Free workspace */
 	free( (void*)work );
 	exit( 0 );
@@ -182,30 +167,3 @@ int test04( void ) {
 #undef LDU M
 #undef LDVT N
 }
-
-//void init_vector( double *v, int n, int incx ) {
-	//srand(time(NULL));
-	//for ( int i = 0; i < n; i++)
-		//v[i*incx] = 10.0 * rand()/RAND_MAX;
-//}
-
-//void init_matrix( double *a, int m, int n, int lda ) {
-	//srand(time(NULL));
-	//for ( int j = 0; j < n; j++)
-		//for ( int i = 0; i < m; i++)
-			//a[i+j*lda] = 10.0 * rand()/RAND_MAX;
-//}
-
-//void print_vector( double *a, int n, int incx ) {
-	//for ( int i = 0; i < n; i++) 
-		//printf(" %6.2f",a[i*incx]);
-	//printf("\n");
-//}
-
-//void print_matrix( double *a, int m, int n, int lda ) {
-	//for ( int i = 0; i < m; i++){
-		//for ( int j = 0; j < n; j++) 
-			//printf(" %6.2f",a[i+j*lda]);
-		//printf("\n");
-	//}
-//} 

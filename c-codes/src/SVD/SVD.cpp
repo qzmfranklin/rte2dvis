@@ -1,26 +1,31 @@
 #include "SVD.h"
 #include <stdio.h>
 #include <mkl.h>
+#define MALLOC_ALIGNMENT 64
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 /*******************************************************************************/
 dSVD gdSVD; 
 /*******************************************************************************/
-int LAPACKE_dgesdd( int matrix_order, char jobz, int m,
-                    int n, double* a, int lda, double* s,
-                    double* u, int ldu, double* vt,
-                    int ldvt );
-//int LAPACKE_zgesdd( int matrix_order, char jobz, int m,
-                    //int n, double complex* a,
-                    //int lda, double* s, double complex* u,
-                    //int ldu, double complex* vt,
-                    //int ldvt );
+void dgesvd( const char* jobu, const char* jobvt, const int* m, 
+             const int* n, double* a, const int* lda, double* s,
+             double* u, const int* ldu, double* vt, const int* ldvt,
+             double* work, const int* lwork, int* info );
 /*******************************************************************************/
+void dSVD::QueryWorkspace(const char* jobu, const char* jobvt) {
+	// TODO
+}
 
-void dSVD::SingularValueList( double *s ) { 
-	LAPACKE_dgesdd( LAPACK_COL_MAJOR, 'N', m, n, a, lda, s, NULL, 1, NULL, 1 );
+int dSVD::SingularValueList( double *s ) { 
+	printf("dSVD::SingularValueList(double *s)\n");
+	// TODO
+
+	return info;
 }
 
 //void dSVD::SingularValueDecomposition( 	double *s, 
 					//double *u,  int ldu, 
 					//double *vt, int ldvt,
 					//double eps ) {
+					//// TODO
 //}

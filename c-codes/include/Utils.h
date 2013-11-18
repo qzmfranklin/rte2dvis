@@ -173,21 +173,36 @@ namespace Utils {
 			std::cout<<std::setw(10)<<"max: "<<this->max()<<std::endl;
 		}
 	};
-	class TimeStamp{
+	class StatVector; // Forward declaration
+	class TimeStamp: public StatVector {
+		/*
+		 * Example of usage:
+		 *
+		 * 	#define N 100
+		 * 		TimeStamp clock(N);
+		 * 		for (int i = 0; i < N; i++) {
+		 * 			clock.tic();
+		 * 	     	// do some work here ... //
+		 * 	     	clock.toc();
+		 * 	     }
+		 * 	     printf("median # of cycles = %d\n",clock.median());
+		 * 	#undef N
+		 */
 		private:
 			unsigned int a1, d1;
 			unsigned int a2, d2;
 		public:
-			TimeStamp(){};
+			TimeStamp(int n): StatVector(n) {};
 			void tic(){//does not use cpuid
 				asm volatile("rdtsc" : "=a" (a1), "=d" (d1));
 			}
-			double toc(){//does not use cpuid
+			void toc(){//does not use cpuid
 				asm volatile("rdtsc" : "=a" (a2), "=d" (d2));
-				return convert(a1, d1, a2, d2);
+				insert( convert(a1, d1, a2, d2) );
 			}
 		private:
 			double convert(unsigned int A1, unsigned int D1, unsigned int A2, unsigned int D2){
+				//printf("TimeStamp::convert()\n");
 				double val;
 				val = D2-D1;
 				val *= pow(2.0, 32.0);
@@ -289,12 +304,12 @@ namespace Utils {
 	/*
 	 * print the content of a vector
 	 */
-	void print_vector(double* v, int n, int incx=1);
+	void print_vector(const char* desc, double* v, int n, int incx=1);
 
 	/*
 	 * print the content of a matrix in col-major
 	 */
-	void print_matrix(double* a, int m, int n, int lda);
+	void print_matrix(const char* desc, double* a, int m, int n, int lda);
 	
 
 

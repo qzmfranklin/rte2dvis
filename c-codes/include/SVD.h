@@ -5,7 +5,7 @@
 #include <cassert>
 class dSVD {
 	/*
-	 * Calling LAPACKE subroutines to compute SVD
+	 * Calling LAPACK subroutines to compute SVD
 	 * 	DOUBLE PRECISION
 	 * Full Col-Major storage:
 	 * 	LAPACK_COL_MAJOR
@@ -14,15 +14,23 @@ class dSVD {
 		std::stack<double*>	fs;
 		std::stack<double*>	fu;
 		std::stack<double*>	fvt;
+		int	query_flag;	// Whether the query for workspace 
+					// is made? 1=Yes, 0=No.
 	public:
 		double*	a;
 		int	m;
 		int	n;
 		int	lda;
-		int	reset_flag;	// 1=IsReset, 0=IsNotReset
 	public:
-		dSVD(): a(NULL), m(0), n(0), lda(0), reset_flag(1) {}
+		dSVD(): a(NULL), m(0), n(0), lda(0), query_flag(0) {}
 		~dSVD() { Free(); }; 
+
+		void Set( double* A, int M, int N, int LDA ) {
+			memcpy( a, A, sizeof(A) );
+			m=M; n=N; lda=LDA; query_flag=0; 
+		}
+
+
 		/* 
 		 * Only computes the singular value list.
 		 * 	a)	The double *s must NOT be allocated 
@@ -34,15 +42,22 @@ class dSVD {
 		 * 	released automatically upon destruction.
 		 * 	b)	The LAPACK subroutine assumes the
 		 * 	leading dimension of s =1.
+		 * 	c) 	If return value == 0, success. Other-
+		 * 	wise, failure.
+		 * 	d)	int *len stores the length of s.
 		 */
-		void SingularValueList( double **s );
+		int SingularValueList( double **s, int *len );
+
 		/* 
 		 * Only computes the singular value list.
 		 * 	a)	The double *s must be allocated beforehand.
 		 * 	b)	The LAPACK subroutine assumes the 
 		 * 	leading dimension of s =1.
+		 * 	c) 	If return value == 0, success. Other-
+		 * 	wise, failure.
 		 */
-		void SingularValueList( double *s );
+		int SingularValueList( double *s );
+
 		/* 
 		 * 1.	Computes all singular values, store them in 
 		 * double *s_temp.
@@ -57,6 +72,11 @@ class dSVD {
 						//double *u,  int ldu, 
 						//double *vt, int ldvt,
 						//double eps=0.0 ); 
+	private:
+		/*
+		 * Query for workspace.
+		 */
+		void QueryWorkspace();
 
 
 		/*
@@ -70,22 +90,26 @@ class dSVD {
 		 * free all existing memories allocated by gdSVD.
 		 */
 		void Free() {
+			printf("dSVD::Free()\n");
+			printf("	|fs.size() = %lu \n",fs.size());
 			while( !fs.empty() ) {
+				//printf("poping fs.top()\n");
 				mkl_free(fs.top());
 				fs.pop();
 			}
+			printf("	|fu.size() = %lu \n",fu.size());
 			while( !fu.empty() ) {
+				//printf("poping fu.top()\n");
 				mkl_free(fu.top());
 				fu.pop();
 			}
+			printf("	|fvt.size() = %lu \n",fvt.size());
 			while( !fvt.empty() ) {
+				//printf("poping fvt.top()\n");
 				mkl_free(fvt.top());
 				fvt.pop();
 			}
 		}
-		void Set( double* A, int M, int N, int LDA ) {
-			a=A; m=M; n=N; lda=LDA; reset_flag=0; }
-		void Reset() { Set(NULL,0,0,0); reset_flag=1; }
 }; 
 
 /*

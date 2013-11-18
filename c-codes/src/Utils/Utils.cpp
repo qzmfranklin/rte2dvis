@@ -249,24 +249,24 @@ namespace Utils {
 	}
 
 	void init_vector(double* v, int n, int incx) {
-		srand(time(NULL));
 		for (int i = 0; i < n; i++)
-			v[n*incx] = 10.0 * rand()/RAND_MAX;
+			v[i*incx] = 10.0 * rand()/RAND_MAX;
 	}
 
 	void init_matrix(double* a, int m, int n, int lda) {
-		srand(time(NULL));
 		for (int j = 0; j < n; j++)
 			for (int i = 0; i < m; i++)
 				a[i+j*lda] = 10.0 * rand()/RAND_MAX;
 	}
-	void print_vector(double* v, int n, int incx) {
+	void print_vector(const char* desc, double* v, int n, int incx) {
+		printf("%s = \n",desc);
 		for (int i = 0; i < n; i++)
-			printf(" %6.2f",v[n*incx]);
+			printf(" %6.2f",v[i*incx]);
 		printf("\n");
 	}
 
-	void print_matrix(double* a, int m, int n, int lda) {
+	void print_matrix(const char* desc, double* a, int m, int n, int lda) {
+		printf("%s = \n",desc);
 		for (int i = 0; i < m; i++) {
 			for (int j = 0; j < n; j++)
 				printf(" %6.2f",a[i+j*lda]);
