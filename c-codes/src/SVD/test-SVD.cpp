@@ -21,26 +21,26 @@ int test01( void ) {
         printf("TEST01\n");
         printf("	|Test dSVD::SingularValueList\n");
 
-	// Prepare the input matrix.
-	double a[M*N];
-	int m=M;
-	int n=N;
-	int lda=M;
-	init_matrix(a,m,n,lda);
-	print_matrix("A",a,m,n,lda);
-	gdSVD.Set(a,m,n,lda);
+	//// Prepare the input matrix.
+	//double a[M*N];
+	//int m=M;
+	//int n=N;
+	//int lda=M;
+	//init_matrix(a,m,n,lda);
+	//print_matrix("A",a,m,n,lda);
+	//gdSVD.Set(a,m,n,lda);
 
-	// Compute the singular value list.
-	double *s1;
-	int len1;
-	gdSVD.SingularValueList(&s1,&len1);
-	print_vector("SVL(auto mem control)",s1,len1);
+	//// Compute the singular value list.
+	//double *s1;
+	//int len1;
+	//gdSVD.SingularValueList(&s1,&len1);
+	//print_vector("SVL(auto mem control)",s1,len1);
 	
-	// Compute the singular value list.
-	double s2[MIN(M,N)];
-	int len2=MIN(M,N);
-	gdSVD.SingularValueList(s2);
-	print_vector("SVL2(manual mem control)",s2,len2);
+	//// Compute the singular value list.
+	//double s2[MIN(M,N)];
+	//int len2=MIN(M,N);
+	//gdSVD.SingularValueList(s2);
+	//print_vector("SVL2(manual mem control)",s2,len2);
 
         printf("END OF TEST01\n");
         printf("\n");
@@ -48,3 +48,4 @@ int test01( void ) {
 #undef M
 #undef N
 }
+

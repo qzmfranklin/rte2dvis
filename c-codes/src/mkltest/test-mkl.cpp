@@ -93,19 +93,17 @@ int test03( void ) {
 	//printf("beta=%lf\n",beta); 
 
 #define COUNTER 50
-	StatVector stat(COUNTER);
-	TimeStamp clk;
+	TimeStamp clk(COUNTER);
 	for (int i = 0; i < COUNTER; i++) {
 		double cycles;
 		clk.tic();
 		dgemm( &transa, &transb, &m, &n, &k, &alpha, a, &lda, b, &ldb, &beta, c, &ldc ); 
-		cycles = clk.toc();
-		stat.insert(cycles);
+		clk.toc();
 	} 
 #undef COUNTER
 
 	printf("\n");
-	printf("FLOPS/cycle = %lf\n",flops/stat.median());
+	printf("FLOPS/cycle = %lf\n",flops/clk.median());
 	//printf("\n");
 	//print_matrix(""alpha*(a.b)+beta*c" c, m, n, ldc );
 	

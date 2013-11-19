@@ -12,15 +12,16 @@ void dgesvd( const char* jobu, const char* jobvt, const int* m,
              double* u, const int* ldu, double* vt, const int* ldvt,
              double* work, const int* lwork, int* info );
 /*******************************************************************************/
-void dSVD::QueryWorkspace(const char* jobu, const char* jobvt) {
-	// TODO
-}
+//void dSVD::QueryWorkspace(const char* jobu, const char* jobvt) {
+	//// TODO
+//}
 
 int dSVD::SingularValueList( double *s ) { 
 	printf("dSVD::SingularValueList(double *s)\n");
 	// TODO
 
-	return info;
+	//return info;
+	return 0;
 }
 
 //void dSVD::SingularValueDecomposition( 	double *s, 

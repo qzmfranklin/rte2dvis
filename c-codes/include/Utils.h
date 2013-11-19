@@ -196,9 +196,12 @@ namespace Utils {
 			void tic(){//does not use cpuid
 				asm volatile("rdtsc" : "=a" (a1), "=d" (d1));
 			}
-			void toc(){//does not use cpuid
+			double toc(){//does not use cpuid
 				asm volatile("rdtsc" : "=a" (a2), "=d" (d2));
-				insert( convert(a1, d1, a2, d2) );
+				double t;
+				t = convert(a1, d1, a2, d2);
+				insert( t );
+				return t;	// compatible with the old TimeStamp
 			}
 		private:
 			double convert(unsigned int A1, unsigned int D1, unsigned int A2, unsigned int D2){
