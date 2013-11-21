@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <mkl.h>
 #define MALLOC_ALIGNMENT 64
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
 /*******************************************************************************/
 dSVD gdSVD; 
 /*******************************************************************************/
@@ -18,8 +16,9 @@ int dSVD::QueryWorkspace(
 		double *restrict vt ) {
 	//printf("dSVD::QueryWorkspace()\n");
 
-	if (  reset_flag == kReset  ) {
-		fprintf(stderr, "A matrix is not set.\n");
+	if (  _reset_flag == kReset  ) {
+		fprintf(stderr, "The matrix is not set yet.\n");
+		fprintf(stderr, "Call dSVD::Set() first.\n");
 		return -1;
 	}
 
@@ -29,26 +28,25 @@ int dSVD::QueryWorkspace(
 	else
 		type = kAll;
 
-	if (  type == query_flag  ) {
-		fprintf(stderr, "Already queried.\n");
+	if (  type == _query_flag  ) {
+		fprintf(stderr, "Workspace is already queried.\n");
+		fprintf(stderr, "Do nothing this time.\n");
 		return 0; 
 	}
 
 	//TODO
-	char *_jobu="N", *_jobvt="N";
-	double _work[1]={0.0};
-	int _ldu=1, _ldvt=1;
-	mkl_free(work);	// Free previous workspace.
+	double __work[1];
+	int _ldu, _ldvt;
+	mkl_free(_work); // Free previous workspace.
 	switch (  type  ) {
 		case kSingularValue: 
-			lwork=-1;
-			// Query for optimal workspace size.
-			//dgesvd(_jobu,_jobvt,&m,&n,a,&lda,s,u,&ldu,vt,&ldvt,_work,&lwork,info);
-			assert(info==0);
-			lwork = (int) *_work;
-			work = (double*) mkl_malloc( lwork * sizeof(double), MALLOC_ALIGNMENT );
-			assert(work);
-			query_flag = type;
+			_ldu = 1; _ldvt = 1; _lwork=-1;
+			dgesvd("N","N",	&m,&n,a,&_lda, s,u,&_ldu,vt,&_ldvt, __work,&_lwork,&info);
+			assert(!info); // Query for optimal workspace size.
+			_lwork = (int) *__work;
+			_work = (double*) mkl_malloc( _lwork * sizeof(double), MALLOC_ALIGNMENT );
+			assert(_work);
+			_query_flag = type;
 			break;
 		case kAll: 
 			break;
@@ -58,27 +56,7 @@ int dSVD::QueryWorkspace(
 			break;
 	}
 
-	return query_flag;
-}
-
-void dSVD::Free() {
-	printf("dSVD::Free()\n");
-	printf("	|fs.size() = %lu \n",fs.size());
-	while( !fs.empty() ) {
-		//printf("poping fs.top()\n");
-		mkl_free(fs.top());
-		fs.pop();
-	}
-	printf("	|fu.size() = %lu \n",fu.size());
-	while( !fu.empty() ) {
-		//printf("poping fu.top()\n");
-		mkl_free(fu.top());
-		fu.pop();
-	}
-	printf("	|fvt.size() = %lu \n",fvt.size());
-	while( !fvt.empty() ) {
-		//printf("poping fvt.top()\n");
-		mkl_free(fvt.top());
-		fvt.pop();
-	}
-}
+	printf("_work = %p\n",_work);
+	printf("_query_flag = %d\n",(int)_query_flag);
+	return _query_flag;
+} 

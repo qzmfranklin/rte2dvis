@@ -95,7 +95,7 @@ ${DIR-SVD}BINASM	:=		${${DIR-SVD}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
 #		${BUILD}/test-mytest.exe:	${BUILD}/test-mytest.o		\
 #						${BUILD}/any-other-files.o
 ${DIR-SVD}TST	:=		test-SVD
-${BUILD}/test-SVD.exe: ${BUILD}/test-SVD.o ${BUILD}/SVD.o
+${BUILD}/test-SVD.exe: ${BUILD}/test-SVD.o ${BUILD}/SVD.o ${BUILD}/Utils.o
 ################## DO NOT MODIFY ################
 ${DIR-SVD}TSTCPP	:=		${${DIR-SVD}TST:%=${DIR-SVD}/%.cpp}
 ${DIR-SVD}TSTOBJ	:=		${${DIR-SVD}TSTCPP:${DIR-SVD}%.cpp=${BUILD}%.o}

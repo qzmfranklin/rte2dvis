@@ -24,8 +24,6 @@
 	} \
 } while(0)  
 
-
-
 namespace Utils {
 	const double PI = 3.1415926535897932384e+00;
 	class Random{
@@ -298,21 +296,21 @@ namespace Utils {
 	/*
 	 * initialize a vector randomly
 	 */
-	void init_vector(double *v, int n, int incx=1);
+	void init_vector(int n, double *v, int incx=1);
 
 	/*
 	 * initialize a matrix randomly
 	 */
-	void init_matrix(double *a, int m, int n, int lda);
+	void init_matrix(int m, int n, double *a, int lda=0);
 	/*
 	 * print the content of a vector
 	 */
-	void print_vector(const char* desc, double* v, int n, int incx=1);
+	void print_vector(const char* desc, int n, double* v, int incx=1);
 
 	/*
 	 * print the content of a matrix in col-major
 	 */
-	void print_matrix(const char* desc, double* a, int m, int n, int lda);
+	void print_matrix(const char* desc, int m, int n, double* a, int lda=0);
 	
 
 

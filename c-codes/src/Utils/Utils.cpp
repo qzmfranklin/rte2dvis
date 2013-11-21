@@ -248,24 +248,26 @@ namespace Utils {
 		box_file(fname, mesg);
 	}
 
-	void init_vector(double* v, int n, int incx) {
+	void init_vector(int n, double* v, int incx) {
 		for (int i = 0; i < n; i++)
 			v[i*incx] = 10.0 * rand()/RAND_MAX;
 	}
 
-	void init_matrix(double* a, int m, int n, int lda) {
+	void init_matrix(int m, int n, double* a, int lda) { 
+		if (!lda) lda=m;
 		for (int j = 0; j < n; j++)
 			for (int i = 0; i < m; i++)
 				a[i+j*lda] = 10.0 * rand()/RAND_MAX;
 	}
-	void print_vector(const char* desc, double* v, int n, int incx) {
+	void print_vector(const char* desc, int n, double* v, int incx) {
 		printf("%s = \n",desc);
 		for (int i = 0; i < n; i++)
 			printf(" %6.2f",v[i*incx]);
 		printf("\n");
 	}
 
-	void print_matrix(const char* desc, double* a, int m, int n, int lda) {
+	void print_matrix(const char* desc, int m, int n, double *a, int lda) {
+		if (!lda) lda=m;
 		printf("%s = \n",desc);
 		for (int i = 0; i < m; i++) {
 			for (int j = 0; j < n; j++)

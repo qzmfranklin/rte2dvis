@@ -133,7 +133,8 @@ DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} ${MAKFILE
 	dist distclean						\
 	check							\
 	todolist						\
-	mkdir							
+	mkdir							\
+	tags
 
 all:	${TARGET_ALL} 
 test:	${TARGET_TEST} 
@@ -168,4 +169,7 @@ mkdir:
 rmdir: 
 	@echo "${B_RED}WARNING: Deleting ${STRUCTURAL_DIRS}${NONE}"
 	${QUIET}rm -rf ${STRUCTURAL_DIRS}
+tags:
+	@echo Generating tags file for vim...
+	${QUIET}ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 ###############################################################################

@@ -22,54 +22,56 @@ class dSVD {
 	 * 	S = MIN(M,N)
 	 */
 	public:
+		enum EQueryType	{
+			kNone		= 0,
+			kSingularValue	= 101, // only compute singular values
+			kAll 		= 102// compute U and VT as well
+		};
+		enum EResetType {
+			kReset,		// is reset
+			kSet		// is set
+		};		
 		int		m;
 		int		n;
 		double*		a;
 		int		info;
 	private:
-		int		lda; 
-		int		ldu;
-		int		ldvt;
-		double*		work;
-		int		lwork;
-		std::stack<double*>	fs;
-		std::stack<double*>	fu;
-		std::stack<double*>	fvt;
-		enum EQueryType	{
-			kNone		= 0,
-			kSingularValue	= 101, // only compute singular values
-			kAll 		= 102// compute U and VT as well
-		} query_flag;
-		enum EResetType {
-			kReset,		// is reset
-			kSet		// is set
-		} reset_flag;		
+		int		_lda; 
+		int		_ldu;
+		int		_ldvt;
+		double*		_work;
+		int		_lwork; 
+		enum EQueryType _query_flag;
+		enum EResetType _reset_flag;
 	public:
-		dSVD():	m(0), n(0), 
+		dSVD():	m(0), 
+			n(0), 
 			a(NULL),
 			info(0), 
-			lda(0), ldu(0), ldvt(0), 
-			work(NULL), lwork(0), 
-			query_flag(kNone),
-			reset_flag(kReset) {}
+			_lda(0),
+			_ldu(0), 
+			_ldvt(0), 
+			_work(NULL), 
+			_lwork(0), 
+			_query_flag(kNone),
+			_reset_flag(kReset) {}
 
-		~dSVD() { Free(); }; 
+		~dSVD() { _Free(); }; 
 
 		void Set( int M, int N, double* A ) {
 			m=M; 
 			n=N; 
 			a=A; 
-			lda=m; 
-			ldu=m; 
-			ldvt=n;
-
-			if (query_flag!=kNone) 
-				mkl_free(work); 
-			query_flag=kNone; 
-			reset_flag=kSet;
+			_lda=m; 
+			_ldu=m; 
+			_ldvt=n; 
+			if (_query_flag!=kNone) 
+				mkl_free(_work); 
+			_query_flag=kNone; 
+			_reset_flag=kSet;
 		}
 
-		void Reset() { reset_flag=kReset; }
+		void Reset() { _reset_flag=kReset; }
 
 		/*
 		 * Query for workspace.
@@ -114,22 +116,23 @@ class dSVD {
 				double *restrict vt );
 
 	private:
-		void Copy( int m, int n, double* restrict a, double* restrict b ) {
+		/*
+		 * Copy a -> b.
+		 * Only used by SingularValueList and
+		 * SingularValueDecomposition for copying
+		 * the contents of a to b.
+		 */
+		void _Copy( double* restrict a, double* restrict b ) {
 			mkl_domatcopy ( 'C', 'N', m, n, 1.0, a, m, b, m );
 		}
 
 		/*
-		 * Free memories.
-		 * The design here is to release the programmer from
-		 * having to constantly worry about memory management.
-		 * Please just use the global object, gdSVD, to do
-		 * whatever double precision SVD you need to do. The
-		 * memories allocated from within the dSVD class will
-		 * be automatically released upon destruction. Or, if
-		 * neccessary, one can call gdSVD.Free() to manually
-		 * free all existing memories allocated by gdSVD.
+		 * Release Memory.
 		 */
-		void Free(); 
+		void _Free( void ) {
+			if (  _query_flag!=kNone  )
+				free(_work);
+		}
 };
 
 /*
