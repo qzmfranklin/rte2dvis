@@ -130,7 +130,9 @@ class dSVD {
 		 * the contents of a to b.
 		 */
 		void _Copy( double* restrict a, double* restrict b ) {
+#ifndef QZM_DEBUG
 			printf("dSVD::_Copy()\n");
+#endif
 			mkl_domatcopy ( 'C', 'N', m, n, 1.0, a, m, b, m );
 		}
 
@@ -138,7 +140,9 @@ class dSVD {
 		 * Release Memory.
 		 */
 		void _Free( void ) {
+#ifndef QZM_DEBUG
 			printf("dSVD::_Free()\n");
+#endif
 			if (  _query_flag!=kNone  ) {
 				printf("Freeing _work...\n");
 				mkl_free(_work);

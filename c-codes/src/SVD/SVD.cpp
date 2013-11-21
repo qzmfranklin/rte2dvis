@@ -14,7 +14,7 @@ int dSVD::QueryWorkspace(
 		double *restrict s,
 		double *restrict u, 
 		double *restrict vt ) {
-	//printf("dSVD::QueryWorkspace()\n");
+	printf("dSVD::QueryWorkspace()\n");
 
 	if (  _reset_flag == kReset  ) {
 		fprintf(stderr, "\tThe matrix is not set yet.\n");
@@ -97,14 +97,13 @@ void dSVD::SingularValueDecomposition(
 	b = (double*) mkl_malloc( m*n*sizeof(double), MALLOC_ALIGNMENT );
 	assert(b);
 	_Copy(a,b);
-	dgesvd("A","A",&m,&n,a,&_lda,s,u,&_ldu,
+	dgesvd("A","A",&m,&n,b,&_lda,s,u,&_ldu,
 			vt,&_ldvt,_work,&_lwork,&info);
 	mkl_free(b);
 } 
-
 /**************************************/ 
 void dSVD::Print() {
-	//printf("dSVD::Print()\n");
+	printf("dSVD::Print()\n");
 
 	char *s = "------  ";
 	printf("%sm\t= %d\n",s,m);
