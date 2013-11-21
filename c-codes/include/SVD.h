@@ -26,7 +26,9 @@ class dSVD {
 		int		n;
 		double*		a;
 		int		info;
+#ifndef QZM_DEBUG
 	private:
+#endif
 		int		_lda; 
 		int		_ldu;
 		int		_ldvt;
@@ -38,8 +40,8 @@ class dSVD {
 			kAll 		= 102	// compute U and VT as well
 		} _query_flag;
 		enum EResetType {
-			kReset,	// is reset
-			kSet   	// is set
+			kReset		= 0,	// is reset
+			kSet   		= 999	// is set
 		} _reset_flag;
 	public:
 		dSVD():	m(0), 
@@ -53,26 +55,25 @@ class dSVD {
 			_lwork(0), 
 			_query_flag(kNone),
 			_reset_flag(kReset) {
-				printf("dSVD::dSVD()\n");
+				//printf("dSVD::dSVD()\n");
 			}
 
 		~dSVD() { 
-			printf("dSVD::~dSVD()\n");
+			//printf("dSVD::~dSVD()\n");
 			_Free(); 
 		}; 
 
 		void Print();
 
 		void Set( int M, int N, double* A ) {
-			printf("dSVD::Set()\n");
+			//printf("dSVD::Set()\n");
 			m=M; 
 			n=N; 
 			a=A; 
 			_lda=m; 
 			_ldu=m; 
 			_ldvt=n; 
-			if (_query_flag!=kNone) 
-				mkl_free(_work); 
+			_Free();
 			_query_flag=kNone; 
 			_reset_flag=kSet;
 		}
@@ -94,29 +95,28 @@ class dSVD {
 		/*
 		 * Only get the singular value list. 
 		 * Destroy the original matrix A.
+		 * Returns the info from dgesvd().
 		 */
-		int SingularValueListX( double *s );
+		void SingularValueListX( double *restrict s );
+
+		/*
+		 * Not destroy the original matrix A.o
+		 */
+		void SingularValueList( double *restrict s );
 		
 		/*
 		 * Return the sigular value list and the U and VT.
 		 * Destroy the original matix A.
+		 * Returns the info from dgesvd().
 		 */
-		int SingularValueDecompositionX( 
+		void SingularValueDecompositionX( 
 				double *restrict s,
 				double *restrict u, 
-				double *restrict vt );
-
+				double *restrict vt ); 
 		/*
-		 * Only get the singular value list. 
-		 * Not destroy the original matrix A.
+		 * Returns the info from dgesvd().
 		 */
-		int SingularValueList( double *s );
-		
-		/*
-		 * Return the sigular value list and the U and VT.
-		 * Not destroy the original matrix A.
-		 */
-		int SingularValueDecomposition( 
+		void SingularValueDecomposition( 
 				double *restrict s,
 				double *restrict u, 
 				double *restrict vt );
@@ -130,6 +130,7 @@ class dSVD {
 		 * the contents of a to b.
 		 */
 		void _Copy( double* restrict a, double* restrict b ) {
+			printf("dSVD::_Copy()\n");
 			mkl_domatcopy ( 'C', 'N', m, n, 1.0, a, m, b, m );
 		}
 
@@ -137,8 +138,13 @@ class dSVD {
 		 * Release Memory.
 		 */
 		void _Free( void ) {
-			if (  _query_flag!=kNone  )
+			printf("dSVD::_Free()\n");
+			if (  _query_flag!=kNone  ) {
+				printf("Freeing _work...\n");
 				mkl_free(_work);
+				_query_flag = kNone;
+				_work = NULL;
+			}
 		}
 
 };

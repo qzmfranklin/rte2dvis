@@ -77,6 +77,7 @@ CFLAGS 		:=-O3						\
 		-prec-div -no-ftz				\
 		-MMD -MP					\
 		-std=c99					\
+		-DQZM_DEBUG					\
 		-restrict					\
 		-Wno-deprecated
 

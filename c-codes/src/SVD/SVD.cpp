@@ -14,7 +14,7 @@ int dSVD::QueryWorkspace(
 		double *restrict s,
 		double *restrict u, 
 		double *restrict vt ) {
-	printf("dSVD::QueryWorkspace()\n");
+	//printf("dSVD::QueryWorkspace()\n");
 
 	if (  _reset_flag == kReset  ) {
 		fprintf(stderr, "\tThe matrix is not set yet.\n");
@@ -23,7 +23,7 @@ int dSVD::QueryWorkspace(
 	}
 
 	enum EQueryType type;
-	if ( !(u||vt) )
+	if ( u==NULL && vt==NULL )
 		type = kSingularValue;
 	else
 		type = kAll;
@@ -35,16 +35,14 @@ int dSVD::QueryWorkspace(
 	}
 
 	double __work[1];
-	int _ldu, _ldvt;
-	mkl_free(_work); // Free previous workspace.
+	_Free();
+	_lwork = -1;
 	switch (  type  ) {
 		case kSingularValue: 
-			_ldu = 1; _ldvt = 1; _lwork=-1;
 			dgesvd("N","N",&m,&n,a,&_lda,s,u,&_ldu,
 					vt,&_ldvt,__work,&_lwork,&info);
 			break;
 		case kAll: 
-			_ldu = m; _ldvt = n; _lwork=-1;
 			dgesvd("A","A",&m,&n,a,&_lda,s,u,&_ldu,
 					vt,&_ldvt,__work,&_lwork,&info);
 			break;
@@ -55,24 +53,69 @@ int dSVD::QueryWorkspace(
 	assert(_work);
 	_query_flag = type;
 
-	//printf("*__work = %f\n",*__work);
-	//printf("_lwork = %d\n",_lwork);
-	//printf("_work = %p\n",_work);
-	//printf("_query_flag = %d\n",(int)_query_flag);
+#ifndef QZM_DEBUG	
+	char *str = "------  ";
+	printf("Completed the query for workspace:\n");
+	printf("%s*__work\t= %f\n",str,*__work);
+	printf("%s_lwork\t= %d\n",str,_lwork);
+	printf("%s_work\t= %p\n",str,_work);
+	printf("%s_query_flag\t= %d\n",str,(int)_query_flag);
+#endif
 	return _query_flag;
 } 
+/**************************************/ 
+void dSVD::SingularValueListX( double *restrict s ) {
+	//printf("dSVD::SingularValueListX()\n");
+	dgesvd("N","N",&m,&n,a,&_lda,s,NULL,&_ldu,
+			NULL,&_ldvt,_work,&_lwork,&info);
+}
+void dSVD::SingularValueList( double *restrict s ) {
+	//printf("dSVD::SingularValueList()\n");
+	double *b;
+	b = (double*) mkl_malloc( m*n*sizeof(double), MALLOC_ALIGNMENT );
+	assert(b);
+	_Copy(a,b);
+	dgesvd("N","N",&m,&n,b,&_lda,s,NULL,&_ldu,
+			NULL,&_ldvt,_work,&_lwork,&info);
+	mkl_free(b);
+}
+/**************************************/ 
+void dSVD::SingularValueDecompositionX( 
+		double *restrict s,
+		double *restrict u, 
+		double *restrict vt ) {
+	//printf("dSVD::SingularValueDecompositionX()\n"); 
+	dgesvd("A","A",&m,&n,a,&_lda,s,u,&_ldu,
+			vt,&_ldvt,_work,&_lwork,&info);
+} 
+void dSVD::SingularValueDecomposition( 
+		double *restrict s,
+		double *restrict u, 
+		double *restrict vt ) {
+	//printf("dSVD::SingularValueDecomposition()\n"); 
+	double *b;
+	b = (double*) mkl_malloc( m*n*sizeof(double), MALLOC_ALIGNMENT );
+	assert(b);
+	_Copy(a,b);
+	dgesvd("A","A",&m,&n,a,&_lda,s,u,&_ldu,
+			vt,&_ldvt,_work,&_lwork,&info);
+	mkl_free(b);
+} 
 
+/**************************************/ 
 void dSVD::Print() {
-	int		m;
-	int		n;
-	double*		a;
-	int		info;
-	int		_lda; 
-	int		_ldu;
-	int		_ldvt;
-	double*		_work;
-	int		_lwork; 
-	_query_flag;
-	_reset_flag;
-	printf("\n");
+	//printf("dSVD::Print()\n");
+
+	char *s = "------  ";
+	printf("%sm\t= %d\n",s,m);
+	printf("%sn\t= %d\n",s,n);
+	printf("%sa\t= %p\n",s,a);
+	printf("%sinfo\t= %d\n",s,info);
+	printf("%s_lda\t= %d\n",s,_lda);
+	printf("%s_ldu\t= %d\n",s,_ldu);
+	printf("%s_ldvt\t= %d\n",s,_ldvt);
+	printf("%s_work\t= %p\n",s,_work);
+	printf("%s_lwork\t= %d\n",s,_lwork);
+	printf("%s_query_flag\t= %d\n",s,(int)_query_flag);
+	printf("%s_reset_flag\t= %d\n",s,(int)_reset_flag);
 }
