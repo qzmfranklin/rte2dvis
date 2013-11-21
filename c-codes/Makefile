@@ -82,6 +82,7 @@ CFLAGS 		:=-O3						\
 
 		# 						\
 		-fPIC						\
+		-DNDEBUG					\
 		-fno-inline-functions				\
 		-Wno-deprecated					\
 

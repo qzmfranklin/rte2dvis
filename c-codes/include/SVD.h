@@ -4,7 +4,7 @@
 #include <mkl.h>
 #include <cassert>
 #define MALLOC_ALIGNMENT 64
-
+/*******************************************************************************/ 
 class dSVD {
 	/*
 	 * Calling LAPACK subroutines to compute SVD.
@@ -22,15 +22,6 @@ class dSVD {
 	 * 	S = MIN(M,N)
 	 */
 	public:
-		enum EQueryType	{
-			kNone		= 0,
-			kSingularValue	= 101, // only compute singular values
-			kAll 		= 102// compute U and VT as well
-		};
-		enum EResetType {
-			kReset,		// is reset
-			kSet		// is set
-		};		
 		int		m;
 		int		n;
 		double*		a;
@@ -41,8 +32,15 @@ class dSVD {
 		int		_ldvt;
 		double*		_work;
 		int		_lwork; 
-		enum EQueryType _query_flag;
-		enum EResetType _reset_flag;
+		enum EQueryType	{
+			kNone		= 0,
+			kSingularValue	= 101,	// only compute singular values
+			kAll 		= 102	// compute U and VT as well
+		} _query_flag;
+		enum EResetType {
+			kReset,	// is reset
+			kSet   	// is set
+		} _reset_flag;
 	public:
 		dSVD():	m(0), 
 			n(0), 
@@ -54,11 +52,19 @@ class dSVD {
 			_work(NULL), 
 			_lwork(0), 
 			_query_flag(kNone),
-			_reset_flag(kReset) {}
+			_reset_flag(kReset) {
+				printf("dSVD::dSVD()\n");
+			}
 
-		~dSVD() { _Free(); }; 
+		~dSVD() { 
+			printf("dSVD::~dSVD()\n");
+			_Free(); 
+		}; 
+
+		void Print();
 
 		void Set( int M, int N, double* A ) {
+			printf("dSVD::Set()\n");
 			m=M; 
 			n=N; 
 			a=A; 
@@ -115,6 +121,7 @@ class dSVD {
 				double *restrict u, 
 				double *restrict vt );
 
+
 	private:
 		/*
 		 * Copy a -> b.
@@ -131,10 +138,11 @@ class dSVD {
 		 */
 		void _Free( void ) {
 			if (  _query_flag!=kNone  )
-				free(_work);
+				mkl_free(_work);
 		}
-};
 
+};
+/*******************************************************************************/ 
 /*
  * Global instance of dSVD. Used to manage memories with the help of 
  * dSVD.Free(). Usually, the programmer never needs to worry about 

@@ -14,11 +14,11 @@ int dSVD::QueryWorkspace(
 		double *restrict s,
 		double *restrict u, 
 		double *restrict vt ) {
-	//printf("dSVD::QueryWorkspace()\n");
+	printf("dSVD::QueryWorkspace()\n");
 
 	if (  _reset_flag == kReset  ) {
-		fprintf(stderr, "The matrix is not set yet.\n");
-		fprintf(stderr, "Call dSVD::Set() first.\n");
+		fprintf(stderr, "\tThe matrix is not set yet.\n");
+		fprintf(stderr, "\tCall dSVD::Set() first.\n");
 		return -1;
 	}
 
@@ -29,34 +29,50 @@ int dSVD::QueryWorkspace(
 		type = kAll;
 
 	if (  type == _query_flag  ) {
-		fprintf(stderr, "Workspace is already queried.\n");
-		fprintf(stderr, "Do nothing this time.\n");
+		fprintf(stderr, "\tWorkspace is already queried.\n");
+		fprintf(stderr, "\tDo nothing this time.\n");
 		return 0; 
 	}
 
-	//TODO
 	double __work[1];
 	int _ldu, _ldvt;
 	mkl_free(_work); // Free previous workspace.
 	switch (  type  ) {
 		case kSingularValue: 
 			_ldu = 1; _ldvt = 1; _lwork=-1;
-			dgesvd("N","N",	&m,&n,a,&_lda, s,u,&_ldu,vt,&_ldvt, __work,&_lwork,&info);
-			assert(!info); // Query for optimal workspace size.
-			_lwork = (int) *__work;
-			_work = (double*) mkl_malloc( _lwork * sizeof(double), MALLOC_ALIGNMENT );
-			assert(_work);
-			_query_flag = type;
+			dgesvd("N","N",&m,&n,a,&_lda,s,u,&_ldu,
+					vt,&_ldvt,__work,&_lwork,&info);
 			break;
 		case kAll: 
+			_ldu = m; _ldvt = n; _lwork=-1;
+			dgesvd("A","A",&m,&n,a,&_lda,s,u,&_ldu,
+					vt,&_ldvt,__work,&_lwork,&info);
 			break;
-		default:
-			fprintf(stderr,"\tArgument 'type' is not one of kSingularValue, kAll.\n");
-			return NULL;
-			break;
-	}
+	} 
+	assert(!info);
+	_lwork = (int) (*__work + 0.001);
+	_work = (double*) mkl_malloc( _lwork * sizeof(double), MALLOC_ALIGNMENT );
+	assert(_work);
+	_query_flag = type;
 
-	printf("_work = %p\n",_work);
-	printf("_query_flag = %d\n",(int)_query_flag);
+	//printf("*__work = %f\n",*__work);
+	//printf("_lwork = %d\n",_lwork);
+	//printf("_work = %p\n",_work);
+	//printf("_query_flag = %d\n",(int)_query_flag);
 	return _query_flag;
 } 
+
+void dSVD::Print() {
+	int		m;
+	int		n;
+	double*		a;
+	int		info;
+	int		_lda; 
+	int		_ldu;
+	int		_ldvt;
+	double*		_work;
+	int		_lwork; 
+	_query_flag;
+	_reset_flag;
+	printf("\n");
+}
