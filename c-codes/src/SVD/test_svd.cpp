@@ -3,7 +3,7 @@
 #include <stdio.h>
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
-using namespace Utils;
+using namespace utils;
 /*******************************************************************************/
 int main(int argc, char const* argv[]);
 int test01( void );

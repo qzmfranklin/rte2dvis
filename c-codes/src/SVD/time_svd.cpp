@@ -4,7 +4,7 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #define MALLOC_ALIGNMENT 64
-using namespace Utils;
+using namespace utils;
 /*******************************************************************************/
 int main(int argc, char const* argv[]);
 enum ETestType {

@@ -1,4 +1,4 @@
-#include "Utils.h"
+#include "utils.h"
 #include <emmintrin.h>
 #include <cmath>
 #include <cstdio>
@@ -11,7 +11,7 @@
 #include <errno.h> 
 using namespace std;
 
-namespace Utils { 
+namespace utils { 
 
 	static void drawline(int width, int n){
 		for(int i=0; i <= n; i++)
@@ -276,4 +276,4 @@ namespace Utils {
 		}
 	}
 	
-} // namespace Utils 
+} // namespace utils 

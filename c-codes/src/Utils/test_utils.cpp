@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 using namespace std;
-using namespace Utils;
+using namespace utils;
 
 int test_Table();
 void runstatv(int v);

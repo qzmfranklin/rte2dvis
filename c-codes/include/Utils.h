@@ -24,7 +24,7 @@
 	} \
 } while(0)  
 
-namespace Utils {
+namespace utils {
 	const double PI = 3.1415926535897932384e+00;
 	class Random{
 		private:

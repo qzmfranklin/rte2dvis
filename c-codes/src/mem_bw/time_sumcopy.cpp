@@ -2,7 +2,7 @@
 #include "sumcopy.hh"
 #include <fstream>
 #include <mkl.h>
-using namespace Utils;
+using namespace utils;
 
 
 void init_mem(double *(&a), double *(&b),  int n){
