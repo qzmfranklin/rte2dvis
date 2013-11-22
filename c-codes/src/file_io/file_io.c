@@ -4,25 +4,10 @@
 #include <float.h>
 #include <string.h>
 #include <mkl.h>
-
-/******************************************************************************/ 
-#ifndef EXTERN_C 
-	#ifdef __cplusplus
-		#define EXTERN_C extern "C"
-	#else
-		#define EXTERN_C extern
-	#endif
-#endif
-EXTERN_C void	fileio_read_rte2dvis_input_file( const char * filename ); 
-EXTERN_C int	fileio_read_info_nodes_triangles(const char * filename_base,		
-						double **nodes,		int *nodes_num,
-						int **triangles,	int *triangles_num );
-EXTERN_C int	fileio_dump_msh_file(		const char * filename_msh,		
-						const char * filename_dat	); 
+#include "file_io.h" 
 /******************************************************************************/ 
 #define MALLOC_ALIGNMENT 64	// mkl_malloc( size_t, 64 )
 /******************************************************************************/ 
-
 void fileio_read_rte2dvis_input_file( const char* filename )
 {
 	// This function is supposed to read 
@@ -33,9 +18,7 @@ void fileio_read_rte2dvis_input_file( const char* filename )
 	// Not implemented yet
 }
 
-int	fileio_read_info_nodes_triangles(	const char * filename_base,		
-						double **nodes,		int *nodes_num,
-						int **triangles,	int *triangles_num )
+int	fileio_read_info_nodes_triangles( const char * filename_base, double **nodes, int *nodes_num, int **triangles, int *triangles_num )
 {
 	// This function shall be used WITH the 
 	// corresponding fileio_dump_msh_file()

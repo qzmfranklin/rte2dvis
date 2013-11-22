@@ -14,7 +14,7 @@ int dSVD::QueryWorkspace(
 		double *restrict s,
 		double *restrict u, 
 		double *restrict vt ) {
-	printf("dSVD::QueryWorkspace()\n");
+	//printf("dSVD::QueryWorkspace()\n");
 
 	if (  _reset_flag == kReset  ) {
 		fprintf(stderr, "\tThe matrix is not set yet.\n");
@@ -29,8 +29,8 @@ int dSVD::QueryWorkspace(
 		type = kAll;
 
 	if (  type == _query_flag  ) {
-		fprintf(stderr, "\tWorkspace is already queried.\n");
-		fprintf(stderr, "\tDo nothing this time.\n");
+		//fprintf(stderr, "\tWorkspace is already queried.");
+		//fprintf(stderr, "\tDo nothing this time.\n");
 		return 0; 
 	}
 
@@ -53,7 +53,7 @@ int dSVD::QueryWorkspace(
 	assert(_work);
 	_query_flag = type;
 
-#ifndef QZM_DEBUG	
+#ifdef NDEBUG
 	char *str = "------  ";
 	printf("Completed the query for workspace:\n");
 	printf("%s*__work\t= %f\n",str,*__work);
@@ -103,7 +103,7 @@ void dSVD::SingularValueDecomposition(
 } 
 /**************************************/ 
 void dSVD::Print() {
-	printf("dSVD::Print()\n");
+	//printf("dSVD::Print()\n");
 
 	char *s = "------  ";
 	printf("%sm\t= %d\n",s,m);

@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <mkl.h>
-#include "file-io.h"
+#include "file_io.h"
 
 
 int main(int argc, char *argv[])

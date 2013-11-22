@@ -3,7 +3,7 @@
 #include <cmath>
 #include <ctime>
 #include <iostream>
-#include "DunavantRule.h"
+#include "dunavant_rules.h"
 using namespace std; 
 namespace QuadratureRules { 
 	DunavantRule gDunavantRule;

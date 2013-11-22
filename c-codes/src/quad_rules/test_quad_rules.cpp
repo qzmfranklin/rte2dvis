@@ -1,6 +1,6 @@
-#include "DunavantRule.h"
-#include "WandzuraRule.h"
-#include "GaussQuadratures.h"
+#include "dunavant_rules.h"
+#include "wandzura_rules.h"
+#include "gauss_rules.h"
 /*****************************************************************************/
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))

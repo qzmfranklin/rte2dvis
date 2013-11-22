@@ -33,10 +33,10 @@
 #	Be careful! Do NOT accidentally insert some spaces!
 # ${TARBALL_NAME} is the name of the tarball generated when one enters
 # 	$ make dist
-PROJECT_NAME	:= rte2dvis
-VERSION		:= v0.01
-DATE_TIME	:= $(shell date "+%Y-%m-%d")
-RELEASE_NAME	:= ${PROJECT_NAME}-${VERSION}-${DATE_TIME}
+PROJECT_NAME	:=rte2dvis
+VERSION		:=v0.01
+DATE_TIME	:=$(shell date "+%Y-%m-%d")
+RELEASE_NAME	:=${PROJECT_NAME}-${VERSION}-${DATE_TIME}
 ###############################################################################
 #				STEP 2
 #QUIET MODE
@@ -77,13 +77,12 @@ CFLAGS 		:=-O3						\
 		-prec-div -no-ftz				\
 		-MMD -MP					\
 		-std=c99					\
-		-DQZM_DEBUG					\
 		-restrict					\
 		-Wno-deprecated
 
 		# 						\
-		-fPIC						\
 		-DNDEBUG					\
+		-fPIC						\
 		-fno-inline-functions				\
 		-Wno-deprecated					\
 
@@ -96,6 +95,9 @@ ASMFLAGS	:=-S -fsource-asm# Generate source code commented assembly code.
 #	Intel Math Kernel Library for MacOSX-x86-64
 MKL_INCS	:=
 MKL_LIBS	:=-mkl
+#	OpenMPI Library
+MPI_INCS	:='mpiCC -showme:compile'
+MPI_LIBS	:='mpiCC -showme:link'
 #	MathLink for MacOSX-x86-64
 ML_DIR		:=/Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
 ML_INCS		:=-I${ML_DIR}

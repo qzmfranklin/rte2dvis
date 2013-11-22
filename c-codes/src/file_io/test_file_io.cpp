@@ -1,15 +1,15 @@
 #include <unistd.h>
-#include "file-io.h" 
+#include "file_io.h" 
 #include <stdio.h>
 #include <string.h>
 #include <mkl.h>
 
 int main(int argc, char *argv[]);
-static int test01(int argc, char *argv[]);
-static int test02(int argc, char *argv[]);
-static int test03(int argc, char *argv[]);
-static int test04(int argc, char *argv[]);
-static int test05(int argc, char *argv[]);
+int test01(int argc, char *argv[]);
+int test02(int argc, char *argv[]);
+int test03(int argc, char *argv[]);
+int test04(int argc, char *argv[]);
+int test05(int argc, char *argv[]);
 /******************************************************************************/
 int main(int argc, char *argv[]) {
 	int err=0;
