@@ -6,29 +6,35 @@
 #include <mkl.h>
 #include "file_io.h" 
 /******************************************************************************/ 
-#define MALLOC_ALIGNMENT 64	// mkl_malloc( size_t, 64 )
+#define MALLOC_ALIGNMENT 64
 /******************************************************************************/ 
 void fileio_read_rte2dvis_input_file( const char* filename )
 {
-	// This function is supposed to read 
-	// some kind of input file to the 
-	// rte2dvis machineray to avoid fre-
-	// quent re-compilation.
-	//
-	// Not implemented yet
+	/*
+	 * This function is supposed to read 
+	 * some kind of input file to the 
+	 * rte2dvis machineray to avoid fre-
+	 * quent re-compilation.
+	 *
+	 * Not implemented yet
+	 */
 }
 
-int	fileio_read_info_nodes_triangles( const char * filename_base, double **nodes, int *nodes_num, int **triangles, int *triangles_num )
+int fileio_read_info_nodes_triangles( const char * filename_base, 
+		double **nodes, int *nodes_num, int **triangles, int *triangles_num )
 {
-	// This function shall be used WITH the 
-	// corresponding fileio_dump_msh_file()
-	// function. Otherwise the fscanf format
-	// string, i.e., the %25.19E part, might
-	// not match.
-	//
-	// In the future, I might be able to make
-	// this function to auto-detect the proper
-	// fscanf format string.
+	/* 
+	 * TODO
+	 * This function shall be used WITH the 
+	 * corresponding fileio_dump_msh_file()
+	 * function. Otherwise the fscanf format
+	 * string, i.e., the %25.19E part, might
+	 * not match.
+	 *
+	 * In the future, I might be able to make
+	 * this function to auto-detect the proper
+	 * fscanf format string.
+	 */
 	int err=0;
 	printf("--------------------------------------------------\n");
 	printf("BEGIN:	FILEIO_READ_INFO_NODES_TRIANGLES\n");
@@ -64,9 +70,6 @@ int	fileio_read_info_nodes_triangles( const char * filename_base, double **nodes
 	strcpy(filename_info,		filename_base);
 	strcpy(filename_nodes,		filename_base);
 	strcpy(filename_triangles,	filename_base);
-	/*strcpy(filename_info,		(void*)filename_base);*/
-	/*strcpy(filename_nodes,	(void*)filename_base);*/
-	/*strcpy(filename_triangles,	(void*)filename_base);*/
 	strcat(filename_info,".info");
 	strcat(filename_nodes,".nodes");
 	strcat(filename_triangles,".triangles");
@@ -98,8 +101,8 @@ int	fileio_read_info_nodes_triangles( const char * filename_base, double **nodes
 	// Open fin_nodes for read
 	FILE *fin_nodes;
 	if (  !(fin_nodes=fopen(filename_nodes,"r"))  ) {
-		printf("	Cannot open filename_nodes for read\n");
-		printf("	Abort...\n");
+		fprintf(stderr,"	Cannot open filename_nodes for read\n");
+		fprintf(stderr,"	Abort...\n");
 		err += 2;
 		return err;
 	} else {
@@ -123,8 +126,8 @@ int	fileio_read_info_nodes_triangles( const char * filename_base, double **nodes
 	// Open fin_triangles for read
 	FILE *fin_triangles;
 	if (  !(fin_triangles=fopen(filename_triangles,"r"))  ) { 
-		printf("	Cannot open filename_triangles for read\n");
-		printf("	Abort...\n");
+		fprintf(stderr,"	Cannot open filename_triangles for read\n");
+		fprintf(stderr,"	Abort...\n");
 		err += 4;
 		return err;
 	} else {
@@ -161,11 +164,13 @@ int	fileio_read_info_nodes_triangles( const char * filename_base, double **nodes
 
 int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 {
-	// This function is expressibly made suitable 
-	// for being integrated into a standalone 
-	// program that reads an MSH file and dumps 
-	// the nodes and triangles into separate ASCII 
-	// files.
+	/*
+	 * This function is expressibly made suitable 
+	 * for being integrated into a standalone 
+	 * program that reads an MSH file and dumps 
+	 * the nodes and triangles into separate ASCII 
+	 * files.
+	 */
 	int err=0;
 	printf("--------------------------------------------------\n");
 	printf("BEGIN:	FILEIO_DUMP_MSH_FILE\n");
@@ -412,4 +417,7 @@ int fileio_dump_msh_file( const char * filename_in, const char * filename_out )
 	printf("--------------------------------------------------\n");
 
 	return err;
+}
+
+void fileio_help() {
 }

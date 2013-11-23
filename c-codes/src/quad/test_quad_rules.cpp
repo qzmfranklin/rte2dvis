@@ -14,9 +14,17 @@ void print_rule( double *xy, double *w, int order_num );
 /*****************************************************************************/
 int main(int argc, char const* argv[])
 { 
+	char fname[FILENAME_MAX];
+	sprintf(fname,"DEBUG/test_quad_rules.txt");
+	freopen(fname,"w",stdout);
+
 	test01(100);
 	test02(100);
 	test03(100);
+
+	fprintf(stderr, "Output to %s\n",fname);
+	fclose(stdout);
+
 	return 0;
 } 
 
@@ -30,7 +38,7 @@ void test01( int n ){
 	double *w;
 	for (rule = 1; rule <= n; rule++) {
 		printf("rule = %d\n",rule);
-		gDunavantRule.Generate( rule, &xy, &w, &order_num );
+		gDunavantRule.Generate( rule, xy, w, order_num );
 		print_rule( xy, w, order_num ); 
 	}
 }
@@ -45,7 +53,7 @@ void test02( int n ){
 	double *w;
 	for (rule = 1; rule <= n; rule++) {
 		printf("rule = %d\n",rule);
-		gWandzuraRule.Generate( rule, &xy, &w, &order_num );
+		gWandzuraRule.Generate( rule, xy, w, order_num );
 		print_rule( xy, w, order_num ); 
 	}
 }
@@ -60,7 +68,7 @@ void test03( int n ) {
 	double *x;
 	double *w;
 	for (order = 1; order <= n; order++) {
-		gGaussQuadratures.Generate( &x, &w, order, -1.0, 1.0 );
+		gGaussRule.Generate( x, w, order, -1.0, 1.0 );
 		print_rule( x, w, order ); 
 	}
 }

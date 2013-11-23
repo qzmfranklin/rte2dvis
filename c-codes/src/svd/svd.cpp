@@ -10,7 +10,8 @@ void dgesvd( const char* jobu, const char* jobvt, const int32_t* m,
 		double* u, const int32_t* ldu, double* vt, const int32_t* ldvt,
 		double* work, const int32_t* lwork, int32_t* info );
 /*******************************************************************************/
-SVD_D::SVD_D():m(0), 
+SVD_D::SVD_D():
+	m(0), 
 	n(0), 
 	a(NULL),
 	info(0), 
@@ -98,6 +99,7 @@ void SVD_D::SingularValueListX( double *restrict s ) {
 	dgesvd("N","N",&m,&n,a,&_lda,s,NULL,&_ldu,
 			NULL,&_ldvt,_work,&_lwork,&info);
 }
+
 void SVD_D::SingularValueList( double *restrict s ) {
 	//printf("SVD_D::SingularValueList()\n");
 	double *b;
@@ -117,6 +119,7 @@ void SVD_D::SingularValueDecompositionX(
 	dgesvd("A","A",&m,&n,a,&_lda,s,u,&_ldu,
 			vt,&_ldvt,_work,&_lwork,&info);
 } 
+
 void SVD_D::SingularValueDecomposition( 
 		double *restrict s,
 		double *restrict u, 

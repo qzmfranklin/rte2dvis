@@ -34,7 +34,7 @@
 # ${TARBALL_NAME} is the name of the tarball generated when one enters
 # 	$ make dist
 PROJECT_NAME	:=rte2dvis
-VERSION		:=v0.01
+VERSION		:=v0.02
 DATE_TIME	:=$(shell date "+%Y-%m-%d")
 RELEASE_NAME	:=${PROJECT_NAME}-${VERSION}-${DATE_TIME}
 ###############################################################################

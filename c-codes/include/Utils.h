@@ -278,9 +278,19 @@ namespace utils {
 	void link_cout(const char *fname);
 
 	/*
-	 * close file opened with link2cout and restore cout stream
+	 * close file opened with link_cout and restore cout stream
 	 */
 	void unlink_cout();
+
+	/*
+	 * open file fname and link its stream to that of stdout
+	 */
+	void link_stdout(const char *fname);
+
+	/*
+	 * close file opened with link_stdout and restore stdout stream
+	 */
+	void unlink_stdout();
 
 	/*
 	 * prints the file to cout (omitting unprintable characters)

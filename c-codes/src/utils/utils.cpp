@@ -202,6 +202,25 @@ namespace utils {
 		ofile.close();
 	}
 
+	// TODO
+	static int linkstd_state = 0;
+
+
+	void link_stdout(const char *fname) {
+		assrt(linkstd_state == 0);
+		linkstd_state = 1;
+
+		assrt(  freopen(fname,"w",stdout)  );
+	} 
+
+	void unlink_stdout() { 
+		assrt(linkstd_state == 1);
+		linkstd_state = 0;
+
+		fclose(stdout);
+		assrt(  fdopen(STDOUT_FILENO,"w")  );
+	}
+
 	void box_file(const char* fname, const char*mesg){
 		FILE *file;
 		file = fopen(fname, "r");

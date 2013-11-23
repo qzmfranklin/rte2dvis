@@ -4,7 +4,7 @@
 #include <mkl.h>
 #include <cassert>
 #define MALLOC_ALIGNMENT 64
-/*******************************************************************************/ 
+/******************************************************************************/ 
 /*
  * Calling LAPACK subroutines to compute SVD.
  * 	DOUBLE PRECISION
@@ -123,10 +123,6 @@ class SVD_D {
 		}
 
 };
-/*******************************************************************************/ 
-/*
- * Global instance of SVD_D. Used to manage 
- * memories with the help of SVD_D._Free(). 
- */
 extern SVD_D gSVD_D;
+/******************************************************************************/ 
 #endif /* End of protection macro _SVD_H_ */

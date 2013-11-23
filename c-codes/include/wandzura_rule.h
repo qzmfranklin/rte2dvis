@@ -4,87 +4,82 @@
 #include <stack>
 #include <cassert>
 #include <mkl.h>
-#define MALLOC_ALIGNMENT 64
 
 namespace QuadratureRules {
 
-	class WandzuraRule {
-		private:
-			std::stack<double*> 	fxy;
-			std::stack<double*> 	fw;
-		public:
-			WandzuraRule() : fxy(), fw() {}
-			~WandzuraRule() { Free(); }
+class WandzuraRule {
+	private:
+		std::stack<double*> 	fxy;
+		std::stack<double*> 	fw;
+	public:
+		WandzuraRule() {}
+		~WandzuraRule() { ReleaseMemory(); }
 
-			void Generate( int rule, double **xy, double **w, int *order_num ) {
-				assert( 1<=rule && rule<=wandzura_rule_num() );
-				*order_num = wandzura_order_num ( rule ); 
-				*xy = (double*) mkl_malloc( 2 * (*order_num) * sizeof(double), MALLOC_ALIGNMENT );
-				*w = (double*) mkl_malloc( (*order_num) * sizeof(double), MALLOC_ALIGNMENT); 
-				assert( (*xy) && (*w) );
-				wandzura_rule ( rule, *order_num, *xy, *w );
-				fxy.push(*xy);
-				fw.push(*w);
-			} 
+		/*
+		 * Generate Dunavant quadrature rule of given given (int rule).
+		 * Allocates memory using mkl_malloc automatically. 64 bytes
+		 * aligned. Return the pointers of the abscissas and the weights
+		 * *xy and *w through reference.
+		 *
+		 * Ownership issue:
+		 * The memory was allocated from within Generate(). In
+		 * principle, one should NOT free the memory on his/her own.
+		 * Instead, please call ReleaseMemory() to release the memory,
+		 * if must. Even if one does not do anything about those
+		 * allocated memory, they will be released (mkl_free()) when the
+		 * global DunavantRule instance is destructed.
+		 */
+		void Generate( int rule, double* &xy, double* &w, int &order_num ); 
 
-			/*
-			 * Free memory when destructed or explicitly called Free().
-			 * The goal of this design is to keep the programmer free
-			 * from freeing memory. Usually, one NEVER needs to call
-			 * Free() explicitly.
-			 */
-			void Free() {
-				while ( !fxy.empty() ) { 
-					mkl_free( fxy.top() );
-					fxy.pop();
-				}
-				while ( !fw.empty() ) { 
-					mkl_free( fw.top() );
-					fw.pop();
-				}
-			}
+		int RuleNumber() { return wandzura_rule_num(); }
 
-		public: 
-			void file_name_inc ( char *file_name );
-			int i4_max ( int i1, int i2 );
-			int i4_min ( int i1, int i2 );
-			int i4_modp ( int i, int j );
-			int i4_wrap ( int ival, int ilo, int ihi );
-			double r8_huge ( void );
-			int r8_nint ( double x );
-			void reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] );
-			int s_len_trim ( char *s );
-			void timestamp ( );
-			double triangle_area ( double t[2*3] );
-			void triangle_points_plot ( char *file_name, double node_xy[], int node_show, int point_num, double point_xy[], int point_show );
-			int wandzura_degree ( int rule );
-			int wandzura_order_num ( int rule );
-			void wandzura_rule ( int rule, int order_num, double xy[], double w[] );
-			int wandzura_rule_num ( void );
-			int *wandzura_suborder ( int rule, int suborder_num );
-			int wandzura_suborder_num ( int rule );
-			void wandzura_subrule ( int rule, int suborder_num, double suborder_xyz[], double suborder_w[] );
-			void wandzura_subrule_1 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
-			void wandzura_subrule_2 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
-			void wandzura_subrule_3 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
-			void wandzura_subrule_4 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
-			void wandzura_subrule_5 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
-			void wandzura_subrule_6 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
-			//
-			//  Versions of the rule using the nonstandard reference triangle:
-			//
-			void wandzura_subrule2_1 ( int suborder_num, double suborder_xy[], double suborder_w[] );
-			void wandzura_subrule2_2 ( int suborder_num, double suborder_xy[], double suborder_w[] );
-			void wandzura_subrule2_3 ( int suborder_num, double suborder_xy[], double suborder_w[] );
-			void wandzura_subrule2_4 ( int suborder_num, double suborder_xy[], double suborder_w[] );
-			void wandzura_subrule2_5 ( int suborder_num, double suborder_xy[], double suborder_w[] );
-			void wandzura_subrule2_6 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+		int Order(int rule) { return wandzura_order_num(rule); }
 
-	};
+		int Degree(int rule) { return wandzura_degree(rule); }
 
-	// Declaration of a global WandzuraRule object gWandzuraRule.
-	// gWandzuraRule is meant to be the ONLY WandzuraRule object
-	// in the entire program.
-	extern WandzuraRule gWandzuraRule;
+		void ReleaseMemory();
+
+	public: 
+		void file_name_inc ( char *file_name );
+		int i4_max ( int i1, int i2 );
+		int i4_min ( int i1, int i2 );
+		int i4_modp ( int i, int j );
+		int i4_wrap ( int ival, int ilo, int ihi );
+		double r8_huge ( void );
+		int r8_nint ( double x );
+		void reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] );
+		int s_len_trim ( char *s );
+		void timestamp ( );
+		double triangle_area ( double t[2*3] );
+		void triangle_points_plot ( char *file_name, double node_xy[], int node_show, int point_num, double point_xy[], int point_show );
+		int wandzura_degree ( int rule );
+		int wandzura_order_num ( int rule );
+		void wandzura_rule ( int rule, int order_num, double xy[], double w[] );
+		int wandzura_rule_num ( void );
+		int *wandzura_suborder ( int rule, int suborder_num );
+		int wandzura_suborder_num ( int rule );
+		void wandzura_subrule ( int rule, int suborder_num, double suborder_xyz[], double suborder_w[] );
+		void wandzura_subrule_1 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+		void wandzura_subrule_2 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+		void wandzura_subrule_3 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+		void wandzura_subrule_4 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+		void wandzura_subrule_5 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+		void wandzura_subrule_6 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+		//
+		//  Versions of the rule using the nonstandard reference triangle:
+		//
+		void wandzura_subrule2_1 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+		void wandzura_subrule2_2 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+		void wandzura_subrule2_3 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+		void wandzura_subrule2_4 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+		void wandzura_subrule2_5 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+		void wandzura_subrule2_6 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+
+};
+
+// Declaration of a global WandzuraRule object gWandzuraRule.
+// gWandzuraRule is meant to be the ONLY WandzuraRule object
+// in the entire program.
+extern WandzuraRule gWandzuraRule;
 } // namespace QuadratureRules
 #endif // End of protection macro _WANDZURA_RULE_H_

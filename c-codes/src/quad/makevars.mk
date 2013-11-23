@@ -59,7 +59,8 @@ ${DIR-quad}QUIET	:=@
 ${DIR-quad}CFILES	:=	
 ${DIR-quad}CPPFILES	:=	${DIR-quad}/gauss_rule.cpp	\
 				${DIR-quad}/dunavant_rule.cpp	\
-				${DIR-quad}/wandzura_rule.cpp 
+				${DIR-quad}/wandzura_rule.cpp	\
+				${DIR-quad}/lyness_rule.cpp
 ################## DO NOT MODIFY ################
 ${DIR-quad}OBJFILES	:=	${${DIR-quad}CPPFILES:${DIR-quad}%.cpp=${BUILD}%.o}	\
 				${${DIR-quad}CFILES:${DIR-quad}%.c=${BUILD}%.o}
@@ -100,6 +101,7 @@ ${DIR-quad}TST	:=		test_quad_rules
 ${BUILD}/test_quad_rules.exe: 	${BUILD}/test_quad_rules.o		\
 				${BUILD}/dunavant_rule.o		\
 				${BUILD}/wandzura_rule.o		\
+				${BUILD}/lyness_rule.o			\
 				${BUILD}/gauss_rule.o
 ################## DO NOT MODIFY ################
 ${DIR-quad}TSTCPP	:=		${${DIR-quad}TST:%=${DIR-quad}/%.cpp}
