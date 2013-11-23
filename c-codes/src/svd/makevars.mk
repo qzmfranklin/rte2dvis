@@ -95,8 +95,8 @@ ${DIR-svd}BINASM	:=		${${DIR-svd}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
 #		${BUILD}/test_mytest.exe:	${BUILD}/test_mytest.o		\
 #						${BUILD}/any-other-files.o
 ${DIR-svd}TST	:=		test_svd time_svd
-${BUILD}/test_svd.exe: ${BUILD}/test_svd.o ${BUILD}/svd.o ${BUILD}/Utils.o
-${BUILD}/time_svd.exe: ${BUILD}/time_svd.o ${BUILD}/svd.o ${BUILD}/Utils.o
+${BUILD}/test_svd.exe: ${BUILD}/test_svd.o ${BUILD}/svd.o ${BUILD}/utils.o
+${BUILD}/time_svd.exe: ${BUILD}/time_svd.o ${BUILD}/svd.o ${BUILD}/utils.o
 ################## DO NOT MODIFY ################
 ${DIR-svd}TSTCPP	:=		${${DIR-svd}TST:%=${DIR-svd}/%.cpp}
 ${DIR-svd}TSTOBJ	:=		${${DIR-svd}TSTCPP:${DIR-svd}%.cpp=${BUILD}%.o}

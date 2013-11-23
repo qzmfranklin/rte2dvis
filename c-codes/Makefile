@@ -148,8 +148,8 @@ clean:
 	@echo "Deleting ${REV_RED}${BUILD}/*${NONE}..."
 	${QUIET}rm -rf ${BUILD}/*
 cleanx:
-	@echo "Deleting ${REV_GREEN}${OUTPUT}/*${NONE}..."
-	${QUIET}rm -rf ${OUTPUT}/*
+	@echo "Deleting ${REV_GREEN}${OUTPUT}/*${NONE}and ${REV_GREEN}${DEBUG}/*${NONE}..."
+	${QUIET}rm -rf ${OUTPUT}/* ${DEBUG}/*
 cleanxx: clean
 	@echo "Deleting ${REV_BLUE}${BIN}/*${NONE}..."
 	${QUIET}rm -rf ${BIN}/*

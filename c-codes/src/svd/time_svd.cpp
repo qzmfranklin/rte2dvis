@@ -1,5 +1,5 @@
-#include "SVD.h"
-#include "Utils.h"
+#include "svd.h"
+#include "utils.h"
 #include <stdio.h>
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -28,7 +28,7 @@ int main(int argc, char const* argv[])
 	const char* cols[1] = {"CYCLES"};
 	double *a; 
 	init_mem(a);
-	
+
 	double data[6];
 	data[0] = time(a,kQueryS);
 	data[1] = time(a,kSVLX);
@@ -37,10 +37,11 @@ int main(int argc, char const* argv[])
 	data[4] = time(a,kSVDX);
 	data[5] = time(a,kSVD);
 
-	//verify_dir("DEBUG/");
-	//char fname[200];
-	//sprintf(fname, "DEBUG/time-sc-stride-%d.txt", STR);
-	//link_cout(fname);
+	verify_dir("DEBUG/");
+	char fname[FILENAME_MAX];
+	sprintf(fname, "DEBUG/time_svd_d_%dx%d.txt\n",M,N);
+	fprintf(stderr,"Output to %s.",fname);
+	link_cout(fname);
 
 	Table tbl;
 	tbl.dim(6, 1);
@@ -51,7 +52,7 @@ int main(int argc, char const* argv[])
 	sprintf(banner,"Matrix size = %d * %d",M,N);
 	tbl.print(banner);
 
-	//unlink_cout();
+	unlink_cout();
 
 	release_mem(a);
 
@@ -64,49 +65,44 @@ double time( double* restrict a, enum ETestType type ) {
 	double s[MIN(M,N)];
 	double u[M*M];
 	double vt[N*N]; 
-	
-	gdSVD.Set(M,N,a); 
-	//gdSVD.Print(); 
+
+	gSVD_D.Set(M,N,a); 
+	//gSVD_D.Print(); 
 
 	for (int i = 0; i < COUNT; i++) {
 		switch (  type  ) {
-			case kQueryS: 
-				gdSVD.Flush();
-				clk.tic();
-				gdSVD.QueryWorkspace(s);
-				clk.toc();
-				break;
-			case kSVLX:
-				gdSVD.QueryWorkspace(s);
-				clk.tic();
-				gdSVD.SingularValueListX(s);
-				clk.toc();
-				break;
-			case kSVL: 
-				gdSVD.QueryWorkspace(s);
-				clk.tic();
-				gdSVD.SingularValueList(s);
-				clk.toc();
-				break;
-			case kQuerySUVT: 
-				gdSVD.Flush();
-				clk.tic();
-				gdSVD.QueryWorkspace(s,u,vt);
-				clk.toc();
-				break;
-			case kSVDX:
-				gdSVD.QueryWorkspace(s,u,vt);
-				clk.tic();
-				gdSVD.SingularValueDecompositionX(s,u,vt);
-				clk.toc();
-				break;
-			case kSVD: 
-				gdSVD.QueryWorkspace(s,u,vt);
-				clk.tic();
-				gdSVD.SingularValueDecomposition(s,u,vt);
-				clk.toc();
-				break; 
+		case kQueryS: 
+			gSVD_D.Flush();
+			clk.tic();
+			gSVD_D.QueryWorkspace(s);
+			break;
+		case kSVLX:
+			gSVD_D.QueryWorkspace(s);
+			clk.tic();
+			gSVD_D.SingularValueListX(s);
+			break;
+		case kSVL: 
+			gSVD_D.QueryWorkspace(s);
+			clk.tic();
+			gSVD_D.SingularValueList(s);
+			break;
+		case kQuerySUVT: 
+			gSVD_D.Flush();
+			clk.tic();
+			gSVD_D.QueryWorkspace(s,u,vt);
+			break;
+		case kSVDX:
+			gSVD_D.QueryWorkspace(s,u,vt);
+			clk.tic();
+			gSVD_D.SingularValueDecompositionX(s,u,vt);
+			break;
+		case kSVD: 
+			gSVD_D.QueryWorkspace(s,u,vt);
+			clk.tic();
+			gSVD_D.SingularValueDecomposition(s,u,vt);
+			break; 
 		}
+		clk.toc();
 	}
 
 	printf("\n");

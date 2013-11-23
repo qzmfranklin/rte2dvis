@@ -5,33 +5,33 @@
 #include <cassert>
 #define MALLOC_ALIGNMENT 64
 /*******************************************************************************/ 
-class dSVD {
-	/*
-	 * Calling LAPACK subroutines to compute SVD.
-	 * 	DOUBLE PRECISION
-	 * Full Col-Major storage:
-	 * 	LAPACK_COL_MAJOR
-	 * 
-	 * Assumed that A, U and VT are packed:
-	 * 	LDA = M, LDU = M, LDVT = N
-	 * where
-	 *	 	A = U S VT
-	 * 	A = M*N
-	 * 	U = M*M
-	 * 	VT= N*N
-	 * 	S = MIN(M,N)
-	 */
+/*
+ * Calling LAPACK subroutines to compute SVD.
+ * 	DOUBLE PRECISION
+ * Full Col-Major storage:
+ * 	LAPACK_COL_MAJOR
+ * 
+ * Assumed that A, U and VT are packed:
+ * 	LDA = M, LDU = M, LDVT = N
+ * where
+ *	 	A = U S VT
+ * 	A = M*N
+ * 	U = M*M
+ * 	VT= N*N
+ * 	S = MIN(M,N)
+ */
+class SVD_D {
 	public:
-		int		m;
-		int		n;
+		int32_t		m;
+		int32_t		n;
 		double*		a;
-		int		info;
+		int32_t		info;
 	private:
-		int		_lda; 
-		int		_ldu;
-		int		_ldvt;
+		int32_t		_lda; 
+		int32_t		_ldu;
+		int32_t		_ldvt;
 		double*		_work;
-		int		_lwork; 
+		int32_t		_lwork; 
 		enum EQueryType	{
 			kNone		= 0,
 			kSingularValue	= 101,	// only compute singular values
@@ -42,50 +42,20 @@ class dSVD {
 			kSet   		= 999	// is set
 		} _reset_flag;
 	public:
-		dSVD():	m(0), 
-			n(0), 
-			a(NULL),
-			info(0), 
-			_lda(0),
-			_ldu(0), 
-			_ldvt(0), 
-			_work(NULL), 
-			_lwork(0), 
-			_query_flag(kNone),
-			_reset_flag(kReset) {
-				printf("dSVD::dSVD()\n");
-			}
-
-		~dSVD() { 
-			printf("dSVD::~dSVD()\n");
-			_Free(); 
-		}; 
-
-		void Print();
-
-		void Set( int M, int N, double* A ) {
-			//printf("dSVD::Set()\n");
-			m=M; 
-			n=N; 
-			a=A; 
-			_lda=m; 
-			_ldu=m; 
-			_ldvt=n; 
-			_Free();
-			_query_flag=kNone; 
-			_reset_flag=kSet;
-		}
-
+		SVD_D(); 
+		~SVD_D(); 
+		void Print(); 
+		void Set( int32_t M, int32_t N, double* A ); 
 		void Reset() { _reset_flag=kReset; }
 
 		/*
 		 * Query for workspace.
 		 * Return values:
-		 * 	-1	Matrix A not set
-		 * 	0	Already queried
-		 * 	>0	Query Status
+		 * 	-1	Matrix A not set 	Failed
+		 * 	0	Already queried		Succeeded
+		 * 	>0	Query Status		Succeeded
 		 */
-		int QueryWorkspace( 
+		int32_t QueryWorkspace( 
 				double *restrict s,
 				double *restrict u =NULL,
 				double *restrict vt=NULL );
@@ -98,7 +68,7 @@ class dSVD {
 		void SingularValueListX( double *restrict s );
 
 		/*
-		 * Not destroy the original matrix A.o
+		 * Not destroy the original matrix A.
 		 */
 		void SingularValueList( double *restrict s );
 		
@@ -123,8 +93,8 @@ class dSVD {
 		 * Release Memory.
 		 */
 		void Flush( void ) {
-			printf("dSVD::Flush()\n");
-			//_Free();
+			printf("SVD_D::Flush()\n");
+			_Free();
 		}
 
 	private:
@@ -135,7 +105,7 @@ class dSVD {
 		 * the contents of a to b.
 		 */
 		void _Copy( double* restrict a, double* restrict b ) {
-			//printf("dSVD::_Copy()\n");
+			//printf("SVD_D::_Copy()\n");
 			mkl_domatcopy ( 'C', 'N', m, n, 1.0, a, m, b, m );
 		}
 
@@ -143,7 +113,7 @@ class dSVD {
 		 * Release Memory.
 		 */
 		void _Free( void ) {
-			//printf("dSVD::_Free()\n");
+			//printf("SVD_D::_Free()\n");
 			if (  _query_flag!=kNone  ) {
 				//printf("Freeing _work...\n");
 				mkl_free(_work);
@@ -155,9 +125,8 @@ class dSVD {
 };
 /*******************************************************************************/ 
 /*
- * Global instance of dSVD. Used to manage memories with the help of 
- * dSVD.Free(). Usually, the programmer never needs to worry about 
- * freeing memories any more.
+ * Global instance of SVD_D. Used to manage 
+ * memories with the help of SVD_D._Free(). 
  */
-extern dSVD gdSVD;
+extern SVD_D gSVD_D;
 #endif /* End of protection macro _SVD_H_ */
