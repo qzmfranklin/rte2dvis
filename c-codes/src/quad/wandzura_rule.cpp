@@ -5,7 +5,7 @@
 #include <cmath>
 #include <ctime>
 #include <cstring> 
-#include "wandzura_rules.h"
+#include "wandzura_rule.h"
 using namespace std; 
 namespace QuadratureRules {
 	

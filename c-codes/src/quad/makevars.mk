@@ -57,9 +57,9 @@ ${DIR-quad}QUIET	:=@
 #  Please, you NEVER need to specify the dependency for any .o file. Just list
 #  the source files.
 ${DIR-quad}CFILES	:=	
-${DIR-quad}CPPFILES	:=	${DIR-quad}/gauss_rules.cpp	\
-				${DIR-quad}/dunavant_rules.cpp	\
-				${DIR-quad}/wandzura_rules.cpp 
+${DIR-quad}CPPFILES	:=	${DIR-quad}/gauss_rule.cpp	\
+				${DIR-quad}/dunavant_rule.cpp	\
+				${DIR-quad}/wandzura_rule.cpp 
 ################## DO NOT MODIFY ################
 ${DIR-quad}OBJFILES	:=	${${DIR-quad}CPPFILES:${DIR-quad}%.cpp=${BUILD}%.o}	\
 				${${DIR-quad}CFILES:${DIR-quad}%.c=${BUILD}%.o}
@@ -98,9 +98,9 @@ ${DIR-quad}BINASM	:=		${${DIR-quad}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
 #						${BUILD}/any-other-files.o
 ${DIR-quad}TST	:=		test_quad_rules
 ${BUILD}/test_quad_rules.exe: 	${BUILD}/test_quad_rules.o		\
-				${BUILD}/dunavant_rules.o		\
-				${BUILD}/wandzura_rules.o		\
-				${BUILD}/gauss_rules.o
+				${BUILD}/dunavant_rule.o		\
+				${BUILD}/wandzura_rule.o		\
+				${BUILD}/gauss_rule.o
 ################## DO NOT MODIFY ################
 ${DIR-quad}TSTCPP	:=		${${DIR-quad}TST:%=${DIR-quad}/%.cpp}
 ${DIR-quad}TSTOBJ	:=		${${DIR-quad}TSTCPP:${DIR-quad}%.cpp=${BUILD}%.o}
