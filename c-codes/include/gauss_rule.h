@@ -9,8 +9,7 @@
 namespace QuadratureRules { 
 class GaussRule {
 	private: 
-		std::stack<double*>	fx;
-		std::stack<double*>	fw;
+		std::stack<double*>	_fx;
 
 	public: 
 		GaussRule() {}
@@ -26,26 +25,25 @@ class GaussRule {
 			kExponential,
 			kRational
 		};
-		/*
-		 * Input, int KIND, the rule.
-		 * 1, Legendre,             (a,b)       1.0
-		 * 2, Chebyshev Type 1,     (a,b)       ((b-x)*(x-a))^-0.5)
-		 * 3, Gegenbauer,           (a,b)       ((b-x)*(x-a))^alpha
-		 * 4, Jacobi,               (a,b)       (b-x)^alpha*(x-a)^beta
-		 * 5, Generalized Laguerre, (a,inf)     (x-a)^alpha*exp(-b*(x-a))
-		 * 6, Generalized Hermite,  (-inf,inf)  |x-a|^alpha*exp(-b*(x-a)^2)
-		 * 7, Exponential,          (a,b)       |x-(a+b)/2.0|^alpha
-		 * 8, Rational,             (a,inf)     (x-a)^alpha*(x+b)^beta
-		 */
-		void Generate(	
-				double* &x, double* &w,
-				int	order	= 1, 
-				double	a	= 0.0,
-				double	b	= 1.0,
-				int	kind	= kLegendre, 
-				double	alpha	= 0.0,
-				double	beta	= 0.0
-			     ); 
+
+/*
+ * Input, int KIND, the rule.
+ * 1, Legendre,             (a,b)       1.0
+ * 2, Chebyshev Type 1,     (a,b)       ((b-x)*(x-a))^-0.5)
+ * 3, Gegenbauer,           (a,b)       ((b-x)*(x-a))^alpha
+ * 4, Jacobi,               (a,b)       (b-x)^alpha*(x-a)^beta
+ * 5, Generalized Laguerre, (a,inf)     (x-a)^alpha*exp(-b*(x-a))
+ * 6, Generalized Hermite,  (-inf,inf)  |x-a|^alpha*exp(-b*(x-a)^2)
+ * 7, Exponential,          (a,b)       |x-(a+b)/2.0|^alpha
+ * 8, Rational,             (a,inf)     (x-a)^alpha*(x+b)^beta
+ */
+		void Generate(	double* &x, double* &w,
+				const int order	= 1, 
+				const double a	= 0.0,
+				const double b	= 1.0,
+				const int kind	= kLegendre, 
+				const double alpha= 0.0,
+				const double beta= 0.0); 
 
 		void ReleaseMemory();
 

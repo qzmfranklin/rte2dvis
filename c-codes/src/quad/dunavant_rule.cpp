@@ -8,28 +8,45 @@
 using namespace std; 
 namespace QuadratureRules { 
 
-/*******************************************************************************/
+/******************************************************************************/
 DunavantRule gDunavantRule;
-/*******************************************************************************/
-void DunavantRule::Generate( int rule, double* &xy, double* &w, int &order_num ) {
-	assert(1<=rule && rule<=dunavant_rule_num() );
-	order_num = dunavant_order_num ( rule ); 
-	xy = (double*) mkl_malloc( 2 * order_num * sizeof(double), MALLOC_ALIGNMENT );
-	w = (double*) mkl_malloc( order_num * sizeof(double), MALLOC_ALIGNMENT); 
-	assert( (xy) && (w) );
-	dunavant_rule ( rule, order_num, xy, w );
-	fxy.push(xy);
-	fw.push(w);
+/******************************************************************************/
+void DunavantRule::Generate(const int rule, int &order_num, 
+		double *&xy, double *&w)
+{
+	//printf("DunavantRule::Generate()\n");
+	assert(1<=rule && rule<=dunavant_rule_num());
+	order_num = dunavant_order_num(rule); 
+	xy = (double*)mkl_malloc(3*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	assert(xy);
+	w = xy + 2*order_num;
+	_fxy.push(xy);
+	dunavant_rule(rule,order_num,xy,w);
 }
 
-void DunavantRule::ReleaseMemory() {
-	while ( !fxy.empty() ) { 
-		mkl_free( fxy.top() );
-		fxy.pop();
+void DunavantRule::Generate(const int rule, int &order_num, 
+		double *&x, double *&y, double *&w)
+{
+	//printf("DunavantRule::Generate()\n");
+	Generate(rule,order_num,x,w);
+	y=x+order_num;
+	double *xx;
+	xx = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
+	assert(xx);
+	for (int i = 0; i < order_num; i++) {
+		xx[i] = x[2*i];
+		y[i] = x[2*i+1];
 	}
-	while ( !fw.empty() ) { 
-		mkl_free( fw.top() );
-		fw.pop();
+	for (int i = 0; i < order_num; i++)
+		x[i] = xx[i]; 
+	mkl_free(xx);
+}
+
+
+void DunavantRule::ReleaseMemory() {
+	while ( !_fxy.empty() ) { 
+		mkl_free( _fxy.top() );
+		_fxy.pop();
 	}
 }
 

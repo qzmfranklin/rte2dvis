@@ -4,13 +4,11 @@
 #include <stack>
 #include <cassert>
 #include <mkl.h>
-
 namespace QuadratureRules {
 
 class WandzuraRule {
 	private:
-		std::stack<double*> 	fxy;
-		std::stack<double*> 	fw;
+		std::stack<double*> 	_fxy;
 	public:
 		WandzuraRule() {}
 		~WandzuraRule() { ReleaseMemory(); }
@@ -29,13 +27,17 @@ class WandzuraRule {
 		 * allocated memory, they will be released (mkl_free()) when the
 		 * global DunavantRule instance is destructed.
 		 */
-		void Generate( int rule, double* &xy, double* &w, int &order_num ); 
+		void Generate(const int rule, int &order_num, 
+				double *&xy, double *&w);
+
+		void Generate(const int rule, int &order_num, 
+				double *&x, double *&y, double *&w);
 
 		int RuleNumber() { return wandzura_rule_num(); }
 
-		int Order(int rule) { return wandzura_order_num(rule); }
+		int Order(const int rule) { return wandzura_order_num(rule); }
 
-		int Degree(int rule) { return wandzura_degree(rule); }
+		int Degree(const int rule) { return wandzura_degree(rule); }
 
 		void ReleaseMemory();
 

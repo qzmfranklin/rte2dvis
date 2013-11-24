@@ -4,13 +4,11 @@
 #include <stack>
 #include <cassert>
 #include <mkl.h>
-#define MALLOC_ALIGNMENT 64
 namespace QuadratureRules {
 
 class DunavantRule {
 	private:
-		std::stack<double*> 	fxy;
-		std::stack<double*> 	fw;
+		std::stack<double*> 	_fxy;
 	public:
 		DunavantRule() {}
 		~DunavantRule() { ReleaseMemory(); }
@@ -29,13 +27,17 @@ class DunavantRule {
 		 * allocated memory, they will be released (mkl_free()) when the
 		 * global DunavantRule instance is destructed.
 		 */
-		void Generate(int rule, double* &xy, double* &w, int &order_num); 
+		void Generate(const int rule, int &order_num, 
+				double *&xy, double *&w);
+
+		void Generate(const int rule, int &order_num, 
+				double *&x, double *&y, double *&w);
 
 		int RuleNumber() { return dunavant_rule_num(); }
 
-		int Order(int rule) { return dunavant_order_num(rule); }
+		int Order(const int rule) { return dunavant_order_num(rule); }
 
-		int Degree(int rule) { return dunavant_degree(rule); }
+		int Degree(const int rule) { return dunavant_degree(rule); }
 
 		void ReleaseMemory(); 
 

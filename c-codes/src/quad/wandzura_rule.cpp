@@ -9,30 +9,57 @@
 #define MALLOC_ALIGNMENT 64
 using namespace std; 
 namespace QuadratureRules {
-/*******************************************************************************/
+/******************************************************************************/
 WandzuraRule gWandzuraRule;
-/****************************************************************************/
-void WandzuraRule::Generate( int rule, double* &xy, double* &w, int &order_num ) {
-	assert( 1<=rule && rule<=wandzura_rule_num() );
-	order_num = wandzura_order_num ( rule ); 
-	xy = (double*) mkl_malloc( 2 * order_num * sizeof(double), MALLOC_ALIGNMENT );
-	w = (double*) mkl_malloc( order_num * sizeof(double), MALLOC_ALIGNMENT); 
-	assert( (xy) && (w) );
-	wandzura_rule ( rule, order_num, xy, w );
-	fxy.push(xy);
-	fw.push(w);
-} 
+/******************************************************************************/
+void WandzuraRule::Generate(const int rule, int &order_num, 
+		double *&xy, double *&w)
+{
+	//printf("WandzuraRule::Generate()\n");
+	assert(1<=rule && rule<=wandzura_rule_num());
+	order_num = wandzura_order_num(rule); 
+	xy = (double*)mkl_malloc(3*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	assert(xy);
+	w = xy + 2*order_num;
+	_fxy.push(xy);
+	wandzura_rule(rule,order_num,xy,w);
+}
+
+void WandzuraRule::Generate(const int rule, int &order_num, 
+		double *&x, double *&y, double *&w)
+{
+	//printf("WandzuraRule::Generate()\n");
+	Generate(rule,order_num,x,w);
+	y=x+order_num;
+	double *xx;
+	xx = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
+	assert(xx);
+	for (int i = 0; i < order_num; i++) {
+		xx[i] = x[2*i];
+		y[i] = x[2*i+1];
+	}
+	for (int i = 0; i < order_num; i++)
+		x[i] = xx[i]; 
+	mkl_free(xx);
+}
+
 
 void WandzuraRule::ReleaseMemory() {
-	while ( !fxy.empty() ) { 
-		mkl_free( fxy.top() );
-		fxy.pop();
-	}
-	while ( !fw.empty() ) { 
-		mkl_free( fw.top() );
-		fw.pop();
+	while ( !_fxy.empty() ) { 
+		mkl_free( _fxy.top() );
+		_fxy.pop();
 	}
 }
+/******************************************************************************/
+
+
+
+
+
+
+
+
+
 void WandzuraRule::file_name_inc ( char *file_name ) 
 	//
 	//  Purpose:

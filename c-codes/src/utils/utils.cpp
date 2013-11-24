@@ -207,18 +207,16 @@ namespace utils {
 
 
 	void link_stdout(const char *fname) {
-		assrt(linkstd_state == 0);
-		linkstd_state = 1;
-
-		assrt(  freopen(fname,"w",stdout)  );
+		if (linkstd_state) return;
+		linkstd_state = 1; 
+		freopen(fname,"w",stdout);
 	} 
 
 	void unlink_stdout() { 
-		assrt(linkstd_state == 1);
-		linkstd_state = 0;
-
+		if (!linkstd_state) return;
+		linkstd_state = 0; 
 		fclose(stdout);
-		assrt(  fdopen(STDOUT_FILENO,"w")  );
+		fdopen(STDOUT_FILENO,"w");
 	}
 
 	void box_file(const char* fname, const char*mesg){

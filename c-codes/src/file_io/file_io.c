@@ -23,18 +23,6 @@ void fileio_read_rte2dvis_input_file( const char* filename )
 int fileio_read_info_nodes_triangles( const char * filename_base, 
 		double **nodes, int *nodes_num, int **triangles, int *triangles_num )
 {
-	/* 
-	 * TODO
-	 * This function shall be used WITH the 
-	 * corresponding fileio_dump_msh_file()
-	 * function. Otherwise the fscanf format
-	 * string, i.e., the %25.19E part, might
-	 * not match.
-	 *
-	 * In the future, I might be able to make
-	 * this function to auto-detect the proper
-	 * fscanf format string.
-	 */
 	int err=0;
 	printf("--------------------------------------------------\n");
 	printf("BEGIN:	FILEIO_READ_INFO_NODES_TRIANGLES\n");

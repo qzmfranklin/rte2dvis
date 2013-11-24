@@ -102,7 +102,8 @@ ${BUILD}/test_quad_rules.exe: 	${BUILD}/test_quad_rules.o		\
 				${BUILD}/dunavant_rule.o		\
 				${BUILD}/wandzura_rule.o		\
 				${BUILD}/lyness_rule.o			\
-				${BUILD}/gauss_rule.o
+				${BUILD}/gauss_rule.o			\
+				${BUILD}/utils.o
 ################## DO NOT MODIFY ################
 ${DIR-quad}TSTCPP	:=		${${DIR-quad}TST:%=${DIR-quad}/%.cpp}
 ${DIR-quad}TSTOBJ	:=		${${DIR-quad}TSTCPP:${DIR-quad}%.cpp=${BUILD}%.o}

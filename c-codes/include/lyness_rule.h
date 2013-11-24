@@ -14,8 +14,7 @@ namespace QuadratureRules {
 using namespace std;
 class LynessRule {
 	private:
-		std::stack<double*> 	fxy;
-		std::stack<double*> 	fw;
+		std::stack<double*> 	_fxy;
 	public:
 		LynessRule() {}
 		~LynessRule() { ReleaseMemory(); }
@@ -34,7 +33,11 @@ class LynessRule {
 		 * allocated memory, they will be released (mkl_free()) when the
 		 * global LynessRule instance is destructed.
 		 */
-		void Generate(int rule, double* &xy, double* &w, int &order_num); 
+		void Generate(int rule, int &order_num, 
+				double *&xy, double *&w);
+
+		void Generate(int rule, int &order_num, 
+				double *&x, double *&y, double *&w);
 
 		int RuleNumber() { return lyness_rule_num()+1; }
 

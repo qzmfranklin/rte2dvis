@@ -9,38 +9,22 @@ namespace QuadratureRules {
 GaussRule gGaussRule; 
 /******************************************************************************/ 
 
-void GaussRule::Generate(	
-		double* &x, double* &w,
-		int	order,
-		double	a,
-		double	b,
-		int	kind,
-		double	alpha,
-		double	beta
-		) {
+void GaussRule::Generate(double* &x, double* &w,
+		const int order, const double a, const double b,
+		const int kind, const double alpha, const double beta)
+{
 	assert( (order>0) && (a<b) && ((int)kind>0) && ((int)kind<9) );
-	x = (double*) mkl_malloc( order * sizeof(double), MALLOC_ALIGNMENT );
-	w = (double*) mkl_malloc( order * sizeof(double), MALLOC_ALIGNMENT );
-	assert( (x) && (w) ); 
-	cgqf ( order, kind, alpha, beta, a, b, x, w ); 
-	fx.push(x);
-	fw.push(w);
+	x = (double*)mkl_malloc(2*order*sizeof(double),MALLOC_ALIGNMENT);
+	assert(x); 
+	w = x + order;
+	cgqf(order,kind,alpha,beta,a,b,x,w); 
+	_fx.push(x);
 }
 
-/*
- * Free memory when destructed or explicitly called Free().
- * The goal of this design is to keep the programmer free
- * from freeing memory. Usually, one NEVER needs to call
- * ReleaseMemory() explicitly.
- */
 void GaussRule::ReleaseMemory() {
-	while ( !fx.empty() ) { 
-		mkl_free( fx.top() );
-		fx.pop();
-	}
-	while ( !fw.empty() ) { 
-		mkl_free( fw.top() );
-		fw.pop();
+	while ( !_fx.empty() ) { 
+		mkl_free( _fx.top() );
+		_fx.pop();
 	}
 }
 
