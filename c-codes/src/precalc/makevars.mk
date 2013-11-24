@@ -56,7 +56,8 @@ ${DIR-precalc}QUIET	:=@
 #  	d) Dependencies are readily dealt with by the setup of the Makefile. One
 #  Please, you NEVER need to specify the dependency for any .o file. Just list
 #  the source files.
-${DIR-precalc}CFILES	:=	${DIR-precalc}/precalc.c
+${DIR-precalc}CFILES	:=	${DIR-precalc}/precalc.c	\
+				${DIR-precalc}/geo_utils.c
 ${DIR-precalc}CPPFILES	:=	
 ################## DO NOT MODIFY ################
 ${DIR-precalc}OBJFILES	:=	${${DIR-precalc}CPPFILES:${DIR-precalc}%.cpp=${BUILD}%.o}	\
@@ -95,8 +96,10 @@ ${DIR-precalc}BINASM	:=		${${DIR-precalc}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
 #
 #		${BUILD}/test_mytest.exe:	${BUILD}/test_mytest.o		\
 #						${BUILD}/any_other_files.o
-${DIR_precalc}TST	:=		test_precalc
+${DIR_precalc}TST	:=		test_precalc test_geo_utils
 ${BUILD}/test_precalc.exe: 	${BUILD}/test_precalc.o ${BUILD}/precalc.o \
+		${BUILD}/utils.o
+${BUILD}/test_geo_utils.exe: 	${BUILD}/test_geo_utils.o ${BUILD}/geo_utils.o \
 		${BUILD}/utils.o
 ################## DO NOT MODIFY ################
 ${DIR_precalc}TSTCPP	:=		${${DIR_precalc}TST:%=${DIR_precalc}/%.cpp}

@@ -1,127 +1,93 @@
 #include "precalc.h"
-#include <math.h> 
+#include <assert.h>
+#include <mkl.h>
+#include <math.h>
+#define MALLOC_ALIGNMENT 64
+/******************************************************************************/
 
-void precalc_pt(const int triangles_num, const int *restrict triangles, 
-		const double *restrict nodes, double *restrict pt) {
-	for (int i = 0; i < triangles_num*3; i++) { 
-		pt[i+0] = nodes[triangles[i]+0];
-		pt[i+1] = nodes[triangles[i]+1];
+void precalc_pt(const int n, const int *restrict triangles, 
+		const double *restrict nodes, 
+		double *restrict x, double *restrict y)
+{
+	for (int i = 0; i < 3*n; i++) {
+		x[i] = nodes[triangles[i]+0];
+		y[i] = nodes[triangles[i]+1];
 	}
 }
 
-static void scale(const double alpha, const int n, double *restrict a) {
+void precalc_cntr(const int n, 
+		const double *restrict x, const double *restrict y,
+		double *restrict cx, double *restrict cy)
+{
 	for (int i = 0; i < n; i++)
-		a[i] *= alpha;
+		cx[i] = x[3*i] + x[3*i+1] + x[3*i+2];
+	for (int i = 0; i < n; i++)
+		cy[i] = y[3*i] + y[3*i+1] + y[3*i+2];
 }
 
-void precalc_cntr(const int n, const double *restrict pt, 
-		double *restrict cntr) {
+void precalc_signed_area(const int n,
+		const double *restrict x, const double *restrict y,
+		double *restrict area)
+{
+	/*
+	double a[2],b[2];
 	for (int i = 0; i < n; i++) {
-		cntr[2*i+0] = pt[6*i+0] + pt[6*i+2] + pt[6*i+4];
-		cntr[2*i+1] = pt[6*i+1] + pt[6*i+3] + pt[6*i+5];
+		a[0] = x[3*i+1] - x[3*i];
+		a[1] = x[3*i+2] - x[3*i];
+		b[0] = y[3*i+1] - y[3*i];
+		b[1] = y[3*i+2] - y[3*i];
+		area[i] = 0.5*( a[0]*b[1] - a[1]*b[0] );
 	}
-	scale(1.0/3.0, n, cntr);
+	*/
+	for (int i = 0; i < n; i++)
+		area[i] = 0.5*(  (x[3*i+1]-x[3*i])
+				*(y[3*i+2]-y[3*i]) 
+				-(x[3*i+2]-x[3*i])
+				*(y[3*i+1]-y[3*i]) );
 }
 
-void precalc_signed_area(const int n, const double *restrict pt, 
-		double *restrict area) {
-	for (int i = 0; i < n; i++)
-		area[i] = 0.5*(  (pt[6*i+2] - pt[6*i+0])
-				*(pt[6*i+3] - pt[6*i+1])
-				-(pt[6*i+4] - pt[6*i+0])
-				*(pt[6*i+5] - pt[6*i+1]));
+
+void precalc_cartesian_to_polar(const int n,
+		const double *restrict inx, const double *restrict iny,
+		double *restrict outr, double *restrict outphi)
+{
+	double *tmp;
+	tmp = (double*)mkl_malloc(n*sizeof(double),MALLOC_ALIGNMENT);
+	assert(tmp);
+	vmdMul(n,inx,inx,outr,VML_LA);
+	vmdMul(n,iny,iny,tmp,VML_LA);
+	vmdAdd(n,outr,tmp,outr,VML_LA);
+	vmdSqr(n,outr,outr,VML_LA);
+	mkl_free(tmp);
+	/*for (int i = 0; i < n; i++)*/
+		/*outr[i] = sqrt(  inx[i]*inx[i] + iny[i]*iny[i]  );*/
+	vmdAtan2(n,iny,inx,outphi,VML_LA);
 }
 
-void precalc_cartesian_to_polar(const int n, const double *restrict in,
-		double *restrict out) {
-	for (int i = 0; i < n; i++)
-		out[2*i+0] = sqrt( in[2*i+0]*in[2*i+0] 
-				+ in[2*i+1]*in[2*i+1] );
-	for (int i = 0; i < n; i++)
-		out[2*i+1] = atan2( in[2*i+1], in[2*i+0] );
-}
-
-/*TODO
- * Convert: Polar -> Cartesian.
- * Input:
- * 	n	int		number of coordinates to convert
- * 	in	double*		[2n] input vector
- * 	out	double*		[2n] output vector
- */
-void precalc_polar_to_cartesian(const int n, const double *restrict in,
-		double *restrict out) {
-	double c, s;
-	for (int i = 0; i < n; i++) {
-		sincos(in[2*i+1],&c,&s);
-		out[2*i+0] = in[2*i] * c;
-		out[2*i+1] = in[2*i] * s;
-	}
+void precalc_polar_to_cartesian(const int n,
+		const double *restrict inr, const double *restrict inphi,
+		double *restrict outx, double *restrict outy)
+{
+	vmdSinCos(n,inphi,outx,outy,VML_LA);
+	vmdMul(n,inr,outx,outx,VML_LA);
+	vmdMul(n,inr,outy,outy,VML_LA);
+	/*for (int i = 0; i < n; i++) {*/
+		/*outx[i] = inr[i] * cos(inphi[i]);*/
+		/*outy[i] = inr[i] * sin(inphi[i]);*/
+	/*}*/
 }
 
 void precalc_fun(double (*fun)(double), const int n, 
-		const double *restrict x, double *restrict out) {
+		const double *restrict in, double *restrict out)
+{
 	for (int i = 0; i < n; i++)
-		out[i] = (*fun)(x[i]);
+		out[i] = (*fun)(in[i]);
 }
 
 void precalc_fun2(double (*fun)(double,double), const int n, 
-		const double *restrict xy, double *restrict out) {
+		const double *restrict in1, const double *restrict in2,
+		double *restrict out)
+{
 	for (int i = 0; i < n; i++)
-		out[i] = (*fun)(xy[2*i],xy[2*i+1]);
+		out[i] = (*fun)(in1[i],in2[i]);
 }
-
-/*TODO
- * Tell whether a point is inside a triangle or not.
- * Input:
- * 	p	double*		[2] point
- * 	pt	double*		[6] triangle
- * Output:
- * 	return	int		1=inside,  0=outside
- * Note:
- * 	If the point is _on_ the side of the triangle, return 0.
- */
-int is_in_triangle(const double *restrict p, const double *restrict pt);
-
-/*TODO
- * Tell which triangle does a point fall into.
- * Input:
- * 	p	double*		[2] point
- * 	n	int		number of triangles
- * 	pt	double*		[6n] triangles
- * Output:
- * 	return	int		number of the triangle where the 
- * 				given point falls into;
- * Note:
- * 	If the point does not fall into any of the given triangles, return -1.
- */
-int in_which_triangle(const double *restrict p, 
-		const int n, const double *restrict pt);
-
-/*TODO
- * Measure the length of segment of a ray passing a triangle.
- * Input:
- * 	p0	double*		[2] point
- * 	phi	double		angle [radian]
- * 	pt	double*		[6] triangle
- * Output:
- * 	return	double		length of intersection
- * Note:
- * 	If the ray does not intersect with the triangle, return 0.0.
- */
-double ray_triangle_seg_len(const double *restrict p0, const double phi,
-		const double *restrict pt);
-
-/*TODO
- * Measure the length of segment of a finite line passing a triangle.
- * Input:
- * 	p1	double*		[2] starting point
- * 	p2	double*		[2] ending point
- * 	phi	double		angle [radian]
- * 	pt	double*		[6] triangle
- * Output:
- * 	return	double		length of intersection
- * Note:
- * 	If the line does not intersect with the triangle, return 0.0.
- */
-double line_triangle_seg_len(const double *restrict p1, 
-		const double *restrict p2, const double *restrict pt);
