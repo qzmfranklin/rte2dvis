@@ -37,7 +37,7 @@
 # 		NO DEFERRED-EVALUATION ( always use colon-equal, i.e., := ) #
 DIR-precalc		:=src/precalc# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following to be verbose.
-${DIR-precalc}QUIET	:=@
+#${DIR-precalc}QUIET	:=@
 ###############################################################################
 #				STEP 2
 #DIRECTORY-SPECIFIC SOURCE FILES
@@ -127,7 +127,7 @@ DEPFILES	:=		${DEPFILES} ${${DIR-precalc}DEPFILES} ${${DIR-precalc}TSTDEP} ${${D
 #  the build in this directory does not require some extra libraries and/or 
 #  hearder files. But in case it did, free at ease to modify these two 
 #  variables.
-${DIR-precalc}CFLAGS 	:=${CFLAGS}
+${DIR-precalc}CFLAGS 	:=${CFLAGS} -vec-report=2
 ${DIR-precalc}CXXFLAGS	:=${CXXFLAGS}
 ${DIR-precalc}INCS		:=${INCS}
 ###############################################################################

@@ -3,12 +3,17 @@
 #include <mkl.h>
 #include <math.h>
 #define MALLOC_ALIGNMENT 64
+
+
+//TODO: test, time, vectorization pragmas
+
 /******************************************************************************/
 
 void precalc_pt(const int n, const int *restrict triangles, 
 		const double *restrict nodes, 
 		double *restrict x, double *restrict y)
 {
+	#pragma vector always
 	for (int i = 0; i < 3*n; i++) {
 		x[i] = nodes[triangles[i]+0];
 		y[i] = nodes[triangles[i]+1];
@@ -19,10 +24,10 @@ void precalc_cntr(const int n,
 		const double *restrict x, const double *restrict y,
 		double *restrict cx, double *restrict cy)
 {
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; i++) {
 		cx[i] = x[3*i] + x[3*i+1] + x[3*i+2];
-	for (int i = 0; i < n; i++)
 		cy[i] = y[3*i] + y[3*i+1] + y[3*i+2];
+	}
 }
 
 void precalc_signed_area(const int n,
@@ -51,17 +56,20 @@ void precalc_cartesian_to_polar(const int n,
 		const double *restrict inx, const double *restrict iny,
 		double *restrict outr, double *restrict outphi)
 {
-	double *tmp;
-	tmp = (double*)mkl_malloc(n*sizeof(double),MALLOC_ALIGNMENT);
-	assert(tmp);
-	vmdMul(n,inx,inx,outr,VML_LA);
-	vmdMul(n,iny,iny,tmp,VML_LA);
-	vmdAdd(n,outr,tmp,outr,VML_LA);
-	vmdSqr(n,outr,outr,VML_LA);
-	mkl_free(tmp);
-	/*for (int i = 0; i < n; i++)*/
-		/*outr[i] = sqrt(  inx[i]*inx[i] + iny[i]*iny[i]  );*/
-	vmdAtan2(n,iny,inx,outphi,VML_LA);
+	/*double *tmp;*/
+	/*tmp = (double*)mkl_malloc(n*sizeof(double),MALLOC_ALIGNMENT);*/
+	/*assert(tmp);*/
+	/*vmdMul(n,inx,inx,outr,VML_LA);*/
+	/*vmdMul(n,iny,iny,tmp,VML_LA);*/
+	/*vmdAdd(n,outr,tmp,outr,VML_LA);*/
+	/*vmdSqr(n,outr,outr,VML_LA);*/
+	/*mkl_free(tmp);*/
+	for (int i = 0; i < n; i++)
+		outr[i] = sqrt(  inx[i]*inx[i] + iny[i]*iny[i]  );
+	/*vmdAtan2(n,iny,inx,outphi,VML_LA);*/
+	for (int i = 0; i < n; i++) {
+		outphi[i]=atan2( iny[i], inx[i] );
+	}
 }
 
 void precalc_polar_to_cartesian(const int n,
