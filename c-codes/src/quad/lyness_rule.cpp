@@ -10,16 +10,17 @@ using namespace std;
 
 namespace QuadratureRules {
 /******************************************************************************/
-extern LynessRule gLynessRule;
+LynessRule gLynessRule;
 /*******************************************************************************/
 
 void LynessRule::Generate( int rule, double* &xy, double* &w, int &order_num ) {
-	assert( 1<=rule && rule<=lyness_rule_num() );
+	rule--;
+	assert( 0<=rule && rule<=lyness_rule_num() );
 	order_num = lyness_order( rule ); 
 	xy = (double*) mkl_malloc( 2 * order_num * sizeof(double), MALLOC_ALIGNMENT );
 	w = (double*) mkl_malloc( order_num * sizeof(double), MALLOC_ALIGNMENT); 
 	assert( xy && w );
-	lyness_rule ( rule, order_num, xy, w );
+	lyness_rule ( rule, order_num, w, xy );
 	fxy.push(xy);
 	fw.push(w);
 }

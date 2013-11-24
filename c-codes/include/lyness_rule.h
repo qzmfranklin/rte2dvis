@@ -36,7 +36,7 @@ class LynessRule {
 		 */
 		void Generate(int rule, double* &xy, double* &w, int &order_num); 
 
-		int RuleNumber() { return lyness_rule_num(); }
+		int RuleNumber() { return lyness_rule_num()+1; }
 
 		int Order(int rule) { return lyness_order(rule); }
 

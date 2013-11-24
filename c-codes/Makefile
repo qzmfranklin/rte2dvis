@@ -78,13 +78,12 @@ CFLAGS 		:=-O3						\
 		-MMD -MP					\
 		-std=c99					\
 		-restrict					\
+		-fPIC						\
+		-fno-inline-functions				\
 		-Wno-deprecated
 
 		# 						\
 		-DNDEBUG					\
-		-fPIC						\
-		-fno-inline-functions				\
-		-Wno-deprecated					\
 
 CXXFLAGS	:=${CFLAGS}# Compilig options for .cpp files.
 ASMFLAGS	:=-S -fsource-asm# Generate source code commented assembly code.
