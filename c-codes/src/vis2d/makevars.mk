@@ -40,6 +40,26 @@ DIR-vis2d		:=src/vis2d# Please, NO SPACE
 ${DIR-vis2d}QUIET	:=@
 ###############################################################################
 #				STEP 2
+#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
+#
+#	Options specified here are used in this directory. By default, all 
+#  builds use the same options. When different compiling and/or linking options 
+#  need to be assigned to different targets, the programmer needs to list all
+#  the speical target-prerequisite dependencies manually.
+#  	By default, the local options inherits the corresponding global ones 
+#  from the Makefile.vars in the root directory. If one wishes to add any 
+#  additional options that are specific to this very directory, add them after 
+#  the global ones. For example:
+# 	 	${DIR-vis2d}CFLAGS	:=${CFLAGS} [directory-specific options]
+#  	Usually, ${DIR-vis2d}INCS and should not need to be modified if
+#  the build in this directory does not require some extra libraries and/or 
+#  hearder files. But in case it did, free at ease to modify these two 
+#  variables.
+${DIR-vis2d}CFLAGS 	:=${CFLAGS} #-vec-report=1
+${DIR-vis2d}CXXFLAGS	:=${CXXFLAGS}
+${DIR-vis2d}INCS		:=${INCS}
+###############################################################################
+#				STEP 3
 #DIRECTORY-SPECIFIC SOURCE FILES
 #
 #  	Remember to add the ${DIR-vis2d}/ to whatever source files(s) you wish to add.
@@ -63,10 +83,10 @@ ${DIR-vis2d}CPPFILES	:=
 ${DIR-vis2d}OBJFILES	:=	${${DIR-vis2d}CPPFILES:${DIR-vis2d}%.cpp=${BUILD}%.o}	\
 				${${DIR-vis2d}CFILES:${DIR-vis2d}%.c=${BUILD}%.o}
 ${DIR-vis2d}DEPFILES	:=	${${DIR-vis2d}OBJFILES:%.o=%.d}
-${DIR-vis2d}ASMFILES	:=	${${DIR-vis2d}OBJFILES:${BUILD}%.o=${DEBUG}%.s}
+${DIR-vis2d}ASMFILES	:=	${${DIR-vis2d}OBJFILES:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################ 
 ###############################################################################
-#				STEP 3
+#				STEP 4
 #DIRECTORY-SPECIFIC BINARY FILES
 #
 #	Executables listed in ${DIR}BINFILES are considered the final output of
@@ -80,10 +100,10 @@ ${DIR-vis2d}BINCPP	:=		${${DIR-vis2d}BIN:%=${DIR-vis2d}/%.cpp}
 ${DIR-vis2d}BINOBJ	:=		${${DIR-vis2d}BINCPP:${DIR-vis2d}%.cpp=${BUILD}%.o}
 ${DIR-vis2d}BINDEP	:=		${${DIR-vis2d}BINOBJ:%.o=%.d}
 ${DIR-vis2d}BINEXE	:=		${${DIR-vis2d}BINOBJ:${BUILD}%.o=${BIN}%.exe}
-${DIR-vis2d}BINASM	:=		${${DIR-vis2d}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-vis2d}BINASM	:=		${${DIR-vis2d}BINOBJ:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
 ###############################################################################
-#				STEP 4
+#				STEP 5
 #DIRECTORY-SPECIFIC TEST FILES
 
 #	Speicify all the test files. All test files must be CPP files. But when
@@ -106,30 +126,10 @@ ${DIR_precalc}TSTCPP	:=		${${DIR_precalc}TST:%=${DIR_precalc}/%.cpp}
 ${DIR-vis2d}TSTOBJ	:=		${${DIR-vis2d}TSTCPP:${DIR-vis2d}%.cpp=${BUILD}%.o}
 ${DIR-vis2d}TSTDEP	:=		${${DIR-vis2d}TSTOBJ:%.o=%.d}
 ${DIR-vis2d}TSTEXE	:=		${${DIR-vis2d}TSTOBJ:%.o=%.exe}
-${DIR-vis2d}TSTASM	:=		${${DIR-vis2d}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-vis2d}TSTASM	:=		${${DIR-vis2d}TSTOBJ:${BUILD}%.o=${ASM}%.s}
 SRCFILES	:=		${SRCFILES} ${${DIR-vis2d}CFILES} ${${DIR-vis2d}CPPFILES} ${${DIR-vis2d}TSTCPP} ${${DIR-vis2d}BINCPP}
 DEPFILES	:=		${DEPFILES} ${${DIR-vis2d}DEPFILES} ${${DIR-vis2d}TSTDEP} ${${DIR-vis2d}BINDEP}
 ################## DO NOT MODIFY ################
-###############################################################################
-#				STEP 5
-#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-#
-#	Options specified here are used in this directory. By default, all 
-#  builds use the same options. When different compiling and/or linking options 
-#  need to be assigned to different targets, the programmer needs to list all
-#  the speical target-prerequisite dependencies manually.
-#  	By default, the local options inherits the corresponding global ones 
-#  from the Makefile.vars in the root directory. If one wishes to add any 
-#  additional options that are specific to this very directory, add them after 
-#  the global ones. For example:
-# 	 	${DIR-vis2d}CFLAGS	:=${CFLAGS} [directory-specific options]
-#  	Usually, ${DIR-vis2d}INCS and should not need to be modified if
-#  the build in this directory does not require some extra libraries and/or 
-#  hearder files. But in case it did, free at ease to modify these two 
-#  variables.
-${DIR-vis2d}CFLAGS 	:=${CFLAGS} #-vec-report=1
-${DIR-vis2d}CXXFLAGS	:=${CXXFLAGS}
-${DIR-vis2d}INCS		:=${INCS}
 ###############################################################################
 #				STEP 6
 #	Write whatever special dependencies that do not fit into any pattern
@@ -168,14 +168,14 @@ ${DIR-vis2d}INCS		:=${INCS}
 ${BUILD}/%.o: ${DIR-vis2d}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-vis2d}QUIET}${CXX} -o $@ -c $< ${${DIR-vis2d}CXXFLAGS} ${${DIR-vis2d}INCS}
-${DEBUG}/%.s: ${DIR-vis2d}/%.cpp
+${ASM}/%.s: ${DIR-vis2d}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-vis2d}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR-vis2d}CXXFLAGS} ${${DIR-vis2d}INCS} 
 #  C sources
 ${BUILD}/%.o: ${DIR-vis2d}/%.c
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-vis2d}QUIET}${CC} -o $@ -c $< ${${DIR-vis2d}CFLAGS} ${${DIR-vis2d}INCS}
-${DEBUG}/%.s: ${DIR-vis2d}/%.c
+${ASM}/%.s: ${DIR-vis2d}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-vis2d}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-vis2d}CFLAGS} ${${DIR-vis2d}INCS} 
 #DIR-vis2dECTORY-SPECIFIC PHONY TARGETS

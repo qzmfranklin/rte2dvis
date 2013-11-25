@@ -1,6 +1,8 @@
 #include "sumcopy.hh"
+#include "utils.h"
 #include <iostream>
 
+using namespace utils;
 using namespace std;
 
 void testall(){
@@ -30,5 +32,8 @@ void testall(){
 }
 
 int main(){
+	verify_dir("DEBUG");
+	link_cout("DEBUG/test_sumcopy.txt");
 	testall();
+	unlink_cout();
 }

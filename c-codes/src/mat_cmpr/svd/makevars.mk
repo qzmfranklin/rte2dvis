@@ -40,6 +40,26 @@ DIR-mat_cmpr/svd		:=src/mat_cmpr/svd# Please, NO SPACE
 ${DIR-mat_cmpr/svd}QUIET	:=@
 ###############################################################################
 #				STEP 2
+#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
+#
+#	Options specified here are used in this directory. By default, all 
+#  builds use the same options. When different compiling and/or linking options 
+#  need to be assigned to different targets, the programmer needs to list all
+#  the speical target-prerequisite dependencies manually.
+#  	By default, the local options inherits the corresponding global ones 
+#  from the Makefile.vars in the root directory. If one wishes to add any 
+#  additional options that are specific to this very directory, add them after 
+#  the global ones. For example:
+# 	 	${DIR-mat_cmpr/svd}CFLAGS	:=${CFLAGS} [directory-specific options]
+#  	Usually, ${DIR-mat_cmpr/svd}INCS and should not need to be modified if
+#  the build in this directory does not require some extra libraries and/or 
+#  hearder files. But in case it did, free at ease to modify these two 
+#  variables.
+${DIR-mat_cmpr/svd}CFLAGS 	:=${CFLAGS}
+${DIR-mat_cmpr/svd}CXXFLAGS	:=${CXXFLAGS}
+${DIR-mat_cmpr/svd}INCS		:=${INCS}
+###############################################################################
+#				STEP 3
 #DIRECTORY-SPECIFIC SOURCE FILES
 #
 #  	Remember to add the ${DIR-mat_cmpr/svd}/ to whatever source files(s) you wish to add.
@@ -62,10 +82,10 @@ ${DIR-mat_cmpr/svd}CPPFILES	:=	${DIR-mat_cmpr/svd}/svd.cpp
 ${DIR-mat_cmpr/svd}OBJFILES	:=	${${DIR-mat_cmpr/svd}CPPFILES:${DIR-mat_cmpr/svd}%.cpp=${BUILD}%.o}	\
 				${${DIR-mat_cmpr/svd}CFILES:${DIR-mat_cmpr/svd}%.c=${BUILD}%.o}
 ${DIR-mat_cmpr/svd}DEPFILES	:=	${${DIR-mat_cmpr/svd}OBJFILES:%.o=%.d}
-${DIR-mat_cmpr/svd}ASMFILES	:=	${${DIR-mat_cmpr/svd}OBJFILES:${BUILD}%.o=${DEBUG}%.s}
+${DIR-mat_cmpr/svd}ASMFILES	:=	${${DIR-mat_cmpr/svd}OBJFILES:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################ 
 ###############################################################################
-#				STEP 3
+#				STEP 4
 #DIRECTORY-SPECIFIC BINARY FILES
 #
 #	Executables listed in ${DIR}BINFILES are considered the final output of
@@ -78,10 +98,10 @@ ${DIR-mat_cmpr/svd}BINCPP	:=		${${DIR-mat_cmpr/svd}BIN:%=${DIR-mat_cmpr/svd}/%.c
 ${DIR-mat_cmpr/svd}BINOBJ	:=		${${DIR-mat_cmpr/svd}BINCPP:${DIR-mat_cmpr/svd}%.cpp=${BUILD}%.o}
 ${DIR-mat_cmpr/svd}BINDEP	:=		${${DIR-mat_cmpr/svd}BINOBJ:%.o=%.d}
 ${DIR-mat_cmpr/svd}BINEXE	:=		${${DIR-mat_cmpr/svd}BINOBJ:${BUILD}%.o=${BIN}%.exe}
-${DIR-mat_cmpr/svd}BINASM	:=		${${DIR-mat_cmpr/svd}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-mat_cmpr/svd}BINASM	:=		${${DIR-mat_cmpr/svd}BINOBJ:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
 ###############################################################################
-#				STEP 4
+#				STEP 5
 #DIRECTORY-SPECIFIC TEST FILES
 
 #	Speicify all the test files. All test files must be CPP files. But when
@@ -102,30 +122,10 @@ ${DIR-mat_cmpr/svd}TSTCPP	:=		${${DIR-mat_cmpr/svd}TST:%=${DIR-mat_cmpr/svd}/%.c
 ${DIR-mat_cmpr/svd}TSTOBJ	:=		${${DIR-mat_cmpr/svd}TSTCPP:${DIR-mat_cmpr/svd}%.cpp=${BUILD}%.o}
 ${DIR-mat_cmpr/svd}TSTDEP	:=		${${DIR-mat_cmpr/svd}TSTOBJ:%.o=%.d}
 ${DIR-mat_cmpr/svd}TSTEXE	:=		${${DIR-mat_cmpr/svd}TSTOBJ:%.o=%.exe}
-${DIR-mat_cmpr/svd}TSTASM	:=		${${DIR-mat_cmpr/svd}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-mat_cmpr/svd}TSTASM	:=		${${DIR-mat_cmpr/svd}TSTOBJ:${BUILD}%.o=${ASM}%.s}
 SRCFILES	:=		${SRCFILES} ${${DIR-mat_cmpr/svd}CFILES} ${${DIR-mat_cmpr/svd}CPPFILES} ${${DIR-mat_cmpr/svd}TSTCPP} ${${DIR-mat_cmpr/svd}BINCPP}
 DEPFILES	:=		${DEPFILES} ${${DIR-mat_cmpr/svd}DEPFILES} ${${DIR-mat_cmpr/svd}TSTDEP} ${${DIR-mat_cmpr/svd}BINDEP}
 ################## DO NOT MODIFY ################
-###############################################################################
-#				STEP 5
-#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-#
-#	Options specified here are used in this directory. By default, all 
-#  builds use the same options. When different compiling and/or linking options 
-#  need to be assigned to different targets, the programmer needs to list all
-#  the speical target-prerequisite dependencies manually.
-#  	By default, the local options inherits the corresponding global ones 
-#  from the Makefile.vars in the root directory. If one wishes to add any 
-#  additional options that are specific to this very directory, add them after 
-#  the global ones. For example:
-# 	 	${DIR-mat_cmpr/svd}CFLAGS	:=${CFLAGS} [directory-specific options]
-#  	Usually, ${DIR-mat_cmpr/svd}INCS and should not need to be modified if
-#  the build in this directory does not require some extra libraries and/or 
-#  hearder files. But in case it did, free at ease to modify these two 
-#  variables.
-${DIR-mat_cmpr/svd}CFLAGS 	:=${CFLAGS}
-${DIR-mat_cmpr/svd}CXXFLAGS	:=${CXXFLAGS}
-${DIR-mat_cmpr/svd}INCS		:=${INCS}
 ###############################################################################
 #				STEP 6
 #	Write whatever special dependencies that do not fit into any pattern
@@ -164,14 +164,14 @@ ${DIR-mat_cmpr/svd}INCS		:=${INCS}
 ${BUILD}/%.o: ${DIR-mat_cmpr/svd}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-mat_cmpr/svd}QUIET}${CXX} -o $@ -c $< ${${DIR-mat_cmpr/svd}CXXFLAGS} ${${DIR-mat_cmpr/svd}INCS}
-${DEBUG}/%.s: ${DIR-mat_cmpr/svd}/%.cpp
+${ASM}/%.s: ${DIR-mat_cmpr/svd}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-mat_cmpr/svd}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR-mat_cmpr/svd}CXXFLAGS} ${${DIR-mat_cmpr/svd}INCS} 
 #  C sources
 ${BUILD}/%.o: ${DIR-mat_cmpr/svd}/%.c
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-mat_cmpr/svd}QUIET}${CC} -o $@ -c $< ${${DIR-mat_cmpr/svd}CFLAGS} ${${DIR-mat_cmpr/svd}INCS}
-${DEBUG}/%.s: ${DIR-mat_cmpr/svd}/%.c
+${ASM}/%.s: ${DIR-mat_cmpr/svd}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-mat_cmpr/svd}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-mat_cmpr/svd}CFLAGS} ${${DIR-mat_cmpr/svd}INCS} 
 #DIR-mat_cmpr/svdECTORY-SPECIFIC PHONY TARGETS

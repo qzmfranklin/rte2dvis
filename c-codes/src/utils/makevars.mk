@@ -40,6 +40,26 @@ DIR-utils		:=src/utils# Please, NO SPACE
 ${DIR-utils}QUIET	:=@
 ###############################################################################
 #				STEP 2
+#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
+#
+#	Options specified here are used in this directory. By default, all 
+#  builds use the same options. When different compiling and/or linking options 
+#  need to be assigned to different targets, the programmer needs to list all
+#  the speical target-prerequisite dependencies manually.
+#  	By default, the local options inherits the corresponding global ones 
+#  from the Makefile.vars in the root directory. If one wishes to add any 
+#  additional options that are specific to this very directory, add them after 
+#  the global ones. For example:
+# 	 	${DIR-utils}CFLAGS	:=${CFLAGS} [directory-specific options]
+#  	Usually, ${DIR-utils}INCS and should not need to be modified if
+#  the build in this directory does not require some extra libraries and/or 
+#  hearder files. But in case it did, free at ease to modify these two 
+#  variables.
+${DIR-utils}CFLAGS 	:=${CFLAGS}
+${DIR-utils}CXXFLAGS	:=${CXXFLAGS}
+${DIR-utils}INCS		:=${INCS}
+###############################################################################
+#				STEP 3
 #DIRECTORY-SPECIFIC SOURCE FILES
 #
 #  	Remember to add the ${DIR-utils}/ to whatever source files(s) you wish to add.
@@ -62,10 +82,10 @@ ${DIR-utils}CPPFILES	:=	${DIR-utils}/utils.cpp
 ${DIR-utils}OBJFILES	:=	${${DIR-utils}CPPFILES:${DIR-utils}%.cpp=${BUILD}%.o}	\
 				${${DIR-utils}CFILES:${DIR-utils}%.c=${BUILD}%.o}
 ${DIR-utils}DEPFILES	:=	${${DIR-utils}OBJFILES:%.o=%.d}
-${DIR-utils}ASMFILES	:=	${${DIR-utils}OBJFILES:${BUILD}%.o=${DEBUG}%.s}
+${DIR-utils}ASMFILES	:=	${${DIR-utils}OBJFILES:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################ 
 ###############################################################################
-#				STEP 3
+#				STEP 4
 #DIRECTORY-SPECIFIC BINARY FILES
 #
 #	Executables listed in ${DIR}BINFILES are considered the final output of
@@ -78,10 +98,10 @@ ${DIR-utils}BINCPP	:=		${${DIR-utils}BIN:%=${DIR-utils}/%.cpp}
 ${DIR-utils}BINOBJ	:=		${${DIR-utils}BINCPP:${DIR-utils}%.cpp=${BUILD}%.o}
 ${DIR-utils}BINDEP	:=		${${DIR-utils}BINOBJ:%.o=%.d}
 ${DIR-utils}BINEXE	:=		${${DIR-utils}BINOBJ:${BUILD}%.o=${BIN}%.exe}
-${DIR-utils}BINASM	:=		${${DIR-utils}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-utils}BINASM	:=		${${DIR-utils}BINOBJ:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
 ###############################################################################
-#				STEP 4
+#				STEP 5
 #DIRECTORY-SPECIFIC TEST FILES
 
 #	Speicify all the test files. All test files must be CPP files. But when
@@ -101,30 +121,10 @@ ${DIR-utils}TSTCPP	:=		${${DIR-utils}TST:%=${DIR-utils}/%.cpp}
 ${DIR-utils}TSTOBJ	:=		${${DIR-utils}TSTCPP:${DIR-utils}%.cpp=${BUILD}%.o}
 ${DIR-utils}TSTDEP	:=		${${DIR-utils}TSTOBJ:%.o=%.d}
 ${DIR-utils}TSTEXE	:=		${${DIR-utils}TSTOBJ:%.o=%.exe}
-${DIR-utils}TSTASM	:=		${${DIR-utils}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-utils}TSTASM	:=		${${DIR-utils}TSTOBJ:${BUILD}%.o=${ASM}%.s}
 SRCFILES	:=		${SRCFILES} ${${DIR-utils}CFILES} ${${DIR-utils}CPPFILES} ${${DIR-utils}TSTCPP} ${${DIR-utils}BINCPP}
 DEPFILES	:=		${DEPFILES} ${${DIR-utils}DEPFILES} ${${DIR-utils}TSTDEP} ${${DIR-utils}BINDEP}
 ################## DO NOT MODIFY ################
-###############################################################################
-#				STEP 5
-#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-#
-#	Options specified here are used in this directory. By default, all 
-#  builds use the same options. When different compiling and/or linking options 
-#  need to be assigned to different targets, the programmer needs to list all
-#  the speical target-prerequisite dependencies manually.
-#  	By default, the local options inherits the corresponding global ones 
-#  from the Makefile.vars in the root directory. If one wishes to add any 
-#  additional options that are specific to this very directory, add them after 
-#  the global ones. For example:
-# 	 	${DIR-utils}CFLAGS	:=${CFLAGS} [directory-specific options]
-#  	Usually, ${DIR-utils}INCS and should not need to be modified if
-#  the build in this directory does not require some extra libraries and/or 
-#  hearder files. But in case it did, free at ease to modify these two 
-#  variables.
-${DIR-utils}CFLAGS 	:=${CFLAGS}
-${DIR-utils}CXXFLAGS	:=${CXXFLAGS}
-${DIR-utils}INCS		:=${INCS}
 ###############################################################################
 #				STEP 6
 #	Write whatever special dependencies that do not fit into any pattern
@@ -163,14 +163,14 @@ ${DIR-utils}INCS		:=${INCS}
 ${BUILD}/%.o: ${DIR-utils}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-utils}QUIET}${CXX} -o $@ -c $< ${${DIR-utils}CXXFLAGS} ${${DIR-utils}INCS}
-${DEBUG}/%.s: ${DIR-utils}/%.cpp
+${ASM}/%.s: ${DIR-utils}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-utils}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR-utils}CXXFLAGS} ${${DIR-utils}INCS} 
 #  C sources
 ${BUILD}/%.o: ${DIR-utils}/%.c
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-utils}QUIET}${CC} -o $@ -c $< ${${DIR-utils}CFLAGS} ${${DIR-utils}INCS}
-${DEBUG}/%.s: ${DIR-utils}/%.c
+${ASM}/%.s: ${DIR-utils}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-utils}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-utils}CFLAGS} ${${DIR-utils}INCS} 
 #DIR-utilsECTORY-SPECIFIC PHONY TARGETS

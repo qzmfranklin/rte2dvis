@@ -12,9 +12,18 @@ int test03( void );
 /*******************************************************************************/
 int main(int argc, char const* argv[])
 { 
+	char fname[FILENAME_MAX];
+	sprintf(fname,"DEBUG/test_svd.txt");
+	link_stdout(fname);
+
+
 	test01();
 	test02();
 	test03();
+
+
+	unlink_stdout();
+	fprintf(stderr, "Output to %s\n",fname);
 
 	return 0;
 }

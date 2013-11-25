@@ -22,6 +22,7 @@ void print_rule(int order_num, double *x, double *y, double *w);
 int main(int argc, char const* argv[])
 { 
 	char fname[FILENAME_MAX];
+	verify_dir("DEBUG");
 	sprintf(fname,"DEBUG/test_quad_rules.txt");
 	link_stdout(fname);
 

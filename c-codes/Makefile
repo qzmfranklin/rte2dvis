@@ -56,10 +56,11 @@ SRC		:=src
 BIN		:=bin
 INCLUDE		:=include
 EXAMPLE		:=example# Data files for various tests
-BUILD		:=build# Out-of-source build - object and dependency files
-DEBUG		:=DEBUG# Profiling and assembly files for debugging use
-OUTPUT		:=OUTPUT# Testing result files
-STRUCTURAL_DIRS	:=${BIN} ${BUILD} ${DEBUG} ${OUTPUT}
+BUILD		:=build# Out-of-source build
+ASM		:=ASM# Assembly codes
+DEBUG		:=DEBUG# Debugging output
+OUTPUT		:=OUTPUT# Output
+STRUCTURAL_DIRS	:=${BIN} ${BUILD} ${ASM} ${DEBUG} ${OUTPUT}
 ###############################################################################
 #				STEP 4
 #PROJECT-WIDE COMMON COMPILATION OPTIONS
@@ -139,6 +140,7 @@ DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} ${MAKFILE
 	test							\
 	asm							\
 	list							\
+	show							\
 	clean cleanx cleanxx 					\
 	dist distclean						\
 	check							\
@@ -149,6 +151,19 @@ all:	${TARGET_ALL}
 test:	${TARGET_TEST} 
 asm:	${TARGET_ASM} 
 list:	${TARGET_LIST} 
+show:
+	@echo "${B_MAGENTA}${BIN}/${NONE}:"
+	@cd ${BIN}; ls *.exe; cd ..
+	@echo "${B_MAGENTA}${BUILD}/${NONE}:"
+	@cd ${BUILD}; ls *.exe; cd ..
+	@#cd ${BUILD}; ls *.o; cd ..
+	@echo "${B_MAGENTA}${DEBUG}/${NONE}:"
+	@cd ${DEBUG}; ls *.txt; cd ..
+	@echo "${B_MAGENTA}${OUTPUT}/${NONE}:"
+	@cd ${OUTPUT}; ls *.txt; cd ..
+	@#echo "${B_MAGENTA}${ASM}/${NONE}:"
+	@#cd ${ASM}; ls *.s; cd ..
+
 clean:
 	@echo "Deleting ${REV_RED}${BUILD}/*${NONE}..."
 	${QUIET}rm -rf ${BUILD}/*

@@ -40,6 +40,26 @@ DIR-quad		:=src/quad# Please, NO SPACE
 ${DIR-quad}QUIET	:=@
 ###############################################################################
 #				STEP 2
+#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
+#
+#	Options specified here are used in this directory. By default, all 
+#  builds use the same options. When different compiling and/or linking options 
+#  need to be assigned to different targets, the programmer needs to list all
+#  the speical target-prerequisite dependencies manually.
+#  	By default, the local options inherits the corresponding global ones 
+#  from the Makefile.vars in the root directory. If one wishes to add any 
+#  additional options that are specific to this very directory, add them after 
+#  the global ones. For example:
+# 	 	${DIR-quad}CFLAGS	:=${CFLAGS} [directory-specific options]
+#  	Usually, ${DIR-quad}INCS and should not need to be modified if
+#  the build in this directory does not require some extra libraries and/or 
+#  hearder files. But in case it did, free at ease to modify these two 
+#  variables.
+${DIR-quad}CFLAGS 	:=${CFLAGS}
+${DIR-quad}CXXFLAGS	:=${CXXFLAGS}
+${DIR-quad}INCS		:=${INCS}
+###############################################################################
+#				STEP 3
 #DIRECTORY-SPECIFIC SOURCE FILES
 #
 #  	Remember to add the ${DIR-quad}/ to whatever source files(s) you wish to add.
@@ -65,10 +85,10 @@ ${DIR-quad}CPPFILES	:=	${DIR-quad}/gauss_rule.cpp	\
 ${DIR-quad}OBJFILES	:=	${${DIR-quad}CPPFILES:${DIR-quad}%.cpp=${BUILD}%.o}	\
 				${${DIR-quad}CFILES:${DIR-quad}%.c=${BUILD}%.o}
 ${DIR-quad}DEPFILES	:=	${${DIR-quad}OBJFILES:%.o=%.d}
-${DIR-quad}ASMFILES	:=	${${DIR-quad}OBJFILES:${BUILD}%.o=${DEBUG}%.s}
+${DIR-quad}ASMFILES	:=	${${DIR-quad}OBJFILES:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################ 
 ###############################################################################
-#				STEP 3
+#				STEP 4
 #DIRECTORY-SPECIFIC BINARY FILES
 #
 #	Executables listed in ${DIR}BINFILES are considered the final output of
@@ -81,10 +101,10 @@ ${DIR-quad}BINCPP	:=		${${DIR-quad}BIN:%=${DIR-quad}/%.cpp}
 ${DIR-quad}BINOBJ	:=		${${DIR-quad}BINCPP:${DIR-quad}%.cpp=${BUILD}%.o}
 ${DIR-quad}BINDEP	:=		${${DIR-quad}BINOBJ:%.o=%.d}
 ${DIR-quad}BINEXE	:=		${${DIR-quad}BINOBJ:${BUILD}%.o=${BIN}%.exe}
-${DIR-quad}BINASM	:=		${${DIR-quad}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-quad}BINASM	:=		${${DIR-quad}BINOBJ:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
 ###############################################################################
-#				STEP 4
+#				STEP 5
 #DIRECTORY-SPECIFIC TEST FILES
 
 #	Speicify all the test files. All test files must be CPP files. But when
@@ -109,30 +129,10 @@ ${DIR-quad}TSTCPP	:=		${${DIR-quad}TST:%=${DIR-quad}/%.cpp}
 ${DIR-quad}TSTOBJ	:=		${${DIR-quad}TSTCPP:${DIR-quad}%.cpp=${BUILD}%.o}
 ${DIR-quad}TSTDEP	:=		${${DIR-quad}TSTOBJ:%.o=%.d}
 ${DIR-quad}TSTEXE	:=		${${DIR-quad}TSTOBJ:%.o=%.exe}
-${DIR-quad}TSTASM	:=		${${DIR-quad}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-quad}TSTASM	:=		${${DIR-quad}TSTOBJ:${BUILD}%.o=${ASM}%.s}
 SRCFILES	:=		${SRCFILES} ${${DIR-quad}CFILES} ${${DIR-quad}CPPFILES} ${${DIR-quad}TSTCPP} ${${DIR-quad}BINCPP}
 DEPFILES	:=		${DEPFILES} ${${DIR-quad}DEPFILES} ${${DIR-quad}TSTDEP} ${${DIR-quad}BINDEP}
 ################## DO NOT MODIFY ################
-###############################################################################
-#				STEP 5
-#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-#
-#	Options specified here are used in this directory. By default, all 
-#  builds use the same options. When different compiling and/or linking options 
-#  need to be assigned to different targets, the programmer needs to list all
-#  the speical target-prerequisite dependencies manually.
-#  	By default, the local options inherits the corresponding global ones 
-#  from the Makefile.vars in the root directory. If one wishes to add any 
-#  additional options that are specific to this very directory, add them after 
-#  the global ones. For example:
-# 	 	${DIR-quad}CFLAGS	:=${CFLAGS} [directory-specific options]
-#  	Usually, ${DIR-quad}INCS and should not need to be modified if
-#  the build in this directory does not require some extra libraries and/or 
-#  hearder files. But in case it did, free at ease to modify these two 
-#  variables.
-${DIR-quad}CFLAGS 	:=${CFLAGS}
-${DIR-quad}CXXFLAGS	:=${CXXFLAGS}
-${DIR-quad}INCS		:=${INCS}
 ###############################################################################
 #				STEP 6
 #	Write whatever special dependencies that do not fit into any pattern
@@ -171,14 +171,14 @@ ${DIR-quad}INCS		:=${INCS}
 ${BUILD}/%.o: ${DIR-quad}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-quad}QUIET}${CXX} -o $@ -c $< ${${DIR-quad}CXXFLAGS} ${${DIR-quad}INCS}
-${DEBUG}/%.s: ${DIR-quad}/%.cpp
+${ASM}/%.s: ${DIR-quad}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-quad}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR-quad}CXXFLAGS} ${${DIR-quad}INCS} 
 #  C sources
 ${BUILD}/%.o: ${DIR-quad}/%.c
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-quad}QUIET}${CC} -o $@ -c $< ${${DIR-quad}CFLAGS} ${${DIR-quad}INCS}
-${DEBUG}/%.s: ${DIR-quad}/%.c
+${ASM}/%.s: ${DIR-quad}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-quad}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-quad}CFLAGS} ${${DIR-quad}INCS} 
 #DIR-quadECTORY-SPECIFIC PHONY TARGETS

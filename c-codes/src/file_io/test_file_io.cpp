@@ -12,6 +12,11 @@ int test04(int argc, char *argv[]);
 int test05(int argc, char *argv[]);
 /******************************************************************************/
 int main(int argc, char *argv[]) {
+
+	char fname[FILENAME_MAX];
+	sprintf(fname,"DEBUG/test_file_io.txt");
+	freopen(fname,"w",stdout); 
+
 	int err=0;
 	printf("###############################################################################\n");
 	printf("START TESTING\n");
@@ -30,6 +35,11 @@ int main(int argc, char *argv[]) {
 	}
 	printf("###############################################################################\n");
 	printf("\n");
+
+	fclose(stdout);
+	stdout=fdopen(STDOUT_FILENO,"w");
+	fprintf(stderr, "Output to %s\n",fname);
+
 	return err;
 }
 /******************************************************************************/

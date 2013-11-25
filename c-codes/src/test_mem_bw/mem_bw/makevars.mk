@@ -40,6 +40,26 @@ DIR-test_mem_bw/mem_bw		:=src/test_mem_bw/mem_bw# Please, NO SPACE
 ${DIR-test_mem_bw/mem_bw}QUIET	:=@
 ###############################################################################
 #				STEP 2
+#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
+#
+#	Options specified here are used in this directory. By default, all 
+#  builds use the same options. When different compiling and/or linking options 
+#  need to be assigned to different targets, the programmer needs to list all
+#  the speical target-prerequisite dependencies manually.
+#  	By default, the local options inherits the corresponding global ones 
+#  from the Makefile.vars in the root directory. If one wishes to add any 
+#  additional options that are specific to this very directory, add them after 
+#  the global ones. For example:
+# 	 	${DIR-test_mem_bw/mem_bw}CFLAGS	:=${CFLAGS} [directory-specific options]
+#  	Usually, ${DIR-test_mem_bw/mem_bw}INCS and should not need to be modified if
+#  the build in this directory does not require some extra libraries and/or 
+#  hearder files. But in case it did, free at ease to modify these two 
+#  variables.
+${DIR-test_mem_bw/mem_bw}CFLAGS 	:=${CFLAGS}
+${DIR-test_mem_bw/mem_bw}CXXFLAGS	:=${CXXFLAGS}
+${DIR-test_mem_bw/mem_bw}INCS		:=${INCS}
+###############################################################################
+#				STEP 3
 #DIRECTORY-SPECIFIC SOURCE FILES
 #
 #  	Remember to add the ${DIR-test_mem_bw/mem_bw}/ to whatever source files(s) you wish to add.
@@ -62,10 +82,10 @@ ${DIR-test_mem_bw/mem_bw}CPPFILES	:=	${DIR-test_mem_bw/mem_bw}/sumcopy.cpp
 ${DIR-test_mem_bw/mem_bw}OBJFILES	:=	${${DIR-test_mem_bw/mem_bw}CPPFILES:${DIR-test_mem_bw/mem_bw}%.cpp=${BUILD}%.o}	\
 				${${DIR-test_mem_bw/mem_bw}CFILES:${DIR-test_mem_bw/mem_bw}%.c=${BUILD}%.o}
 ${DIR-test_mem_bw/mem_bw}DEPFILES	:=	${${DIR-test_mem_bw/mem_bw}OBJFILES:%.o=%.d}
-${DIR-test_mem_bw/mem_bw}ASMFILES	:=	${${DIR-test_mem_bw/mem_bw}OBJFILES:${BUILD}%.o=${DEBUG}%.s}
+${DIR-test_mem_bw/mem_bw}ASMFILES	:=	${${DIR-test_mem_bw/mem_bw}OBJFILES:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################ 
 ###############################################################################
-#				STEP 3
+#				STEP 4
 #DIRECTORY-SPECIFIC BINARY FILES
 #
 #	Executables listed in ${DIR}BINFILES are considered the final output of
@@ -78,10 +98,10 @@ ${DIR-test_mem_bw/mem_bw}BINCPP	:=		${${DIR-test_mem_bw/mem_bw}BIN:%=${DIR-test_
 ${DIR-test_mem_bw/mem_bw}BINOBJ	:=		${${DIR-test_mem_bw/mem_bw}BINCPP:${DIR-test_mem_bw/mem_bw}%.cpp=${BUILD}%.o}
 ${DIR-test_mem_bw/mem_bw}BINDEP	:=		${${DIR-test_mem_bw/mem_bw}BINOBJ:%.o=%.d}
 ${DIR-test_mem_bw/mem_bw}BINEXE	:=		${${DIR-test_mem_bw/mem_bw}BINOBJ:${BUILD}%.o=${BIN}%.exe}
-${DIR-test_mem_bw/mem_bw}BINASM	:=		${${DIR-test_mem_bw/mem_bw}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-test_mem_bw/mem_bw}BINASM	:=		${${DIR-test_mem_bw/mem_bw}BINOBJ:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
 ###############################################################################
-#				STEP 4
+#				STEP 5
 #DIRECTORY-SPECIFIC TEST FILES
 
 #	Speicify all the test files. All test files must be CPP files. But when
@@ -102,30 +122,10 @@ ${DIR-test_mem_bw/mem_bw}TSTCPP	:=		${${DIR-test_mem_bw/mem_bw}TST:%=${DIR-test_
 ${DIR-test_mem_bw/mem_bw}TSTOBJ	:=		${${DIR-test_mem_bw/mem_bw}TSTCPP:${DIR-test_mem_bw/mem_bw}%.cpp=${BUILD}%.o}
 ${DIR-test_mem_bw/mem_bw}TSTDEP	:=		${${DIR-test_mem_bw/mem_bw}TSTOBJ:%.o=%.d}
 ${DIR-test_mem_bw/mem_bw}TSTEXE	:=		${${DIR-test_mem_bw/mem_bw}TSTOBJ:%.o=%.exe}
-${DIR-test_mem_bw/mem_bw}TSTASM	:=		${${DIR-test_mem_bw/mem_bw}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-test_mem_bw/mem_bw}TSTASM	:=		${${DIR-test_mem_bw/mem_bw}TSTOBJ:${BUILD}%.o=${ASM}%.s}
 SRCFILES	:=		${SRCFILES} ${${DIR-test_mem_bw/mem_bw}CFILES} ${${DIR-test_mem_bw/mem_bw}CPPFILES} ${${DIR-test_mem_bw/mem_bw}TSTCPP} ${${DIR-test_mem_bw/mem_bw}BINCPP}
 DEPFILES	:=		${DEPFILES} ${${DIR-test_mem_bw/mem_bw}DEPFILES} ${${DIR-test_mem_bw/mem_bw}TSTDEP} ${${DIR-test_mem_bw/mem_bw}BINDEP}
 ################## DO NOT MODIFY ################
-###############################################################################
-#				STEP 5
-#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-#
-#	Options specified here are used in this directory. By default, all 
-#  builds use the same options. When different compiling and/or linking options 
-#  need to be assigned to different targets, the programmer needs to list all
-#  the speical target-prerequisite dependencies manually.
-#  	By default, the local options inherits the corresponding global ones 
-#  from the Makefile.vars in the root directory. If one wishes to add any 
-#  additional options that are specific to this very directory, add them after 
-#  the global ones. For example:
-# 	 	${DIR-test_mem_bw/mem_bw}CFLAGS	:=${CFLAGS} [directory-specific options]
-#  	Usually, ${DIR-test_mem_bw/mem_bw}INCS and should not need to be modified if
-#  the build in this directory does not require some extra libraries and/or 
-#  hearder files. But in case it did, free at ease to modify these two 
-#  variables.
-${DIR-test_mem_bw/mem_bw}CFLAGS 	:=${CFLAGS}
-${DIR-test_mem_bw/mem_bw}CXXFLAGS	:=${CXXFLAGS}
-${DIR-test_mem_bw/mem_bw}INCS		:=${INCS}
 ###############################################################################
 #				STEP 6
 #	Write whatever special dependencies that do not fit into any pattern
@@ -164,14 +164,14 @@ ${DIR-test_mem_bw/mem_bw}INCS		:=${INCS}
 ${BUILD}/%.o: ${DIR-test_mem_bw/mem_bw}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-test_mem_bw/mem_bw}QUIET}${CXX} -o $@ -c $< ${${DIR-test_mem_bw/mem_bw}CXXFLAGS} ${${DIR-test_mem_bw/mem_bw}INCS}
-${DEBUG}/%.s: ${DIR-test_mem_bw/mem_bw}/%.cpp
+${ASM}/%.s: ${DIR-test_mem_bw/mem_bw}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-test_mem_bw/mem_bw}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR-test_mem_bw/mem_bw}CXXFLAGS} ${${DIR-test_mem_bw/mem_bw}INCS} 
 #  C sources
 ${BUILD}/%.o: ${DIR-test_mem_bw/mem_bw}/%.c
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-test_mem_bw/mem_bw}QUIET}${CC} -o $@ -c $< ${${DIR-test_mem_bw/mem_bw}CFLAGS} ${${DIR-test_mem_bw/mem_bw}INCS}
-${DEBUG}/%.s: ${DIR-test_mem_bw/mem_bw}/%.c
+${ASM}/%.s: ${DIR-test_mem_bw/mem_bw}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-test_mem_bw/mem_bw}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-test_mem_bw/mem_bw}CFLAGS} ${${DIR-test_mem_bw/mem_bw}INCS} 
 #DIR-test_mem_bw/mem_bwECTORY-SPECIFIC PHONY TARGETS

@@ -40,6 +40,26 @@ DIR-file_io		:=src/file_io# Please, NO SPACE
 ${DIR-file_io}QUIET	:=@
 ###############################################################################
 #				STEP 2
+#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
+#
+#	Options specified here are used in this directory. By default, all 
+#  builds use the same options. When different compiling and/or linking options 
+#  need to be assigned to different targets, the programmer needs to list all
+#  the speical target-prerequisite dependencies manually.
+#  	By default, the local options inherits the corresponding global ones 
+#  from the Makefile.vars in the root directory. If one wishes to add any 
+#  additional options that are specific to this very directory, add them after 
+#  the global ones. For example:
+# 	 	${DIR-file_io}CFLAGS	:=${CFLAGS} [directory-specific options]
+#  	Usually, ${DIR-file_io}INCS and should not need to be modified if
+#  the build in this directory does not require some extra libraries and/or 
+#  hearder files. But in case it did, free at ease to modify these two 
+#  variables.
+${DIR-file_io}CFLAGS 	:=${CFLAGS}
+${DIR-file_io}CXXFLAGS	:=${CXXFLAGS}
+${DIR-file_io}INCS	:=${INCS}
+###############################################################################
+#				STEP 3
 #DIRECTORY-SPECIFIC SOURCE FILES
 #
 #  	Remember to add the ${DIR-file_io}/ to whatever source files(s) you wish to add.
@@ -62,10 +82,10 @@ ${DIR-file_io}CPPFILES	:=
 ${DIR-file_io}OBJFILES	:=	${${DIR-file_io}CPPFILES:${DIR-file_io}%.cpp=${BUILD}%.o}	\
 				${${DIR-file_io}CFILES:${DIR-file_io}%.c=${BUILD}%.o}
 ${DIR-file_io}DEPFILES	:=	${${DIR-file_io}OBJFILES:%.o=%.d}
-${DIR-file_io}ASMFILES	:=	${${DIR-file_io}OBJFILES:${BUILD}%.o=${DEBUG}%.s}
+${DIR-file_io}ASMFILES	:=	${${DIR-file_io}OBJFILES:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################ 
 ###############################################################################
-#				STEP 3
+#				STEP 4
 #DIRECTORY-SPECIFIC BINARY FILES
 #
 #	Executables listed in ${DIR}BINFILES are considered the final output of
@@ -79,53 +99,33 @@ ${DIR-file_io}BINCPP	:=		${${DIR-file_io}BIN:%=${DIR-file_io}/%.cpp}
 ${DIR-file_io}BINOBJ	:=		${${DIR-file_io}BINCPP:${DIR-file_io}%.cpp=${BUILD}%.o}
 ${DIR-file_io}BINDEP	:=		${${DIR-file_io}BINOBJ:%.o=%.d}
 ${DIR-file_io}BINEXE	:=		${${DIR-file_io}BINOBJ:${BUILD}%.o=${BIN}%.exe}
-${DIR-file_io}BINASM	:=		${${DIR-file_io}BINOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-file_io}BINASM	:=		${${DIR-file_io}BINOBJ:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
 ###############################################################################
-#				STEP 4
+#				STEP 5
 #DIRECTORY-SPECIFIC TEST FILES
 
 #	Speicify all the test files. All test files must be CPP files. But when
 #  listing the them in ${DIR-file_io}TST, do NOT write the .cpp extension. For example:
 #  if one wishes to add test-mytest.cpp, he should write:
 #
-#  		${DIR-file_io}TST:=test-mytest
+#  		${DIR-file_io}TST:=test_mytest
 #
 #	Then list all the build rules right afterwards. For example:
 #
 #		${BUILD}/test_mytest.exe:	${BUILD}/test_mytest.o		\
 #						${BUILD}/any_other_files.o
-${DIR_file_io}TST	:=		test_file_io
+${DIR-file_io}TST	:=		test_file_io
 ${BUILD}/test_file_io.exe: 	${BUILD}/test_file_io.o ${BUILD}/file_io.o
 ################## DO NOT MODIFY ################
-${DIR_file_io}TSTCPP	:=		${${DIR_file_io}TST:%=${DIR_file_io}/%.cpp}
+${DIR-file_io}TSTCPP	:=		${${DIR-file_io}TST:%=${DIR-file_io}/%.cpp}
 ${DIR-file_io}TSTOBJ	:=		${${DIR-file_io}TSTCPP:${DIR-file_io}%.cpp=${BUILD}%.o}
 ${DIR-file_io}TSTDEP	:=		${${DIR-file_io}TSTOBJ:%.o=%.d}
 ${DIR-file_io}TSTEXE	:=		${${DIR-file_io}TSTOBJ:%.o=%.exe}
-${DIR-file_io}TSTASM	:=		${${DIR-file_io}TSTOBJ:${BUILD}%.o=${DEBUG}%.s}
+${DIR-file_io}TSTASM	:=		${${DIR-file_io}TSTOBJ:${BUILD}%.o=${ASM}%.s}
 SRCFILES	:=		${SRCFILES} ${${DIR-file_io}CFILES} ${${DIR-file_io}CPPFILES} ${${DIR-file_io}TSTCPP} ${${DIR-file_io}BINCPP}
 DEPFILES	:=		${DEPFILES} ${${DIR-file_io}DEPFILES} ${${DIR-file_io}TSTDEP} ${${DIR-file_io}BINDEP}
 ################## DO NOT MODIFY ################
-###############################################################################
-#				STEP 5
-#DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-#
-#	Options specified here are used in this directory. By default, all 
-#  builds use the same options. When different compiling and/or linking options 
-#  need to be assigned to different targets, the programmer needs to list all
-#  the speical target-prerequisite dependencies manually.
-#  	By default, the local options inherits the corresponding global ones 
-#  from the Makefile.vars in the root directory. If one wishes to add any 
-#  additional options that are specific to this very directory, add them after 
-#  the global ones. For example:
-# 	 	${DIR-file_io}CFLAGS	:=${CFLAGS} [directory-specific options]
-#  	Usually, ${DIR-file_io}INCS and should not need to be modified if
-#  the build in this directory does not require some extra libraries and/or 
-#  hearder files. But in case it did, free at ease to modify these two 
-#  variables.
-${DIR-file_io}CFLAGS 	:=${CFLAGS}
-${DIR-file_io}CXXFLAGS	:=${CXXFLAGS}
-${DIR-file_io}INCS		:=${INCS}
 ###############################################################################
 #				STEP 6
 #	Write whatever special dependencies that do not fit into any pattern
@@ -164,14 +164,14 @@ ${DIR-file_io}INCS		:=${INCS}
 ${BUILD}/%.o: ${DIR-file_io}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-file_io}QUIET}${CXX} -o $@ -c $< ${${DIR-file_io}CXXFLAGS} ${${DIR-file_io}INCS}
-${DEBUG}/%.s: ${DIR-file_io}/%.cpp
+${ASM}/%.s: ${DIR-file_io}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-file_io}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR-file_io}CXXFLAGS} ${${DIR-file_io}INCS} 
 #  C sources
 ${BUILD}/%.o: ${DIR-file_io}/%.c
 	@echo Compiling "${GREEN}$@${NONE}"...
 	${${DIR-file_io}QUIET}${CC} -o $@ -c $< ${${DIR-file_io}CFLAGS} ${${DIR-file_io}INCS}
-${DEBUG}/%.s: ${DIR-file_io}/%.c
+${ASM}/%.s: ${DIR-file_io}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-file_io}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-file_io}CFLAGS} ${${DIR-file_io}INCS} 
 #DIR-file_ioECTORY-SPECIFIC PHONY TARGETS
