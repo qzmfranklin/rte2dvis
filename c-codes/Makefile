@@ -79,6 +79,7 @@ CFLAGS 		:=-O3						\
 		-std=c99					\
 		-restrict					\
 		-fPIC						\
+		-openmp						\
 		-Wno-deprecated
 
 		# 						\
@@ -96,9 +97,13 @@ ASMFLAGS	:=-S -fsource-asm# Generate source code commented assembly code.
 #	Intel Math Kernel Library for MacOSX-x86-64
 MKL_INCS	:=
 MKL_LIBS	:=-mkl
+#	OpenMP Flags
+OMP_INCS	:=
+OMP_LIBS	:=-openmp
+
 #	OpenMPI Library
-MPI_INCS	:='mpiCC -showme:compile'
-MPI_LIBS	:='mpiCC -showme:link'
+#MPI_INCS	:='mpiCC -showme:compile'
+#MPI_LIBS	:='mpiCC -showme:link'
 #	MathLink for MacOSX-x86-64
 ML_DIR		:=/Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
 ML_INCS		:=-I${ML_DIR}
@@ -108,8 +113,8 @@ MPREP		:=${ML_DIR}/mprep
 MLL_INCS	:=-I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C/
 MLL_LIBS	:=-L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 #PROJECT-WIDE DEFAULT LINKING LIBRARIES AND INCLUDE DIRECTORIES
-INCS		:=${MKL_INCS} -iquote ${INCLUDE}
-LIBS		:=${MKL_LIBS} 
+INCS		:=${MKL_INCS} -iquote ${INCLUDE} ${OMP_INCS} ${MPI_LIBS}
+LIBS		:=${MKL_LIBS} ${OMP_LIBS} ${MPI_LIBS}
 ##	LONESTAR COMPILING OPTIONS
 #CFLAGS 	:= -O3 -prec-div -no-ftz -restrict -Wshadow -MMD -MP
 
