@@ -18,10 +18,12 @@ void WandzuraRule::Generate(const int rule, int &order_num,
 	//printf("WandzuraRule::Generate()\n");
 	assert(1<=rule && rule<=wandzura_rule_num());
 	order_num = wandzura_order_num(rule); 
-	xy = (double*)mkl_malloc(3*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	xy = (double*)mkl_malloc(2*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	w  = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
 	assert(xy);
-	w = xy + 2*order_num;
+	assert(w);
 	_fxy.push(xy);
+	_fxy.push(w);
 	wandzura_rule(rule,order_num,xy,w);
 }
 
@@ -29,18 +31,27 @@ void WandzuraRule::Generate(const int rule, int &order_num,
 		double *&x, double *&y, double *&w)
 {
 	//printf("WandzuraRule::Generate()\n");
-	Generate(rule,order_num,x,w);
-	y=x+order_num;
-	double *xx;
-	xx = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
-	assert(xx);
+	assert(1<=rule && rule<=wandzura_rule_num());
+	order_num = wandzura_order_num(rule); 
+	double *xy;
+	xy= (double*)mkl_malloc(2*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	w = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
+	assert(xy);
+	assert(w);
+	wandzura_rule(rule,order_num,xy,w);
+
+	x = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
+	y = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
+	assert(x);
+	assert(y);
 	for (int i = 0; i < order_num; i++) {
-		xx[i] = x[2*i];
-		y[i] = x[2*i+1];
+		x[i] = xy[2*i];
+		y[i] = xy[2*i+1];
 	}
-	for (int i = 0; i < order_num; i++)
-		x[i] = xx[i]; 
-	mkl_free(xx);
+
+	_fxy.push(x);
+	_fxy.push(y);
+	_fxy.push(w);
 }
 
 

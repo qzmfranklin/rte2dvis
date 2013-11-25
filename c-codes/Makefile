@@ -86,7 +86,7 @@ CFLAGS 		:=-O3						\
 		-DNDEBUG					\
 		-opt-report-phase ipo_inl			\
 		-fno-inline-functions				\
-		-vec-report=5					\
+		-vec-report=1					\
 
 CXXFLAGS	:=${CFLAGS}# Compilig options for .cpp files.
 ASMFLAGS	:=-S -fsource-asm# Generate source code commented assembly code.
@@ -143,8 +143,7 @@ DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} ${MAKFILE
 	dist distclean						\
 	check							\
 	todolist						\
-	mkdir							\
-	tags
+	mkdir
 
 all:	${TARGET_ALL} 
 test:	${TARGET_TEST} 
@@ -179,7 +178,4 @@ mkdir:
 rmdir: 
 	@echo "${B_RED}WARNING: Deleting ${STRUCTURAL_DIRS}${NONE}"
 	${QUIET}rm -rf ${STRUCTURAL_DIRS}
-tags:
-	@echo Generating tags file for vim...
-	${QUIET}ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 ###############################################################################
