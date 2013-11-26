@@ -83,16 +83,24 @@ CFLAGS 		:=-O3						\
 		-restrict					\
 		-fPIC						\
 		-openmp						\
+		-fno-inline-functions				\
+		-unroll-aggressive				\
+		-fno-math-errno					\
 		-Wno-deprecated
 
 		# 						\
+		-static						\
+		-dynamic					\
+		-static-intel					\
 		-DNDEBUG					\
+		-DDEBUG						\
 		-opt-report-phase ipo_inl			\
-		-fno-inline-functions				\
 		-vec-report=1					\
 
 CXXFLAGS	:=${CFLAGS}# Compilig options for .cpp files.
-ASMFLAGS	:=-S -fsource-asm# Generate source code commented assembly code.
+ASMFLAGS	:=-S -fsource-asm# Source code commeNted assembly code.
+DYLFLAGS	:=-dynamiclib -static-intel# Linking Dynamic library.
+STLFLAGS	:=-staticlib -static-intel# Linking static library.
 ###############################################################################
 #				STEP 5
 #PROJECT-WIDE INCLUDE AND LINKAGE OPTIONS
@@ -158,15 +166,15 @@ list:	${TARGET_LIST}
 show:
 	@echo "${B_MAGENTA}${BIN}/${NONE}:"
 	@cd ${BIN}; ls *.exe; cd ..
+	@cd ${BIN}; ls *.dylib; cd ..
+	@cd ${BIN}; ls *.a; cd ..
 	@echo "${B_MAGENTA}${BUILD}/${NONE}:"
 	@cd ${BUILD}; ls *.exe; cd ..
-	@#cd ${BUILD}; ls *.o; cd ..
+	@cd ${BUILD}; ls *.o; cd ..
 	@echo "${B_MAGENTA}${DEBUG}/${NONE}:"
 	@cd ${DEBUG}; ls *.txt; cd ..
 	@echo "${B_MAGENTA}${OUTPUT}/${NONE}:"
 	@cd ${OUTPUT}; ls *.txt; cd ..
-	@#echo "${B_MAGENTA}${ASM}/${NONE}:"
-	@#cd ${ASM}; ls *.s; cd ..
 
 clean:
 	@echo "Deleting ${REV_RED}${BUILD}/*${NONE}..."

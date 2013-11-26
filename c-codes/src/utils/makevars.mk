@@ -82,10 +82,7 @@ ${DIR-utils}CPPFILES	:=	${DIR-utils}/cpp_utils.cpp \
 	${DIR-utils}/TimeStamp.cpp
 #	Specify the libraries one wishes to build, and the build rules for them.
 #  Note that these libraries are cleaned when one types "make clean".
-${DIR-utils}LIBFILES	:=	${BUILD}/cpp_utils.dylib ${BUILD}/c_utils.dylib
-${BUILD}/cpp_utils.dylib: ${BUILD}/cpp_utils.o \
-	${BUILD}/Table.o ${BUILD}/StatVector.o ${BUILD}/TimeStamp.o
-${BUILD}/c_utils.dylib: ${BUILD}/c_utils.o
+${DIR-utils}LIBFILES	:=	
 ################## DO NOT MODIFY ################
 ${DIR-utils}OBJFILES	:=	${${DIR-utils}CPPFILES:${DIR-utils}%.cpp=${BUILD}%.o}	\
 				${${DIR-utils}CFILES:${DIR-utils}%.c=${BUILD}%.o}
@@ -103,8 +100,10 @@ ${DIR-utils}ASMFILES	:=	${${DIR-utils}OBJFILES:${BUILD}%.o=${ASM}%.s}
 ${DIR-utils}BIN	:=		
 #	Specify the libraries one wishes to build, and the build rules for them.
 #  Note that these libraries are considered part of the final output.
-${DIR-utils}BINLIB	:=		
-#  	Put all the .dylib and .a libraries here:
+${DIR-utils}BINLIB	:=	${BIN}/cpp_utils.dylib ${BIN}/c_utils.dylib
+${BIN}/cpp_utils.dylib: ${BUILD}/cpp_utils.o \
+	${BUILD}/Table.o ${BUILD}/StatVector.o ${BUILD}/TimeStamp.o
+${BIN}/c_utils.dylib: ${BUILD}/c_utils.o 
 ################## DO NOT MODIFY ################
 ${DIR-utils}BINCPP	:=		${${DIR-utils}BIN:%=${DIR-utils}/%.cpp}
 ${DIR-utils}BINOBJ	:=		${${DIR-utils}BINCPP:${DIR-utils}%.cpp=${BUILD}%.o}
@@ -126,10 +125,11 @@ ${DIR-utils}BINASM	:=		${${DIR-utils}BINOBJ:${BUILD}%.o=${ASM}%.s}
 #
 #		${BUILD}/test_mytest.exe:	${BUILD}/test_mytest.o		\
 #						${BUILD}/any-other-files.o
-#${DIR-utils}TST	:=		test_c_utils test_cpp_utils test_geo_utils
-#${BUILD}/test_utils.exe: ${BUILD}/utils.o ${BUILD}/test_utils.o
-#${BUILD}/test_geo_utils.exe: ${BUILD}/utils.o ${BUILD}/test_geo_utils.o \
-	#${BUILD}/geo_utils.o
+${DIR-utils}TST	:=		test_c_utils test_cpp_utils test_geo_utils
+${BUILD}/test_c_utils.exe: ${BIN}/c_utils.dylib ${BUILD}/test_c_utils.o
+${BUILD}/test_cpp_utils.exe: ${BIN}/cpp_utils.dylib ${BUILD}/test_cpp_utils.o
+${BUILD}/test_geo_utils.exe: ${BIN}/cpp_utils.dylib ${BUILD}/test_geo_utils.o \
+	${BUILD}/geo_utils.o
 ################## DO NOT MODIFY ################
 ${DIR-utils}TSTCPP	:=		${${DIR-utils}TST:%=${DIR-utils}/%.cpp}
 ${DIR-utils}TSTOBJ	:=		${${DIR-utils}TSTCPP:${DIR-utils}%.cpp=${BUILD}%.o}
@@ -203,11 +203,63 @@ ${DIR-utils}-asm: ${${DIR-utils}ASMFILES} ${${DIR-utils}TSTASM}
 ${DIR-utils}-list:
 	@echo \#\#\#\#\#\#\#\#"${B_BROWN}BEGIN $@${NONE}"\#\#\#\#\#\#\#\#
 	@$(foreach dir, 						\
-		CFILES CPPFILES OBJFILES DEPFILES ASMFILES LIBFILES	\
-		TSTCPP TSTOBJ TSTDEP TSTEXE TSTASM			\
-		BINCPP BINOBJ BINDEP BINEXE BINASM BINLIB		\
+		CFILES CPPFILES TSTCPP BINCPP				\
 		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then echo		\
-		"${BROWN}${dir}${NONE}\t"${${DIR-utils}${dir}};		\
+		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			echo "${BROWN}${dir}${NONE}\t\c";		\
+			$(foreach file,${${DIR-utils}${dir}},		\
+			    if [ -f ${file} ]; then echo		\
+				"${BLACK}${file}${NONE}\c";		\
+			    else echo "${GREY}${file}${NONE}\c";	\
+			    fi;)					\
+			echo;						\
 		fi;)
-	@echo \#\#\#\#\#\#\#\#"${B_BROWN}END $@${NONE}"\#\#\#\#\#\#\#\# 
+	@$(foreach dir, 						\
+		OBJFILES TSTOBJ BINOBJ					\
+		,							\
+		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			echo "${BROWN}${dir}${NONE}\t\c";		\
+			$(foreach file,${${DIR-utils}${dir}},		\
+			    if [ -f ${file} ]; then echo		\
+				"${GREEN}${file}${NONE}\c";		\
+			    else echo "${GREY}${file}${NONE}\c";	\
+			    fi;)					\
+			echo;						\
+		fi;)
+	@$(foreach dir, 						\
+		DEPFILES TSTDEP BINDEP					\
+		,							\
+		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			echo "${BROWN}${dir}${NONE}\t\c";		\
+			$(foreach file,${${DIR-utils}${dir}},		\
+			    if [ -f ${file} ]; then echo		\
+				"${GREEN}${file}${NONE}\c";		\
+			    else echo "${GREY}${file}${NONE}\c";	\
+			    fi;)					\
+			echo;						\
+		fi;)
+	@$(foreach dir, 						\
+		TSTEXE BINEXE						\
+		,							\
+		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			echo "${BROWN}${dir}${NONE}\t\c";		\
+			$(foreach file,${${DIR-utils}${dir}},		\
+			    if [ -f ${file} ]; then echo		\
+				"${RED}${file}${NONE}\c";		\
+			    else echo "${GREY}${file}${NONE}\c";	\
+			    fi;)					\
+			echo;						\
+		fi;)
+	@$(foreach dir, 						\
+		LIBFILES BINLIB						\
+		,							\
+		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			echo "${BROWN}${dir}${NONE}\t\c";		\
+			$(foreach file,${${DIR-utils}${dir}},		\
+			    if [ -f ${file} ]; then echo		\
+				"${MAGENTA}${file}${NONE}\c";		\
+			    else echo "${GREY}${file}${NONE}\c";	\
+			    fi;)					\
+			echo;						\
+		fi;)
+	@#echo \#\#\#\#\#\#\#\#"${B_BROWN}END $@${NONE}"\#\#\#\#\#\#\#\# 
