@@ -77,10 +77,10 @@ ${DIR-quad}INCS		:=${INCS}
 #  Please, you NEVER need to specify the dependency for any .o file. Just list
 #  the source files.
 ${DIR-quad}CFILES	:=	
-${DIR-quad}CPPFILES	:=	${DIR-quad}/gauss_rule.cpp	\
-				${DIR-quad}/dunavant_rule.cpp	\
-				${DIR-quad}/wandzura_rule.cpp	\
-				${DIR-quad}/lyness_rule.cpp
+${DIR-quad}CPPFILES	:=	${DIR-quad}/GaussRule.cpp	\
+				${DIR-quad}/DunavantRule.cpp	\
+				${DIR-quad}/WandzuraRule.cpp	\
+				${DIR-quad}/LynessRule.cpp
 ################## DO NOT MODIFY ################
 ${DIR-quad}OBJFILES	:=	${${DIR-quad}CPPFILES:${DIR-quad}%.cpp=${BUILD}%.o}	\
 				${${DIR-quad}CFILES:${DIR-quad}%.c=${BUILD}%.o}

@@ -113,8 +113,8 @@ OMP_INCS	:=
 OMP_LIBS	:=-openmp
 
 #	OpenMPI Library
-#MPI_INCS	:='mpiCC -showme:compile'
-#MPI_LIBS	:='mpiCC -showme:link'
+#MPI_INCS	:='mpicxx -showme:compile'
+#MPI_LIBS	:='mpicxx -showme:link'
 #	MathLink for MacOSX-x86-64
 ML_DIR		:=/Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
 ML_INCS		:=-I${ML_DIR}
@@ -151,7 +151,6 @@ DISTFILES:=${SRCFILES} ${HDRFILES} ${DOCFILES} ${MANFILES} \
 	test							\
 	asm							\
 	list							\
-	show							\
 	clean cleanx cleanxx 					\
 	dist distclean						\
 	todolist						\
@@ -163,18 +162,6 @@ all:	${TARGET_ALL}
 test:	${TARGET_TEST} 
 asm:	${TARGET_ASM} 
 list:	${TARGET_LIST} 
-show:
-	@echo "${B_MAGENTA}${BIN}/${NONE}:"
-	@cd ${BIN}; ls *.exe; cd ..
-	@cd ${BIN}; ls *.dylib; cd ..
-	@cd ${BIN}; ls *.a; cd ..
-	@echo "${B_MAGENTA}${BUILD}/${NONE}:"
-	@cd ${BUILD}; ls *.exe; cd ..
-	@cd ${BUILD}; ls *.o; cd ..
-	@echo "${B_MAGENTA}${DEBUG}/${NONE}:"
-	@cd ${DEBUG}; ls *.txt; cd ..
-	@echo "${B_MAGENTA}${OUTPUT}/${NONE}:"
-	@cd ${OUTPUT}; ls *.txt; cd ..
 
 clean:
 	@echo "Deleting ${REV_RED}${BUILD}/*${NONE}..."
@@ -224,8 +211,6 @@ help:
 		"List files associated with each directory."
 	@echo "${GREEN}mkdir/rmdir${NONE}\t"\
 		"Create/delete structural directories."
-	@echo "${GREEN}show${NONE}\t\t"\
-		"List files already generated."
 	@echo "${GREEN}test${NONE}\t\t"\
 		"Generate ${BUILD}/*.exe."
 	@echo "${GREEN}todolist${NONE}\t"\
