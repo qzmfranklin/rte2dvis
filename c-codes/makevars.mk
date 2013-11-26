@@ -60,7 +60,7 @@ ${DIR-utils}CXXFLAGS:=${CXXFLAGS}
 ${DIR-utils}INCS:=${INCS}
 ###############################################################################
 #				STEP 3
-#DIRECTORY-SPECIFIC SOURCE, OBJECT, and LIBRARY FILES
+#DIRECTORY-SPECIFIC SOURCE FILES
 #
 #  	Remember to add the ${DIR-utils}/ to whatever source files(s) you wish to add.
 #  The dependencies are automatically resolved by the dependency files (*.d 
@@ -76,24 +76,12 @@ ${DIR-utils}INCS:=${INCS}
 #  	d) Dependencies are readily dealt with by the setup of the Makefile. One
 #  Please, you NEVER need to specify the dependency for any .o file. Just list
 #  the source files.
-#  	Only assign the source files here. The corresponding object files are
-#  created automatically.
 ${DIR-utils}CFILES:=${DIR-utils}/c_utils.c 
 ${DIR-utils}CPPFILES:=${DIR-utils}/cpp_utils.cpp \
 	${DIR-utils}/Table.cpp ${DIR-utils}/StatVector.cpp \
 	${DIR-utils}/TimeStamp.cpp
 #	Specify the libraries one wishes to build, and the build rules for them.
 #  Note that these libraries are cleaned when one types "make clean".
-#  	Note that the default pattern rules for building libraries are %.dylib:
-#  %.o based. There must be one and only one .o file that shares the file base
-#  name with the library. For example: 
-#  		mylib.dylib: my.o			is not valid;
-#  		mylib.dylib: mylib.o mylib2.o		is valid;
-#  	Also note that the MacOSX system does NOT support statically linked
-#  binaries. There is no use building any static library therefore. However,
-#  the pattern rules for building static libraries and linking against static
-#  libraries are still preserved in the top level Makefile.vars for use in a 
-#  Linux system.
 ${DIR-utils}LIBFILES:=
 ###############################################################################
 #				STEP 4
@@ -105,18 +93,7 @@ ${DIR-utils}LIBFILES:=
 #  	Also, specify the dependencies for each binaries.
 ${DIR-utils}BIN:=
 #	Specify the libraries one wishes to build, and the build rules for them.
-#  Note that these libraries are NOT cleaned when one types "make clean". These
-#  libraries are considered parts of the final output of this project.
-#  	Note that the default pattern rules for building libraries are %.dylib:
-#  %.o based. There must be one and only one .o file that shares the file base
-#  name with the library. For example: 
-#  		mylib.dylib: my.o			is not valid;
-#  		mylib.dylib: mylib.o mylib2.o		is valid;
-#  	Also note that the MacOSX system does NOT support statically linked
-#  binaries. There is no use building any static library therefore. However,
-#  the pattern rules for building static libraries and linking against static
-#  libraries are still preserved in the top level Makefile.vars for use in a 
-#  Linux system.
+#  Note that these libraries are considered part of the final output.
 ${DIR-utils}BINLIB:=${BIN}/cpp_utils.dylib ${BIN}/c_utils.dylib
 ${BIN}/cpp_utils.dylib: ${BUILD}/cpp_utils.o \
 	${BUILD}/Table.o ${BUILD}/StatVector.o ${BUILD}/TimeStamp.o
@@ -207,8 +184,6 @@ DEPFILES:=${DEPFILES} ${${DIR-utils}DEPFILES} \
 #	C++ linkage at the top level is done in the Makefile.vars in the root 
 #  directory. Any special build rules for libraries and executables should be
 #  secified in STEP 6 in this makevars.mk file.
-#  	Not using "\" to break long lines because that would hurt the non-quiet 
-#  mode output aestetics. The new colorful version of "make list"
 
 #  C++ sources
 ${BUILD}/%.o: ${DIR-utils}/%.cpp
@@ -252,30 +227,6 @@ ${DIR-utils}-list:
 			echo;						\
 		fi;)
 	@$(foreach dir, 						\
-		TSTEXE BINEXE						\
-		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
-			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR-utils}${dir}},		\
-			    if [ -f ${file} ]; then echo		\
-				"${RED}${file}${NONE}\c";		\
-			    else echo "${GREY}${file}${NONE}\c";	\
-			    fi;)					\
-			echo;						\
-		fi;)
-	@$(foreach dir, 						\
-		LIBFILES BINLIB						\
-		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
-			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR-utils}${dir}},		\
-			    if [ -f ${file} ]; then echo		\
-				"${MAGENTA}${file}${NONE}\c";		\
-			    else echo "${GREY}${file}${NONE}\c";	\
-			    fi;)					\
-			echo;						\
-		fi;)
-	@$(foreach dir, 						\
 		OBJFILES TSTOBJ BINOBJ					\
 		,							\
 		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
@@ -300,13 +251,25 @@ ${DIR-utils}-list:
 			echo;						\
 		fi;)
 	@$(foreach dir, 						\
-		ASMFILES TSTASM BINASM					\
+		TSTEXE BINEXE						\
 		,							\
 		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
 			$(foreach file,${${DIR-utils}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
-				"${GREEN}${file}${NONE}\c";		\
+				"${RED}${file}${NONE}\c";		\
+			    else echo "${GREY}${file}${NONE}\c";	\
+			    fi;)					\
+			echo;						\
+		fi;)
+	@$(foreach dir, 						\
+		LIBFILES BINLIB						\
+		,							\
+		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			echo "${BROWN}${dir}${NONE}\t\c";		\
+			$(foreach file,${${DIR-utils}${dir}},		\
+			    if [ -f ${file} ]; then echo		\
+				"${MAGENTA}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
 			    fi;)					\
 			echo;						\
