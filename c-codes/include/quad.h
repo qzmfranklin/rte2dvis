@@ -1,14 +1,17 @@
 #ifndef _QUAD_H_
 #define _QUAD_H_
+/******************************************************************************/
 
 /*
  * Include all the quadrature rules.
  */
 
 
-#include "dunavant_rule.h"
-#include "wandzura_rule.h"
-#include "gauss_rule.h"
+#include "DunavantRule.h"
+#include "LynessRule.h"
+#include "WandzuraRule.h" 
+#include "GaussRule.h"
 
 
+/******************************************************************************/
 #endif /* End of protection macro _QUAD_H_ */

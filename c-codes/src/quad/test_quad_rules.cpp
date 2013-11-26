@@ -1,14 +1,11 @@
 #include <stdio.h>
-#include "dunavant_rule.h"
-#include "wandzura_rule.h"
-#include "lyness_rule.h"
-#include "gauss_rule.h"
+#include "quad.h"
+#include "utils.h"
 /*****************************************************************************/
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 /*****************************************************************************/
 using namespace QuadratureRules;
-using namespace utils;
 int main(int argc, char const* argv[]);
 void test01(int n);
 void test02(int n);

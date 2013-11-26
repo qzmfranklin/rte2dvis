@@ -55,8 +55,8 @@ ${DIR-utils}QUIET	:=@
 #  the build in this directory does not require some extra libraries and/or 
 #  hearder files. But in case it did, free at ease to modify these two 
 #  variables.
-${DIR-utils}CFLAGS 	:=${CFLAGS} -fno-inline-functions
-${DIR-utils}CXXFLAGS	:=${CXXFLAGS} -fno-inline-functions
+${DIR-utils}CFLAGS 	:=${CFLAGS}
+${DIR-utils}CXXFLAGS	:=${CXXFLAGS}
 ${DIR-utils}INCS	:=${INCS}
 ###############################################################################
 #				STEP 3
@@ -77,7 +77,15 @@ ${DIR-utils}INCS	:=${INCS}
 #  Please, you NEVER need to specify the dependency for any .o file. Just list
 #  the source files.
 ${DIR-utils}CFILES	:=	${DIR-utils}/c_utils.c 
-${DIR-utils}CPPFILES	:=	${DIR-utils}/cpp_utils.cpp
+${DIR-utils}CPPFILES	:=	${DIR-utils}/cpp_utils.cpp \
+	${DIR-utils}/Table.cpp ${DIR-utils}/StatVector.cpp \
+	${DIR-utils}/TimeStamp.cpp
+#	Specify the libraries one wishes to build, and the build rules for them.
+#  Note that these libraries are cleaned when one types "make clean".
+${DIR-utils}LIBFILES	:=	${BUILD}/cpp_utils.dylib ${BUILD}/c_utils.dylib
+${BUILD}/cpp_utils.dylib: ${BUILD}/cpp_utils.o \
+	${BUILD}/Table.o ${BUILD}/StatVector.o ${BUILD}/TimeStamp.o
+${BUILD}/c_utils.dylib: ${BUILD}/c_utils.o
 ################## DO NOT MODIFY ################
 ${DIR-utils}OBJFILES	:=	${${DIR-utils}CPPFILES:${DIR-utils}%.cpp=${BUILD}%.o}	\
 				${${DIR-utils}CFILES:${DIR-utils}%.c=${BUILD}%.o}
@@ -86,13 +94,17 @@ ${DIR-utils}ASMFILES	:=	${${DIR-utils}OBJFILES:${BUILD}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################ 
 ###############################################################################
 #				STEP 4
-#DIRECTORY-SPECIFIC BINARY FILES
+#DIRECTORY-SPECIFIC BINARIES
 #
 #	Executables listed in ${DIR}BINFILES are considered the final output of
 #  this project. All of them should be built into ${BIN} instead of ${BUILD}
-#  for all other executables. 
-#  	So far, only supports CPP source files. TODO
+#  for all other executables.
+#  	Also, specify the dependencies for each binaries.
 ${DIR-utils}BIN	:=		
+#	Specify the libraries one wishes to build, and the build rules for them.
+#  Note that these libraries are considered part of the final output.
+${DIR-utils}BINLIB	:=		
+#  	Put all the .dylib and .a libraries here:
 ################## DO NOT MODIFY ################
 ${DIR-utils}BINCPP	:=		${${DIR-utils}BIN:%=${DIR-utils}/%.cpp}
 ${DIR-utils}BINOBJ	:=		${${DIR-utils}BINCPP:${DIR-utils}%.cpp=${BUILD}%.o}
@@ -181,7 +193,8 @@ TARGET_ALL	:=${TARGET_ALL} ${DIR-utils}-all
 TARGET_TEST	:=${TARGET_TEST} ${DIR-utils}-test
 TARGET_ASM	:=${TARGET_ASM} ${DIR-utils}-asm
 TARGET_LIST	:=${TARGET_LIST} ${DIR-utils}-list
-${DIR-utils}-all: ${${DIR-utils}OBJFILES} ${${DIR-utils}BINEXE}
+${DIR-utils}-all: ${${DIR-utils}OBJFILES} ${${DIR-utils}BINEXE}		\
+	${${DIR-utils}LIBFILES} ${${DIR-utils}BINLIB}
 	@echo Finished building "${B_BLUE}$@${NONE}".
 ${DIR-utils}-test: ${${DIR-utils}TSTEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".  
@@ -189,19 +202,12 @@ ${DIR-utils}-asm: ${${DIR-utils}ASMFILES} ${${DIR-utils}TSTASM}
 	@echo Finished generating "${B_BLUE}$@${NONE}".  
 ${DIR-utils}-list:
 	@echo \#\#\#\#\#\#\#\#"${B_BROWN}BEGIN $@${NONE}"\#\#\#\#\#\#\#\#
-	@echo "${BROWN}CFILES${NONE}":${${DIR-utils}CFILES}
-	@echo "${BROWN}CPPFILES${NONE}":${${DIR-utils}CPPFILES}
-	@echo "${BROWN}OBJFILES${NONE}":${${DIR-utils}OBJFILES}
-	@echo "${BROWN}DEPFILES${NONE}":${${DIR-utils}DEPFILES}
-	@echo "${BROWN}ASMFILES${NONE}":${${DIR-utils}ASMFILES}
-	@echo "${BROWN}TSTCPP${NONE}":${${DIR-utils}TSTCPP}
-	@echo "${BROWN}TSTOBJ${NONE}":${${DIR-utils}TSTOBJ}
-	@echo "${BROWN}TSTDEP${NONE}":${${DIR-utils}TSTDEP}
-	@echo "${BROWN}TSTEXE${NONE}":${${DIR-utils}TSTEXE}
-	@echo "${BROWN}TSTASM${NONE}":${${DIR-utils}TSTASM} 
-	@echo "${BROWN}BINCPP${NONE}":${${DIR-utils}BINCPP}
-	@echo "${BROWN}BINOBJ${NONE}":${${DIR-utils}BINOBJ}
-	@echo "${BROWN}BINDEP${NONE}":${${DIR-utils}BINDEP}
-	@echo "${BROWN}BINEXE${NONE}":${${DIR-utils}BINEXE}
-	@echo "${BROWN}BINASM${NONE}":${${DIR-utils}BINASM} 
-	@echo \#\#\#\#\#\#\#\#"${B_BROWN}END $@${NONE}"\#\#\#\#\#\#\#\#
+	@$(foreach dir, 						\
+		CFILES CPPFILES OBJFILES DEPFILES ASMFILES LIBFILES	\
+		TSTCPP TSTOBJ TSTDEP TSTEXE TSTASM			\
+		BINCPP BINOBJ BINDEP BINEXE BINASM BINLIB		\
+		,							\
+		if [ ! -z "${${DIR-utils}${dir}}" ]; then echo		\
+		"${BROWN}${dir}${NONE}\t"${${DIR-utils}${dir}};		\
+		fi;)
+	@echo \#\#\#\#\#\#\#\#"${B_BROWN}END $@${NONE}"\#\#\#\#\#\#\#\# 

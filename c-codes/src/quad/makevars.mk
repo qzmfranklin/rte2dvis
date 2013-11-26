@@ -119,17 +119,18 @@ ${DIR-quad}BINASM	:=		${${DIR-quad}BINOBJ:${BUILD}%.o=${ASM}%.s}
 #						${BUILD}/any-other-files.o
 ${DIR-quad}TST	:=		test_quad_rules
 ${BUILD}/test_quad_rules.exe: 	${BUILD}/test_quad_rules.o		\
-				${BUILD}/dunavant_rule.o		\
-				${BUILD}/wandzura_rule.o		\
-				${BUILD}/lyness_rule.o			\
-				${BUILD}/gauss_rule.o			\
-				${BUILD}/utils.o
+				${BUILD}/DunavantRule.o			\
+				${BUILD}/WandzuraRule.o			\
+				${BUILD}/LynessRule.o			\
+				${BUILD}/GaussRule.o			\
+				${BUILD}/c_utils.o			\
+				${BUILD}/cpp_utils.o
 ################## DO NOT MODIFY ################
-${DIR-quad}TSTCPP	:=		${${DIR-quad}TST:%=${DIR-quad}/%.cpp}
-${DIR-quad}TSTOBJ	:=		${${DIR-quad}TSTCPP:${DIR-quad}%.cpp=${BUILD}%.o}
-${DIR-quad}TSTDEP	:=		${${DIR-quad}TSTOBJ:%.o=%.d}
-${DIR-quad}TSTEXE	:=		${${DIR-quad}TSTOBJ:%.o=%.exe}
-${DIR-quad}TSTASM	:=		${${DIR-quad}TSTOBJ:${BUILD}%.o=${ASM}%.s}
+${DIR-quad}TSTCPP	:=	${${DIR-quad}TST:%=${DIR-quad}/%.cpp}
+${DIR-quad}TSTOBJ	:=	${${DIR-quad}TSTCPP:${DIR-quad}%.cpp=${BUILD}%.o}
+${DIR-quad}TSTDEP	:=	${${DIR-quad}TSTOBJ:%.o=%.d}
+${DIR-quad}TSTEXE	:=	${${DIR-quad}TSTOBJ:%.o=%.exe}
+${DIR-quad}TSTASM	:=	${${DIR-quad}TSTOBJ:${BUILD}%.o=${ASM}%.s}
 SRCFILES	:=		${SRCFILES} ${${DIR-quad}CFILES} ${${DIR-quad}CPPFILES} ${${DIR-quad}TSTCPP} ${${DIR-quad}BINCPP}
 DEPFILES	:=		${DEPFILES} ${${DIR-quad}DEPFILES} ${${DIR-quad}TSTDEP} ${${DIR-quad}BINDEP}
 ################## DO NOT MODIFY ################

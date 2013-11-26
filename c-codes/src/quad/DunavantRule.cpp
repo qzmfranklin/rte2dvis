@@ -3,7 +3,7 @@
 #include <cmath>
 #include <ctime>
 #include <iostream>
-#include "dunavant_rule.h"
+#include "DunavantRule.h"
 #define MALLOC_ALIGNMENT 64
 using namespace std; 
 namespace QuadratureRules { 

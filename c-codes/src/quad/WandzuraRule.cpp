@@ -5,7 +5,7 @@
 #include <cmath>
 #include <ctime>
 #include <cstring> 
-#include "wandzura_rule.h"
+#include "WandzuraRule.h"
 #define MALLOC_ALIGNMENT 64
 using namespace std; 
 namespace QuadratureRules {

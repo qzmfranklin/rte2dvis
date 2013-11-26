@@ -1,10 +1,6 @@
 #include "cpp_utils.h"
 #include <iostream>
 #include <fstream>
-#include "Table.h"
-#include "Random.h"
-#include "StatVector.h"
-#include "TimeStamp.h"
 /******************************************************************************/
 /*
  * based on http://stackoverflow.com/questions/5252375/custom-c-assert-macro
@@ -23,7 +19,7 @@
 } while(0)  
 /******************************************************************************/
 using namespace std;
-
+/******************************************************************************/ 
 static std::streambuf *sbuf_backup;
 static std::ofstream ofile;
 static int linkcout_state = 0;
@@ -46,3 +42,4 @@ void unlink_cout(){
 	std::cout.rdbuf(sbuf_backup);
 	ofile.close();
 }
+/******************************************************************************/

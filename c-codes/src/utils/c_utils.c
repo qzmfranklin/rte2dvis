@@ -79,7 +79,7 @@ static int ___linkstd_state___ = 0;
 
 void link_stdout(const char *fname)
 {
-	assrt(___linkstd_state___==1);
+	assrt(___linkstd_state___==0);
 	___linkstd_state___ = 1; 
 
 	FILE *fp = fopen(fname,"w");
@@ -90,7 +90,7 @@ void link_stdout(const char *fname)
 
 void unlink_stdout()
 {
-	assrt(___linkstd_state___==0);
+	assrt(___linkstd_state___==1);
 	___linkstd_state___ = 0; 
 	fclose(stdout);
 	fdopen(STDOUT_FILENO,"w");

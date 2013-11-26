@@ -115,8 +115,8 @@ ${DIR-mat_cmpr/svd}BINASM	:=		${${DIR-mat_cmpr/svd}BINOBJ:${BUILD}%.o=${ASM}%.s}
 #		${BUILD}/test_mytest.exe:	${BUILD}/test_mytest.o		\
 #						${BUILD}/any-other-files.o
 ${DIR-mat_cmpr/svd}TST	:=		test_svd time_svd
-${BUILD}/test_svd.exe: ${BUILD}/test_svd.o ${BUILD}/svd.o ${BUILD}/utils.o
-${BUILD}/time_svd.exe: ${BUILD}/time_svd.o ${BUILD}/svd.o ${BUILD}/utils.o
+${BUILD}/test_svd.exe: ${BUILD}/test_svd.o ${BUILD}/svd.o ${BUILD}/libutils.dylib
+${BUILD}/time_svd.exe: ${BUILD}/time_svd.o ${BUILD}/svd.o ${BUILD}/libutils.dylib
 ################## DO NOT MODIFY ################
 ${DIR-mat_cmpr/svd}TSTCPP	:=		${${DIR-mat_cmpr/svd}TST:%=${DIR-mat_cmpr/svd}/%.cpp}
 ${DIR-mat_cmpr/svd}TSTOBJ	:=		${${DIR-mat_cmpr/svd}TSTCPP:${DIR-mat_cmpr/svd}%.cpp=${BUILD}%.o}

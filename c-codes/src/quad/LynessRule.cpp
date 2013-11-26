@@ -5,7 +5,7 @@
 #include <cmath>
 #include <ctime>
 #include <cstring>
-#include "lyness_rule.h"
+#include "LynessRule.h"
 using namespace std;
 
 namespace QuadratureRules {

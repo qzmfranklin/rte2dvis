@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
-#include "gauss_rule.h"
+#include "GaussRule.h"
 #define MALLOC_ALIGNMENT 64
 namespace QuadratureRules { 
 /******************************************************************************/ 
