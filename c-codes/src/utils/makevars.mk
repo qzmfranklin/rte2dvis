@@ -26,6 +26,8 @@
 #  done manually, i.e., listing target-prerequisites, while preserving almost 
 #  the same degree of modularity as that can be achieved through the recursive 
 #  make approach.
+#  	This method is not portable yet. Though very easily transpotable.
+#  Use of BASH shell is strongly recommended. Use of C-shell
 #  	If you have any suggestions and/or ideas, please let me know.
 ###############################################################################
 #				STEP 1
@@ -287,8 +289,6 @@ ${DIR-utils}-list:
 		fi;)
 	@$(foreach dir, 						\
 		OBJFILES TSTOBJ BINOBJ					\
-		DEPFILES TSTDEP BINDEP					\
-		ASMFILES TSTASM BINASM					\
 		,							\
 		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
@@ -299,3 +299,22 @@ ${DIR-utils}-list:
 			    fi;)					\
 			echo;						\
 		fi;)
+	@$(foreach dir, 						\
+		ASMFILES TSTASM BINASM					\
+		,							\
+		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			echo "${BROWN}${dir}${NONE}\t\c";		\
+			$(foreach file,${${DIR-utils}${dir}},		\
+			    if [ -f ${file} ]; then echo		\
+				"${CYAN}${file}${NONE}\c";		\
+			    else echo "${GREY}${file}${NONE}\c";	\
+			    fi;)					\
+			echo;						\
+		fi;)
+	@#echo Have not decided the final order of files.		\
+		OBJFILES TSTOBJ BINOBJ					\
+		DEPFILES TSTDEP BINDEP					\
+		ASMFILES TSTASM BINASM					\
+		OBJFILES DEPFILES ASMFILES				\
+		TSTOBJ TSTASM						\
+		BINOBJ BINASM						\
