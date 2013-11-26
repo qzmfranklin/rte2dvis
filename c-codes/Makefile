@@ -37,6 +37,8 @@ PROJECT_NAME	:=rte2dvis
 VERSION		:=v0.02
 DATE_TIME	:=$(shell date "+%Y-%m-%d")
 RELEASE_NAME	:=${PROJECT_NAME}-${VERSION}-${DATE_TIME}
+AUTHOR_NAME	:=Zhongming Qu
+AUTHOR_EMAIL	:=qzmfrank@umich.edu
 ###############################################################################
 #				STEP 2
 #QUIET MODE
@@ -133,7 +135,8 @@ LIBS		:=${MKL_LIBS} ${OMP_LIBS} ${MPI_LIBS}
 -include Makefile.vars# The top level .vars file
 -include ${MKVFILES}# The makevars.mk's in the subdirectories
 -include ${DEPFILES}# Dependency files (*.d files)
-DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} ${MAKFILES}
+DISTFILES:=${SRCFILES} ${HDRFILES} ${DOCFILES} ${MANFILES} \
+	${EXPFILES} ${MKVFILES} ${MAKFILES}
 ###############################################################################
 #			TOP LEVEL PHONY TARGETS
 .PHONY: all 							\
@@ -143,9 +146,10 @@ DISTFILES:=${SRCFILES} ${HDRFILES} ${MANFILES} ${EXPFILES} ${MKVFILES} ${MAKFILE
 	show							\
 	clean cleanx cleanxx 					\
 	dist distclean						\
-	check							\
 	todolist						\
-	mkdir
+	mkdir rmdir						\
+	check							\
+	help
 
 all:	${TARGET_ALL} 
 test:	${TARGET_TEST} 
@@ -168,24 +172,20 @@ clean:
 	@echo "Deleting ${REV_RED}${BUILD}/*${NONE}..."
 	${QUIET}rm -rf ${BUILD}/*
 cleanx:
-	@echo "Deleting ${REV_GREEN}${OUTPUT}/*${NONE}and ${REV_GREEN}${DEBUG}/*${NONE}..."
-	${QUIET}rm -rf ${OUTPUT}/* ${DEBUG}/*
+	@echo "Deleting ${REV_GREEN}${DEBUG}/*${NONE}..."
+	${QUIET}rm -rf ${DEBUG}/*
 cleanxx: clean
 	@echo "Deleting ${REV_BLUE}${BIN}/*${NONE}..."
 	${QUIET}rm -rf ${BIN}/*
 dist:
 	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.tgz${NONE}"...
 	${QUIET}rm -f ${RELEASE_NAME}.tgz; tar czf ${RELEASE_NAME}.tgz ${DISTFILES}
-check:
-	#TODO
-	@echo Checking distribution integrity:
-	${QUIET}echo ${DISTFILES}
 todolist: 
 	-@for file in ${DISTFILES:=};				\
 	do fgrep -H -e TODO -e FIXME -e UNFINISHED		\
 	$$file;	done; true 
 mkdir: 
-	@echo Creating structurual directories:
+	@echo Creating structural directories:
 	@$(foreach dir,${STRUCTURAL_DIRS},if [ ! -d ${dir} ]; 	\
 		then echo Creating "${GREEN}${dir}/${NONE}"...; \
 		mkdir ${dir}; else echo Already exists:		\
@@ -193,4 +193,50 @@ mkdir:
 rmdir: 
 	@echo "${B_RED}WARNING: Deleting ${STRUCTURAL_DIRS}${NONE}"
 	${QUIET}rm -rf ${STRUCTURAL_DIRS}
+check:
+	@echo "Running test binaries... (not implemented yet)"#TODO
+help:
+	@echo ""
+	@echo "Welcome! Here is a brief guide to using this Makefile by"
+	@echo "\t${AUTHOR_NAME} <${AUTHOR_EMAIL}>"
+	@echo "\t\t${B_RED}TOP LEVEL PHONY TARGETS${NONE}"
+	@echo "${GREEN}all${NONE}\t\t"\
+		"Generate ${BUILD}/*.o and ${BIN}/*.{exe,a,dylib}."
+	@echo "${GREEN}asm${NONE}\t\t"\
+		"Generate ${ASM}/*.s."
+	@echo "${GREEN}check${NONE}\t\t"\
+		"Run all the test binaries, i.e., ${BUILD}/*.exe."
+	@echo "${GREEN}clean[x,xx]${NONE}\t"\
+		"Different levels of cleaning."
+	@echo "${GREEN}dist${NONE}\t\t"\
+		"Make a tar ball of source files."
+	@echo "${GREEN}help${NONE}\t\t"\
+		"Print the above help message."
+	@echo "${GREEN}list${NONE}\t\t"\
+		"List files associated with each directory."
+	@echo "${GREEN}mkdir/rmdir${NONE}\t"\
+		"Create/delete structural directories."
+	@echo "${GREEN}show${NONE}\t\t"\
+		"List files already generated."
+	@echo "${GREEN}test${NONE}\t\t"\
+		"Generate ${BUILD}/*.exe."
+	@echo "${GREEN}todolist${NONE}\t"\
+		"List files with TODO and/or FIXME."
+	@echo "\t\t${B_RED}DIRECTORY-SPECIFIC PHONY TARGETS${NONE}"
+	@echo "\t\tSome phony targets are defined for"
+	@echo "\tevery subdirectoies in the src/ directory,"
+	@echo "\t<subdir>, to do tasks that are specific to"
+	@echo "\tor associated with <subdir>."
+	@echo "\t\tNote that <subdir> does not have the "
+	@echo "\tslash at the end, e.g., <subdir>="
+	@echo "\tsrc/subdir001, _not_ <subdir>=src/subdir001/."
+	@echo "${GREEN}<subdir>-all${NONE}\t"\
+		"Generate ${BUILD}/*.o and ${BIN}/*.exe associated with <subdir>"
+	@echo "${GREEN}<subdir>-asm${NONE}\t"\
+		"Generate ${ASM}/*.s associated with <subdir>"
+	@echo "${GREEN}<subdir>-list${NONE}\t"\
+		"List files associated with <subdir>"
+	@echo "${GREEN}<subdir>-test${NONE}\t"\
+		"Generate ${BUILD}/*.exe associated with <subdir>"
+	@echo ""
 ###############################################################################

@@ -2,8 +2,6 @@
 #include "sumcopy.hh"
 #include <fstream>
 #include <mkl.h>
-using namespace utils;
-
 
 void init_mem(double *(&a), double *(&b),  int n){
 	long nbytes = 1l*n*8;

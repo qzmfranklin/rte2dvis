@@ -1,8 +1,6 @@
 #include "sumcopy.hh"
 #include "utils.h"
 #include <iostream>
-
-using namespace utils;
 using namespace std;
 
 void testall(){

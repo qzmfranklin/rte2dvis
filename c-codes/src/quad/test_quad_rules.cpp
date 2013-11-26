@@ -3,7 +3,6 @@
 #include "wandzura_rule.h"
 #include "lyness_rule.h"
 #include "gauss_rule.h"
-#include "utils.h"
 /*****************************************************************************/
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))

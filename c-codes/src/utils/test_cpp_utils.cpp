@@ -1,8 +1,7 @@
-#include "Utils.h"
+#include "cpp_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 using namespace std;
-using namespace utils;
 
 int test_Table();
 void runstatv(int v);

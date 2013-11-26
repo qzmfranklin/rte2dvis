@@ -7,7 +7,6 @@
 #define N_THREADS 8
 #define MALLOC_ALIGNMENT 64
 /*******************************************************************************/
-using namespace utils;
 enum ETestType { kEASY, kMKL, kSEQ, kOMP };
 void init(const int n,double *restrict &a,double *restrict &b);
 void release(double *restrict a, double *restrict b);

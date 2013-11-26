@@ -6,12 +6,10 @@
 #define N 24525
 #define MALLOC_ALIGNMENT 64
 /******************************************************************************/
-using namespace utils;
 enum ETestType { kEASY, kMKL, kSEQ, kOMP };
-void init(const int n,double *restrict &a,double *restrict &b);
-void release(double *restrict a, double *restrict b);
-void matcpy(const int n,const double *restrict a,double *restrict b);
-double time(const int n,const double *restrict a,double *restrict b,
+void init(const int n,double *restrict &a);
+void release(double *restrict &a);
+double time(const int n,double *restrict a,
 		enum ETestType type,const int nthreads=1);
 /******************************************************************************/
 int main(int argc, char const* argv[])
@@ -22,16 +20,16 @@ int main(int argc, char const* argv[])
 	const char* cols[1] = {"mem-bw"};
 	double data[10*1];
 
-	double *a,*b; 
-	init(N,a,b);
+	double *a; 
+	init(N,a);
 	
-	data[0]	= time(N,a,b,kEASY); 
-	data[1]	= time(N,a,b,kMKL); 
-	data[2]	= time(N,a,b,kSEQ); 
+	data[0]	= time(N,a,kEASY); 
+	data[1]	= time(N,a,kMKL); 
+	data[2]	= time(N,a,kSEQ); 
 	for (int i = 1; i < 8; i++)
-		data[2+i] = time(N,a,b,kOMP,1+i); 
+		data[2+i] = time(N,a,kOMP,1+i); 
 
-	release(a,b);
+	release(a);
 
 
 	Table tbl;
@@ -59,27 +57,25 @@ int main(int argc, char const* argv[])
 /*
  * Time each method
  */
-double time(const int n,const double *restrict a,double *restrict b,
+double time(const int n,double *restrict a,
 		enum ETestType type,const int nthreads)
 {
 #define COUNT 10
-	matcpy(n,a,b);
-
 	TimeStamp clk(COUNT);
 	for (int i = 0; i < COUNT; i++) { 
 		clk.tic(); 
 		switch (  type  ) {
 		case kEASY: 
-			trans_easy(n,b);
+			trans_easy(n,a);
 			break;
 		case kMKL: 
-			trans_mkl(n,b);
+			trans_mkl(n,a);
 			break;
 		case kSEQ: 
-			trans_seq(n,b);
+			trans_seq(n,a);
 			break;
 		case kOMP: 
-			trans_omp(n,b,nthreads);
+			trans_omp(n,a,nthreads);
 			break;
 		}
 		clk.toc();
@@ -92,31 +88,18 @@ double time(const int n,const double *restrict a,double *restrict b,
 /*
  * Only running on my own laptop.
  */
-void init(const int n,double *restrict &a,double *restrict &b)
+void init(const int n,double *restrict &a)
 {
 	a=(double*)mkl_malloc(n*n*sizeof(double),MALLOC_ALIGNMENT);
-	b=(double*)mkl_malloc(n*n*sizeof(double),MALLOC_ALIGNMENT);
 	assert(a);
-	assert(b);
 	init_matrix(n,n,a,n);
-	init_matrix(n,n,b,n);
 }
 
 /*
  * Lazy release
  */
-void release(double *restrict a, double *restrict b)
+void release(double *restrict &a)
 {
 	mkl_free(a);
-	mkl_free(b);
 	a=NULL;
-	b=NULL;
 }
-
-/*
- * Copy memory content a->b
- */
-void matcpy(const int n,const double *restrict a,double *restrict b)
-{
-	mkl_domatcopy('C','N',n,n,1.0,a,n,b,n);
-} 

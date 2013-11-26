@@ -55,9 +55,9 @@ ${DIR-utils}QUIET	:=@
 #  the build in this directory does not require some extra libraries and/or 
 #  hearder files. But in case it did, free at ease to modify these two 
 #  variables.
-${DIR-utils}CFLAGS 	:=${CFLAGS}
-${DIR-utils}CXXFLAGS	:=${CXXFLAGS}
-${DIR-utils}INCS		:=${INCS}
+${DIR-utils}CFLAGS 	:=${CFLAGS} -fno-inline-functions
+${DIR-utils}CXXFLAGS	:=${CXXFLAGS} -fno-inline-functions
+${DIR-utils}INCS	:=${INCS}
 ###############################################################################
 #				STEP 3
 #DIRECTORY-SPECIFIC SOURCE FILES
@@ -76,8 +76,8 @@ ${DIR-utils}INCS		:=${INCS}
 #  	d) Dependencies are readily dealt with by the setup of the Makefile. One
 #  Please, you NEVER need to specify the dependency for any .o file. Just list
 #  the source files.
-${DIR-utils}CFILES	:=	
-${DIR-utils}CPPFILES	:=	${DIR-utils}/utils.cpp
+${DIR-utils}CFILES	:=	${DIR-utils}/c_utils.c 
+${DIR-utils}CPPFILES	:=	${DIR-utils}/cpp_utils.cpp
 ################## DO NOT MODIFY ################
 ${DIR-utils}OBJFILES	:=	${${DIR-utils}CPPFILES:${DIR-utils}%.cpp=${BUILD}%.o}	\
 				${${DIR-utils}CFILES:${DIR-utils}%.c=${BUILD}%.o}
@@ -114,8 +114,10 @@ ${DIR-utils}BINASM	:=		${${DIR-utils}BINOBJ:${BUILD}%.o=${ASM}%.s}
 #
 #		${BUILD}/test_mytest.exe:	${BUILD}/test_mytest.o		\
 #						${BUILD}/any-other-files.o
-${DIR-utils}TST	:=		test_utils
-${BUILD}/test_utils.exe: ${BUILD}/utils.o ${BUILD}/test_utils.o
+#${DIR-utils}TST	:=		test_c_utils test_cpp_utils test_geo_utils
+#${BUILD}/test_utils.exe: ${BUILD}/utils.o ${BUILD}/test_utils.o
+#${BUILD}/test_geo_utils.exe: ${BUILD}/utils.o ${BUILD}/test_geo_utils.o \
+	#${BUILD}/geo_utils.o
 ################## DO NOT MODIFY ################
 ${DIR-utils}TSTCPP	:=		${${DIR-utils}TST:%=${DIR-utils}/%.cpp}
 ${DIR-utils}TSTOBJ	:=		${${DIR-utils}TSTCPP:${DIR-utils}%.cpp=${BUILD}%.o}
