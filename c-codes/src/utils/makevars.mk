@@ -85,7 +85,7 @@ ${DIR-utils}QUIET:=@
 #  	Note that one _cannot_ drop any of the global compiling and linking
 #  options. So only specify options that are definitely needed by the entire
 #  project at the top level Makefile.
-${DIR-utils}CFLAGS:=${CFLAGS}
+${DIR-utils}CFLAGS:=${CFLAGS} #-vec-report=2
 ${DIR-utils}CXXFLAGS:=${CXXFLAGS}
 ${DIR-utils}INCS:=${INCS}
 ###############################################################################

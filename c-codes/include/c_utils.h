@@ -6,10 +6,17 @@ extern "C" {
 #endif
 
 /*
- * Output a matrix to a file.
+ * Import a matrix from a file.
  */
-void matrix_out(const char* fname, const int m, const int n, double *restrict v,
-		int lda);
+void array_in(const char* fname, const int m, const int n, double *restrict a,
+		const int lda);
+
+/*
+ * Export a matrix to a file.
+ * If fname==NULL, use stdout.
+ */
+void array_out(const char* fname, const int m, const int n, double *restrict a,
+		const int lda);
 
 /*
  * Flush an array (either matrix or vector).
@@ -57,6 +64,18 @@ void print_vector(const char* desc, const int n, double* v, int incx);
 void print_matrix(const char* desc, const int m, const int n, 
 		double *a, int lda);
 
+/*
+ * Find the max{|a[i,j]|}. Returns the value and position index.
+ * Sequential version.
+ */
+double dabs_max(int *pos, const int m, const int n, const double* a, 
+		const int lda);
+/*
+ * Find the max{|a[i,j]|}. Returns the value and position index.
+ * OMP version.
+ */
+double dabs_max_omp(int *pos, const int m, const int n, const double* a, 
+		const int lda, const int nthreads);
 
 #ifdef __cplusplus
 }
