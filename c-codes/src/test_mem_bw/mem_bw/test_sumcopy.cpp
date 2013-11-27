@@ -1,6 +1,7 @@
-#include "sumcopy.hh"
+#include "sumcopy.h"
 #include "utils.h"
 #include <iostream>
+/******************************************************************************/
 using namespace std;
 
 void testall(){

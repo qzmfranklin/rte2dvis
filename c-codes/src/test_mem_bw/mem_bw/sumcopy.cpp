@@ -1,4 +1,4 @@
-#include "sumcopy.hh"
+#include "sumcopy.h"
 
 double sum(double *restrict a, long int n){
 	double s = 0;

@@ -72,30 +72,34 @@ STRUCTURAL_DIRS	:=${BIN} ${BUILD} ${ASM} ${DEBUG} ${OUTPUT}
 #  compiling options and linking libraries below. Of course, if one has some
 #  architecture-dependent options in some subdirectories, he/she also needs to
 #  modify those parts accordingly.
+#  	All the subdirectories inherit the compiling and linking options 
+#  specified in this STEP. Note that one _cannot_ drop any of the global 
+#  compiling and linking options. So only specify options that are definitely 
+#  needed by the entire project here.
 CC		:=icc
 CXX		:=icpc
 # Compiling options for .c files:
-CFLAGS 		:=-O3						\
-		-Wall						\
-		-prec-div -no-ftz				\
-		-MMD -MP					\
-		-std=c99					\
-		-restrict					\
-		-fPIC						\
-		-openmp						\
-		-fno-inline-functions				\
-		-unroll-aggressive				\
-		-fno-math-errno					\
+CFLAGS 		:=-O3							\
+		-Wall							\
+		-prec-div -no-ftz					\
+		-MMD -MP						\
+		-std=c99						\
+		-restrict						\
+		-fPIC							\
+		-openmp							\
+		-fno-inline-functions					\
+		-unroll-aggressive					\
+		-fno-math-errno						\
 		-Wno-deprecated
 
-		# 						\
-		-static						\
-		-dynamic					\
-		-static-intel					\
-		-DNDEBUG					\
-		-DDEBUG						\
-		-opt-report-phase ipo_inl			\
-		-vec-report=1					\
+		# 							\
+		-static							\
+		-dynamic						\
+		-static-intel						\
+		-DNDEBUG						\
+		-DDEBUG							\
+		-opt-report-phase ipo_inl				\
+		-vec-report=1						\
 
 CXXFLAGS	:=${CFLAGS}# Compilig options for .cpp files.
 ASMFLAGS	:=-S -fsource-asm# Source code commeNted assembly code.

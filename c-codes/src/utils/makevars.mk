@@ -27,8 +27,32 @@
 #  the same degree of modularity as that can be achieved through the recursive 
 #  make approach.
 #  	This method is not portable yet. Though very easily transpotable.
-#  Use of BASH shell is strongly recommended. Use of C-shell
+#  Use of BASH shell is strongly recommended. Use of C-shell or other shells
+#  might lead to unexpected results.
 #  	If you have any suggestions and/or ideas, please let me know.
+#  TODO:
+#  	Write up python or perl scripts that can scan the src/ directory
+#  and generate a single Makefile at the top level. The authors has not done
+#  this mainly for two reasons: a) He does not know python or perl any well;
+#  b) There is still room for improvement in this set of template files.
+#  The author wishes to wait until it
+#  	a) is tested on several different Linux clusters, and
+#  	b) fully supports dynamic _and_ static libraries and executables, and
+#  	c) capable of handling primary configure such as DEBUG and RELEASE, and
+#  	d) if possible, supports Fortran files well (to appeal to a larger
+#  	audience).
+#  
+#  	The make utility is a good thing. But GNU make lacks in its fundamental
+#  design the respect and support for the hierachy of source file directories
+#  that are very compilcated for any project with more than a hundred files.
+#  Version control and project build are the two most important deeds in 
+#  programming, though often their importance is not fully acknowledged. Version
+#  control software had Git replaced SVN and CVS. Maybe the call for a better
+#  build tool would in time render the long-lived GNU make obselete. People
+#  have to come up with ways to do it right. CMake is very good at portability.
+#  However, portability also makes CMake less friendly to many of its quasi-
+#  expert users, who, just like the author, would like to be able to modify
+#  some of the CMake-generated Makefiles.
 ###############################################################################
 #				STEP 1
 #DIRECTORY NAME FROM THE ROOT DIRECTORY
@@ -45,12 +69,12 @@ ${DIR-utils}QUIET:=@
 #				STEP 2
 #DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
 #
-#  Options specified here are used in this directory. By default, all 
-#  builds use the same options. When different compiling and/or linking options 
+#  Options specified here are used in this directory. By default, all builds 
+#  use the same options. When different compiling and/or linking options 
 #  need to be assigned to different targets, the programmer needs to list all
 #  the speical target-prerequisite dependencies manually.
 #  	By default, the local options inherits the corresponding global ones 
-#  from the Makefile.vars in the root directory. If one wishes to add any 
+#  from the Makefile in the root directory. If one wishes to add any 
 #  additional options that are specific to this very directory, add them after 
 #  the global ones. For example:
 # 	 	${DIR-utils}CFLAGS :=${CFLAGS} [directory-specific options]
@@ -58,6 +82,9 @@ ${DIR-utils}QUIET:=@
 #  the build in this directory does not require some extra libraries and/or 
 #  hearder files. But in case it did, free at ease to modify these two 
 #  variables.
+#  	Note that one _cannot_ drop any of the global compiling and linking
+#  options. So only specify options that are definitely needed by the entire
+#  project at the top level Makefile.
 ${DIR-utils}CFLAGS:=${CFLAGS}
 ${DIR-utils}CXXFLAGS:=${CXXFLAGS}
 ${DIR-utils}INCS:=${INCS}
@@ -101,11 +128,10 @@ ${DIR-utils}CPPFILES:=${DIR-utils}/cpp_utils.cpp \
 ${DIR-utils}LIBFILES:=
 ###############################################################################
 #				STEP 4
-#DIRECTORY-SPECIFIC BINARIES: EXECUTABLES and LIBRARIES
+#DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
 #
 #  Executables listed in ${DIR}BINFILES are considered the final output of
-#  this project. All of them should be built into ${BIN} instead of ${BUILD}
-#  for all other executables.
+#  this project. All of them should be built into ${BIN} instead of ${BUILD}.
 #  	Also, specify the dependencies for each binaries.
 ${DIR-utils}BIN:=
 #  Specify the libraries one wishes to build, and the build rules for them.
