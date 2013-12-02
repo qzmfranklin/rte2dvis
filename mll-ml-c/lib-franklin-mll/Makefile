@@ -2,7 +2,7 @@
 #NOINLINE := True
 # generat universal binary usig -fPIC instead of fpic
 UNIVERSAL_BINARY := True
-include ../makevars.mk
+-include ../makevars.mk
 INCS	:= ${MLL_INCS} ${ML_INCS}
 LIBS	:= ${MLL_LIBS} ${ML_LIBS} ${MKL_LIBS}
 ############################################################################### 
@@ -17,10 +17,10 @@ uninstall:
 lib-franklin.dylib: lib-franklin.o legendre-rule.o dunavant-rule.o 
 
 lib-franklin.o: lib-franklin.c
-include lib-franklin.d
+-include lib-franklin.d
 
 legendre-rule.o: legendre-rule.c
-include legendre-rule.d
+-include legendre-rule.d
 
 dunavant-rule.o: dunavant-rule.c
-include dunavant-rule.d
+-include dunavant-rule.d

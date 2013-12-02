@@ -1,6 +1,9 @@
-# include <math.h>
-# include <time.h>
-# include "dunavant-rule.h"
+#include <math.h>
+#include <time.h>
+#include <stdio.h>
+#include <mkl.h>
+#include <string.h>
+#include "dunavant-rule.h"
 
 //****************************************************************************80
 

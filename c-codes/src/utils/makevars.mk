@@ -147,10 +147,10 @@ ${DIR-utils}BIN:=
 #  the pattern rules for building static libraries and linking against static
 #  libraries are still preserved in the top level Makefile.vars for use in a 
 #  Linux system.
-${DIR-utils}BINLIB:=${BIN}/cpp_utils.dylib ${BIN}/c_utils.dylib
-${BIN}/cpp_utils.dylib: ${BUILD}/cpp_utils.o \
+${DIR-utils}BINLIB:=${LIB}/cpp_utils.dylib ${LIB}/c_utils.dylib
+${LIB}/cpp_utils.dylib: ${BUILD}/cpp_utils.o \
 	${BUILD}/Table.o ${BUILD}/StatVector.o ${BUILD}/TimeStamp.o
-${BIN}/c_utils.dylib: ${BUILD}/c_utils.o 
+${LIB}/c_utils.dylib: ${BUILD}/c_utils.o 
 ###############################################################################
 #				STEP 5
 #DIRECTORY-SPECIFIC TEST FILES

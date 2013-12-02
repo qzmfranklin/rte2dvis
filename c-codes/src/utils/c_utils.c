@@ -23,25 +23,25 @@
 	} \
 } while(0)  
 /******************************************************************************/ 
-void array_in(const char* fname, const int m, const int n, double *restrict a,
-		const int lda)
-{
-	assrt(a>=m); 
+/*void array_in(const char* fname, const int m, const int n, double *restrict a,*/
+		/*const int lda)*/
+/*{*/
+	/*assrt(lda>=m); */
 
-	FILE *fp = fopen(fname,"r");
-	assrt(fp);
-	fprintf(stderr, "Import array from %s\n",fname);
+	/*FILE *fp = fopen(fname,"r");*/
+	/*assrt(fp);*/
+	/*fprintf(stderr, "Import array from %s\n",fname);*/
 
-	for (int i = 0; i < m; i++)
-		for (int i = 0; i < n; i++)
-			/*fscanf();*/
-			// TODO
-}
+	/*for (int i = 0; i < m; i++)*/
+		/*for (int i = 0; i < n; i++)*/
+			/*[>fscanf();<]*/
+			/*// TODO*/
+/*}*/
 
 void array_out(const char* fname, const int m, const int n, double *restrict a,
 		const int lda)
 {
-	assrt(a>=m);
+	assrt(lda>=m);
 
 	FILE *fp;
 	if(fname == NULL) {
@@ -55,7 +55,7 @@ void array_out(const char* fname, const int m, const int n, double *restrict a,
 
 	for(int i=0; i < m; i++){
 		for(int j=0; j < n; j++)
-			fprintf(fp, "%f  ", v[i+j*lda]);
+			fprintf(fp, "%f  ", a[i+j*lda]);
 		fprintf(fp, "\n");
 	}
 

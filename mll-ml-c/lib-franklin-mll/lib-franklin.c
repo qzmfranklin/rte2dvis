@@ -1,46 +1,23 @@
-#ifndef __has_feature         // Optional of course.
-  #define __has_feature(x) 0  // Compatibility with non-clang compilers.
-#endif
-#include "mathlink.h"
+/*#include <stdio.h>*/
+/*#include <alloc.h>*/
+/*#include "mathlink.h"*/
 #include "WolframLibrary.h" 
-#include <stdio.h>
+#include "lib-franklin.h"
 #include "legendre-rule.h"
-#include "dunavant-rule.h"
-
-/*****************************************************************************/
-
-DLLEXPORT mint WolframLibrary_getVersion();
-DLLEXPORT int WolframLibrary_initialize( WolframLibraryData libData);
-DLLEXPORT void WolframLibrary_uninitialize( WolframLibraryData libData);
-DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
-DLLEXPORT int DunavantRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
-
-/*****************************************************************************/
-
-DLLEXPORT mint WolframLibrary_getVersion( ) {
-/* Return the version of Library Link */
-	return WolframLibraryVersion;
-}
-DLLEXPORT int WolframLibrary_initialize( WolframLibraryData libData) {
-/* Initialize Library */
-	return LIBRARY_NO_ERROR;
-}
-DLLEXPORT void WolframLibrary_uninitialize( WolframLibraryData libData) {
-/* Uninitialize Library */
-	return;
-}
-
-
-/*****************************************************************************/
-
-DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res) {
-//	Input:	
-//		order		Integer
-//		xmin		Real
-//		xmax		Real
-//	Output:
-//		RES		{Real,2,"Shared"}
-//
+#include "dunavant-rule.h" 
+#include <mkl.h>
+#include <stdio.h>
+/*****************************************************************************/ 
+/* Input:	
+ * 	order		Integer
+ * 	xmin		Real
+ * 	xmax		Real
+ * Output:
+ * 	RES		{Real,2,"Shared"}
+ */
+DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, 
+		MArgument *Args, MArgument Res)
+{
 	int err = LIBRARY_NO_ERROR; 
 	/*Receive from LibraryLink*/
 	mint order;
@@ -61,7 +38,7 @@ DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, MArgument
 	kind = 1; 
 	x = (double *) malloc( order * sizeof(double) );
 	w = (double *) malloc( order * sizeof(double) );
-	cgqf ( order, kind, alpha, beta, xmin, xmax, x, w );
+	cgqf( order, kind, alpha, beta, xmin, xmax, x, w );
 
 	/*Send to LibraryLink*/
 	MTensor RES;
@@ -88,15 +65,16 @@ DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, MArgument
 	return LIBRARY_NO_ERROR;
 }
 
-/*****************************************************************************/
-
-DLLEXPORT int DunavantRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res) {
-//	Input:	
-//		rule		Integer
-//		NODE_XY2	{Real,2,"Constant"}
-//	Output:
-//		RES		{Real,2,"Shared"}
-
+/*
+ * Input:
+ * 	rule		Integer
+ * 	NODE_XY2	{Real,2,"Constatn"}
+ * Output:
+ * 	RES		{Real,2,"Shared"}
+ */
+DLLEXPORT int DunavantRule_MLL( WolframLibraryData libData, mint Argc, 
+		MArgument *Args, MArgument Res)
+{
 	int err = LIBRARY_NO_ERROR;
 
 	/*Receive from LibraryLink*/
@@ -139,8 +117,8 @@ DLLEXPORT int DunavantRule_MLL( WolframLibraryData libData, mint Argc, MArgument
 	for (i = 0; i < order_num; i++) {
 		res[i+0*order_num] = (mreal) xy2[0+i*2];
 		res[i+1*order_num] = (mreal) xy2[1+i*2];
-		res[i+2*order_num] = (mreal) w[i];		// normalized to 1.0
-		/*res[i+2*order_num] = (mreal) w[i]*fabs(area2);*/
+		res[i+2*order_num] = (mreal) w[i]; // normalized to 1.0
+		/**res[i+2*order_num] = (mreal) w[i]*fabs(area2);*/
 	}
 	MArgument_setMTensor(Res,RES);
 
@@ -155,3 +133,28 @@ DLLEXPORT int DunavantRule_MLL( WolframLibraryData libData, mint Argc, MArgument
 	if (err) return err;
 	return LIBRARY_NO_ERROR;
 }
+/******************************************************************************/
+/*
+ * Return the version of Library Link
+ */
+DLLEXPORT mint WolframLibrary_getVersion( ) 
+{
+	return WolframLibraryVersion;
+}
+
+/* 
+ * Initialize Library
+ */
+DLLEXPORT int WolframLibrary_initialize( WolframLibraryData libData)
+{
+	return LIBRARY_NO_ERROR;
+}
+
+/* 
+ * Uninitialize Library
+ */
+DLLEXPORT void WolframLibrary_uninitialize( WolframLibraryData libData)
+{
+	return;
+} 
+/******************************************************************************/

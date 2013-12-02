@@ -56,13 +56,14 @@ QUIET		:=@
 #  when one has very strong reasons.
 SRC		:=src
 BIN		:=bin
+LIB		:=lib
 INCLUDE		:=include
 EXAMPLE		:=example# Data files for various tests
 BUILD		:=build# Out-of-source build
 ASM		:=ASM# Assembly codes
 DEBUG		:=DEBUG# Debugging output
 OUTPUT		:=OUTPUT# Output
-STRUCTURAL_DIRS	:=${BIN} ${BUILD} ${ASM} ${DEBUG} ${OUTPUT}
+STRUCTURAL_DIRS	:=${BIN} ${LIB} ${BUILD} ${ASM} ${DEBUG} ${OUTPUT}
 ###############################################################################
 #				STEP 4
 #PROJECT-WIDE COMMON COMPILATION OPTIONS
@@ -158,7 +159,7 @@ DISTFILES:=${SRCFILES} ${HDRFILES} ${DOCFILES} ${MANFILES} \
 	clean cleanx cleanxx 					\
 	dist distclean						\
 	todolist						\
-	mkdir rmdir						\
+	dir rmdir						\
 	check							\
 	help
 
@@ -183,7 +184,7 @@ todolist:
 	-@for file in ${DISTFILES:=};				\
 	do fgrep -H -e TODO -e FIXME -e UNFINISHED		\
 	$$file;	done; true 
-mkdir: 
+dir: 
 	@echo Creating structural directories:
 	@$(foreach dir,${STRUCTURAL_DIRS},if [ ! -d ${dir} ]; 	\
 		then echo Creating "${GREEN}${dir}/${NONE}"...; \
@@ -207,14 +208,14 @@ help:
 		"Run all the test binaries, i.e., ${BUILD}/*.exe."
 	@echo "${GREEN}clean[x,xx]${NONE}\t"\
 		"Different levels of cleaning."
+	@echo "${GREEN}[rm]dir${NONE}\t"\
+		"[Delete]Create structural directories."
 	@echo "${GREEN}dist${NONE}\t\t"\
 		"Make a tar ball of source files."
 	@echo "${GREEN}help${NONE}\t\t"\
 		"Print the above help message."
 	@echo "${GREEN}list${NONE}\t\t"\
 		"List files associated with each directory."
-	@echo "${GREEN}mkdir/rmdir${NONE}\t"\
-		"Create/delete structural directories."
 	@echo "${GREEN}test${NONE}\t\t"\
 		"Generate ${BUILD}/*.exe."
 	@echo "${GREEN}todolist${NONE}\t"\
