@@ -55,15 +55,15 @@ QUIET		:=@
 #	This part follows the usual convention of GNU projects. Modify it only
 #  when one has very strong reasons.
 SRC		:=src
-BIN		:=bin
-LIB		:=lib
 INCLUDE		:=include
 EXAMPLE		:=example# Data files for various tests
 BUILD		:=build# Out-of-source build
-ASM		:=ASM# Assembly codes
-DEBUG		:=DEBUG# Debugging output
-OUTPUT		:=OUTPUT# Output
-STRUCTURAL_DIRS	:=${BIN} ${LIB} ${BUILD} ${ASM} ${DEBUG} ${OUTPUT}
+BIN		:=${BUILD}/bin
+LIB		:=${BUILD}/lib
+ASM		:=${BUILD}/ASM# Assembly codes
+DEBUG		:=${BUILD}/DEBUG# Debugging output
+OUTPUT		:=${BUILD}/OUTPUT# Output 
+STRUCTURAL_DIRS	:=${BUILD} ${BIN} ${LIB} ${ASM} ${DEBUG} ${OUTPUT}
 ###############################################################################
 #				STEP 4
 #PROJECT-WIDE COMMON COMPILATION OPTIONS
