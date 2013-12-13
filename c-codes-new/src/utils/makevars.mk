@@ -113,7 +113,7 @@ ${DIR-utils}INCS:=${INCS}
 #  	Only assign the source files here. The corresponding object files are
 #  created automatically.
 ${DIR-utils}CFILES:=file_io.c
-${DIR-utils}CPPFILES:=utils.cpp
+${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -127,11 +127,11 @@ ${DIR-utils}CPPFILES:=utils.cpp
 #${LIB}/%.so: ${OBJ}/%.o
 	#@echo Linking "${B_MAGENTA}$@${NONE}"...
 	#${QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
-${DIR-utils}BINEXE:=${BIN}/msh_to_data.exe
-${DIR-utils}DYNLIB:=${LIB}/utils.so 
+${DIR-utils}BINEXE:=msh_to_data.exe
+${DIR-utils}DYNLIB:=utils.so 
 
 ${BIN}/msh_to_data.exe: ${LIB}/utils.so ${OBJ}/msh_to_data.o ${OBJ}/file_io.o 
-${LIB}/utils.so: ${OBJ}/utils.o
+${LIB}/utils.so: ${OBJ}/utils.o ${OBJ}/StatVector.o ${OBJ}/Table.o ${OBJ}/TimeStamp.o 
 	@echo Linking "${B_MAGENTA}$@${NONE}"...
 	${QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
 ###############################################################################
@@ -144,8 +144,8 @@ ${LIB}/utils.so: ${OBJ}/utils.o
 #  Then list all the build rules right afterwards, e.g.:
 #		${BUILD}/test_mytest.exe: ${BUILD}/test_mytest.o \
 #					  ${BUILD}/any-other-files.o
-#${DIR-utils}TSTEXE:=${BIN}/test_utils.exe
-#${BIN}/test_utils.exe: ${LIB}/utils.so  ${OBJ}/test_utils.o 
+${DIR-utils}TSTEXE:=test_utils.exe
+${BIN}/test_utils.exe: ${LIB}/utils.so  ${OBJ}/test_utils.o 
 ###############################################################################
 #				STEP 6
 #	WHATEVER IS LEFT SHALL BE WRITTEN HERE
@@ -204,11 +204,14 @@ ${DIR-utils}OBJFILES:=${${DIR-utils}CPPFILES:${DIR-utils}%.cpp=${OBJ}%.o} \
 ${DIR-utils}DEPFILES:=${${DIR-utils}OBJFILES:%.o=%.d}
 ${DIR-utils}ASMFILES:=${${DIR-utils}OBJFILES:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
+${DIR-utils}BINEXE:=${${DIR-utils}BINEXE:%=${BIN}/%}
 ${DIR-utils}BINCPP:=${${DIR-utils}BINEXE:${BIN}/%.exe=${DIR-utils}/%.cpp}
 ${DIR-utils}BINOBJ:=${${DIR-utils}BINCPP:${DIR-utils}%.cpp=${OBJ}%.o}
 ${DIR-utils}BINDEP:=${${DIR-utils}BINOBJ:%.o=%.d}
 ${DIR-utils}BINASM:=${${DIR-utils}BINOBJ:${OBJ}%.o=${ASM}%.s}
+${DIR-utils}DYNLIB:=${${DIR-utils}DYNLIB:%=${LIB}/%}
 ################## DO NOT MODIFY ################
+${DIR-utils}TSTEXE:=${${DIR-utils}TSTEXE:%=${BIN}/%}
 ${DIR-utils}TSTCPP:=${${DIR-utils}TSTEXE:${BIN}/%.exe=${DIR-utils}/%.cpp}
 ${DIR-utils}TSTOBJ:=${${DIR-utils}TSTCPP:${DIR-utils}%.cpp=${OBJ}%.o}
 ${DIR-utils}TSTDEP:=${${DIR-utils}TSTOBJ:%.o=%.d}
