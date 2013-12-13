@@ -1,0 +1,97 @@
+# 			DISTRIBUTION FILES
+DISTFILES:=${SRCFILES} ${HDRFILES} ${DOCFILES} ${MANFILES} \
+	${EXPFILES} ${MKVFILES} ${MAKFILES}
+###############################################################################
+#			TOP LEVEL PHONY TARGETS
+.PHONY: all 							\
+	test							\
+	asm							\
+	list							\
+	clean cleanx cleanxx 					\
+	dist distclean						\
+	todolist						\
+	dir rmdir						\
+	check							\
+	help
+
+all:	${TARGET_ALL}
+test:	${TARGET_TEST} 
+asm:	${TARGET_ASM} 
+list:	${TARGET_LIST} 
+
+clean:
+	@echo "Deleting ${REV_GREEN}${OBJ}/*${NONE}..."
+	${QUIET}rm -f ${OBJ}/*
+cleanx:
+	@echo "Deleting ${REV_CYAN}${ASM}/*${NONE}..."
+	${QUIET}rm -f ${ASM}/*
+	@echo "Deleting ${REV_CYAN}${DEBUG}/*${NONE}..."
+	${QUIET}rm -f ${DEBUG}/*
+cleanxx: clean
+	@echo "Deleting ${REV_RED}${BIN}/*${NONE}..."
+	${QUIET}rm -f ${BIN}/*
+	@echo "Deleting ${REV_MAGENTA}${LIB}/*${NONE}..."
+	${QUIET}rm -f ${LIB}/*
+dist:
+	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.tgz${NONE}"...
+	${QUIET}rm -f ${RELEASE_NAME}.tgz; tar czf ${RELEASE_NAME}.tgz ${DISTFILES}
+todolist:
+	-@for file in ${DISTFILES:Makefile};			\
+	do fgrep -H -e TODO -e FIXME -e UNFINISHED		\
+	$$file;	done; true 
+dir: 
+	@echo Creating structural directories:
+	@$(foreach dir,${STRUCTURAL_DIRS},if [ ! -d ${dir} ]; 	\
+		then echo Creating "${GREEN}${dir}/${NONE}"...; \
+		mkdir ${dir}; else echo Already exists:		\
+		"${GREY}${dir}${NONE}"; fi;)
+rmdir: 
+	@echo "${B_RED}WARNING: Deleting ${STRUCTURAL_DIRS}${NONE}"
+	${QUIET}rm -rf ${STRUCTURAL_DIRS}
+check:
+	@echo "Running test binaries... (not implemented yet)"#TODO
+	@echo $(strip $(shell uname))
+	@echo ${DOOOO}
+help:
+	@echo ""
+	@echo "Welcome! Here is a brief guide to using this Makefile by"
+	@echo "\t${AUTHOR_NAME} <${AUTHOR_EMAIL}>"
+	@echo "\t\t${B_RED}TOP LEVEL PHONY TARGETS${NONE}"
+	@echo "${GREEN}all${NONE}\t\t"\
+		"Generate ${BUILD}/*.o and ${BIN}/*.{exe,a,dylib}."
+	@echo "${GREEN}asm${NONE}\t\t"\
+		"Generate ${ASM}/*.s."
+	@echo "${GREEN}check${NONE}\t\t"\
+		"Run all the test binaries, i.e., ${BUILD}/*.exe."
+	@echo "${GREEN}clean[x,xx]${NONE}\t"\
+		"Different levels of cleaning."
+	@echo "${GREEN}[rm]dir${NONE}\t"\
+		"[Delete]Create structural directories."
+	@echo "${GREEN}dist${NONE}\t\t"\
+		"Make a tar ball of source files."
+	@echo "${GREEN}help${NONE}\t\t"\
+		"Print the above help message."
+	@echo "${GREEN}list${NONE}\t\t"\
+		"List files associated with each directory."
+	@echo "${GREEN}test${NONE}\t\t"\
+		"Generate ${BUILD}/*.exe."
+	@echo "${GREEN}todolist${NONE}\t"\
+		"List files with TODO and/or FIXME."
+	@echo "\t\t${B_RED}DIRECTORY-SPECIFIC PHONY TARGETS${NONE}"
+	@echo "\t\tSome phony targets are defined for"
+	@echo "\tevery subdirectoies in the src/ directory,"
+	@echo "\t<subdir>, to do tasks that are specific to"
+	@echo "\tor associated with <subdir>."
+	@echo "\t\tNote that <subdir> does not have the "
+	@echo "\tslash at the end, e.g., <subdir>="
+	@echo "\tsrc/subdir001, _not_ <subdir>=src/subdir001/."
+	@echo "${GREEN}<subdir>-all${NONE}\t"\
+		"Generate ${BUILD}/*.o and ${BIN}/*.exe associated with <subdir>"
+	@echo "${GREEN}<subdir>-asm${NONE}\t"\
+		"Generate ${ASM}/*.s associated with <subdir>"
+	@echo "${GREEN}<subdir>-list${NONE}\t"\
+		"List files associated with <subdir>"
+	@echo "${GREEN}<subdir>-test${NONE}\t"\
+		"Generate ${BUILD}/*.exe associated with <subdir>"
+	@echo ""
+###############################################################################
