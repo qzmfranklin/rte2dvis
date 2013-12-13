@@ -3529,7 +3529,7 @@ Add Eq.\eqref{eq:der-Btnmnpmp-quadrature} and Eq.\eqref{eq:der-Bsnmnpmp-quadratu
 In Eq.\eqref{eq:der-Bnmnpmp-quadrature}, there is a \emph{testing} integral 
 $\int d\vectorsym{r}$, and a \emph{source} integral $\int d\vectorsym{r^\prime}$.
 In previous sections, we dealt extensively with single-point testing and single-point source.
-In this section, we advance to single-point testing and multi-point source.
+In this section, we advance to multi-point testing and multi-point source.
 
 \begin{equation} \label{eq:result-Bnmnpmp-quadrature}
 	\begin{split}
@@ -3537,7 +3537,9 @@ In this section, we advance to single-point testing and multi-point source.
 		=& 
 			S(n)
 			S(n^\prime)
+			\sum \limits_{j_n=1}^{M_n}
 			\sum \limits_{j_{n^\prime}=1}^{M_{n^\prime}}
+			w_{j_n}
 			w_{j_{n^\prime}}
 			\left[
 				\mu_t(\vectorsym{r}_{{j_{n^\prime}}})
@@ -3546,22 +3548,61 @@ In this section, we advance to single-point testing and multi-point source.
 				g^{\lvert m^\prime \rvert}
 			\right]
 			\frac
-			{ e^{+i (m^\prime - m)\phi_{\vectorsym{r}_n
+			{ e^{+i (m^\prime - m)\phi_{\vectorsym{r}_{j_n}
 			-\vectorsym{r}_{{j_{n^\prime}}}}} }
-			{\lvert\vectorsym{r}_n-\vectorsym{r}_{{j_{n^\prime}}}\rvert}
+			{\lvert\vectorsym{r}_{j_n}-\vectorsym{r}_{{j_{n^\prime}}}\rvert}
+		\\
+		=& 
+			\text{C}_t(n,n^\prime,m-m^\prime)
+			+
+			\text{C}_s(n,n^\prime,m-m^\prime)
+			g^{\lvert m^\prime \rvert}
 	\end{split}
 \end{equation}
-The $M_{n^\prime}$ is the number of sampling points for $S_{n^\prime}$.
+where
+\begin{subequations} \label{eq:ct-cs}
+	\begin{align} 
+		\text{C}_t(n,n^\prime,\Delta m)
+		=&
+			+
+			S(n)
+			S(n^\prime)
+			\sum \limits_{j_n=1}^{M_n}
+			\sum \limits_{j_{n^\prime}=1}^{M_{n^\prime}}
+			w_{j_n}
+			w_{j_{n^\prime}}
+			\mu_t(\vectorsym{r}_{{j_{n^\prime}}}) 
+			\frac
+			{ e^{-i \Delta m \phi_{\vectorsym{r}_{j_n}
+			-\vectorsym{r}_{{j_{n^\prime}}}}} } 
+			{\lvert\vectorsym{r}_{j_n}-\vectorsym{r}_{{j_{n^\prime}}}\rvert}
+		\\
+		\text{C}_s(n,n^\prime,\Delta m)
+		=&
+			-
+			S(n)
+			S(n^\prime)
+			\sum \limits_{j_n=1}^{M_n}
+			\sum \limits_{j_{n^\prime}=1}^{M_{n^\prime}}
+			w_{j_n}
+			w_{j_{n^\prime}}
+			\mu_s(\vectorsym{r}_{{j_{n^\prime}}})
+			\frac
+			{ e^{-i \Delta m \phi_{\vectorsym{r}_{j_n}
+			-\vectorsym{r}_{{j_{n^\prime}}}}} }
+			{\lvert\vectorsym{r}_{j_n}-\vectorsym{r}_{{j_{n^\prime}}}\rvert}
+	\end{align}
+\end{subequations}
+\\
+The $M_n$ is the number of sampling points for $S_n$. The $M_{n^\prime}$ is the 
+number of sampling points for $S_{n^\prime}$.
 \\
 
-The precision for any specific $B_{(nm)(n^\prime m^\prime)}$ depends on the following three factors:
-\begin{itemize}
-	\item	the distance between the source and the testing triangle, and
-	\item	the order of the simple harmonics involved, $\lvert m - m^\prime \rvert$, and
-	\item	the quadrature rule, i.e., 
-		$\left\{ (\xi_i,\zeta_i), w_i \right\} _{i=1}^{M}$,
-		being employed.
-\end{itemize}
+Eq.\eqref{eq:result-Bnmnpmp-quadrature} and Eq.\eqref{eq:ct-cs} indicate that
+each matrix block $B_{(nm)(n^\prime m^\prime)}$ is Toeplitz-like. The
+matrix-vector (M-V) multiplication of $B(n,n^\prime)$ can be done at the cost of
+$O(N\log(N))$ in time and $O(N)$ in storage.
+\\
 
 Emperically, the number of significant digits (SD) depends linearly on the 
 required precision and the number of sample points (order) for the non-singular integral:
@@ -3583,7 +3624,6 @@ Both methods are already implemented in Mathematica, not in C/C++ yet.
 
 The new $B$ is still rank-deficient. (plots go here to illustrate this point)
 Adaptive numerical integration strategy applies here.
-
 
 
 
