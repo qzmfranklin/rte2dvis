@@ -123,17 +123,15 @@ ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp
 #  complete build rule is copied from the Makefile.vars file.
 #${BIN}/%.exe: ${OBJ}/%.o 
 	#@echo Linking  "${B_RED}$@${NONE}"...
-	#${QUIET}${CXX} -o $@ $(filter %.o,$^) $(filter %.so,$^) $(filter %.a,$^) ${LIBS}
+	#${${DIR-utils}-QUIET}${CXX} -o $@ $(filter %.o,$^) $(filter %.so,$^) $(filter %.a,$^) ${LIBS}
 #${LIB}/%.so: ${OBJ}/%.o
 	#@echo Linking "${B_MAGENTA}$@${NONE}"...
-	#${QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
+	#${${DIR-utils}-QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
 ${DIR-utils}BINEXE:=msh_to_data.exe
 ${DIR-utils}DYNLIB:=utils.so 
 
 ${BIN}/msh_to_data.exe: ${LIB}/utils.so ${OBJ}/msh_to_data.o ${OBJ}/file_io.o 
 ${LIB}/utils.so: ${OBJ}/utils.o ${OBJ}/StatVector.o ${OBJ}/Table.o ${OBJ}/TimeStamp.o 
-	@echo Linking "${B_MAGENTA}$@${NONE}"...
-	${QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
@@ -317,16 +315,16 @@ ${DIR-utils}-list:
 			    else echo "${GREY}${file}${NONE}\c";	\
 			    fi;)					\
 			echo;						\
-		fi;)
-	@$(foreach dir, 						\
-		ASMFILES TSTASM BINASM					\
-		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
-			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR-utils}${dir}},		\
-			    if [ -f ${file} ]; then echo		\
-				"${CYAN}${file}${NONE}\c";		\
-			    else echo "${GREY}${file}${NONE}\c";	\
-			    fi;)					\
-			echo;						\
-		fi;)
+		fi;) 
+	@#@$(foreach dir, 						\
+		#ASMFILES TSTASM BINASM					\
+		#,							\
+		#if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			#echo "${BROWN}${dir}${NONE}\t\c";		\
+			#$(foreach file,${${DIR-utils}${dir}},		\
+			    #if [ -f ${file} ]; then echo		\
+				#"${CYAN}${file}${NONE}\c";		\
+			    #else echo "${GREY}${file}${NONE}\c";	\
+			    #fi;)					\
+			#echo;						\
+		#fi;)

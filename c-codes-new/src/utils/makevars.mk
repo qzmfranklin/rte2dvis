@@ -113,7 +113,9 @@ ${DIR-utils}INCS:=${INCS}
 #  	Only assign the source files here. The corresponding object files are
 #  created automatically.
 ${DIR-utils}CFILES:=file_io.c
-${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp
+${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
+	DunavantRule.cpp GaussRule.cpp LynessRule.cpp \
+	WandzuraRule.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -123,17 +125,18 @@ ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp
 #  complete build rule is copied from the Makefile.vars file.
 #${BIN}/%.exe: ${OBJ}/%.o 
 	#@echo Linking  "${B_RED}$@${NONE}"...
-	#${QUIET}${CXX} -o $@ $(filter %.o,$^) $(filter %.so,$^) $(filter %.a,$^) ${LIBS}
+	#${${DIR-utils}-QUIET}${CXX} -o $@ $(filter %.o,$^) $(filter %.so,$^) $(filter %.a,$^) ${LIBS}
 #${LIB}/%.so: ${OBJ}/%.o
 	#@echo Linking "${B_MAGENTA}$@${NONE}"...
-	#${QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
+	#${${DIR-utils}-QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
 ${DIR-utils}BINEXE:=msh_to_data.exe
-${DIR-utils}DYNLIB:=utils.so 
+${DIR-utils}DYNLIB:=utils.so quadrules.so
 
 ${BIN}/msh_to_data.exe: ${LIB}/utils.so ${OBJ}/msh_to_data.o ${OBJ}/file_io.o 
-${LIB}/utils.so: ${OBJ}/utils.o ${OBJ}/StatVector.o ${OBJ}/Table.o ${OBJ}/TimeStamp.o 
-	@echo Linking "${B_MAGENTA}$@${NONE}"...
-	${QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
+${LIB}/utils.so: ${OBJ}/utils.o ${OBJ}/StatVector.o ${OBJ}/Table.o \
+	${OBJ}/TimeStamp.o
+${LIB}/quadrules.so: ${OB}/GaussRule.o ${OBJ}/DunavantRule.o \
+	${OBJ}/WandzuraRule.o ${OBJ}/LynessRule.o
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
@@ -144,8 +147,9 @@ ${LIB}/utils.so: ${OBJ}/utils.o ${OBJ}/StatVector.o ${OBJ}/Table.o ${OBJ}/TimeSt
 #  Then list all the build rules right afterwards, e.g.:
 #		${BUILD}/test_mytest.exe: ${BUILD}/test_mytest.o \
 #					  ${BUILD}/any-other-files.o
-${DIR-utils}TSTEXE:=test_utils.exe
+${DIR-utils}TSTEXE:=test_utils.exe test_quadrules.exe
 ${BIN}/test_utils.exe: ${LIB}/utils.so  ${OBJ}/test_utils.o 
+${BIN}/test_quadrules.exe: ${LIB}/quadrules.so  ${OBJ}/test_quadrules.o 
 ###############################################################################
 #				STEP 6
 #	WHATEVER IS LEFT SHALL BE WRITTEN HERE
@@ -317,16 +321,16 @@ ${DIR-utils}-list:
 			    else echo "${GREY}${file}${NONE}\c";	\
 			    fi;)					\
 			echo;						\
-		fi;)
-	@$(foreach dir, 						\
-		ASMFILES TSTASM BINASM					\
-		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
-			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR-utils}${dir}},		\
-			    if [ -f ${file} ]; then echo		\
-				"${CYAN}${file}${NONE}\c";		\
-			    else echo "${GREY}${file}${NONE}\c";	\
-			    fi;)					\
-			echo;						\
-		fi;)
+		fi;) 
+	@#@$(foreach dir, 						\
+		#ASMFILES TSTASM BINASM					\
+		#,							\
+		#if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+			#echo "${BROWN}${dir}${NONE}\t\c";		\
+			#$(foreach file,${${DIR-utils}${dir}},		\
+			    #if [ -f ${file} ]; then echo		\
+				#"${CYAN}${file}${NONE}\c";		\
+			    #else echo "${GREY}${file}${NONE}\c";	\
+			    #fi;)					\
+			#echo;						\
+		#fi;)
