@@ -125,18 +125,20 @@ ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
 #  complete build rule is copied from the Makefile.vars file.
 #${BIN}/%.exe: ${OBJ}/%.o 
 	#@echo Linking  "${B_RED}$@${NONE}"...
-	#${${DIR-utils}-QUIET}${CXX} -o $@ $(filter %.o,$^) $(filter %.so,$^) $(filter %.a,$^) ${LIBS}
+	#${${DIR-utils}QUIET}${CXX} -o $@ $(filter %.o,$^) $(filter %.so,$^) $(filter %.a,$^) ${LIBS}
 #${LIB}/%.so: ${OBJ}/%.o
 	#@echo Linking "${B_MAGENTA}$@${NONE}"...
-	#${${DIR-utils}-QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
+	#${${DIR-utils}QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
 ${DIR-utils}BINEXE:=msh_to_data.exe
-${DIR-utils}DYNLIB:=utils.so quadrules.so
+${DIR-utils}DYNLIB:=utils.so QuadratureRules.so
 
 ${BIN}/msh_to_data.exe: ${LIB}/utils.so ${OBJ}/msh_to_data.o ${OBJ}/file_io.o 
 ${LIB}/utils.so: ${OBJ}/utils.o ${OBJ}/StatVector.o ${OBJ}/Table.o \
 	${OBJ}/TimeStamp.o
-${LIB}/quadrules.so: ${OB}/GaussRule.o ${OBJ}/DunavantRule.o \
+${LIB}/QuadratureRules.so: ${OBJ}/GaussRule.o ${OBJ}/DunavantRule.o \
 	${OBJ}/WandzuraRule.o ${OBJ}/LynessRule.o
+	@echo Linking "${B_MAGENTA}$@${NONE}"...
+	${${DIR-utils}QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
@@ -147,53 +149,50 @@ ${LIB}/quadrules.so: ${OB}/GaussRule.o ${OBJ}/DunavantRule.o \
 #  Then list all the build rules right afterwards, e.g.:
 #		${BUILD}/test_mytest.exe: ${BUILD}/test_mytest.o \
 #					  ${BUILD}/any-other-files.o
-${DIR-utils}TSTEXE:=test_utils.exe test_quadrules.exe
+${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe
 ${BIN}/test_utils.exe: ${LIB}/utils.so  ${OBJ}/test_utils.o 
-${BIN}/test_quadrules.exe: ${LIB}/quadrules.so  ${OBJ}/test_quadrules.o 
-###############################################################################
-#				STEP 6
-#	WHATEVER IS LEFT SHALL BE WRITTEN HERE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-###############################################################################
-###############################################################################
+${BIN}/test_QuadratureRules.exe: ${LIB}/QuadratureRules.so  ${LIB}/utils.so ${OBJ}/test_QuadratureRules.o 
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or
 #  CPP source files are added, removed, or renamed. In that case, just go over
-#  STEP 1-6 again and it is done!
+#  STEP 1-5 again and it is done!
+###############################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###############################################################################
 ###############################################################################
 ###############################################################################
 ###############################################################################
