@@ -35,7 +35,7 @@ OBJ		:=${BUILD}/obj
 BIN		:=${BUILD}/bin
 LIB		:=${BUILD}/lib
 ASM		:=${BUILD}/ASM# Assembly codes
-DEBUG		:=${BUILD}/DEBUG# Debugging output
+DEBUG		:=${BIN}/DEBUG# Debugging output
 OUTPUT		:=${BUILD}/OUTPUT# Output 
 STRUCTURAL_DIRS	:=${BUILD} ${OBJ} ${BIN} ${LIB} ${ASM} ${DEBUG} ${OUTPUT}
 ###############################################################################

@@ -19,7 +19,7 @@ int main(int argc, char const* argv[])
 { 
 	char fname[FILENAME_MAX];
 	verify_dir("DEBUG");
-	sprintf(fname,"DEBUG/test_quad_rules.txt");
+	sprintf(fname,"DEBUG/test_QuadratureRules.txt");
 	link_stdout(fname);
 
 	test01(100);

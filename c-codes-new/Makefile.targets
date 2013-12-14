@@ -21,17 +21,17 @@ list:	${TARGET_LIST}
 
 clean:
 	@echo "Deleting ${REV_GREEN}${OBJ}/*${NONE}..."
-	${QUIET}rm -f ${OBJ}/*
+	${QUIET}rm -f ${OBJ}/*.{o,d}
 cleanx:
 	@echo "Deleting ${REV_CYAN}${ASM}/*${NONE}..."
-	${QUIET}rm -f ${ASM}/*
+	${QUIET}rm -f ${ASM}/*.s
 	@echo "Deleting ${REV_CYAN}${DEBUG}/*${NONE}..."
-	${QUIET}rm -f ${DEBUG}/*
+	${QUIET}rm -f ${DEBUG}/*.txt
 cleanxx: clean
 	@echo "Deleting ${REV_RED}${BIN}/*${NONE}..."
-	${QUIET}rm -f ${BIN}/*
+	${QUIET}rm -f ${BIN}/*.exe
 	@echo "Deleting ${REV_MAGENTA}${LIB}/*${NONE}..."
-	${QUIET}rm -f ${LIB}/*
+	${QUIET}rm -f ${LIB}/*.{a,so}
 dist:
 	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.tgz${NONE}"...
 	${QUIET}rm -f ${RELEASE_NAME}.tgz; tar czf ${RELEASE_NAME}.tgz ${DISTFILES}

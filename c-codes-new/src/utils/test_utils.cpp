@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <stdio.h>
 #include <iostream>
 /******************************************************************************/
 using namespace std;
@@ -8,9 +9,19 @@ void runstatv(int v);
 
 int main(int argc, char const* argv[])
 {
-	
+	char fname[FILENAME_MAX];
+	verify_dir("DEBUG");
+	sprintf(fname,"DEBUG/test_int_trig.txt");
+	link_stdout(fname);
+	link_cout(fname);
+
+
 	runstatv(100000);
 	test_Table();
+
+
+	unlink_stdout();
+	unlink_cout();
 	return 0;
 }
 

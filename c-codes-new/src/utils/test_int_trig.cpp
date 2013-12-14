@@ -15,8 +15,19 @@ int test02(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
 {
+	char fname[FILENAME_MAX];
+	verify_dir("DEBUG");
+	sprintf(fname,"DEBUG/test_int_trig.txt");
+	link_stdout(fname);
+	link_cout(fname);
+
+
 	test01();
 	test02();
+
+
+	unlink_cout();
+	unlink_stdout();
 	
 	return 0;
 }
