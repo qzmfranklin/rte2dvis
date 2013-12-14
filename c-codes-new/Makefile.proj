@@ -7,7 +7,8 @@
 PROJECT_NAME	:=rte2dvis
 VERSION		:=v0.01
 DATE_TIME	:=$(shell date "+%Y-%m-%d")
-RELEASE_NAME	:=${PROJECT_NAME}-${VERSION}-${DATE_TIME}
+PLATFORM	:=$(shell uname)
+RELEASE_NAME	:=${PROJECT_NAME}-${PLATFORM}-${VERSION}-${DATE_TIME}
 AUTHOR_NAME	:=Zhongming Qu
 AUTHOR_EMAIL	:=qzmfrank@umich.edu
 ###############################################################################
@@ -84,36 +85,52 @@ CFLAGS 		:=-O3							\
 
 CXXFLAGS	:=${CFLAGS}# Compilig options for .cpp files.
 ASMFLAGS	:=-S -fsource-asm# Source code commeNted assembly code.
-ifeq ($(shell uname),Darwin)
-	DYLFLAGS:=-dynamiclib# Create dynamic library in MacOSX-x86-64
-else
-	DYLFLAGS:=-shared# in Linux
-endif
 ###############################################################################
 #				STEP 5
 #PROJECT-WIDE INCLUDE AND LINKAGE OPTIONS
-#	This part shall also be modified in accordance to the previous part.
-#	Intel Math Kernel Library for MacOSX-x86-64
-MKL_INCS	:=
-MKL_LIBS	:=-mkl
-#	OpenMP Flags
-OMP_INCS	:=
-OMP_LIBS	:=-openmp
-
-#	OpenMPI Library
-#MPI_INCS	:='mpicxx -showme:compile'
-#MPI_LIBS	:='mpicxx -showme:link'
-#	MathLink for MacOSX-x86-64
-#ML_DIR		:=/Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
-#ML_INCS		:=-I${ML_DIR}
-#ML_LIBS		:=-L${ML_DIR} -lMLi3 -lstdc++ -framework Foundation
-#MPREP		:=${ML_DIR}/mprep
-#	LibraryLink for MacOSX-x86-64
-#MLL_INCS	:=-I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C/
-#MLL_LIBS	:=-L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
+ifeq (${PLATFORM},Linux)
+	#	Intel Math Kernel Library for MacOSX-x86-64
+	MKL_INCS	:=
+	MKL_LIBS	:=-mkl
+	#	OpenMP Flags
+	OMP_INCS	:=
+	OMP_LIBS	:=-openmp
+	#	OpenMPI Library
+	#MPI_INCS	:='mpicxx -showme:compile'
+	#MPI_LIBS	:='mpicxx -showme:link'
+	#	MathLink for MacOSX-x86-64
+	#MATH_DIR	:=/opt/Wolfram/Mathematica/9.0
+	#ML_DIR		:=${MATH_DIR}/SystemFiles/Links/MathLink/DeveloperKit/Linux-x86-86/CompilerAdditions
+	#ML_INCS		:=-I${ML_DIR}
+	#ML_LIBS		:=-L${ML_DIR} -lMLi3 -lstdc++
+	#MPREP		:=${ML_DIR}/mprep
+	#MCC		:=${ML_DIR}/mcc
+	##	LibraryLink for MacOSX-x86-64
+	#MLL_INCS	:=-I${MATH_DIR}/SystemFiles/IncludeFiles/C
+	#MLL_LIBS	:=-L${MATH_DIR}/SystemFiles/Libraries/Linux-x86-64
+endif
+ifeq (${PLATFORM},Darwin)
+	#	Intel Math Kernel Library for MacOSX-x86-64
+	MKL_INCS	:=
+	MKL_LIBS	:=-mkl
+	#	OpenMP Flags
+	OMP_INCS	:=
+	OMP_LIBS	:=-openmp
+	#	OpenMPI Library
+	MPI_INCS	:='mpicxx -showme:compile'
+	MPI_LIBS	:='mpicxx -showme:link'
+	#	MathLink for MacOSX-x86-64
+	ML_DIR		:=/Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
+	ML_INCS		:=-I${ML_DIR}
+	ML_LIBS		:=-L${ML_DIR} -lMLi3 -lstdc++ -framework Foundation
+	MPREP		:=${ML_DIR}/mprep
+	#	LibraryLink for MacOSX-x86-64
+	MLL_INCS	:=-I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C/
+	MLL_LIBS	:=-L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
+endif
 #PROJECT-WIDE DEFAULT LINKING LIBRARIES AND INCLUDE DIRECTORIES
-INCS		:=-iquote ${INCLUDE} ${MKL_INCS} ${OMP_INCS} ${MPI_LIBS}
-LIBS		:=${MKL_LIBS} ${OMP_LIBS} ${MPI_LIBS}
+INCS		:=${ML_INCS} ${MLL_INCS} ${MKL_INCS} ${OMP_INCS} ${MPI_LIBS} -iquote ${INCLUDE}
+LIBS		:=${ML_LIBS} ${MLL_LIBS} ${MKL_LIBS} ${OMP_LIBS} ${MPI_LIBS}
 ##	LONESTAR COMPILING OPTIONS
 #CFLAGS 	:= -O3 -prec-div -no-ftz -restrict -Wshadow -MMD -MP
 

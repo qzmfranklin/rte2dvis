@@ -50,8 +50,8 @@ rmdir:
 	${QUIET}rm -rf ${STRUCTURAL_DIRS}
 check:
 	@echo "Running test binaries... (not implemented yet)"#TODO
-	@echo $(strip $(shell uname))
-	@echo ${DOOOO}
+	@echo ${PLATFORM}
+	@echo ${DYLFLAGS}
 help:
 	@echo ""
 	@echo "Welcome! Here is a brief guide to using this Makefile by"

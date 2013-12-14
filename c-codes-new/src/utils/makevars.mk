@@ -99,42 +99,41 @@ ${DIR-utils}INCS:=${INCS}
 ${DIR-utils}CFILES:=file_io.c
 ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
 	DunavantRule.cpp GaussRule.cpp LynessRule.cpp \
-	WandzuraRule.cpp int_trig.cpp
+	WandzuraRule.cpp int_trig.cpp QuadratureRules.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
-#${BIN}/%.exe: ${OBJ}/%.o 
-	#@echo Linking  "${B_RED}$@${NONE}"...
-	#${${DIR-utils}QUIET}${CXX} -o $@ $(filter %.o,$^) $(filter %.so,$^) $(filter %.a,$^) ${LIBS}
-#${LIB}/%.so: ${OBJ}/%.o
-	#@echo Linking "${B_MAGENTA}$@${NONE}"...
-	#${${DIR-utils}QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
 ${DIR-utils}BINEXE:=msh_to_data.exe
-${DIR-utils}DYNLIB:=utils.so QuadratureRules.so
+${DIR-utils}LIB:=utils QuadratureRules
 
-${BIN}/msh_to_data.exe: ${LIB}/utils.so ${OBJ}/msh_to_data.o ${OBJ}/file_io.o 
-${LIB}/utils.so: ${OBJ}/utils.o ${OBJ}/StatVector.o ${OBJ}/Table.o \
-	${OBJ}/TimeStamp.o
-${LIB}/QuadratureRules.so: ${OBJ}/GaussRule.o ${OBJ}/DunavantRule.o \
+${BIN}/msh_to_data.exe: ${OBJ}/msh_to_data.o ${OBJ}/file_io.o 
+
+${LIB}/libutils.so ${LIB}/libutils.a: ${OBJ}/utils.o \
+	${OBJ}/StatVector.o ${OBJ}/Table.o ${OBJ}/TimeStamp.o
+
+${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
+	${OBJ}/QuadratureRules.o \
+	${OBJ}/GaussRule.o ${OBJ}/DunavantRule.o \
 	${OBJ}/WandzuraRule.o ${OBJ}/LynessRule.o
-	@echo Linking "${B_MAGENTA}$@${NONE}"...
-	${${DIR-utils}QUIET}${CXX} -o $@ $(filter %.o,$^) ${LIBS} ${DYLFLAGS}
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
 ${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe test_file_io.exe \
 	test_int_trig.exe
 
-${BIN}/test_utils.exe: ${LIB}/utils.so  ${OBJ}/test_utils.o 
+${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
+	${LIB}/libutils.a ${LIB}/libutils.so 
 
-${BIN}/test_file_io.exe: ${LIB}/utils.so  ${OBJ}/test_file_io.o \
-	${OBJ}/file_io.o
+${BIN}/test_file_io.exe: ${OBJ}/test_file_io.o ${OBJ}/file_io.o \
+	${LIB}/libutils.a ${LIB}/libutils.so
 
-${BIN}/test_int_trig.exe: ${LIB}/utils.so ${OBJ}/test_int_trig.o \
-	${LIB}/QuadratureRules.so ${OBJ}/int_trig.o
+${BIN}/test_int_trig.exe: ${OBJ}/test_int_trig.o ${OBJ}/int_trig.o \
+	${LIB}/libutils.a ${LIB}/libutils.so \
+	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
 
-${BIN}/test_QuadratureRules.exe: ${LIB}/QuadratureRules.so  ${LIB}/utils.so \
-	${OBJ}/test_QuadratureRules.o
+${BIN}/test_QuadratureRules.exe: ${OBJ}/test_QuadratureRules.o \
+	${LIB}/libutils.a ${LIB}/libutils.so \
+	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or
@@ -195,7 +194,8 @@ ${DIR-utils}BINCPP:=${${DIR-utils}BINEXE:${BIN}/%.exe=${DIR-utils}/%.cpp}
 ${DIR-utils}BINOBJ:=${${DIR-utils}BINCPP:${DIR-utils}%.cpp=${OBJ}%.o}
 ${DIR-utils}BINDEP:=${${DIR-utils}BINOBJ:%.o=%.d}
 ${DIR-utils}BINASM:=${${DIR-utils}BINOBJ:${OBJ}%.o=${ASM}%.s}
-${DIR-utils}DYNLIB:=${${DIR-utils}DYNLIB:%=${LIB}/%}
+${DIR-utils}DYNLIB:=${${DIR-utils}LIB:%=${LIB}/lib%.so}
+${DIR-utils}STCLIB:=${${DIR-utils}LIB:%=${LIB}/lib%.a}
 ################## DO NOT MODIFY ################
 ${DIR-utils}TSTEXE:=${${DIR-utils}TSTEXE:%=${BIN}/%}
 ${DIR-utils}TSTCPP:=${${DIR-utils}TSTEXE:${BIN}/%.exe=${DIR-utils}/%.cpp}
@@ -247,7 +247,7 @@ TARGET_TEST	:=${TARGET_TEST} ${DIR-utils}-test
 TARGET_ASM	:=${TARGET_ASM} ${DIR-utils}-asm
 TARGET_LIST	:=${TARGET_LIST} ${DIR-utils}-list
 ${DIR-utils}-all: ${${DIR-utils}OBJFILES} ${${DIR-utils}BINEXE}	\
-	${${DIR-utils}DYNLIB}
+	${${DIR-utils}DYNLIB} ${${DIR-utils}STCLIB}
 	@echo Finished building "${B_BLUE}$@${NONE}".
 ${DIR-utils}-test: ${${DIR-utils}TSTEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".  
@@ -281,7 +281,7 @@ ${DIR-utils}-list:
 			echo;						\
 		fi;)
 	@$(foreach dir, 						\
-		DYNLIB							\
+		DYNLIB STCLIB							\
 		,							\
 		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
