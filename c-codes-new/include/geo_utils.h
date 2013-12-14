@@ -19,7 +19,7 @@ extern "C" {
  * Note:
  * 	If the point is _on_ the side of the triangle, return 0.
  */
-int geoutils_is_in_triangle(const double *restrict p, 
+int is_in_trig(const double *restrict p, 
 		const double *restrict x, const double *restrict y);
 
 /*
@@ -35,7 +35,7 @@ int geoutils_is_in_triangle(const double *restrict p,
  * Note:
  * 	If the point does not fall into any of the given triangles, return -1.
  */
-int geoutils_in_which_triangle(const double *restrict p, const int n, 
+int in_which_trig(const double *restrict p, const int n, 
 		const double *restrict x, const double *restrict y);
 
 /*
@@ -50,7 +50,7 @@ int geoutils_in_which_triangle(const double *restrict p, const int n,
  * Note:
  * 	If the ray does not intersect with the triangle, return 0.0.
  */
-double geoutils_ray_triangle_seg_len(
+double ray_trig_seg_len(
 		const double *restrict p0, const double phi,
 		const double *restrict x, const double *restrict y);
 
@@ -67,7 +67,7 @@ double geoutils_ray_triangle_seg_len(
  * Note:
  * 	If the line does not intersect with the triangle, return 0.0.
  */
-double geoutils_line_triangle_seg_len(
+double ln_trg_seg_len(
 		const double *restrict p1, const double *restrict p2, 
 		const double *restrict x, const double *restrict y);
 /******************************************************************************/

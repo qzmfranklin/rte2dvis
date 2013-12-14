@@ -1,5 +1,5 @@
-#ifndef _QUAD_H_
-#define _QUAD_H_
+#ifndef _QUADRATURE_RULES_H_
+#define _QUADRATURE_RULES_H_
 /******************************************************************************/
 
 /*
@@ -14,4 +14,4 @@
 
 
 /******************************************************************************/
-#endif /* End of protection macro _QUAD_H_ */
+#endif /* End of protection macro _QUADRATURE_RULES_H_ */

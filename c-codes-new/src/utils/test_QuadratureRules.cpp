@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "quad.h"
+#include "QuadratureRules.h"
 #include "utils.h"
 /*****************************************************************************/
 #define MIN(a,b) (((a)<(b))?(a):(b))
