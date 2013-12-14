@@ -131,7 +131,7 @@ ${BIN}/test_file_io.exe: ${LIB}/utils.so  ${OBJ}/test_file_io.o \
 	${OBJ}/file_io.o
 
 ${BIN}/test_int_trig.exe: ${LIB}/utils.so ${OBJ}/test_int_trig.o \
-	${LIB}/QuadratureRules.so
+	${LIB}/QuadratureRules.so ${OBJ}/int_trig.o
 
 ${BIN}/test_QuadratureRules.exe: ${LIB}/QuadratureRules.so  ${LIB}/utils.so \
 	${OBJ}/test_QuadratureRules.o

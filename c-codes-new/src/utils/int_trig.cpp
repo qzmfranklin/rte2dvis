@@ -2,8 +2,7 @@
 #include <math.h>
 #include <assert.h>
 /******************************************************************************/
-		val[i] = dit_symmetric(q,p,&f);
-double dit_symmetric(struct st_quadrule *q, const double *restrict p,
+double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 		double (*f)(double,double))
 {
 	assert(q->flag == 2); // quadrature rule for 2D triangle

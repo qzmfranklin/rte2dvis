@@ -22,7 +22,7 @@ struct st_quadrule {
  * Note:
  * 	The functor *f must point to a smooth function on pt.
  */
-double dit_symmetric(struct st_quadrule *q, const double *restrict p,
+double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 		double (*f)(double,double));
 
 /*

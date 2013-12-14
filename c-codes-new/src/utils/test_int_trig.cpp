@@ -7,7 +7,7 @@
 /******************************************************************************/
 #define MALLOC_ALIGNMENT 64
 /******************************************************************************/
-double f(double x, double y) { return x*x + 0.1*y + exp(-x-0.5*y*y); }
+static double f(double x, double y) { return x*x + 0.1*y + exp(-x-0.5*y*y); }
 
 int test01(void);
 int test02(void);
@@ -16,6 +16,7 @@ int test02(void);
 int main(int argc, char const* argv[])
 {
 	test01();
+	test02();
 	
 	return 0;
 }
@@ -45,17 +46,30 @@ int test02(void)
         printf("	|Test dit_symmetric\n");
 
 	double p[] = {1.,0.,0.,2.,3.,2.};
-	double val[N];
+	double val[2*N];
 
 	struct st_quadrule *q;
 	q=(struct st_quadrule*)mkl_malloc(sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+	printf("sizeof(*q)\t=%lu\n",sizeof(*q));
 	for (int i = 0; i < N; i++) {
 		gDunavantRule.Generate(i+1,q);
-		val[i] = dit_symmetric(q,p,&f);
+		val[i]   = q->n;
+		val[N+i] = dit_symmetric(q,p,&f);
 	}
-
-	print_vector("val",N,val);
 	mkl_free(q);
+	
+	Table tbl;
+	const char *rows[N]={"1","2","3","4","5","6","7","8","9","10",
+		"11","12","13","14","15","16","17","18","19","20"};
+	const char *cols[2]={"order","value"};
+	tbl.set_width(20);
+	tbl.dim(N,2);
+	tbl.rows(rows);
+	tbl.cols(cols);
+	tbl.data(val);
+	char banner[BUFSIZ]=
+		"Double Precision Numerical Integration on \n\tTriangle using Symmetric Quadrature Rules";
+	tbl.print(banner);
 	
         printf("END OF TEST02\n");
         printf("\n");
