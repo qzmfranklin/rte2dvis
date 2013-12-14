@@ -1,9 +1,11 @@
 //****************************************************************************80
 #include <fstream>
+#include <string.h>
 #include <cmath>
 #include <ctime>
 #include <iostream>
 #include "DunavantRule.h"
+#include "int_trig.h"
 #define MALLOC_ALIGNMENT 64
 using namespace std; 
 namespace QuadratureRules { 
@@ -11,6 +13,18 @@ namespace QuadratureRules {
 /******************************************************************************/
 DunavantRule gDunavantRule;
 /******************************************************************************/
+void DunavantRule::Generate(const int rule, struct st_quadrule *&q)
+{
+	//printf("DunavantRule::Generate()\n");
+	int order_num;
+	double *xy, *w;
+	Generate(rule,order_num,xy,w);
+	q->flag = 2;
+	q->n    = order_num;
+	q->x    = xy;
+	q->w    = w;
+}
+
 void DunavantRule::Generate(const int rule, int &order_num, 
 		double *&xy, double *&w)
 {

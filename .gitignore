@@ -29,3 +29,11 @@ c-codes/doc/*
 log
 tags
 *.orig
+
+*.o
+*.d
+*.s
+*.S
+*.dylib
+*.so
+*.exe

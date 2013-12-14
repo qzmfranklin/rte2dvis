@@ -122,12 +122,16 @@ ${LIB}/QuadratureRules.so: ${OBJ}/GaussRule.o ${OBJ}/DunavantRule.o \
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe test_file_io.exe
+${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe test_file_io.exe \
+	test_int_trig.exe
 
 ${BIN}/test_utils.exe: ${LIB}/utils.so  ${OBJ}/test_utils.o 
 
 ${BIN}/test_file_io.exe: ${LIB}/utils.so  ${OBJ}/test_file_io.o \
 	${OBJ}/file_io.o
+
+${BIN}/test_int_trig.exe: ${LIB}/utils.so ${OBJ}/test_int_trig.o \
+	${LIB}/QuadratureRules.so
 
 ${BIN}/test_QuadratureRules.exe: ${LIB}/QuadratureRules.so  ${LIB}/utils.so \
 	${OBJ}/test_QuadratureRules.o

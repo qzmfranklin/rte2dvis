@@ -28,7 +28,6 @@ int main(int argc, char const* argv[])
 	test04(100);
 
 	unlink_stdout();
-	fprintf(stderr, "Output to %s\n",fname);
 
 	return 0;
 } 

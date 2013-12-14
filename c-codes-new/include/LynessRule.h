@@ -1,6 +1,6 @@
 #ifndef _LYNESS_H_
 #define _LYNESS_H_
-#include <string.h>
+#include <string>
 #include <stack>
 #include <cassert>
 #include <mkl.h>
@@ -63,7 +63,7 @@ class LynessRule {
 				double sub_w[] );
 		double r8_abs ( double x );
 		void r8mat_copy ( int m, int n, double a1[], double a2[] );
-		void r8mat_write ( string output_filename, int m, int n, 
+		void r8mat_write ( std::string output_filename, int m, int n, 
 				double table[] );
 		void r8vec_copy ( int n, double a1[], double a2[] );
 		double r8vec_sum ( int n, double a[] );

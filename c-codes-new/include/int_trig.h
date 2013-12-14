@@ -3,11 +3,10 @@
 /******************************************************************************/
 #include <complex.h>
 /******************************************************************************/
-	
 struct st_quadrule {
+	int flag;	// 1=1D, 2=2D triangle, 3=3D tetrahedron
 	int n;		// number of points
-	double *x;	// x abscissa
-	double *y;	// y abscissa
+	double *x;	// abscissa
 	double *w;	// weights
 };
 
@@ -23,8 +22,7 @@ struct st_quadrule {
  * Note:
  * 	The functor *f must point to a smooth function on pt.
  */
-double dit_symmetric(struct st_quadrule *restrict q,
-		const double *restrict pt, 
+double dit_symmetric(struct st_quadrule *q, const double *restrict p,
 		double (*f)(double,double));
 
 /*
@@ -42,22 +40,22 @@ double dit_symmetric(struct st_quadrule *restrict q,
  * 		f(r)/norm(r-r0)
  * 	where the function f(r) is smooth on the pt.
  */
-double dit_arcsinh(struct st_quadrule *restrict qu, 
-		struct st_quadrule *restrict qv, 
-		const double *restrict pt, 
-		const double *restrict r0,
-		double (*f)(double,double));
+//double dit_arcsinh(struct st_quadrule *restrict qu, 
+		//struct st_quadrule *restrict qv, 
+		//const double *restrict pt, 
+		//const double *restrict r0,
+		//double (*f)(double,double));
 
 /*
  * Complex valued integral routines.
  */
-double _Complex cit_symmetric(struct st_quadrule *q, 
-		const double *pt,
-		double _Complex (*f)(double,double)); 
-double _Complex dit_arcsinh(struct st_quadrule *restrict qu, 
-		struct st_quadrule *restrict qv, 
-		const double *restrict pt, 
-		const double *restrict r0,
-		double _Complex (*f)(double,double));
+//double _Complex cit_symmetric(struct st_quadrule *q, 
+		//const double *pt,
+		//double _Complex (*f)(double,double)); 
+//double _Complex dit_arcsinh(struct st_quadrule *restrict qu, 
+		//struct st_quadrule *restrict qv, 
+		//const double *restrict pt, 
+		//const double *restrict r0,
+		//double _Complex (*f)(double,double));
 /******************************************************************************/
 #endif
