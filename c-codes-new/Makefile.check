@@ -1,0 +1,10 @@
+#  Various testing programs should be taken care of separately in this file.
+check: all test
+	@echo; echo
+	@echo "Running test binaries..."
+	@#./${BIN}/test_file_io.exe	#TODO
+	@#./${BIN}/msh_to_data.exe ${EXAMPLE}/mshtodat-example.msh > ${DEBUG}/log.txt
+	@./${BIN}/test_utils.exe ${DEBUG}/test_utils.txt
+	@./${BIN}/test_QuadratureRules.exe ${DEBUG}/test_QuadratureRules.txt
+	@./${BIN}/test_int_trig.exe ${DEBUG}/test_int_trig.txt
+	@echo; echo

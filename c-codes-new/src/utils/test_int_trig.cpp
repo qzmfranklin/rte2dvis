@@ -1,4 +1,5 @@
 #include "int_trig.h"
+#include <string.h>
 #include "utils.h"
 #include "QuadratureRules.h"
 #include <stdio.h>
@@ -7,7 +8,8 @@
 /******************************************************************************/
 #define MALLOC_ALIGNMENT 64
 /******************************************************************************/
-static double f(double x, double y) { return x*x + 0.1*y + exp(-x-0.5*y*y); }
+//static double f(double x, double y) { return x*x + 0.1*y + exp(-x-0.5*y*y); }
+static double f(double x, double y) { return -x*x*x-y*y*y; }
 
 int test01(void);
 int test02(void);
@@ -16,8 +18,11 @@ int test02(void);
 int main(int argc, char const* argv[])
 {
 	char fname[FILENAME_MAX];
-	verify_dir("DEBUG");
-	sprintf(fname,"DEBUG/test_int_trig.txt");
+	if (!argc)
+		sprintf(fname,"DEBUG/test_int_trig.txt");
+	else
+		strcpy(fname,argv[1]);
+
 	link_stdout(fname);
 	link_cout(fname);
 
@@ -40,7 +45,7 @@ int test01(void)
         printf("	|Test struct st_quadrule\n");
 
 	struct st_quadrule q;
-	q.flag = 1;
+	q.dim = 1;
 	printf("sizeof(q)\t=%lu\n",sizeof(q));
 
         printf("END OF TEST01\n");

@@ -1,14 +1,13 @@
 #ifndef _LYNESS_H_
 #define _LYNESS_H_
+/******************************************************************************/
 #include <string>
 #include <stack>
 #include <cassert>
 #include <mkl.h>
+#include "quad_types.h"
 #define MALLOC_ALIGNMENT 64
-/******************************************************************************/
-
-
-
+/******************************************************************************/ 
 namespace QuadratureRules {
 
 using namespace std;
@@ -19,32 +18,14 @@ class LynessRule {
 		LynessRule() {}
 		~LynessRule() { ReleaseMemory(); }
 
-		/*
-		 * Generate Lyness quadrature rule of given given (int rule).
-		 * Allocates memory using mkl_malloc automatically. 64 bytes
-		 * aligned. Return the pointers of the abscissas and the weights
-		 * *xy and *w through reference.
-		 *
-		 * Ownership issue:
-		 * The memory was allocated from within Generate(). In
-		 * principle, one should NOT free the memory on his/her own.
-		 * Instead, please call ReleaseMemory() to release the memory,
-		 * if must. Even if one does not do anything about those
-		 * allocated memory, they will be released (mkl_free()) when the
-		 * global LynessRule instance is destructed.
-		 */
+		void Generate(int rule, struct st_quadrule *q);
 		void Generate(int rule, int &order_num, 
-				double *&xy, double *&w);
-
+				double *&xy, double *&w); 
 		void Generate(int rule, int &order_num, 
-				double *&x, double *&y, double *&w);
-
-		int RuleNumber() { return lyness_rule_num()+1; }
-
-		int Order(int rule) { return lyness_order(rule); }
-
-		int Degree(int rule) { return lyness_precision(rule); }
-
+				double *&x, double *&y, double *&w); 
+		int RuleNumber() { return lyness_rule_num()+1; } 
+		int Order(int rule) { return lyness_order(rule); } 
+		int Degree(int rule) { return lyness_precision(rule); } 
 		void ReleaseMemory(); 
 	private:
 		int i4_max ( int i1, int i2 );
@@ -75,4 +56,5 @@ extern LynessRule gLynessRule;
 
 }
 
+/******************************************************************************/
 #endif

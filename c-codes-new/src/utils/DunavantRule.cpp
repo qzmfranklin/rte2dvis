@@ -19,7 +19,7 @@ void DunavantRule::Generate(const int rule, struct st_quadrule *&q)
 	int order_num;
 	double *xy, *w;
 	Generate(rule,order_num,xy,w);
-	q->flag = 2;
+	q->dim  = 2;
 	q->n    = order_num;
 	q->x    = xy;
 	q->w    = w;

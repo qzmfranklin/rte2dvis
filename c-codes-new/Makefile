@@ -63,5 +63,6 @@
 -include Makefile.vars# The top level variables' file
 -include ${MKVFILES}# The makevars.mk's in the subdirectories
 -include ${DEPFILES}# Dependency files (*.d files)
--include Makefile.targets# The top level PHONY targets' file
+-include Makefile.targets# The top level PHONY targets' file, except for check
+-include Makefile.check# Testing scripts
 ###############################################################################

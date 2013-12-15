@@ -1,10 +1,13 @@
 #ifndef _GAUSS_QUADRATURES_H_
 #define _GAUSS_QUADRATURES_H_
+/******************************************************************************/
 
+#include "quad_types.h"
 #include <stack>
 #include <mkl.h>
 #include <cassert>
 #include <cstdio>
+/******************************************************************************/
 
 namespace QuadratureRules { 
 class GaussRule {
@@ -37,8 +40,16 @@ class GaussRule {
  * 7, Exponential,          (a,b)       |x-(a+b)/2.0|^alpha
  * 8, Rational,             (a,inf)     (x-a)^alpha*(x+b)^beta
  */
-		void Generate(	double* &x, double* &w,
-				const int order	= 1, 
+		void Generate(	const int order,
+				struct st_quadrule *q,
+				const double a	= 0.0,
+				const double b	= 1.0,
+				const int kind	= kLegendre, 
+				const double alpha= 0.0,
+				const double beta= 0.0); 
+
+		void Generate(	const int order,
+				double* &x, double* &w,
 				const double a	= 0.0,
 				const double b	= 1.0,
 				const int kind	= kLegendre, 
@@ -67,4 +78,5 @@ class GaussRule {
 extern GaussRule gGaussRule;
 
 } // namespace QuadratureRules
+/******************************************************************************/
 #endif // End of protection macro _GAUSS_RULE_H_

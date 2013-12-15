@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <string.h>
 #include <stdio.h>
 #include <iostream>
 /******************************************************************************/
@@ -10,8 +11,11 @@ void runstatv(int v);
 int main(int argc, char const* argv[])
 {
 	char fname[FILENAME_MAX];
-	verify_dir("DEBUG");
-	sprintf(fname,"DEBUG/test_int_trig.txt");
+	if (!argc)
+		sprintf(fname,"DEBUG/test_int_trig.txt");
+	else
+		strcpy(fname,argv[1]);
+
 	link_stdout(fname);
 	link_cout(fname);
 

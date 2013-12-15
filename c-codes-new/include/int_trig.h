@@ -1,15 +1,9 @@
 #ifndef _INT_TRIG_H_
 #define _INT_TRIG_H_
 /******************************************************************************/
+#include "quad_types.h"
 #include <complex.h>
 /******************************************************************************/
-struct st_quadrule {
-	int flag;	// 1=1D, 2=2D triangle, 3=3D tetrahedron
-	int n;		// number of points
-	double *x;	// abscissa
-	double *w;	// weights
-};
-
 /*
  * Double precision numerical integration over triangle using symmetric
  * quadrature rules.

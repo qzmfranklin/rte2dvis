@@ -1,11 +1,11 @@
 #include "int_trig.h"
 #include <math.h>
 #include <assert.h>
-/******************************************************************************/
+/******************************************************************************/ 
 double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 		double (*f)(double,double))
 {
-	assert(q->flag == 2); // quadrature rule for 2D triangle
+	assert(q->dim == 2); // quadrature rule for 2D triangle
 	double val=0.0;
 
 	// A matrix, col-major

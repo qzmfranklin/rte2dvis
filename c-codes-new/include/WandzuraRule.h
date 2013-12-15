@@ -1,9 +1,12 @@
 #ifndef _WANDZURA_RULE_H_
 #define _WANDZURA_RULE_H_
+/******************************************************************************/
 
 #include <stack>
 #include <cassert>
 #include <mkl.h>
+#include "quad_types.h"
+/******************************************************************************/
 namespace QuadratureRules {
 
 class WandzuraRule {
@@ -13,32 +16,14 @@ class WandzuraRule {
 		WandzuraRule() {}
 		~WandzuraRule() { ReleaseMemory(); }
 
-		/*
-		 * Generate Dunavant quadrature rule of given given (int rule).
-		 * Allocates memory using mkl_malloc automatically. 64 bytes
-		 * aligned. Return the pointers of the abscissas and the weights
-		 * *xy and *w through reference.
-		 *
-		 * Ownership issue:
-		 * The memory was allocated from within Generate(). In
-		 * principle, one should NOT free the memory on his/her own.
-		 * Instead, please call ReleaseMemory() to release the memory,
-		 * if must. Even if one does not do anything about those
-		 * allocated memory, they will be released (mkl_free()) when the
-		 * global DunavantRule instance is destructed.
-		 */
+		void Generate(int rule, struct st_quadrule *q);
 		void Generate(const int rule, int &order_num, 
-				double *&xy, double *&w);
-
+				double *&xy, double *&w); 
 		void Generate(const int rule, int &order_num, 
-				double *&x, double *&y, double *&w);
-
-		int RuleNumber() { return wandzura_rule_num(); }
-
-		int Order(const int rule) { return wandzura_order_num(rule); }
-
-		int Degree(const int rule) { return wandzura_degree(rule); }
-
+				double *&x, double *&y, double *&w); 
+		int RuleNumber() { return wandzura_rule_num(); } 
+		int Order(const int rule) { return wandzura_order_num(rule); } 
+		int Degree(const int rule) { return wandzura_degree(rule); } 
 		void ReleaseMemory();
 
 	public: 
@@ -84,4 +69,5 @@ class WandzuraRule {
 // in the entire program.
 extern WandzuraRule gWandzuraRule;
 } // namespace QuadratureRules
+/******************************************************************************/
 #endif // End of protection macro _WANDZURA_RULE_H_

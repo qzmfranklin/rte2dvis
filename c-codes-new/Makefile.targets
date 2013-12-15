@@ -20,18 +20,13 @@ asm:	${TARGET_ASM}
 list:	${TARGET_LIST} 
 
 clean:
-	@echo "Deleting ${REV_GREEN}${OBJ}/*${NONE}..."
-	${QUIET}rm -f ${OBJ}/*.{o,d}
+	rm -f ${OBJ}/*.o ${OBJ}/*.d
 cleanx:
-	@echo "Deleting ${REV_CYAN}${ASM}/*${NONE}..."
-	${QUIET}rm -f ${ASM}/*.s
-	@echo "Deleting ${REV_CYAN}${DEBUG}/*${NONE}..."
-	${QUIET}rm -f ${DEBUG}/*.txt
+	rm -f ${ASM}/*.s ${ASM}/*.d
+	rm -f ${DEBUG}/*.txt
 cleanxx: clean
-	@echo "Deleting ${REV_RED}${BIN}/*${NONE}..."
-	${QUIET}rm -f ${BIN}/*.exe
-	@echo "Deleting ${REV_MAGENTA}${LIB}/*${NONE}..."
-	${QUIET}rm -f ${LIB}/*.{a,so}
+	rm -f ${BIN}/*.exe
+	rm -f ${LIB}/*.a ${LIB}/*.so
 dist:
 	@echo Compressing into "${B_CYAN}${RELEASE_NAME}.tgz${NONE}"...
 	${QUIET}rm -f ${RELEASE_NAME}.tgz; tar czf ${RELEASE_NAME}.tgz ${DISTFILES}
@@ -48,10 +43,6 @@ dir:
 rmdir: 
 	@echo "${B_RED}WARNING: Deleting ${STRUCTURAL_DIRS}${NONE}"
 	${QUIET}rm -rf ${STRUCTURAL_DIRS}
-check:
-	@echo "Running test binaries... (not implemented yet)"#TODO
-	@echo ${PLATFORM}
-	@echo ${DYLFLAGS}
 help:
 	@echo ""
 	@echo "Welcome! Here is a brief guide to using this Makefile by"

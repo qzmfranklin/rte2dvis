@@ -4,7 +4,7 @@
 #include <stack>
 #include <cassert>
 #include <mkl.h>
-#include "int_trig.h"
+#include "quad_types.h"
 /******************************************************************************/
 namespace QuadratureRules {
 

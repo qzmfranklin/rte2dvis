@@ -11,7 +11,18 @@ using namespace std;
 namespace QuadratureRules {
 /******************************************************************************/
 LynessRule gLynessRule;
-/*******************************************************************************/
+/*******************************************************************************/ 
+void LynessRule::Generate(const int rule, struct st_quadrule *q)
+{
+	//printf("LynessRule::Generate()\n");
+	int order_num;
+	double *xy,*w;
+	Generate(rule,order_num,xy,w);
+	q->dim  = 2;
+	q->n    = order_num;
+	q->x    = xy;
+	q->w    = w;
+}
 
 void LynessRule::Generate(int rule, int &order_num, 
 		double *&xy, double *&w)
