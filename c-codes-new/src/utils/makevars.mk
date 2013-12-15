@@ -118,14 +118,11 @@ ${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe test_file_io.exe \
+${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe \
 	test_int_trig.exe
 
 ${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
-
-${BIN}/test_file_io.exe: ${OBJ}/test_file_io.o ${OBJ}/file_io.o \
-	${LIB}/libutils.a ${LIB}/libutils.so
 
 ${BIN}/test_int_trig.exe: ${OBJ}/test_int_trig.o ${OBJ}/int_trig.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \

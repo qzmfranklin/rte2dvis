@@ -46,10 +46,6 @@ void test01( int n )
 	q=(struct st_quadrule*)mkl_malloc(sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
 	for (int rule = 1; rule <= n; rule++) {
 		printf("rule = %d\n",rule);
-		//gDunavantRule.Generate( rule, order_num, xy, w );
-		//print_rule( order_num, xy, w ); 
-		//gDunavantRule.Generate(rule,order_num,x,y,w);
-		//print_rule(order_num,x,y,w);
 		gDunavantRule.Generate(rule,q);
 		print_st_quadrule(q);
 	}
@@ -65,10 +61,6 @@ void test02( int n )
 	q=(struct st_quadrule*)mkl_malloc(sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
 	for (int rule = 1; rule <= n; rule++) {
 		printf("rule = %d\n",rule);
-		//gWandzuraRule.Generate( rule, order_num, xy, w );
-		//print_rule( order_num, xy, w ); 
-		//gWandzuraRule.Generate(rule,order_num,x,y,w);
-		//print_rule(order_num,x,y,w);
 		gWandzuraRule.Generate(rule,q);
 		print_st_quadrule(q);
 	}
@@ -84,10 +76,6 @@ void test03( int n )
 	q=(struct st_quadrule*)mkl_malloc(sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
 	for (int rule = 1; rule <= n; rule++) {
 		printf("rule = %d\n",rule);
-		//gLynessRule.Generate( rule, order_num, xy, w);
-		//print_rule( order_num, xy, w ); 
-		//gLynessRule.Generate(rule,order_num,x,y,w);
-		//print_rule(order_num,x,y,w);
 		gLynessRule.Generate(rule,q);
 		print_st_quadrule(q);
 	}
@@ -103,8 +91,6 @@ void test04( int n ) {
 	struct st_quadrule *q;
 	q=(struct st_quadrule*)mkl_malloc(sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
 	for (int order = 1; order <= n; order++) {
-		//gGaussRule.Generate( order, x, w, -1.0, 1.0 );
-		//print_rule_gauss( order, x, w ); 
 		gGaussRule.Generate(order,q); 
 		print_st_quadrule(q);
 	}

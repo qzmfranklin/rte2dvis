@@ -1,4 +1,5 @@
 #include "int_trig.h"
+#include <complex.h>
 #include <string.h>
 #include "utils.h"
 #include "QuadratureRules.h"
@@ -8,12 +9,20 @@
 /******************************************************************************/
 #define MALLOC_ALIGNMENT 64
 /******************************************************************************/
-//static double f(double x, double y) { return x*x + 0.1*y + exp(-x-0.5*y*y); }
-static double f(double x, double y) { return -x*x*x-y*y*y; }
+using namespace QuadratureRules;
+static double p[] = {1.,0.,0.,2.,3.,2.};
+static double f02(double x, double y) { 
+	return log(x*x+exp(x*y));
+}
+static double true_val_f02 = 6.2340491877461960211;
+
+static double _Complex f03(double x, double y) { 
+	return sqrt(fabs(x))+sqrt(fabs(y))*x*I; 
+}
 
 int test01(void);
 int test02(void);
-
+int test03(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
 {
@@ -24,15 +33,13 @@ int main(int argc, char const* argv[])
 		strcpy(fname,argv[1]);
 
 	link_stdout(fname);
-	link_cout(fname);
-
-
 	test01();
+	unlink_stdout(); 
+
+	link_cout(fname);
 	test02();
-
-
+	test03();
 	unlink_cout();
-	unlink_stdout();
 	
 	return 0;
 }
@@ -45,7 +52,6 @@ int test01(void)
         printf("	|Test struct st_quadrule\n");
 
 	struct st_quadrule q;
-	q.dim = 1;
 	printf("sizeof(q)\t=%lu\n",sizeof(q));
 
         printf("END OF TEST01\n");
@@ -56,41 +62,110 @@ int test01(void)
 int test02(void)
 {
 #define N 20
-	using namespace QuadratureRules;
+#define COUNT 20
 	int err=0; 
         printf("TEST02\n");
-        printf("	|Test dit_symmetric\n");
+        printf("	|Test dit_symmetric DunavantRule\n");
 
-	double p[] = {1.,0.,0.,2.,3.,2.};
-	double val[2*N];
+	double data[3*N];
+	double work[400];
+	TimeStamp clk(COUNT);
 
 	struct st_quadrule *q;
 	q=(struct st_quadrule*)mkl_malloc(sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
 	printf("sizeof(*q)\t=%lu\n",sizeof(*q));
 	for (int i = 0; i < N; i++) {
 		gDunavantRule.Generate(i+1,q);
-		val[i]   = q->n;
-		val[N+i] = dit_symmetric(q,p,&f);
+		data[i]   = q->n;
+		data[N+i] = -log( fabs( (dit_symmetric(q,p,&f02,work) 
+					 -true_val_f02)/true_val_f02)
+				) / log(10);
+		clk.flush();
+		for (int j = 0; j < COUNT; j++) {
+			clk.tic();
+			dit_symmetric(q,p,&f02,work);
+			for (int k = 0; k < 1000; k++) {
+				int i=1;
+			}
+			clk.toc();
+		}
+		data[2*N+i] = clk.median();
 	}
 	mkl_free(q);
 	
 	Table tbl;
-	const char *rows[N]={"1","2","3","4","5","6","7","8","9","10",
-		"11","12","13","14","15","16","17","18","19","20"};
-	const char *cols[2]={"order","value"};
+	const char *rows[N]={"Dunavant1","Dunavant2","Dunavant3","Dunavant4",
+		"Dunavant5","Dunavant6","Dunavant7","Dunavant8","Dunavant9",
+		"Dunavant10","Dunavant11","Dunavant12","Dunavant13",
+		"Dunavant14","Dunavant15","Dunavant16","Dunavant17",
+		"Dunavant18","Dunavant19","Dunavant20"};
+	const char *cols[3]={"order","precision in #SD","time in cycles"};
 	tbl.set_width(20);
-	tbl.dim(N,2);
+	tbl.dim(N,3);
 	tbl.rows(rows);
 	tbl.cols(cols);
-	tbl.data(val);
-	char banner[BUFSIZ]=
-		"Double Precision Numerical Integration on \n\tTriangle using Symmetric Quadrature Rules";
+	tbl.data(data);
+	char banner[BUFSIZ];
+	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Symmetric Quadrature Rules\n\t\tTrue value = %20.15f",true_val_f02);
 	tbl.print(banner);
 	
         printf("END OF TEST02\n");
         printf("\n");
 	return err;
+#undef COUNT
 #undef N
 }
 
+int test03(void)
+{
+#define N 6
+#define COUNT 20
+	int err=0; 
+        printf("TEST03\n");
+        printf("	|Test dit_symmetric WandzuraRule\n");
+	
+	double data[3*N];
+	double work[1000];
+	TimeStamp clk(COUNT);
+
+	struct st_quadrule *q;
+	q=(struct st_quadrule*)mkl_malloc(sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+	printf("sizeof(*q)\t=%lu\n",sizeof(*q));
+	for (int i = 0; i < N; i++) {
+		gWandzuraRule.Generate(i+1,q);
+		data[i]   = q->n;
+		data[N+i] = -log( fabs( (dit_symmetric(q,p,&f02,work) 
+					 -true_val_f02)/true_val_f02)
+				) / log(10);
+		clk.flush();
+		for (int j = 0; j < COUNT; j++) {
+			clk.tic();
+			dit_symmetric(q,p,&f02,work);
+			for (int k = 0; k < 1000; k++) {
+				int i=1;
+			}
+			clk.toc();
+		}
+		data[2*N+i] = clk.median();
+	}
+	mkl_free(q);
+	
+	Table tbl;
+	const char *rows[N]={"Wandzura1","Wandzura2","Wandzura3","Wandzura4",
+		"Wandzura5","Wandzura6"};
+	const char *cols[3]={"order","precision in #SD","time in cycles"};
+	tbl.set_width(20);
+	tbl.dim(N,3);
+	tbl.rows(rows);
+	tbl.cols(cols);
+	tbl.data(data);
+	char banner[BUFSIZ];
+	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Symmetric Quadrature Rules\n\t\tTrue value = %20.15f",true_val_f02);
+	tbl.print(banner);
+        printf("END OF TEST03\n");
+        printf("\n");
+	return err;
+#undef COUNT
+#undef N
+}
 /******************************************************************************/
