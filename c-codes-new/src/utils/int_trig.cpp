@@ -8,7 +8,6 @@ double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 	assert(q->dim == 2); // quadrature rule for 2D triangle
 	double val=0.0;
 
-	// A matrix, col-major
 	int n;
 	double *w, *xy;
 	n    = q->n;
@@ -18,12 +17,13 @@ double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 	A  = work;
 	qq = A + 4;
 	ff = qq + 2*n;
+	// A matrix, row-major
 	A[0] = p[2]-p[0];
 	A[1] = p[4]-p[0];
 	A[2] = p[3]-p[1];
 	A[3] = p[5]-p[1];
 
-	//#pragma vector always
+	#pragma vector always
 	for (int i = 0; i < n; i++) {
 		qq[2*i]   = A[0]*xy[2*i] + A[1]*xy[2*i+1] + p[0];
 		qq[2*i+1] = A[2]*xy[2*i] + A[3]*xy[2*i+1] + p[1]; 
@@ -41,14 +41,13 @@ double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 	return val;
 }
 
-double _Complex cit_symmetric(const struct st_quadrule *q, 
+double _Complex zit_symmetric(const struct st_quadrule *q, 
 		const double *restrict p,
 		double _Complex (*f)(double,double), double *restrict work)
 {
 	assert(q->dim == 2); // quadrature rule for 2D triangle
 	double _Complex val=0.0;
 
-	// A matrix, col-major
 	int n;
 	double *w, *xy;
 	n    = q->n;
@@ -59,12 +58,13 @@ double _Complex cit_symmetric(const struct st_quadrule *q,
 	A  = work;
 	qq = A + 4;
 	ff = (double _Complex*) (qq + 2*n);
+	// A matrix, row-major
 	A[0] = p[2]-p[0];
 	A[1] = p[4]-p[0];
 	A[2] = p[3]-p[1];
 	A[3] = p[5]-p[1];
 
-	//#pragma vector always
+	#pragma vector always
 	for (int i = 0; i < n; i++) {
 		qq[2*i]   = A[0]*xy[2*i] + A[1]*xy[2*i+1] + p[0];
 		qq[2*i+1] = A[2]*xy[2*i] + A[3]*xy[2*i+1] + p[1]; 
