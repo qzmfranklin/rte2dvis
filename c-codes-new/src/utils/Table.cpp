@@ -58,48 +58,45 @@ void Table::data(double *datai){
 static void drawline(int width, int n){
 	for(int i=0; i <= n; i++)
 		for(int j=0; j < width; j++)
-			cout<<"-";
-	cout<<endl;
+			printf("-");
+	printf("\n");
 }
 
 static void drawblankline(int width, int n){
 	for(int i=0; i <= n; i++){
-		cout<<"|";
+		printf("|");
 		for(int j=1; j < width; j++)
-			cout<<" ";
+			printf(" ");
 	}
-	cout<<"|";
-	cout<<endl;
+	printf("|\n");
 }
 
 static void drawtoprow(int width, const char* cols[], int n){
-	cout<<"|";
+	printf("|");
 	for(int j=1; j < width; j++)
-		cout<<" ";
-	for(int i=0; i < n; i++){
-		cout<<"|"<<setw(width-1)<<cols[i];
-	}
-	cout<<"|";
-	cout<<endl;
+		printf(" ");
+	for(int i=0; i < n; i++)
+		printf("|%*s",width-1,cols[i]);
+	printf("|\n");
 }
 
 static void drawrow(int width, 
 		const char *row, double *data, int n){
-	cout<<"|";
-	cout<<setw(width-1)<<row;
-	for(int i=0; i < n; i++){
-		cout<<"|"<<setw(width-1)<<data[i];
-	}
-	cout<<"|"<<endl;
+	printf("|");
+	printf("%*s",width-1,row);
+	for(int i=0; i < n; i++)
+		printf("|%*lf",width-1,data[i]);
+	printf("|\n");
 } 
 
 
 void Table::print(const char* banner){
 	assrt(state == 4);
 	state = 1;
-	cout<<endl;
-	cout<<endl;
-	cout<<"Table: "<<banner<<endl<<endl;
+	printf("\n");
+	printf("\n");
+	printf("Table: %s\n",banner);
+	printf("\n");
 	drawline(width, n);
 	drawblankline(width, n);
 	drawtoprow(width, collist, n);

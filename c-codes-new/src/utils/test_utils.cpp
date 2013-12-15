@@ -14,18 +14,14 @@ int main(int argc, char const* argv[])
 	if (!argc)
 		sprintf(fname,"DEBUG/test_int_trig.txt");
 	else
-		strcpy(fname,argv[1]);
-
-	link_stdout(fname);
-	link_cout(fname);
-
+		strcpy(fname,argv[1]); 
+	link_stdout(fname); 
 
 	runstatv(100000);
 	test_Table();
 
-
 	unlink_stdout();
-	unlink_cout();
+
 	return 0;
 }
 
@@ -55,8 +51,8 @@ void runstatv(int n){
 	for(int i=1; i <= n; i++){
 		v.insert(i*pm%256);
 	}
-	cout<<"median = "<<v.median()<<endl;
-	cout<<"mean = "<<v.mean()<<endl;
-	cout<<"max = "<<v.max()<<endl;
-	cout<<"min = "<<v.min()<<endl;
+	printf("median\t=%f\n",v.median());
+	printf("mean\t=%f\n",v.mean());
+	printf("max\t=%f\n",v.max());
+	printf("min\t=%f\n",v.min());
 }

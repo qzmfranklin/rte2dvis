@@ -16,8 +16,6 @@ void array_in(const char* fname, const int n, double *v);
 void array_flush(double *v, int size); 
 void solve2x2(double *restrict A, double *restrict rhs, double *restrict x); 
 void verify_dir(const char *dir); 
-void link_cout(const char *fname); 
-void unlink_cout(); 
 void link_stdout(const char *fname); 
 void unlink_stdout(); 
 void box_file(const char* fname, const char*mesg); 

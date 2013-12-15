@@ -14,15 +14,17 @@ static double p[] = {1.,0.,0.,2.,3.,2.};
 static double f02(double x, double y) { 
 	return log(x*x+exp(x*y));
 }
-static double true_val_f02 = 6.2340491877461960211;
-
 static double _Complex f03(double x, double y) { 
-	return sqrt(fabs(x))+sqrt(fabs(y))*x*I; 
+	return cexp(I*( x*y*log(x+3)+y*y));
 }
+static double true_val_f02=6.2340491877461960211;
+static double _Complex true_val_f03=-0.2986424021019246+0.1503820269098639*I;
+
 
 int test01(void);
 int test02(void);
 int test03(void);
+int test04(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
 {
@@ -33,14 +35,14 @@ int main(int argc, char const* argv[])
 		strcpy(fname,argv[1]);
 
 	link_stdout(fname);
-	test01();
-	unlink_stdout(); 
 
-	link_cout(fname);
+	test01();
 	test02();
 	test03();
-	unlink_cout();
-	
+	test04();
+
+	unlink_stdout();
+
 	return 0;
 }
 
@@ -106,7 +108,7 @@ int test02(void)
 	tbl.cols(cols);
 	tbl.data(data);
 	char banner[BUFSIZ];
-	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Symmetric Quadrature Rules\n\t\tTrue value = %20.15f",true_val_f02);
+	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Dunavant Quadrature Rules\n\t\tTrue value = %20.15f",true_val_f02);
 	tbl.print(banner);
 	
         printf("END OF TEST02\n");
@@ -160,12 +162,25 @@ int test03(void)
 	tbl.cols(cols);
 	tbl.data(data);
 	char banner[BUFSIZ];
-	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Symmetric Quadrature Rules\n\t\tTrue value = %20.15f",true_val_f02);
+	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Wandzura Quadrature Rules\n\t\tTrue value = %20.15f",true_val_f02);
 	tbl.print(banner);
         printf("END OF TEST03\n");
         printf("\n");
 	return err;
 #undef COUNT
 #undef N
+}
+
+int test04(void)
+{
+	int err=0; 
+        printf("TEST04\n");
+        printf("	|Test cit_symmetric DunavantRule\n");
+
+
+	
+        printf("END OF TEST04\n");
+        printf("\n");
+	return err;
 }
 /******************************************************************************/

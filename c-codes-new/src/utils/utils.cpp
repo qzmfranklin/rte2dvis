@@ -120,6 +120,10 @@ void verify_dir(const char *dir)
 	assrt(S_ISDIR(sb.st_mode));
 }
 
+/*
+ * link_cout and unlink_cout are deprecated. They are no longer in the header
+ * file, i.e., utils.h. They are just provided here as a historical trait.
+ */
 static std::streambuf *sbuf_backup;
 static std::ofstream ofile;
 static int linkcout_state = 0;
@@ -166,6 +170,7 @@ void unlink_stdout()
 {
 	assrt(___linkstd_state___==1);
 	___linkstd_state___ = 0; 
+	fflush(stdout);
 	fclose(stdout);
 	stdout = ___stdout_backup___;
 }
