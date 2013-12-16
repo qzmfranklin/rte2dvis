@@ -11,6 +11,8 @@ check: all test
 	@./${BIN}/test_QuadratureRules.exe ${DEBUG}/test_QuadratureRules.txt
 	@echo "Running ${B_RED}test_int_trig.exe${NONE}..."
 	@./${BIN}/test_int_trig.exe ${DEBUG}/test_int_trig.txt
+	@echo "Running ${B_RED}test_toeplitz.exe${NONE}..."
+	@./${BIN}/test_toeplitz.exe ${DEBUG}/test_toeplitz.txt
 	@echo
 	@echo "Find all testing results in ${GREEN}${DEBUG}/${NONE}"
 	@echo

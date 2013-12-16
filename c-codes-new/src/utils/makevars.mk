@@ -99,7 +99,8 @@ ${DIR-utils}INCS:=${INCS}
 ${DIR-utils}CFILES:=file_io.c
 ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
 	DunavantRule.cpp GaussRule.cpp LynessRule.cpp \
-	WandzuraRule.cpp int_trig.cpp QuadratureRules.cpp
+	WandzuraRule.cpp int_trig.cpp QuadratureRules.cpp \
+	toeplitz.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -119,18 +120,23 @@ ${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
 ${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe \
-	test_int_trig.exe
+	test_int_trig.exe test_toeplitz.exe
 
 ${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
 
-${BIN}/test_int_trig.exe: ${OBJ}/test_int_trig.o ${OBJ}/int_trig.o \
+${BIN}/test_int_trig.exe: ${OBJ}/test_int_trig.o \
+	${OBJ}/int_trig.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \
 	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
 
 ${BIN}/test_QuadratureRules.exe: ${OBJ}/test_QuadratureRules.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \
 	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
+
+${BIN}/test_toeplitz.exe: ${OBJ}/test_toeplitz.o \
+	${OBJ}/toeplitz.o \
+	${LIB}/libutils.a ${LIB}/libutils.so
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

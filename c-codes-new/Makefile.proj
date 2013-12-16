@@ -89,7 +89,10 @@ ASMFLAGS	:=-S -fsource-asm# Source code commeNted assembly code.
 #				STEP 5
 #PROJECT-WIDE INCLUDE AND LINKAGE OPTIONS
 ifeq (${PLATFORM},Linux)
-	#	Intel Math Kernel Library for MacOSX-x86-64
+	#	FFTW3 Library for Linux
+	FFTW_INCS	:=-I/opt/intel/mkl/include/fftw
+	FFTW_LIBS	:=-lfftw3
+	#	Intel Math Kernel Library for Linux
 	MKL_INCS	:=
 	MKL_LIBS	:=-mkl
 	#	OpenMP Flags
@@ -98,7 +101,7 @@ ifeq (${PLATFORM},Linux)
 	#	OpenMPI Library
 	#MPI_INCS	:='mpicxx -showme:compile'
 	#MPI_LIBS	:='mpicxx -showme:link'
-	#	MathLink for MacOSX-x86-64
+	#	MathLink for Linux
 	#MATH_DIR	:=/opt/Wolfram/Mathematica/9.0
 	#ML_DIR		:=${MATH_DIR}/SystemFiles/Links/MathLink/DeveloperKit/Linux-x86-86/CompilerAdditions
 	#ML_INCS		:=-I${ML_DIR}
@@ -129,8 +132,8 @@ ifeq (${PLATFORM},Darwin)
 	MLL_LIBS	:=-L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 endif
 #PROJECT-WIDE DEFAULT LINKING LIBRARIES AND INCLUDE DIRECTORIES
-INCS		:=${ML_INCS} ${MLL_INCS} ${MKL_INCS} ${OMP_INCS} ${MPI_LIBS} -iquote ${INCLUDE}
-LIBS		:=${ML_LIBS} ${MLL_LIBS} ${MKL_LIBS} ${OMP_LIBS} ${MPI_LIBS}
+INCS		:=${FFTW_INCS} ${ML_INCS} ${MLL_INCS} ${MKL_INCS} ${OMP_INCS} ${MPI_LIBS} -iquote ${INCLUDE}
+LIBS		:=${FFTW_LIBS} ${ML_LIBS} ${MLL_LIBS} ${MKL_LIBS} ${OMP_LIBS} ${MPI_LIBS}
 ##	LONESTAR COMPILING OPTIONS
 #CFLAGS 	:= -O3 -prec-div -no-ftz -restrict -Wshadow -MMD -MP
 

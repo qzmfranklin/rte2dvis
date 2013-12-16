@@ -99,11 +99,17 @@ double dit_arcsinh(const struct st_quadrule *restrict qu,
 		const double *restrict p, const double *restrict p0,
 		double (*f)(double,double), double *restrict work);
 
+ /*
+  *Worksapce, i.e., work, must be at least (5*nu*nv+nu)*sizeof(double) 
+  */
 double _Complex zit_arcsinh_atomic(const struct st_quadrule *restrict qu, 
 		const struct st_quadrule *restrict qv,
 		const double *restrict p,
 		double _Complex (*f)(double,double), double *restrict work);
 
+ /*
+  *Worksapce, i.e., work, must be at least (5*nu*nv+nu+25)*sizeof(double) 
+  */
 double _Complex zit_arcsinh(const struct st_quadrule *restrict qu, 
 		const struct st_quadrule *restrict qv,
 		const double *restrict p, const double *restrict p0,
