@@ -8,8 +8,8 @@
 /******************************************************************************/
 void array_abs(double *v, int n); 
 double array_max(double *v, int n); 
-void array_diff(double *restrict v, double *restrict w, int n); 
-void array_copy(double *restrict v, double *restrict w, int n); 
+void array_diff(const int n, double *restrict v, double *restrict w); 
+void array_copy(const int n, double *restrict v, double *restrict w); 
 void array_out(const char* fname, const int m, const int n, double *restrict a,
 		int lda=0);
 void array_in(const char* fname, const int n, double *v);

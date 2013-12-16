@@ -95,21 +95,21 @@ void Table::print(const char* banner){
 	state = 1;
 	printf("\n");
 	printf("\n");
-	printf("Table: %s\n",banner);
-	printf("\n");
+	printf("\t\t\t\t\tTable\n");
+	printf("%s\n",banner);
 	drawline(width, n);
-	drawblankline(width, n);
+	//drawblankline(width, n);
 	drawtoprow(width, collist, n);
-	drawblankline(width, n);
+	//drawblankline(width, n);
 	drawline(width, n);
 	double *rdata = new double[n];
 	for(int i=0; i < m; i++){
-		drawblankline(width, n);
+		//drawblankline(width, n);
 		for(int j=0; j < n; j++)
 			rdata[j] = datarr[i+j*m];
 		drawrow(width, rowlist[i], rdata, n);
-		drawblankline(width, n);
-		drawline(width, n);
+		//drawblankline(width, n);
+		//drawline(width, n);
 	}
 	delete[] rdata;
 }

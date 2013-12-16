@@ -4,6 +4,16 @@
 #include "quad_types.h"
 #include <complex.h>
 /******************************************************************************/
+/*
+ * double *p is the triangle:
+ * 	x0	p[0]
+ * 	y0	p[1]
+ * 	x1	p[2]
+ * 	y1	p[3]
+ * 	x2	p[4]
+ * 	y2	p[5]
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -27,6 +37,7 @@ extern "C" {
  */
 double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 		double (*f)(double,double), double *restrict work);
+
 /*
  * Double complex numerical integration over triangle using symmetric
  * quadrature rules.
@@ -47,7 +58,22 @@ double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 double _Complex zit_symmetric(const struct st_quadrule *q, 
 		const double *restrict p,
 		double _Complex (*f)(double,double), double *restrict work);
+
+/**************************************/ 
+double dit_arcsinh_atomic(const struct st_quadrule *restrict qu, 
+		const struct st_quadrule *restrict qv,
+		const double *restrict p,
+		double (*f)(double,double), double *restrict work);
+
+double dit_arcsinh(const struct st_quadrule *restrict qu, 
+		const struct st_quadrule *restrict qv,
+		const double *restrict p, const double *restrict p0,
+		double (*f)(double,double), double *restrict work);
 	
+//double _Complex zit_arcsinh(const struct st_quadrule *q, 
+		//const double *restrict p,
+		//double _Complex (*f)(double,double), double *restrict work);
+
 #ifdef __cplusplus
 }
 #endif

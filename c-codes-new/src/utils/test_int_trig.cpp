@@ -17,8 +17,12 @@ static double f02(double x, double y) {
 static double _Complex f03(double x, double y) { 
 	return cexp(I*( x*y*log(x+3)+y*y));
 }
+static double f04(double x, double y) { 
+	return x*y+exp(-x);
+}
 static double true_val_f02=6.2340491877461960211;
 static double _Complex true_val_f03=-0.2986424021019246+0.1503820269098639*I;
+static double true_val_f04=4.417444019285018;
 
 
 int test01(void);
@@ -26,6 +30,7 @@ int test02(void);
 int test03(void);
 int test04(void);
 int test05(void);
+int test06(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
 {
@@ -42,6 +47,7 @@ int main(int argc, char const* argv[])
 	test03();
 	test04();
 	test05();
+	test06();
 
 	unlink_stdout();
 
@@ -87,12 +93,9 @@ int test02(void)
 		for (int j = 0; j < COUNT; j++) {
 			clk.tic();
 			dit_symmetric(q,p,&f02,work);
-			for (int k = 0; k < 1000; k++) {
-				int i=1;
-			}
 			clk.toc();
 		}
-		data[2*N+i] = clk.median();
+		data[2*N+i] = clk.median()/data[i];
 	}
 	mkl_free(q);
 	
@@ -102,7 +105,7 @@ int test02(void)
 		"Dunavant10","Dunavant11","Dunavant12","Dunavant13",
 		"Dunavant14","Dunavant15","Dunavant16","Dunavant17",
 		"Dunavant18","Dunavant19","Dunavant20"};
-	const char *cols[3]={"order","precision in #SD","time in cycles"};
+	const char *cols[3]={"order","precision in #SD","time in cycles/sample point"};
 	tbl.set_width(20);
 	tbl.dim(N,3);
 	tbl.rows(rows);
@@ -143,19 +146,16 @@ int test03(void)
 		for (int j = 0; j < COUNT; j++) {
 			clk.tic();
 			dit_symmetric(q,p,&f02,work);
-			for (int k = 0; k < 1000; k++) {
-				int i=1;
-			}
 			clk.toc();
 		}
-		data[2*N+i] = clk.median();
+		data[2*N+i] = clk.median()/data[i];
 	}
 	mkl_free(q);
 	
 	Table tbl;
 	const char *rows[N]={"Wandzura1","Wandzura2","Wandzura3","Wandzura4",
 		"Wandzura5","Wandzura6"};
-	const char *cols[3]={"order","precision in #SD","time in cycles"};
+	const char *cols[3]={"order","precision in #SD","time in cycles/sample point"};
 	tbl.set_width(20);
 	tbl.dim(N,3);
 	tbl.rows(rows);
@@ -194,12 +194,9 @@ int test04(void)
 		for (int j = 0; j < COUNT; j++) {
 			clk.tic();
 			zit_symmetric(q,p,&f03,work);
-			for (int k = 0; k < 1000; k++) {
-				int i=1;
-			}
 			clk.toc();
 		}
-		data[2*N+i] = clk.median();
+		data[2*N+i] = clk.median()/data[i];
 	}
 	mkl_free(q);
 	
@@ -209,7 +206,7 @@ int test04(void)
 		"Dunavant10","Dunavant11","Dunavant12","Dunavant13",
 		"Dunavant14","Dunavant15","Dunavant16","Dunavant17",
 		"Dunavant18","Dunavant19","Dunavant20"};
-	const char *cols[3]={"order","precision in #SD","time in cycles"};
+	const char *cols[3]={"order","precision in #SD","time in cycles/sample point"};
 	tbl.set_width(20);
 	tbl.dim(N,3);
 	tbl.rows(rows);
@@ -250,19 +247,16 @@ int test05(void)
 		for (int j = 0; j < COUNT; j++) {
 			clk.tic();
 			zit_symmetric(q,p,&f03,work);
-			for (int k = 0; k < 1000; k++) {
-				int i=1;
-			}
 			clk.toc();
 		}
-		data[2*N+i] = clk.median();
+		data[2*N+i] = clk.median()/data[i];
 	}
 	mkl_free(q);
 	
 	Table tbl;
 	const char *rows[N]={"Wandzura1","Wandzura2","Wandzura3","Wandzura4",
 		"Wandzura5","Wandzura6"};
-	const char *cols[3]={"order","precision in #SD","time in cycles"};
+	const char *cols[3]={"order","precision in #SD","time in cycles/sample point"};
 	tbl.set_width(20);
 	tbl.dim(N,3);
 	tbl.rows(rows);
@@ -276,5 +270,109 @@ int test05(void)
 	return err;
 #undef COUNT
 #undef N
+}
+
+int test06(void)
+{
+#define NU 10
+#define NV 6
+#define COUNT 20
+	int err=0; 
+        printf("TEST06\n");
+        printf("	|Test dit_arcsinh_atomic Legendre X Legendre\n");
+	double precision[NU*NV];
+	double time[NU*NV];
+	TimeStamp clk(COUNT);
+
+	struct st_quadrule *qu[NU],*qv[NV]; 
+	for (int i = 0; i < NU; i++) { 
+		qu[i]=(struct st_quadrule*)mkl_malloc(
+				sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+		gGaussRule.Generate(i+1,qu[i]);
+	}
+	for (int i = 0; i < NV; i++) {
+		qv[i]=(struct st_quadrule*)mkl_malloc(
+				sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+		gGaussRule.Generate(i+1,qv[i]);
+	}
+
+	double work[2000]; // workspace
+	for (int j = 0; j < NV; j++)
+		for (int i = 0; i < NU; i++) {
+			precision[i+j*NU] = -log( fabs(
+						(dit_arcsinh_atomic(qu[i],qv[j],p,&f04,work) 
+						 -true_val_f04)/true_val_f04)
+					) / log(10);
+			//precision[i+j*NU] = dit_arcsinh_atomic(qu[i],qv[j],p,&f04,work);
+			clk.flush();
+			for (int k = 0; k < COUNT; k++) {
+				clk.tic();
+				dit_arcsinh_atomic(qu[i],qv[j],p,&f04,work);
+				clk.toc();
+			}
+			time[i+j*NU] = clk.median()/(i*j);
+		}
+
+	for (int i = 0; i < NU; i++)
+		mkl_free(qu[i]);
+	for (int i = 0; i < NV; i++)
+		mkl_free(qv[i]);
+	
+	Table tbl[2];
+	char banner[BUFSIZ];
+	const char *rows[NU]={"1","2","3","4",
+		"5","6","7","8","9","10"};
+	const char *cols[NV]={"1","2","3","4","5","6"};
+	tbl[0].set_width(12);
+	tbl[0].dim(NU,NV);
+	tbl[0].rows(rows);
+	tbl[0].cols(cols);
+	tbl[0].data(precision);
+	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Arcsinh Transform\n\t\tTrue value = %20.15f\n\n\tPrecision in Number of Significant Digits",true_val_f04);
+	tbl[0].print(banner);
+
+
+	tbl[1].set_width(12);
+	tbl[1].dim(NU,NV);
+	tbl[1].rows(rows);
+	tbl[1].cols(cols);
+	tbl[1].data(time);
+	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Arcsinh Transform\n\t\tTrue value = %20.15f\n\n\tTime in Cycles/Sampling Point",true_val_f04);
+	tbl[1].print(banner);
+	
+        printf("END OF TEST06\n");
+        printf("\n");
+	return err; 
+#undef COUNT
+#undef NV
+#undef NU
+}
+
+int test06x(void)
+{
+#define NU 5
+#define NV 2
+	int err=0; 
+        printf("TEST06\n");
+        printf("	|Test dit_arcsinh_atomic Legendre X Legendre\n");
+
+	struct st_quadrule *qu,*qv; 
+	qu=(struct st_quadrule*)mkl_malloc(
+			sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+	qv=(struct st_quadrule*)mkl_malloc(
+			sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+	gGaussRule.Generate(NU,qu);
+	gGaussRule.Generate(NV,qv);
+
+	double val,work[2000]; // workspace
+	val = dit_arcsinh_atomic(qu,qv,p,&f04,work);
+
+	fprintf(stderr, "val=%f\n",val);
+	
+        printf("END OF TEST06\n");
+        printf("\n");
+	return err; 
+#undef NV
+#undef NU
 }
 /******************************************************************************/

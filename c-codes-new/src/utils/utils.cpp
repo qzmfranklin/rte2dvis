@@ -44,13 +44,13 @@ double array_max(double *v, int n)
 	return ans;
 }
 
-void array_diff(double *restrict v, double *restrict w, int n)
+void array_diff(const int n, double *restrict v, double *restrict w)
 {
 	for(int i=0; i < n; i++)
 		v[i] -= w[i];
 }
 
-void array_copy(double *restrict v, double *restrict w, int n)
+void array_copy(const int n, double *restrict v, double *restrict w)
 {
 	for(int i=0; i < n; i++)
 		w[i] = v[i];

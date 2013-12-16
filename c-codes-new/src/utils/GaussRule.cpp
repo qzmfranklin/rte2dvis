@@ -13,7 +13,7 @@ void GaussRule::Generate(const int order, struct st_quadrule *q,
 		const double a, const double b, const int kind, 
 		const double alpha, const double beta)
 {
-	//printf("GaussRule::Generate()\n");
+	//fprintf(stderr,"GaussRule::Generate2()\n");
 	double *x, *w;
 	Generate(order,x,w,a,b,kind,alpha,beta);
 	q->dim  = 1;
@@ -26,6 +26,7 @@ void GaussRule::Generate(const int order, double* &x, double* &w,
 		const double a, const double b, const int kind, 
 		const double alpha, const double beta)
 {
+	//fprintf(stderr,"GaussRule::Generate1()\n");
 	assert( (order>0) && (a<b) && ((int)kind>0) && ((int)kind<9) );
 	x = (double*)mkl_malloc(2*order*sizeof(double),MALLOC_ALIGNMENT);
 	assert(x); 
