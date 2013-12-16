@@ -94,8 +94,8 @@ void Table::print(const char* banner){
 	assrt(state == 4);
 	state = 1;
 	printf("\n");
-	printf("\n");
-	printf("\t\t\t\t\tTable\n");
+	//printf("\n");
+	printf("\t\t\t\tTable\n");
 	printf("%s\n",banner);
 	drawline(width, n);
 	//drawblankline(width, n);
@@ -111,6 +111,7 @@ void Table::print(const char* banner){
 		//drawblankline(width, n);
 		//drawline(width, n);
 	}
+	printf("\n");
 	delete[] rdata;
 }
 

@@ -11,26 +11,32 @@
 /******************************************************************************/
 using namespace QuadratureRules;
 static double p[] = {1.,0.,0.,2.,3.,2.};
+static double p0[]= {1.,3.};
 static double f02(double x, double y) { 
 	return log(x*x+exp(x*y));
 }
-static double _Complex f03(double x, double y) { 
+static double _Complex f04(double x, double y) { 
 	return cexp(I*( x*y*log(x+3)+y*y));
 }
-static double f04(double x, double y) { 
-	return x*y+exp(-x);
+static double f06(double x, double y) { 
+	return x*y+x;
+}
+static double f07(double x, double y) {
+	return x;
 }
 static double true_val_f02=6.2340491877461960211;
-static double _Complex true_val_f03=-0.2986424021019246+0.1503820269098639*I;
-static double true_val_f04=4.417444019285018;
-
-
+static double _Complex true_val_f04=-0.2986424021019246+0.1503820269098639*I;
+static double true_val_f06=6.83251299189152016285147;
+static double true_val_f07=2.25338772238102952694357;
+/******************************************************************************/ 
 int test01(void);
 int test02(void);
 int test03(void);
 int test04(void);
 int test05(void);
 int test06(void);
+int test07(void);
+int testxx(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
 {
@@ -48,6 +54,8 @@ int main(int argc, char const* argv[])
 	test04();
 	test05();
 	test06();
+	test07();
+	//testxx();
 
 	unlink_stdout();
 
@@ -112,7 +120,7 @@ int test02(void)
 	tbl.cols(cols);
 	tbl.data(data);
 	char banner[BUFSIZ];
-	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Dunavant Quadrature Rules\n\t\tTrue value = %20.15f",true_val_f02);
+	sprintf(banner,"Precision in #SD");
 	tbl.print(banner);
 	
         printf("END OF TEST02\n");
@@ -162,7 +170,7 @@ int test03(void)
 	tbl.cols(cols);
 	tbl.data(data);
 	char banner[BUFSIZ];
-	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Wandzura Quadrature Rules\n\t\tTrue value = %20.15f",true_val_f02);
+	sprintf(banner,"Precision in #SD");
 	tbl.print(banner);
         printf("END OF TEST03\n");
         printf("\n");
@@ -187,13 +195,13 @@ int test04(void)
 	for (int i = 0; i < N; i++) {
 		gDunavantRule.Generate(i+1,q);
 		data[i]   = q->n;
-		data[N+i] = -log( cabs( (zit_symmetric(q,p,&f03,work) 
-					 -true_val_f03)/true_val_f03)
+		data[N+i] = -log( cabs( (zit_symmetric(q,p,&f04,work) 
+					 -true_val_f04)/true_val_f04)
 				) / log(10);
 		clk.flush();
 		for (int j = 0; j < COUNT; j++) {
 			clk.tic();
-			zit_symmetric(q,p,&f03,work);
+			zit_symmetric(q,p,&f04,work);
 			clk.toc();
 		}
 		data[2*N+i] = clk.median()/data[i];
@@ -213,7 +221,7 @@ int test04(void)
 	tbl.cols(cols);
 	tbl.data(data);
 	char banner[BUFSIZ];
-	sprintf(banner,"Double Complex Numerical Integration on \n\tTriangle using Dunavant Quadrature Rules\n\t\tTrue value = %20.15f + %20.15f*I",creal(true_val_f03),cimag(true_val_f03));
+	sprintf(banner,"Precision in #SD");
 	tbl.print(banner);
 	
         printf("END OF TEST04\n");
@@ -240,13 +248,13 @@ int test05(void)
 	for (int i = 0; i < N; i++) {
 		gWandzuraRule.Generate(i+1,q);
 		data[i]   = q->n;
-		data[N+i] = -log( cabs( (zit_symmetric(q,p,&f03,work) 
-					 -true_val_f03)/true_val_f03)
+		data[N+i] = -log( cabs( (zit_symmetric(q,p,&f04,work) 
+					 -true_val_f04)/true_val_f04)
 				) / log(10);
 		clk.flush();
 		for (int j = 0; j < COUNT; j++) {
 			clk.tic();
-			zit_symmetric(q,p,&f03,work);
+			zit_symmetric(q,p,&f04,work);
 			clk.toc();
 		}
 		data[2*N+i] = clk.median()/data[i];
@@ -263,7 +271,7 @@ int test05(void)
 	tbl.cols(cols);
 	tbl.data(data);
 	char banner[BUFSIZ];
-	sprintf(banner,"Double Complex Numerical Integration on \n\tTriangle using Wandzura Quadrature Rules\n\t\tTrue value = %20.15f + %20.15f*I",creal(true_val_f03),cimag(true_val_f03));
+	sprintf(banner,"Precision in #SD");
 	tbl.print(banner);
         printf("END OF TEST05\n");
         printf("\n");
@@ -300,14 +308,14 @@ int test06(void)
 	for (int j = 0; j < NV; j++)
 		for (int i = 0; i < NU; i++) {
 			precision[i+j*NU] = -log( fabs(
-						(dit_arcsinh_atomic(qu[i],qv[j],p,&f04,work) 
-						 -true_val_f04)/true_val_f04)
+						(dit_arcsinh_atomic(qu[i],qv[j],p,&f06,work) 
+						 -true_val_f06)/true_val_f06)
 					) / log(10);
-			//precision[i+j*NU] = dit_arcsinh_atomic(qu[i],qv[j],p,&f04,work);
+			//precision[i+j*NU] = dit_arcsinh_atomic(qu[i],qv[j],p,&f06,work);
 			clk.flush();
 			for (int k = 0; k < COUNT; k++) {
 				clk.tic();
-				dit_arcsinh_atomic(qu[i],qv[j],p,&f04,work);
+				dit_arcsinh_atomic(qu[i],qv[j],p,&f06,work);
 				clk.toc();
 			}
 			time[i+j*NU] = clk.median()/(i*j);
@@ -328,7 +336,7 @@ int test06(void)
 	tbl[0].rows(rows);
 	tbl[0].cols(cols);
 	tbl[0].data(precision);
-	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Arcsinh Transform\n\t\tTrue value = %20.15f\n\n\tPrecision in Number of Significant Digits",true_val_f04);
+	sprintf(banner,"Precision in #SD");
 	tbl[0].print(banner);
 
 
@@ -337,7 +345,7 @@ int test06(void)
 	tbl[1].rows(rows);
 	tbl[1].cols(cols);
 	tbl[1].data(time);
-	sprintf(banner,"Double Precision Numerical Integration on \n\tTriangle using Arcsinh Transform\n\t\tTrue value = %20.15f\n\n\tTime in Cycles/Sampling Point",true_val_f04);
+	sprintf(banner,"Time in cycles/sample point");
 	tbl[1].print(banner);
 	
         printf("END OF TEST06\n");
@@ -348,12 +356,88 @@ int test06(void)
 #undef NU
 }
 
-int test06x(void)
+int test07(void)
+{
+#define NU 10
+#define NV 6
+#define COUNT 20
+	int err=0; 
+        printf("TEST07\n");
+        printf("	|Test dit_arcsinh Legendre X Legendre\n");
+	double precision[NU*NV];
+	double time[NU*NV];
+	TimeStamp clk(COUNT);
+
+	struct st_quadrule *qu[NU],*qv[NV]; 
+	for (int i = 0; i < NU; i++) { 
+		qu[i]=(struct st_quadrule*)mkl_malloc(
+				sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+		gGaussRule.Generate(i+1,qu[i]);
+	}
+	for (int i = 0; i < NV; i++) {
+		qv[i]=(struct st_quadrule*)mkl_malloc(
+				sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+		gGaussRule.Generate(i+1,qv[i]);
+	}
+
+	double work[2000]; // workspace
+	for (int j = 0; j < NV; j++)
+		for (int i = 0; i < NU; i++) {
+			precision[i+j*NU] = -log( fabs(
+						(dit_arcsinh(qu[i],qv[j],p,p0,&f07,work) 
+						 -true_val_f07)/true_val_f07)
+					) / log(10);
+			//precision[i+j*NU] = dit_arcsinh(qu[i],qv[j],p,p0,&f07,work);
+			clk.flush();
+			for (int k = 0; k < COUNT; k++) {
+				clk.tic();
+				dit_arcsinh_atomic(qu[i],qv[j],p,&f07,work);
+				clk.toc();
+			}
+			time[i+j*NU] = clk.median()/(3*i*j);
+		}
+
+	for (int i = 0; i < NU; i++)
+		mkl_free(qu[i]);
+	for (int i = 0; i < NV; i++)
+		mkl_free(qv[i]);
+	
+	Table tbl[2];
+	char banner[BUFSIZ];
+	const char *rows[NU]={"1","2","3","4",
+		"5","6","7","8","9","10"};
+	const char *cols[NV]={"1","2","3","4","5","6"};
+	tbl[0].set_width(12);
+	tbl[0].dim(NU,NV);
+	tbl[0].rows(rows);
+	tbl[0].cols(cols);
+	tbl[0].data(precision);
+	sprintf(banner,"Precision in #SD");
+	tbl[0].print(banner);
+
+
+	tbl[1].set_width(12);
+	tbl[1].dim(NU,NV);
+	tbl[1].rows(rows);
+	tbl[1].cols(cols);
+	tbl[1].data(time);
+	sprintf(banner,"Time in cycles/sample point");
+	tbl[1].print(banner);
+	
+        printf("END OF TEST07\n");
+        printf("\n");
+	return err; 
+#undef COUNT
+#undef NV
+#undef NU
+}
+
+int testxx(void)
 {
 #define NU 5
 #define NV 2
 	int err=0; 
-        printf("TEST06\n");
+        printf("TESTxx\n");
         printf("	|Test dit_arcsinh_atomic Legendre X Legendre\n");
 
 	struct st_quadrule *qu,*qv; 
@@ -365,11 +449,11 @@ int test06x(void)
 	gGaussRule.Generate(NV,qv);
 
 	double val,work[2000]; // workspace
-	val = dit_arcsinh_atomic(qu,qv,p,&f04,work);
+	val = dit_arcsinh(qu,qv,p,p0,&f07,work);
 
 	fprintf(stderr, "val=%f\n",val);
 	
-        printf("END OF TEST06\n");
+        printf("END OF TESTxx\n");
         printf("\n");
 	return err; 
 #undef NV

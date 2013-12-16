@@ -100,6 +100,7 @@ double dit_arcsinh_atomic(const struct st_quadrule *restrict qu,
 		const double *restrict p,
 		double (*f)(double,double), double *restrict work)
 {
+	// (4*nu*nv+nu)*sizeof(double)
 	assert((qu->dim==1)&&(qv->dim==1));
 	double p0p1[2],p0p2[2],p1p2[2],invp1p2,up1p2[2],Ah[4],xp[2],h,u0[2];
 	p0p1[0] = p[2] - p[0]; // x1-x0
@@ -162,14 +163,40 @@ double dit_arcsinh_atomic(const struct st_quadrule *restrict qu,
 	return val;
 }
 
-
-static double vec_diff2(double *restrict u, double *restrict v, double *res) {
-	res[0] = u[0] - v[0];
-	res[1] = u[1] - v[1];
+/*
+ * return	Det[a1-a2,b1-b2]
+ */
+static double det(const double *a1, const double *a2, 
+		const double *b1, const double *b2)
+{
+	return (a1[0]-a2[0])*(b1[1]-b2[1]) - (a1[1]-a2[1])*(b1[0]-b2[0]);
 }
 
-static double det2x2(double *restrict a, double *restrict b) {
-	return a[0]*b[1]-a[1]*b[0];
+/*
+ * Construct three triangles cyclically using p and p0, output to res.
+ */
+static void cyc_trig(const double *p, const double *p0, double *&res)
+{
+	res[0]    = p0[0];
+	res[1]    = p0[1];
+	res[2]    = p[0];
+	res[3]    = p[1];
+	res[4]    = p[2];
+	res[5]    = p[3];
+
+	res[6+0]  = p0[0];
+	res[6+1]  = p0[1];
+	res[6+2]  = p[2];
+	res[6+3]  = p[3];
+	res[6+4]  = p[4];
+	res[6+5]  = p[5];
+
+	res[12+0] = p0[0];
+	res[12+1] = p0[1];
+	res[12+2] = p[4];
+	res[12+3] = p[5];
+	res[12+4] = p[0];
+	res[12+5] = p[1];
 }
 
 double dit_arcsinh(const struct st_quadrule *restrict qu, 
@@ -177,13 +204,28 @@ double dit_arcsinh(const struct st_quadrule *restrict qu,
 		const double *restrict p, const double *restrict p0,
 		double (*f)(double,double), double *restrict work)
 {
-	double *u,*v;
-	u = work;
-	v = u + 2;
-	double A;
+	// 25*sizeof(double) + sizeof(iwork)
+	double *A,*s,*w,*pp,*iwork;
+	A = work;
+	s = A + 1;
+	w = s + 3; 
+	pp= w + 3;
+	iwork= pp + 18;
 
+	A[0] = det(p+2,p ,p+4,p  );
+	s[0] = det(p,  p0,p+2,p  )*A[0];
+	s[1] = det(p+2,p0,p+4,p+2)*A[0];
+	s[2] = det(p+4,p0,p,  p+4)*A[0];
+	for (int i = 0; i < 3; i++)
+		if (s[i]>0)
+			w[i] = 1.0;
+		else
+			w[i] =-1.0;
+	cyc_trig(p,p0,pp);
 
 	double val=0.0;
+	for (int i = 0; i < 3; i++)
+		val += w[i] * dit_arcsinh_atomic(qu,qv,pp+6*i,f,iwork);
 
 	return val;
 }
