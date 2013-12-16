@@ -98,7 +98,7 @@ double dit_arcsinh(const struct st_quadrule *restrict qu,
 		const struct st_quadrule *restrict qv,
 		const double *restrict p, const double *restrict p0,
 		double (*f)(double,double), double *restrict work);
-	
+
 double _Complex zit_arcsinh_atomic(const struct st_quadrule *restrict qu, 
 		const struct st_quadrule *restrict qv,
 		const double *restrict p,

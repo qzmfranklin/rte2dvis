@@ -24,10 +24,18 @@ static double f06(double x, double y) {
 static double f07(double x, double y) {
 	return x;
 }
+static double _Complex f08(double x, double y) {
+	return 2*x*y+(x*x-y*y)*I;
+}
+static double _Complex f09(double x, double y) {
+	return 2*x*y+(x*x-y*y)*I;
+}
 static double true_val_f02=6.2340491877461960211;
 static double _Complex true_val_f04=-0.2986424021019246+0.1503820269098639*I;
 static double true_val_f06=6.83251299189152016285147;
 static double true_val_f07=2.25338772238102952694357;
+static double _Complex true_val_f08=7.0299660409736428635+1.0905215459986228247*I;
+static double _Complex true_val_f09=6.5318853202466288449-0.2741522601456360062I;
 /******************************************************************************/ 
 int test01(void);
 int test02(void);
@@ -36,6 +44,8 @@ int test04(void);
 int test05(void);
 int test06(void);
 int test07(void);
+int test08(void);
+int test09(void);
 int testxx(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
@@ -55,6 +65,8 @@ int main(int argc, char const* argv[])
 	test05();
 	test06();
 	test07();
+	test08();
+	test09();
 	//testxx();
 
 	unlink_stdout();
@@ -391,7 +403,7 @@ int test07(void)
 			clk.flush();
 			for (int k = 0; k < COUNT; k++) {
 				clk.tic();
-				dit_arcsinh_atomic(qu[i],qv[j],p,&f07,work);
+				dit_arcsinh(qu[i],qv[j],p,p0,&f07,work);
 				clk.toc();
 			}
 			time[i+j*NU] = clk.median()/(3*i*j);
@@ -432,13 +444,165 @@ int test07(void)
 #undef NU
 }
 
+int test08(void)
+{
+#define NU 10
+#define NV 6
+#define COUNT 20
+	int err=0; 
+        printf("TEST08\n");
+        printf("	|Test zit_arcsinh_atomic Legendre X Legendre\n");
+	double precision[NU*NV];
+	double time[NU*NV];
+	TimeStamp clk(COUNT);
+
+	struct st_quadrule *qu[NU],*qv[NV]; 
+	for (int i = 0; i < NU; i++) { 
+		qu[i]=(struct st_quadrule*)mkl_malloc(
+				sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+		gGaussRule.Generate(i+1,qu[i]);
+	}
+	for (int i = 0; i < NV; i++) {
+		qv[i]=(struct st_quadrule*)mkl_malloc(
+				sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+		gGaussRule.Generate(i+1,qv[i]);
+	}
+
+	double work[2000]; // workspace
+	for (int j = 0; j < NV; j++)
+		for (int i = 0; i < NU; i++) {
+			precision[i+j*NU] = -log( cabs(
+						(zit_arcsinh_atomic(qu[i],qv[j],p,&f08,work) 
+						 -true_val_f08)/true_val_f08)
+					) / log(10);
+			//precision[i+j*NU] = dit_arcsinh_atomic(qu[i],qv[j],p,&f08,work);
+			clk.flush();
+			for (int k = 0; k < COUNT; k++) {
+				clk.tic();
+				zit_arcsinh_atomic(qu[i],qv[j],p,&f08,work);
+				clk.toc();
+			}
+			time[i+j*NU] = clk.median()/(i*j);
+		}
+
+	for (int i = 0; i < NU; i++)
+		mkl_free(qu[i]);
+	for (int i = 0; i < NV; i++)
+		mkl_free(qv[i]);
+	
+	Table tbl[2];
+	char banner[BUFSIZ];
+	const char *rows[NU]={"1","2","3","4",
+		"5","6","7","8","9","10"};
+	const char *cols[NV]={"1","2","3","4","5","6"};
+	tbl[0].set_width(12);
+	tbl[0].dim(NU,NV);
+	tbl[0].rows(rows);
+	tbl[0].cols(cols);
+	tbl[0].data(precision);
+	sprintf(banner,"Precision in #SD");
+	tbl[0].print(banner);
+
+
+	tbl[1].set_width(12);
+	tbl[1].dim(NU,NV);
+	tbl[1].rows(rows);
+	tbl[1].cols(cols);
+	tbl[1].data(time);
+	sprintf(banner,"Time in cycles/sample point");
+	tbl[1].print(banner);
+	
+        printf("END OF TEST08\n");
+        printf("\n");
+	return err; 
+#undef COUNT
+#undef NV
+#undef NU
+}
+
+int test09(void)
+{
+#define NU 10
+#define NV 6
+#define COUNT 20
+	int err=0; 
+        printf("TEST09\n");
+        printf("	|Test zit_arcsinh Legendre X Legendre\n");
+	double precision[NU*NV];
+	double time[NU*NV];
+	TimeStamp clk(COUNT);
+
+	struct st_quadrule *qu[NU],*qv[NV]; 
+	for (int i = 0; i < NU; i++) { 
+		qu[i]=(struct st_quadrule*)mkl_malloc(
+				sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+		gGaussRule.Generate(i+1,qu[i]);
+	}
+	for (int i = 0; i < NV; i++) {
+		qv[i]=(struct st_quadrule*)mkl_malloc(
+				sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+		gGaussRule.Generate(i+1,qv[i]);
+	}
+
+	double work[2000]; // workspace
+	for (int j = 0; j < NV; j++)
+		for (int i = 0; i < NU; i++) {
+			precision[i+j*NU] = -log( cabs(
+						(zit_arcsinh(qu[i],qv[j],p,p0,&f09,work) 
+						 -true_val_f09)/true_val_f09)
+					) / log(10);
+			//precision[i+j*NU] = dit_arcsinh(qu[i],qv[j],p,p0,&f09,work);
+			clk.flush();
+			for (int k = 0; k < COUNT; k++) {
+				clk.tic();
+				zit_arcsinh(qu[i],qv[j],p,p0,&f09,work);
+				clk.toc();
+			}
+			time[i+j*NU] = clk.median()/(3*i*j);
+		}
+
+	for (int i = 0; i < NU; i++)
+		mkl_free(qu[i]);
+	for (int i = 0; i < NV; i++)
+		mkl_free(qv[i]);
+	
+	Table tbl[2];
+	char banner[BUFSIZ];
+	const char *rows[NU]={"1","2","3","4",
+		"5","6","7","8","9","10"};
+	const char *cols[NV]={"1","2","3","4","5","6"};
+	tbl[0].set_width(12);
+	tbl[0].dim(NU,NV);
+	tbl[0].rows(rows);
+	tbl[0].cols(cols);
+	tbl[0].data(precision);
+	sprintf(banner,"Precision in #SD");
+	tbl[0].print(banner);
+
+
+	tbl[1].set_width(12);
+	tbl[1].dim(NU,NV);
+	tbl[1].rows(rows);
+	tbl[1].cols(cols);
+	tbl[1].data(time);
+	sprintf(banner,"Time in cycles/sample point");
+	tbl[1].print(banner);
+	
+        printf("END OF TEST09\n");
+        printf("\n");
+	return err; 
+#undef COUNT
+#undef NV
+#undef NU
+}
+
 int testxx(void)
 {
 #define NU 5
 #define NV 2
 	int err=0; 
         printf("TESTxx\n");
-        printf("	|Test dit_arcsinh_atomic Legendre X Legendre\n");
+        printf("	|Test zit_arcsinh_atomic Legendre X Legendre\n");
 
 	struct st_quadrule *qu,*qv; 
 	qu=(struct st_quadrule*)mkl_malloc(
@@ -448,10 +612,12 @@ int testxx(void)
 	gGaussRule.Generate(NU,qu);
 	gGaussRule.Generate(NV,qv);
 
-	double val,work[2000]; // workspace
-	val = dit_arcsinh(qu,qv,p,p0,&f07,work);
+	double work[2000]; // workspace
+	double _Complex val;
+	val = zit_arcsinh_atomic(qu,qv,p,&f08,work);
 
-	fprintf(stderr, "val=%f\n",val);
+	fprintf(stderr, "true val= %f + %f*I\n",creal(true_val_f08),cimag(true_val_f08));
+	fprintf(stderr, "val     = %f + %f*I\n",creal(val),cimag(val));
 	
         printf("END OF TESTxx\n");
         printf("\n");
