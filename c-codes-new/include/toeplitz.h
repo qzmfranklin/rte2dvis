@@ -1,54 +1,55 @@
 #ifndef _TOEPLITZ_VEC_MUL_H_
 #define _TOEPLITZ_VEC_MUL_H_
 /******************************************************************************/ 
+#include <fftw3.h>
+/******************************************************************************/ 
 /*
  * Nameing convenction:
  * 	D	double precision
  * 	Z	double complex
+ *
  * 	I	in-place
  * 	O	out-of-place
- * 	CR	circulant matrix
- * 	TL	Toeplitz matrix
+ *
+ * 	CR	circulant matrix, pass the first column
+ * 	CRF	circulant matrix, pass the Fourier transform of the first column
+ *
+ * 	TL	Toeplitz matrix, pass the first column and the first row
+ *
  * 	MV	matrix-vector multiplication
  */
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-	//TODO
-struct st_plans { 
-	int             kind;
-	int             plan_num;
-	fftw_plan     **plan;
-	void           *work;
-}
+#endif 
+
+enum fftw_plan_kind {
+	IFWD	= 0,	// in-place forward
+	IBWD,		// in-place backward
+	OFWD,		// out-of-place forward
+	OBWD,		// out-of-place backward
+}; 
+
+void create_fftw_plans(const int n, fftw_plan *restrict &plans, 
+		int flag = FFTW_MEASURE|FFTW_PATIENT);
+void destroy_fftw_plans(fftw_plan *restrict plans);
 
 /*
- * Auxilliary routine to connect the first column and the first row and the
- * Toeplitz matrix to form a single vector, z, that is the input of the
- * multiplication routine.
- */
-void d_toeplitz_to_circulant(const double *col, const double *row, 
-		double *restrict z);
-
-/*
- * Double precision out-of-place fast M-V multiplication:
- * 		Z.Vin => Vout
+ * In-place circulant matrix - vector multiplication.
  * Input:
- * 	n	int		dimension of the Toeplitz matrix
- * 	z	*double		[n] col and row representing the matrix
- * 	in	*double		[n] input vector
- * 	work	*double		[?] workspace
+ * 	n		size of matrix Z
+ * 	zf		DFT of the first column of Z
+ * 	v		vector V
+ * 	plans		fftw_plan *, created by create_fftw_plans
  * Output:
- * 	out	*double		[n] first n elements form the output vector
+ * 	v		upon exit, stores Z.V
  * Note:
- * 	n, z, and in are all kept constant during operation.
- * 	z, in, and out must point to different arrays.
- * 	Workspace, i.e., work, must be at least sizeof(double)*(TODO)
- * bytes.
+ * 	The fftw_plan pointer, plans, must be created by calling the
+ * create_fftw_plans routine with the same dimension n.
+ * 	The input vectors, zf and v, must be 16bytes aligned.
  */
-void zocrmv(const int n, void *z, void *in, void *out, 
-		fftw_plan **plans, void *work);
+void zicrfmv(const int n, const double _Complex *restrict zf,
+		double _Complex *restrict v, const fftw_plan *plans);
 	
 #ifdef __cplusplus
 }

@@ -29,13 +29,27 @@
 /******************************************************************************/ 
 using namespace std;
 
-void array_abs(double *v, int n)
+void cscale(const double _Complex scale, 
+		const int n, double _Complex *restrict v)
+{
+	for (int i = 0; i < n; i++)
+		v[i] *= scale;
+}
+
+void cdot(const int n, double _Complex *a,  
+		double _Complex *b, double _Complex *dest)
+{
+	for (int i = 0; i < n; i++) 
+		dest[i] = a[i]*b[i];
+} 
+
+void array_abs(const int n, double *v)
 {
 	for(int i=0; i < n; i++)
 		v[i] = fabs(v[i]);
 }
 
-double array_max(double *v, int n)
+double array_max(const  int n, double *v)
 {
 	double ans = 0;
 	for(int i=0; i < n; i++)
@@ -92,9 +106,9 @@ void array_in(const char* fname, const int n, double *v)
 	ifile.close();
 }
 
-void array_flush(double *v, int size)
+void array_flush(const int n, double *v)
 {
-	for(long int i=0; i < size; i++)
+	for(long int i=0; i < n; i++)
 		_mm_clflush(v + i);
 }
 
