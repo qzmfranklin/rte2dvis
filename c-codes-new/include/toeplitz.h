@@ -1,6 +1,7 @@
 #ifndef _TOEPLITZ_VEC_MUL_H_
 #define _TOEPLITZ_VEC_MUL_H_
 /******************************************************************************/ 
+#include <complex.h>
 #include <fftw3.h>
 /******************************************************************************/ 
 /*
@@ -50,7 +51,6 @@ void destroy_fftw_plans(fftw_plan *restrict plans);
  */
 void zicrfmv(const int n, const double _Complex *restrict zf,
 		double _Complex *restrict v, const fftw_plan *plans);
-	
 #ifdef __cplusplus
 }
 #endif 

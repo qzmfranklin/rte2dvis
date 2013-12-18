@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	int err=0;
 	printf("###############################################################################\n");
 	/*printf("--------------------------------------------------\n");*/
-	printf("BEGIN:	|MSH_TO_DATA.EXE\n");
+	printf("BEGIN:	|MSH_TO_TXT.EXE\n");
 	printf("	|This executable aims to read the nodes\n");
 	printf("	|and triangles from the given MSH file,\n");
 	printf("	|then dump the nodes and triangles into\n");
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 	printf("		filename_out	= %s\n",filename_out); 
 
 	// Calling fileio_dump_msh_file
-	err += fileio_dump_msh_file(filename_in,filename_out); 
+	err += fileio_msh_to_txt(filename_in,filename_out); 
 
 	if (!err) {
 		printf("	Successfully dumped nodes and triangles!\n");

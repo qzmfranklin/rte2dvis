@@ -7,7 +7,6 @@
 /******************************************************************************/ 
 
 void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
-
 {
 	//fprintf(stderr, "create_fftw_plans(n=%d,plans,flag)\n",n);
 	fftw_complex *work1,*work2;

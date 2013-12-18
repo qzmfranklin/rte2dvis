@@ -4,10 +4,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void fileio_read_rte2dvis_input_file(const char *filename); 
-int fileio_read_info_nodes_triangles(const char *filename_base,	double **nodes,
-		int *num_nodes, int **triangles, int *num_triangles );
-int fileio_dump_msh_file(const char *filename_msh, const char *filename_dat); 
+int fileio_read_info_nodes_triangles_from_txt(const char *filename_base,	
+		double **nodes, int *num_nodes, int **triangles, 
+		int *num_triangles );
+
+int fileio_msh_to_txt(const char *filename_msh, const char *filename_dat);
+int fileio_msh_to_binary(const char *filename_msh, const char *filename_dat);
 #ifdef __cplusplus
 }
 #endif
