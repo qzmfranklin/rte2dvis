@@ -50,13 +50,7 @@ int testxx(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
 {
-	char fname[FILENAME_MAX];
-	if (!argc)
-		sprintf(fname,"DEBUG/test_int_trig.txt");
-	else
-		strcpy(fname,argv[1]);
-
-	link_stdout(fname);
+	if (argc>1) link_stdout(argv[1]);
 
 	test01();
 	test02();
@@ -69,7 +63,7 @@ int main(int argc, char const* argv[])
 	test09();
 	//testxx();
 
-	unlink_stdout();
+	if (argc>1) unlink_stdout();
 
 	return 0;
 }

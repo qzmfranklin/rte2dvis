@@ -10,17 +10,12 @@ void runstatv(int v);
 
 int main(int argc, char const* argv[])
 {
-	char fname[FILENAME_MAX];
-	if (!argc)
-		sprintf(fname,"DEBUG/test_int_trig.txt");
-	else
-		strcpy(fname,argv[1]); 
-	link_stdout(fname); 
+	if (argc>1) link_stdout(argv[1]);
 
 	runstatv(100000);
 	test_Table();
 
-	unlink_stdout();
+	if (argc>1) unlink_stdout();
 
 	return 0;
 }

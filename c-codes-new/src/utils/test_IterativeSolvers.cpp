@@ -11,17 +11,11 @@ int main(int argc, char const* argv[]);
 /*****************************************************************************/
 int main(int argc, char const* argv[])
 { 
-	char fname[FILENAME_MAX];
-	if (!argc)
-		sprintf(fname,"DEBUG/test_IterativeSolvers.txt");
-	else
-		strcpy(fname,argv[1]);
-
-	link_stdout(fname);
+	if (argc>1) link_stdout(argv[1]);
 
 	//test01();
 
-	unlink_stdout();
+	if (argc>1) unlink_stdout();
 
 	return 0;
 }

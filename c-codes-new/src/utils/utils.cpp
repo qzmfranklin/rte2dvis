@@ -168,6 +168,12 @@ static FILE *___stdout_backup___;
 
 void link_stdout(const char *fname)
 {
+	if (fname==NULL) {
+		fprintf(stderr,"link_stdout(const char *fname): fname=NULL\n");
+		fprintf(stderr, "Use the current stdout.\n");
+		return;
+	}
+
 	assrt(___linkstd_state___==0);
 	___linkstd_state___ = 1; 
 
