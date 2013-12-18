@@ -19,3 +19,14 @@ int main(int argc, char const* argv[])
 
 	return 0;
 }
+
+int test01(void)
+{
+	int err=0; 
+        printf("TEST01\n");
+        printf("	|Test MKL fgmres\n");
+	
+        printf("END OF TEST01\n");
+        printf("\n");
+	return err;
+}

@@ -94,7 +94,7 @@ int test01(void)
 
 int test02(void)
 {
-#define N 8192
+#define N 1024
 #define COUNT 20
 	int err=0; 
         printf("TEST02\n");
