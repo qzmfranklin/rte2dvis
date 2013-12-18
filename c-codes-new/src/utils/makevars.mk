@@ -100,7 +100,7 @@ ${DIR-utils}CFILES:=file_io.c
 ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
 	DunavantRule.cpp GaussRule.cpp LynessRule.cpp \
 	WandzuraRule.cpp int_trig.cpp QuadratureRules.cpp \
-	toeplitz.cpp IterativeSolvers.cpp
+	toeplitz.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -120,7 +120,7 @@ ${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
 ${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe \
-	test_int_trig.exe test_toeplitz.exe test_IterativeSolvers.exe
+	test_int_trig.exe test_toeplitz.exe test_mkl_solvers.exe
 
 ${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
@@ -138,8 +138,7 @@ ${BIN}/test_toeplitz.exe: ${OBJ}/test_toeplitz.o \
 	${OBJ}/toeplitz.o \
 	${LIB}/libutils.a ${LIB}/libutils.so
 
-${BIN}/test_IterativeSolvers.exe: ${OBJ}/test_IterativeSolvers.o \
-	${OBJ}/IterativeSolvers.o \
+${BIN}/test_mkl_solvers.exe: ${OBJ}/test_mkl_solvers.o \
 	${LIB}/libutils.a ${LIB}/libutils.so
 
 ###############################################################################

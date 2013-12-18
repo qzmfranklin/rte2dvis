@@ -30,5 +30,9 @@ void init_matrix(const int m, const int n, double* a, int lda=1);
 void print_vector(const char* desc, const int n, double* v, int incx=1);
 void print_matrix(const char* desc, const int m, const int n, double *a, 
 		int lda=0);
+void print_cvector(const char* desc, const int n, 
+		double _Complex *restrict v, int incx=1);
+void print_cmatrix(const char* desc, const int m, const int n, 
+		double _Complex *restrict a, int lda=0);
 /******************************************************************************/
 #endif

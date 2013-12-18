@@ -261,18 +261,43 @@ void print_vector(const char* desc, const int n, double* v, int incx)
 	assrt(incx>0);
 	printf("%s = \n",desc);
 	for (int i = 0; i < n; i++)
-		printf(" %6.2f",v[i*incx]);
+		printf("%6.2f ",v[i*incx]);
 	printf("\n");
 }
 
-void print_matrix(const char* desc, const int m, const int n, double *a, int lda)
+void print_matrix(const char* desc, const int m, const int n, 
+		double *a, int lda)
 {
 	if (lda<m) lda=m;
 	printf("%s = \n",desc);
 	for (int i = 0; i < m; i++) {
 		for (int j = 0; j < n; j++)
-			printf(" %6.2f",a[i+j*lda]);
+			printf("%6.2f ",a[i+j*lda]);
 		printf("\n");
 	}
 }
+
+
+void print_cvector(const char* desc, const int n, 
+		double _Complex *restrict v, int incx)
+{
+	assrt(incx>0);
+	printf("%s = \n",desc);
+	for (int i = 0; i < n; i++)
+		printf("%6.2f+%6.2fI ",creal(v[i*incx]),cimag(v[i*incx]));
+	printf("\n");
+}
+
+void print_cmatrix(const char* desc, const int m, const int n, 
+		double _Complex *restrict a, int lda)
+{
+	if (lda<m) lda=m;
+	printf("%s = \n",desc);
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++)
+			printf("%6.2f+%6.2fI ",creal(a[i+j*lda]),cimag(a[i+j*lda]));
+		printf("\n");
+	}
+}
+
 /******************************************************************************/
