@@ -62,14 +62,14 @@
 #				STEP 1
 #	DIRECTORY NAME FROM THE ROOT DIRECTORY
 #
-#  The ${DIR-utils} variable will be used through the rest of this 
+#  The ${DIR-v1} variable will be used through the rest of this 
 #  makevars.mk file to achieve modularity.
 #  	Be very careful:
 # 		NO SPACE ( tab is OK )
 # 		NO DEFERRED-EVALUATION ( always use colon-equal, i.e., := ) #
-DIR-utils:=src/utils# Please, NO SPACE 
+DIR-v1:=src/v1# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following line to be verbose.
-${DIR-utils}QUIET:=@
+${DIR-v1}QUIET:=@
 ###############################################################################
 #				STEP 2
 #	DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
@@ -82,61 +82,45 @@ ${DIR-utils}QUIET:=@
 #  from the Makefile in the root directory. If one wishes to add any 
 #  additional options that are specific to this very directory, add them after 
 #  the global ones. For example:
-# 	 	${DIR-utils}CFLAGS :=${CFLAGS} [directory-specific options]
-#  	Usually, ${DIR-utils}INCS and should not need to be modified if
+# 	 	${DIR-v1}CFLAGS :=${CFLAGS} [directory-specific options]
+#  	Usually, ${DIR-v1}INCS and should not need to be modified if
 #  the build in this directory does not require some extra libraries and/or 
 #  hearder files. But in case it did, free at ease to modify these two 
 #  variables.
 #  	Note that one _cannot_ drop any of the global compiling and linking
 #  options. So only specify options that are definitely needed by the entire
 #  project at the top level Makefile.
-${DIR-utils}CFLAGS:=${CFLAGS}
-${DIR-utils}CXXFLAGS:=${CXXFLAGS}
-${DIR-utils}INCS:=${INCS}
+${DIR-v1}CFLAGS:=${CFLAGS}
+${DIR-v1}CXXFLAGS:=${CXXFLAGS}
+${DIR-v1}INCS:=${INCS}
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
-${DIR-utils}CFILES:=file_io.c
-${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
-	DunavantRule.cpp GaussRule.cpp LynessRule.cpp \
-	WandzuraRule.cpp int_trig.cpp QuadratureRules.cpp \
-	toeplitz.cpp
+${DIR-v1}CFILES:=
+${DIR-v1}CPPFILES:=
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
-${DIR-utils}BINEXE:=msh_to_data.exe
-${DIR-utils}LIB:=utils QuadratureRules
+${DIR-v1}BINEXE:=
+${DIR-v1}LIB:=
 
-${BIN}/msh_to_data.exe: ${OBJ}/msh_to_data.o ${OBJ}/file_io.o 
+#${BIN}/msh_to_data.exe: ${OBJ}/msh_to_data.o ${OBJ}/file_io.o 
 
-${LIB}/libutils.so ${LIB}/libutils.a: ${OBJ}/utils.o \
-	${OBJ}/StatVector.o ${OBJ}/Table.o ${OBJ}/TimeStamp.o
+#${LIB}/libutils.so ${LIB}/libutils.a: ${OBJ}/utils.o \
+	#${OBJ}/StatVector.o ${OBJ}/Table.o ${OBJ}/TimeStamp.o
 
-${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
-	${OBJ}/QuadratureRules.o \
-	${OBJ}/GaussRule.o ${OBJ}/DunavantRule.o \
-	${OBJ}/WandzuraRule.o ${OBJ}/LynessRule.o
+#${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
+	#${OBJ}/QuadratureRules.o \
+	#${OBJ}/GaussRule.o ${OBJ}/DunavantRule.o \
+	#${OBJ}/WandzuraRule.o ${OBJ}/LynessRule.o
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe \
-	test_int_trig.exe test_toeplitz.exe
+${DIR-v1}TSTEXE:=
 
-${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
-	${LIB}/libutils.a ${LIB}/libutils.so 
+#${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
+	#${LIB}/libutils.a ${LIB}/libutils.so 
 
-${BIN}/test_int_trig.exe: ${OBJ}/test_int_trig.o \
-	${OBJ}/int_trig.o \
-	${LIB}/libutils.a ${LIB}/libutils.so \
-	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
-
-${BIN}/test_QuadratureRules.exe: ${OBJ}/test_QuadratureRules.o \
-	${LIB}/libutils.a ${LIB}/libutils.so \
-	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
-
-${BIN}/test_toeplitz.exe: ${OBJ}/test_toeplitz.o \
-	${OBJ}/toeplitz.o \
-	${LIB}/libutils.a ${LIB}/libutils.so
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or
@@ -185,32 +169,32 @@ ${BIN}/test_toeplitz.exe: ${OBJ}/test_toeplitz.o \
 #  variables and add proper files to the top level variables. Please anyway do
 #  NOT modify them.
 ################## DO NOT MODIFY ################
-${DIR-utils}CFILES:=${${DIR-utils}CFILES:%=${DIR-utils}/%}
-${DIR-utils}CPPFILES:=${${DIR-utils}CPPFILES:%=${DIR-utils}/%}
-${DIR-utils}OBJFILES:=${${DIR-utils}CPPFILES:${DIR-utils}%.cpp=${OBJ}%.o} \
-		      ${${DIR-utils}CFILES:${DIR-utils}%.c=${OBJ}%.o}
-${DIR-utils}DEPFILES:=${${DIR-utils}OBJFILES:%.o=%.d}
-${DIR-utils}ASMFILES:=${${DIR-utils}OBJFILES:${OBJ}%.o=${ASM}%.s}
+${DIR-v1}CFILES:=${${DIR-v1}CFILES:%=${DIR-v1}/%}
+${DIR-v1}CPPFILES:=${${DIR-v1}CPPFILES:%=${DIR-v1}/%}
+${DIR-v1}OBJFILES:=${${DIR-v1}CPPFILES:${DIR-v1}%.cpp=${OBJ}%.o} \
+		      ${${DIR-v1}CFILES:${DIR-v1}%.c=${OBJ}%.o}
+${DIR-v1}DEPFILES:=${${DIR-v1}OBJFILES:%.o=%.d}
+${DIR-v1}ASMFILES:=${${DIR-v1}OBJFILES:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
-${DIR-utils}BINEXE:=${${DIR-utils}BINEXE:%=${BIN}/%}
-${DIR-utils}BINCPP:=${${DIR-utils}BINEXE:${BIN}/%.exe=${DIR-utils}/%.cpp}
-${DIR-utils}BINOBJ:=${${DIR-utils}BINCPP:${DIR-utils}%.cpp=${OBJ}%.o}
-${DIR-utils}BINDEP:=${${DIR-utils}BINOBJ:%.o=%.d}
-${DIR-utils}BINASM:=${${DIR-utils}BINOBJ:${OBJ}%.o=${ASM}%.s}
-${DIR-utils}DYNLIB:=${${DIR-utils}LIB:%=${LIB}/lib%.so}
-${DIR-utils}STCLIB:=${${DIR-utils}LIB:%=${LIB}/lib%.a}
+${DIR-v1}BINEXE:=${${DIR-v1}BINEXE:%=${BIN}/%}
+${DIR-v1}BINCPP:=${${DIR-v1}BINEXE:${BIN}/%.exe=${DIR-v1}/%.cpp}
+${DIR-v1}BINOBJ:=${${DIR-v1}BINCPP:${DIR-v1}%.cpp=${OBJ}%.o}
+${DIR-v1}BINDEP:=${${DIR-v1}BINOBJ:%.o=%.d}
+${DIR-v1}BINASM:=${${DIR-v1}BINOBJ:${OBJ}%.o=${ASM}%.s}
+${DIR-v1}DYNLIB:=${${DIR-v1}LIB:%=${LIB}/lib%.so}
+${DIR-v1}STCLIB:=${${DIR-v1}LIB:%=${LIB}/lib%.a}
 ################## DO NOT MODIFY ################
-${DIR-utils}TSTEXE:=${${DIR-utils}TSTEXE:%=${BIN}/%}
-${DIR-utils}TSTCPP:=${${DIR-utils}TSTEXE:${BIN}/%.exe=${DIR-utils}/%.cpp}
-${DIR-utils}TSTOBJ:=${${DIR-utils}TSTCPP:${DIR-utils}%.cpp=${OBJ}%.o}
-${DIR-utils}TSTDEP:=${${DIR-utils}TSTOBJ:%.o=%.d}
-${DIR-utils}TSTASM:=${${DIR-utils}TSTOBJ:${OBJ}%.o=${ASM}%.s}
+${DIR-v1}TSTEXE:=${${DIR-v1}TSTEXE:%=${BIN}/%}
+${DIR-v1}TSTCPP:=${${DIR-v1}TSTEXE:${BIN}/%.exe=${DIR-v1}/%.cpp}
+${DIR-v1}TSTOBJ:=${${DIR-v1}TSTCPP:${DIR-v1}%.cpp=${OBJ}%.o}
+${DIR-v1}TSTDEP:=${${DIR-v1}TSTOBJ:%.o=%.d}
+${DIR-v1}TSTASM:=${${DIR-v1}TSTOBJ:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
-SRCFILES:=${SRCFILES} ${${DIR-utils}CFILES} \
-	${${DIR-utils}CPPFILES} ${${DIR-utils}TSTCPP} \
-	${${DIR-utils}BINCPP}
-DEPFILES:=${DEPFILES} ${${DIR-utils}DEPFILES} \
-	${${DIR-utils}TSTDEP} ${${DIR-utils}BINDEP}
+SRCFILES:=${SRCFILES} ${${DIR-v1}CFILES} \
+	${${DIR-v1}CPPFILES} ${${DIR-v1}TSTCPP} \
+	${${DIR-v1}BINCPP}
+DEPFILES:=${DEPFILES} ${${DIR-v1}DEPFILES} \
+	${${DIR-v1}TSTDEP} ${${DIR-v1}BINDEP}
 ################## DO NOT MODIFY ################
 ###############################################################################
 #				WANRING
@@ -230,41 +214,41 @@ DEPFILES:=${DEPFILES} ${${DIR-utils}DEPFILES} \
 #  mode output aestetics. The new colorful version of "make list" is ready now!
 
 #  C++ sources
-${OBJ}/%.o: ${DIR-utils}/%.cpp
+${OBJ}/%.o: ${DIR-v1}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
-	${${DIR-utils}QUIET}${CXX} -o $@ -c $< ${${DIR-utils}CXXFLAGS} ${${DIR-utils}INCS}
-${ASM}/%.s: ${DIR-utils}/%.cpp
+	${${DIR-v1}QUIET}${CXX} -o $@ -c $< ${${DIR-v1}CXXFLAGS} ${${DIR-v1}INCS}
+${ASM}/%.s: ${DIR-v1}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
-	${${DIR-utils}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR-utils}CXXFLAGS} ${${DIR-utils}INCS} 
+	${${DIR-v1}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR-v1}CXXFLAGS} ${${DIR-v1}INCS} 
 #  C sources
-${OBJ}/%.o: ${DIR-utils}/%.c
+${OBJ}/%.o: ${DIR-v1}/%.c
 	@echo Compiling "${GREEN}$@${NONE}"...
-	${${DIR-utils}QUIET}${CC} -o $@ -c $< ${${DIR-utils}CFLAGS} ${${DIR-utils}INCS}
-${ASM}/%.s: ${DIR-utils}/%.c
+	${${DIR-v1}QUIET}${CC} -o $@ -c $< ${${DIR-v1}CFLAGS} ${${DIR-v1}INCS}
+${ASM}/%.s: ${DIR-v1}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
-	${${DIR-utils}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-utils}CFLAGS} ${${DIR-utils}INCS} 
-#DIR-utilsECTORY-SPECIFIC PHONY TARGETS
-.PHONY: ${DIR-utils}-all ${DIR-utils}-test ${DIR-utils}-asm ${DIR-utils}-list
-TARGET_ALL	:=${TARGET_ALL} ${DIR-utils}-all
-TARGET_TEST	:=${TARGET_TEST} ${DIR-utils}-test
-TARGET_ASM	:=${TARGET_ASM} ${DIR-utils}-asm
-TARGET_LIST	:=${TARGET_LIST} ${DIR-utils}-list
-${DIR-utils}-all: ${${DIR-utils}OBJFILES} ${${DIR-utils}BINEXE}	\
-	${${DIR-utils}DYNLIB} ${${DIR-utils}STCLIB}
+	${${DIR-v1}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-v1}CFLAGS} ${${DIR-v1}INCS} 
+#DIR-v1ECTORY-SPECIFIC PHONY TARGETS
+.PHONY: ${DIR-v1}-all ${DIR-v1}-test ${DIR-v1}-asm ${DIR-v1}-list
+TARGET_ALL	:=${TARGET_ALL} ${DIR-v1}-all
+TARGET_TEST	:=${TARGET_TEST} ${DIR-v1}-test
+TARGET_ASM	:=${TARGET_ASM} ${DIR-v1}-asm
+TARGET_LIST	:=${TARGET_LIST} ${DIR-v1}-list
+${DIR-v1}-all: ${${DIR-v1}OBJFILES} ${${DIR-v1}BINEXE}	\
+	${${DIR-v1}DYNLIB} ${${DIR-v1}STCLIB}
 	@echo Finished building "${B_BLUE}$@${NONE}".
-${DIR-utils}-test: ${${DIR-utils}TSTEXE}
+${DIR-v1}-test: ${${DIR-v1}TSTEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".  
-${DIR-utils}-asm: ${${DIR-utils}ASMFILES} ${${DIR-utils}TSTASM} 	\
-	${${DIR-utils}BINASM}
+${DIR-v1}-asm: ${${DIR-v1}ASMFILES} ${${DIR-v1}TSTASM} 	\
+	${${DIR-v1}BINASM}
 	@echo Finished generating "${B_BLUE}$@${NONE}".  
-${DIR-utils}-list:
+${DIR-v1}-list:
 	@echo \#\#\#\#\#\#\#\#"${B_BROWN}BEGIN $@${NONE}"\#\#\#\#\#\#\#\#
 	@$(foreach dir, 						\
 		CFILES CPPFILES TSTCPP BINCPP				\
 		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR-v1}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR-utils}${dir}},		\
+			$(foreach file,${${DIR-v1}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${BLACK}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
@@ -274,9 +258,9 @@ ${DIR-utils}-list:
 	@$(foreach dir, 						\
 		TSTEXE BINEXE						\
 		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR-v1}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR-utils}${dir}},		\
+			$(foreach file,${${DIR-v1}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${RED}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
@@ -286,9 +270,9 @@ ${DIR-utils}-list:
 	@$(foreach dir, 						\
 		DYNLIB STCLIB							\
 		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR-v1}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR-utils}${dir}},		\
+			$(foreach file,${${DIR-v1}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${MAGENTA}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
@@ -298,9 +282,9 @@ ${DIR-utils}-list:
 	@$(foreach dir, 						\
 		OBJFILES TSTOBJ BINOBJ					\
 		,							\
-		if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR-v1}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR-utils}${dir}},		\
+			$(foreach file,${${DIR-v1}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${GREEN}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
@@ -310,9 +294,9 @@ ${DIR-utils}-list:
 	@#@$(foreach dir, 						\
 		#ASMFILES TSTASM BINASM					\
 		#,							\
-		#if [ ! -z "${${DIR-utils}${dir}}" ]; then 		\
+		#if [ ! -z "${${DIR-v1}${dir}}" ]; then 		\
 			#echo "${BROWN}${dir}${NONE}\t\c";		\
-			#$(foreach file,${${DIR-utils}${dir}},		\
+			#$(foreach file,${${DIR-v1}${dir}},		\
 			    #if [ -f ${file} ]; then echo		\
 				#"${CYAN}${file}${NONE}\c";		\
 			    #else echo "${GREY}${file}${NONE}\c";	\

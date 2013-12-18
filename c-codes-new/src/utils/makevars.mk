@@ -100,7 +100,7 @@ ${DIR-utils}CFILES:=file_io.c
 ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
 	DunavantRule.cpp GaussRule.cpp LynessRule.cpp \
 	WandzuraRule.cpp int_trig.cpp QuadratureRules.cpp \
-	toeplitz.cpp
+	toeplitz.cpp IterativeSolvers.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -120,7 +120,7 @@ ${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
 ${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe \
-	test_int_trig.exe test_toeplitz.exe
+	test_int_trig.exe test_toeplitz.exe test_IterativeSolvers.exe
 
 ${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
@@ -137,6 +137,11 @@ ${BIN}/test_QuadratureRules.exe: ${OBJ}/test_QuadratureRules.o \
 ${BIN}/test_toeplitz.exe: ${OBJ}/test_toeplitz.o \
 	${OBJ}/toeplitz.o \
 	${LIB}/libutils.a ${LIB}/libutils.so
+
+${BIN}/test_IterativeSolvers.exe: ${OBJ}/test_IterativeSolvers.o \
+	${OBJ}/IterativeSolvers.o \
+	${LIB}/libutils.a ${LIB}/libutils.so
+
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or
@@ -244,19 +249,24 @@ ${ASM}/%.s: ${DIR-utils}/%.c
 	@echo Generating "${CYAN}$@${NONE}"...
 	${${DIR-utils}QUIET}${CC} -o $@ $< ${ASMFLAGS} ${${DIR-utils}CFLAGS} ${${DIR-utils}INCS} 
 #DIR-utilsECTORY-SPECIFIC PHONY TARGETS
-.PHONY: ${DIR-utils}-all ${DIR-utils}-test ${DIR-utils}-asm ${DIR-utils}-list
+.PHONY: ${DIR-utils}-all ${DIR-utils}-test \
+	${DIR-utils}-asm ${DIR-utils}-check \
+	${DIR-utils}-list
+	
 TARGET_ALL	:=${TARGET_ALL} ${DIR-utils}-all
 TARGET_TEST	:=${TARGET_TEST} ${DIR-utils}-test
 TARGET_ASM	:=${TARGET_ASM} ${DIR-utils}-asm
+TARGET_CHECK	:=${TARGET_CHECK} ${DIR-utils}-check
 TARGET_LIST	:=${TARGET_LIST} ${DIR-utils}-list
 ${DIR-utils}-all: ${${DIR-utils}OBJFILES} ${${DIR-utils}BINEXE}	\
 	${${DIR-utils}DYNLIB} ${${DIR-utils}STCLIB}
 	@echo Finished building "${B_BLUE}$@${NONE}".
 ${DIR-utils}-test: ${${DIR-utils}TSTEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".  
-${DIR-utils}-asm: ${${DIR-utils}ASMFILES} ${${DIR-utils}TSTASM} 	\
+${DIR-utils}-asm: ${${DIR-utils}ASMFILES} ${${DIR-utils}TSTASM} \
 	${${DIR-utils}BINASM}
 	@echo Finished generating "${B_BLUE}$@${NONE}".  
+${DIR-utils}-check: ${${DIR-utils}TSTEXE:${BIN}/%.exe=${OUTPUT}/%.txt}
 ${DIR-utils}-list:
 	@echo \#\#\#\#\#\#\#\#"${B_BROWN}BEGIN $@${NONE}"\#\#\#\#\#\#\#\#
 	@$(foreach dir, 						\

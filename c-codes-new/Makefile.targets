@@ -17,6 +17,7 @@ DISTFILES:=${SRCFILES} ${HDRFILES} ${DOCFILES} ${MANFILES} \
 all:	${TARGET_ALL}
 test:	${TARGET_TEST} 
 asm:	${TARGET_ASM} 
+check:	${TARGET_CHECK}
 list:	${TARGET_LIST} 
 
 clean:
@@ -53,7 +54,7 @@ help:
 	@echo "${GREEN}asm${NONE}\t\t"\
 		"Generate ${ASM}/*.s."
 	@echo "${GREEN}check${NONE}\t\t"\
-		"Run all the test binaries, i.e., ${BUILD}/*.exe."
+		"Run all the test binaries, i.e., ${BIN}/test_*.exe."
 	@echo "${GREEN}clean[x,xx]${NONE}\t"\
 		"Different levels of cleaning."
 	@echo "${GREEN}[rm]dir${NONE}\t"\
@@ -82,6 +83,8 @@ help:
 		"Generate ${ASM}/*.s associated with <subdir>"
 	@echo "${GREEN}<subdir>-list${NONE}\t"\
 		"List files associated with <subdir>"
+	@echo "${GREEN}<subdir>-check${NONE}\t"\
+		"Run test_*.exe associated with <subdir>"
 	@echo "${GREEN}<subdir>-test${NONE}\t"\
 		"Generate ${BUILD}/*.exe associated with <subdir>"
 	@echo ""
