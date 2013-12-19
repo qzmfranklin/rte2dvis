@@ -76,7 +76,8 @@ ${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
 ${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe \
-	test_int_trig.exe test_toeplitz.exe test_mkl_solvers.exe
+	test_int_trig.exe test_toeplitz.exe test_mkl_solvers.exe \
+	test_file_io.exe
 
 ${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
@@ -95,6 +96,9 @@ ${BIN}/test_toeplitz.exe: ${OBJ}/test_toeplitz.o \
 	${LIB}/libutils.a ${LIB}/libutils.so
 
 ${BIN}/test_mkl_solvers.exe: ${OBJ}/test_mkl_solvers.o \
+	${LIB}/libutils.a ${LIB}/libutils.so
+
+${BIN}/test_file_io.exe: ${OBJ}/test_file_io.o \
 	${LIB}/libutils.a ${LIB}/libutils.so
 
 ###############################################################################

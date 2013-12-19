@@ -4,11 +4,6 @@
 #include <stdlib.h>
 #include "file_io.h"
 /*******************************************************************************/
-/*
- * This is a pure C program. Compile with Intel C/C++ compiler OK.
- * The compiled product is a standalone executable that reads MSH
- * file then dump the nodes and triangles into separate ASCII files.
- */
 int main(int argc, char *argv[])
 { 
 	int err=0;
@@ -84,7 +79,7 @@ int main(int argc, char *argv[])
 	printf("		filename_out	= %s\n",filename_out); 
 
 	// Calling fileio_dump_msh_file
-	err += fileio_msh_to_txt(filename_in,filename_out); 
+	err += msh_to_txt(filename_in,filename_out); 
 
 	if (!err) {
 		printf("	Successfully dumped nodes and triangles!\n");

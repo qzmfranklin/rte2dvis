@@ -8,6 +8,67 @@
 /******************************************************************************/ 
 #define MALLOC_ALIGNMENT 64
 /******************************************************************************/ 
+void print_mesh(struct st_mesh_info *q)
+{
+	printf("FORMAT\t\t= %d\n",	q->format);
+	printf("STATUS\t\t= %d\n",	q->status);
+	printf("NUM_NODES\t= %d\n",	q->num_nodes);
+	printf("NUM_TRIGS\t= %d\n",	q->num_trigs);
+	printf("NODES\t\t= %p\n",	q->nodes);
+	printf("TRIGS\t\t= %p\n",	q->trigs);
+	printf("\n");
+}
+
+void init_mesh(struct st_mesh_info *q, const char *fbase, int format)
+{
+	strcpy(q->fbase,fbase);
+	q->format=format;
+	q->status=0;
+}
+
+void read_info(struct st_mesh_info *q)
+{
+	//printf("read_info(stuct st_mesh_info *q)");
+	assert(q->status==0); 
+
+	char filename_info[FILENAME_MAX];
+	strcpy(filename_info,q->fbase);
+	strcat(filename_info,".info");
+
+	// Open fin_info for read
+	FILE *fin_info;
+	fin_info = fopen(filename_info,"r");
+	assert(fin_info);
+
+	// Scan fin_info
+	int num_nodes,num_trigs;
+	fscanf(fin_info,"%d\t\t# number of nodes",     &num_nodes);
+	fscanf(fin_info,"%d\t\t# number of triangles", &num_trigs);
+	fclose(fin_info);
+
+	q->num_nodes=num_nodes;
+	q->num_trigs=num_trigs;
+	q->status=1; 
+}
+
+void alloc_mesh(struct st_mesh_info *q)
+{
+	//fprintf(stderr,"alloc_mesh(struct st_mesh_info *q)\n");
+	assert(q->status==1);
+
+	q->nodes=(double*)mkl_malloc(
+			2 * (q->num_nodes) * sizeof(double),
+			MALLOC_ALIGNMENT);
+	q->trigs=(int*)mkl_malloc(
+			6 * (q->num_trigs) * sizeof(int),
+			MALLOC_ALIGNMENT);
+
+	q->status=2;
+}
+
+void load_mesh(struct st_mesh_info *q);//TODO
+void destroy_mesh(struct st_mesh_info *q);
+/******************************************************************************/
 int fileio_read_info_nodes_triangles_from_txt(const char * filename_base, 
 		double **nodes, int *nodes_num, 
 		int **triangles, int *triangles_num )
@@ -139,7 +200,7 @@ int fileio_read_info_nodes_triangles_from_txt(const char * filename_base,
 	return err;
 }
 
-int fileio_msh_to_txt( const char * filename_in, const char * filename_out )
+int msh_to_txt( const char * filename_in, const char * filename_out )
 {
 	/*
 	 * This function is expressibly made suitable 
@@ -396,7 +457,7 @@ int fileio_msh_to_txt( const char * filename_in, const char * filename_out )
 	return err;
 }
 
-int fileio_msh_to_binary( const char * filename_in, const char * filename_out )
+int msh_to_bin( const char * filename_in, const char * filename_out )
 {
 	/*
 	 * This function is expressibly made suitable 
