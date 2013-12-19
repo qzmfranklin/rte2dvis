@@ -8,36 +8,37 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 /******************************************************************************/ 
-void print_mesh(struct st_mesh_info *q, int flag)
+void print_mesh(struct st_mesh_info &q, int flag)
 {
-	printf("FORMAT\t\t= %d\n",	q->format);
-	printf("STATUS\t\t= %d\n",	q->status);
-	printf("NUM_NODES\t= %d\n",	q->num_nodes);
-	printf("NUM_TRIGS\t= %d\n",	q->num_trigs);
-	printf("NODES\t\t= %p\n",	q->nodes);
-	printf("TRIGS\t\t= %p\n",	q->trigs);
+	printf("FORMAT\t\t= %d\n",	q.format);
+	printf("STATUS\t\t= %d\n",	q.status);
+	printf("NUM_NODES\t= %d\n",	q.num_nodes);
+	printf("NUM_TRIGS\t= %d\n",	q.num_trigs);
+	printf("NODES\t\t= %p\n",	q.nodes);
+	printf("TRIGS\t\t= %p\n",	q.trigs);
 
 	if (!flag) {
 		printf("\n");
 		return;
 	}
 
-	assert(q->status==3); // after calling load_mesh()
+	assert(q.status==3); // after calling load_mesh()
 	printf("nodes:\n");
-	for (int i = 0; i < MIN(20,q->num_nodes); i++)
+	for (int i = 0; i < MIN(20,q.num_nodes); i++)
 		printf("[%7d] (%8.3lf,%8.3lf)\n",
-				i,q->nodes[2*i],q->nodes[2*i+1]);
+				i,
+				q.nodes[2*i],q.nodes[2*i+1]);
 	printf("trigs:\n");
-	for (int i = 0; i < MIN(20,q->num_trigs); i++)
+	for (int i = 0; i < MIN(20,q.num_trigs); i++)
 		printf("[%7d] (%8.3lf,%8.3lf) (%8.3lf,%8.3lf) (%8.3lf,%8.3lf)\n",
 				i,
-				q->trigs[6*i  ],q->trigs[6*i+1],
-				q->trigs[6*i+2],q->trigs[6*i+3],
-				q->trigs[6*i+4],q->trigs[6*i+5]);
+				q.trigs[6*i  ],q.trigs[6*i+1],
+				q.trigs[6*i+2],q.trigs[6*i+3],
+				q.trigs[6*i+4],q.trigs[6*i+5]);
 	printf("\n");
 }
 
-void load_mesh(struct st_mesh_info *q, const char *fbase)
+void load_mesh(struct st_mesh_info &q, const char *fbase)
 {
 	init_mesh(q,fbase);
 	read_info(q);
@@ -45,19 +46,19 @@ void load_mesh(struct st_mesh_info *q, const char *fbase)
 	read_mesh(q);
 }
 
-void init_mesh(struct st_mesh_info *q, const char *fbase)
+void init_mesh(struct st_mesh_info &q, const char *fbase)
 {
-	strcpy(q->fbase,fbase);
-	q->status=0;
+	strcpy(q.fbase,fbase);
+	q.status=0;
 }
 
-void read_info(struct st_mesh_info *q)
+void read_info(struct st_mesh_info &q)
 {
-	//printf("read_info(stuct st_mesh_info *q)");
-	assert(q->status==0); 
+	//printf("read_info(stuct st_mesh_info &q)");
+	assert(q.status==0); 
 
 	char filename_info[FILENAME_MAX];
-	strcpy(filename_info,q->fbase);
+	strcpy(filename_info,q.fbase);
 	strcat(filename_info,".info");
 
 	// Open fin_info for read
@@ -72,40 +73,40 @@ void read_info(struct st_mesh_info *q)
 	fscanf(fin_info,"%d\t\t# number of triangles", &num_trigs);
 	fclose(fin_info);
 
-	q->format   =format;
-	q->num_nodes=num_nodes;
-	q->num_trigs=num_trigs;
+	q.format   =format;
+	q.num_nodes=num_nodes;
+	q.num_trigs=num_trigs;
 
 
-	q->status=1; 
+	q.status=1; 
 }
 
-void alloc_mesh(struct st_mesh_info *q)
+void alloc_mesh(struct st_mesh_info &q)
 {
-	//fprintf(stderr,"alloc_mesh(struct st_mesh_info *q)\n");
-	assert(q->status==1);
+	//fprintf(stderr,"alloc_mesh(struct st_mesh_info &q)\n");
+	assert(q.status==1);
 
-	q->nodes=(double*)mkl_malloc(
-			2 * (q->num_nodes) * sizeof(double),
+	q.nodes=(double*)mkl_malloc(
+			2 * (q.num_nodes) * sizeof(double),
 			MALLOC_ALIGNMENT);
-	q->trigs=(double*)mkl_malloc(
-			6 * (q->num_trigs) * sizeof(double),
+	q.trigs=(double*)mkl_malloc(
+			6 * (q.num_trigs) * sizeof(double),
 			MALLOC_ALIGNMENT);
-	assert(q->nodes);
-	assert(q->trigs);
+	assert(q.nodes);
+	assert(q.trigs);
 
-	q->status=2;
+	q.status=2;
 }
 
-void read_mesh(struct st_mesh_info *q)
+void read_mesh(struct st_mesh_info &q)
 {
-	//fprintf(stderr,"load_mesh(struct st_mesh_info *q)\n");
-	assert(q->status==2);
+	//fprintf(stderr,"load_mesh(struct st_mesh_info &q)\n");
+	assert(q.status==2);
 
 	char filename_nodes[FILENAME_MAX];
 	char filename_trigs[FILENAME_MAX];
-	strcpy(filename_nodes,q->fbase);
-	strcpy(filename_trigs,q->fbase);
+	strcpy(filename_nodes,q.fbase);
+	strcpy(filename_trigs,q.fbase);
 	strcat(filename_nodes,".nodes");
 	strcat(filename_trigs,".trigs");
 
@@ -117,49 +118,49 @@ void read_mesh(struct st_mesh_info *q)
 	assert(fin_trigs);
 
 	int *trigs;
-	trigs=(int*)mkl_malloc(3*q->num_trigs*sizeof(int),MALLOC_ALIGNMENT);
+	trigs=(int*)mkl_malloc(3*q.num_trigs*sizeof(int),MALLOC_ALIGNMENT);
 
-	switch (q->format) {
+	switch (q.format) {
 	case 1: // 1=ASCII
-		for (int i = 0; i < q->num_nodes; i++)
+		for (int i = 0; i < q.num_nodes; i++)
 			fscanf(fin_nodes,"%lf %lf\n",
-					q->nodes+2*i,q->nodes+2*i+1);
-		for (int i = 0; i < q->num_trigs; i++)
+					q.nodes+2*i,q.nodes+2*i+1);
+		for (int i = 0; i < q.num_trigs; i++)
 			fscanf(fin_trigs,"%d %d %d\n",
 					trigs+3*i,trigs+3*i+1,trigs+3*i+2);
 		break;
 	case 2: // 2=BINARY
-		fread(q->nodes,sizeof(double),2*q->num_nodes,fin_nodes);
-		fread(trigs   ,sizeof(int),3*q->num_trigs,fin_trigs);
+		fread(q.nodes,sizeof(double),2*q.num_nodes,fin_nodes);
+		fread(trigs   ,sizeof(int),3*q.num_trigs,fin_trigs);
 		break;
 	}
 	fclose(fin_nodes);
 	fclose(fin_trigs);
 
-	// Assemble q->trigs
-	for (int i = 0; i < q->num_trigs; i++)  {
-		q->trigs[6*i  ] = q->nodes[2*trigs[2*i  ]  ];  // x0
-		q->trigs[6*i+1] = q->nodes[2*trigs[2*i  ]+1];  // y0
-		q->trigs[6*i+2] = q->nodes[2*trigs[2*i+1]  ];  // x1
-		q->trigs[6*i+3] = q->nodes[2*trigs[2*i+1]+1];  // y1
-		q->trigs[6*i+4] = q->nodes[2*trigs[2*i+2]  ];  // x2
-		q->trigs[6*i+5] = q->nodes[2*trigs[2*i+2]+1];  // y2
+	// Assemble q.trigs
+	for (int i = 0; i < q.num_trigs; i++)  {
+		q.trigs[6*i  ] = q.nodes[2*trigs[2*i  ]  ];  // x0
+		q.trigs[6*i+1] = q.nodes[2*trigs[2*i  ]+1];  // y0
+		q.trigs[6*i+2] = q.nodes[2*trigs[2*i+1]  ];  // x1
+		q.trigs[6*i+3] = q.nodes[2*trigs[2*i+1]+1];  // y1
+		q.trigs[6*i+4] = q.nodes[2*trigs[2*i+2]  ];  // x2
+		q.trigs[6*i+5] = q.nodes[2*trigs[2*i+2]+1];  // y2
 	} 
 	mkl_free(trigs);
 
 
-	q->status=3;
+	q.status=3;
 }
 
-void release_mesh(struct st_mesh_info *q)
+void release_mesh(struct st_mesh_info &q)
 {
-	//fprintf(stderr,"release_mesh(struct st_mesh_info *q)\n");
-	assert(q->status>=2);
+	//fprintf(stderr,"release_mesh(struct st_mesh_info &q)\n");
+	assert(q.status>=2);
 
-	mkl_free(q->nodes);
-	mkl_free(q->trigs);
+	mkl_free(q.nodes);
+	mkl_free(q.trigs);
 
-	q->status=-1;
+	q.status=-1;
 }
 
 /******************************************************************************/

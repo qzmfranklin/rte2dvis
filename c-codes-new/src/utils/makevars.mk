@@ -100,7 +100,17 @@ ${BIN}/test_mkl_solvers.exe: ${OBJ}/test_mkl_solvers.o \
 
 ${BIN}/test_file_io.exe: ${OBJ}/test_file_io.o \
 	${OBJ}/file_io.o \
-	${LIB}/libutils.a ${LIB}/libutils.so
+	${LIB}/libutils.a ${LIB}/libutils.so \
+	${EXAMPLE}/square162.ascii.info \
+	${EXAMPLE}/square162.binary.info
+
+${EXAMPLE}/square162.ascii.info : ${BIN}/dump_msh.exe \
+	${EXAMPLE}/square162.msh
+	./$< 2 ${EXAMPLE}/square162.msh ${EXAMPLE}/square162.ascii
+
+${EXAMPLE}/square162.binary.info : ${BIN}/dump_msh.exe \
+	${EXAMPLE}/square162.msh
+	./$< 2 ${EXAMPLE}/square162.msh ${EXAMPLE}/square162.binary
 
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build

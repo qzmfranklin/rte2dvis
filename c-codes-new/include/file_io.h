@@ -22,16 +22,25 @@ struct st_mesh_info {
  * 	0	show less
  * 	1	show more
  */
-void print_mesh  (struct st_mesh_info *q, int flag=0);
+void print_mesh  (struct st_mesh_info &q, int flag=0);
 
+/*
+ * driver routine
+ */
+void load_mesh   (struct st_mesh_info &q, const char *fbase);
+
+/*
+ * release memory
+ */
+void release_mesh(struct st_mesh_info &q);
 /******************************************************************************/
-void load_mesh   (struct st_mesh_info *q, const char *fbase);
-void init_mesh   (struct st_mesh_info *q, const char *fbase);
-void read_info   (struct st_mesh_info *q);
-void alloc_mesh  (struct st_mesh_info *q);
-void read_mesh   (struct st_mesh_info *q);
-void release_mesh(struct st_mesh_info *q);
-/******************************************************************************/
+/*
+ * The following routines are not supposed to be called by the user.
+ */
+void init_mesh   (struct st_mesh_info &q, const char *fbase);
+void read_info   (struct st_mesh_info &q);
+void alloc_mesh  (struct st_mesh_info &q);
+void read_mesh   (struct st_mesh_info &q);
 
 /*
  * Read MSH file, dump the nodes and trigs into ASCII/BINARY files.

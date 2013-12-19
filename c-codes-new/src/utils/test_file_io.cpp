@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "utils.h"
+#include "file_io.h"
 /******************************************************************************/
 int test01(void);
 int test02(void);
@@ -26,8 +27,7 @@ int test01(void)
 
 	char *fbase="example/square162.ascii"; 
 
-	struct st_mesh_info *q;
-	q=(struct st_mesh_info*)malloc(sizeof(struct st_mesh_info)); 
+	struct st_mesh_info q;
 	printf("sizeof(struct st_mesh_info=%lu\n",sizeof(struct st_mesh_info)); 
 
 	init_mesh(q,fbase);
@@ -40,12 +40,10 @@ int test01(void)
 	print_mesh(q); 
 
 	read_mesh(q);
-	print_mesh(q,1); // verbose
+	print_mesh(q,1);
 
 	release_mesh(q);
 	print_mesh(q);
-
-	free(q);
 
         printf("END OF TEST01\n");
         printf("\n");
@@ -61,9 +59,7 @@ int test02(void)
 
 	char *fbase="example/square162.binary"; 
 
-	struct st_mesh_info *q;
-	q=(struct st_mesh_info*)malloc(sizeof(struct st_mesh_info)); 
-	printf("sizeof(struct st_mesh_info=%lu\n",sizeof(struct st_mesh_info)); 
+	struct st_mesh_info q;
 
 	init_mesh(q,fbase);
 	print_mesh(q);
@@ -80,8 +76,6 @@ int test02(void)
 	release_mesh(q);
 	print_mesh(q);
 
-	free(q);
-
         printf("END OF TEST02\n");
         printf("\n");
 	return err;
@@ -95,8 +89,8 @@ int test03(void)
 
 	char *fbase="example/square162.ascii"; 
 	struct st_mesh_info q;
-	load_mesh(&q,fbase);
-	print_mesh(&q);
+	load_mesh(q,fbase);
+	print_mesh(q);
 	
         printf("END OF TEST03\n");
         printf("\n");
