@@ -58,10 +58,10 @@ ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
-${DIR-utils}BINEXE:=msh_to_txt.exe
+${DIR-utils}BINEXE:=dump_msh.exe
 ${DIR-utils}LIB:=utils QuadratureRules
 
-${BIN}/msh_to_txt.exe: ${OBJ}/msh_to_txt.o \
+${BIN}/dump_msh.exe: ${OBJ}/dump_msh.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
 
 ${LIB}/libutils.so ${LIB}/libutils.a: ${OBJ}/utils.o \

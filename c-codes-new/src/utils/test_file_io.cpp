@@ -2,13 +2,16 @@
 #include "utils.h"
 /******************************************************************************/
 int test01(void);
+int test02(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
 {
 	if (argc>1) link_stdout(argv[1]);
-	if (argc>1) unlink_stdout();
 
+	if (argc>1) unlink_stdout();
 	test01(); 
+	test02(); 
+
 
 	return 0;
 }
@@ -17,11 +20,9 @@ int test01(void)
 {
 	int err=0; 
         printf("TEST01\n");
-        printf("	|Test work flow of read\n");
+        printf("	|Test work flow of read\n"); 
 
-
-	char *fbase="example/mshtodat-example";
-
+	char *fbase="example/square162.ascii"; 
 
 	struct st_mesh_info *q;
 	q=(struct st_mesh_info*)malloc(sizeof(struct st_mesh_info)); 
@@ -37,15 +38,49 @@ int test01(void)
 	print_mesh(q); 
 
 	load_mesh(q);
-	print_mesh(q,1);
+	print_mesh(q,1); // verbose
 
 	release_mesh(q);
 	print_mesh(q);
 
-
 	free(q);
 
         printf("END OF TEST01\n");
+        printf("\n");
+	return err;
+}
+
+
+int test02(void)
+{
+	int err=0; 
+        printf("TEST02\n");
+        printf("	|Test work flow of read\n"); 
+
+	char *fbase="example/square162.binary"; 
+
+	struct st_mesh_info *q;
+	q=(struct st_mesh_info*)malloc(sizeof(struct st_mesh_info)); 
+	printf("sizeof(struct st_mesh_info=%lu\n",sizeof(struct st_mesh_info)); 
+
+	init_mesh(q,fbase);
+	print_mesh(q);
+
+	read_info(q);
+	print_mesh(q);
+
+	alloc_mesh(q);
+	print_mesh(q); 
+
+	load_mesh(q);
+	print_mesh(q,1); // verbose
+
+	release_mesh(q);
+	print_mesh(q);
+
+	free(q);
+
+        printf("END OF TEST02\n");
         printf("\n");
 	return err;
 }

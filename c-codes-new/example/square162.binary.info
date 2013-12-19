@@ -1,0 +1,29 @@
+2		# 1=ASCII 2=BINARY
+98		# number of nodes
+162		# number of trigs
+
+
+
+
+
+
+
+
+# This is the information file for the .nodes
+# and the .trigs file generated from the specified
+# .msh file. The first 10 lines are reserved
+# for current or future use. Comments enter
+# here:
+#
+# How to read this info file using C fscanf?
+# Answer: the format strings are:
+# 	.info:		"%d\t\t# 1=ASCII 2=BINARY"
+# 			"%d\t\t# number of nodes"
+# 			"%d\t\t# number of trigs"
+#	.nodes:		"%lf %lf"
+#	.trigs:	"%d %d %d"
+#
+#
+#
+#
+#
