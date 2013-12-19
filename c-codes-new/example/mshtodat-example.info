@@ -1,5 +1,5 @@
 98		# number of nodes
-162		# number of triangles
+162		# number of trigs
 
 
 
@@ -9,7 +9,7 @@
 
 
 # This is the info file for the .nodes
-# and the .triangles file generated from
+# and the .trigs file generated from
 # .msh file. The first 10 lines are reserved
 # for current or future use. Comments enter
 # here:
@@ -17,9 +17,9 @@
 # How to read this info file using C fscanf?
 # Answer: the format strings are:
 # 	.info:		"%d\t\t# number of nodes"
-# 			"%d\t\t# number of triangles"
+# 			"%d\t\t# number of trigs"
 #	.nodes:		"%lf %lf"
-#	.triangles:	"%d %d %d"
+#	.trigs:	"%d %d %d"
 #
 #
 #

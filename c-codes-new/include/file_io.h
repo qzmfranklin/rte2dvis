@@ -11,24 +11,29 @@
 //extern "C" {
 //#endif
 
-//TODO
 struct st_mesh_info {
-	int    format;	// source file format, e.g., 1=MSH
 	int    status;	// st_mesh_info internal status
+
+	int    format;	// 1=ASCII, 2=BINARY
 	int num_nodes;	// number of nodes
 	int num_trigs;	// number of triangles
 	double *nodes;
-	int    *trigs;
+	double *trigs;
 	char   fbase[FILENAME_MAX];	// file base name
 };
 
-void print_mesh  (struct st_mesh_info *q);
+/*
+ * flag:
+ * 	0	show less
+ * 	1	show more
+ */
+void print_mesh  (struct st_mesh_info *q, int flag=0);
 
-void init_mesh   (struct st_mesh_info *q, const char *fbase, int format=1);
+void init_mesh   (struct st_mesh_info *q, const char *fbase);
 void read_info   (struct st_mesh_info *q);
 void alloc_mesh  (struct st_mesh_info *q);
 void load_mesh   (struct st_mesh_info *q);
-void destroy_mesh(struct st_mesh_info *q);
+void release_mesh(struct st_mesh_info *q);
 
 /*
  * One monolithic function that reads all information.

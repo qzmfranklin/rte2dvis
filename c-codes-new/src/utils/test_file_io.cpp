@@ -15,7 +15,6 @@ int main(int argc, char const* argv[])
 
 int test01(void)
 {
-	//TODO
 	int err=0; 
         printf("TEST01\n");
         printf("	|Test work flow of read\n");
@@ -36,6 +35,13 @@ int test01(void)
 
 	alloc_mesh(q);
 	print_mesh(q); 
+
+	load_mesh(q);
+	print_mesh(q,1);
+
+	release_mesh(q);
+	print_mesh(q);
+
 
 	free(q);
 
