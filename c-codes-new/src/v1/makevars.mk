@@ -63,8 +63,19 @@ ${DIR-v1}LIB:=
 ${DIR-v1}TSTEXE:=test_v1.exe
 
 ${BIN}/test_v1.exe: ${OBJ}/test_v1.o \
+	${OBJ}/file_io.o ${OBJ}/toeplitz.o ${OBJ}/int_trig.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \
 	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
+
+${OUTPUT}/test_v1.txt: ${BIN}/test_v1.exe \
+	${EXAMPLE}/square162.binary.info \
+	${EXAMPLE}/square162.binary.nodes \
+	${EXAMPLE}/square162.binary.trigs
+
+${EXAMPLE}/square162.binary.info \
+	${EXAMPLE}/square162.binary.nodes \
+	${EXAMPLE}/square162.binary.trigs: ${BIN}/dump_msh.exe ${EXAMPLE}/square162.msh
+	./$< 2 ${EXAMPLE}/square162.msh ${EXAMPLE}/square162.binary
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

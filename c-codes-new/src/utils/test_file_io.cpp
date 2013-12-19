@@ -3,15 +3,17 @@
 /******************************************************************************/
 int test01(void);
 int test02(void);
+int test03(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
 {
 	if (argc>1) link_stdout(argv[1]);
 
-	if (argc>1) unlink_stdout();
 	test01(); 
 	test02(); 
+	test03(); 
 
+	if (argc>1) unlink_stdout(); 
 
 	return 0;
 }
@@ -37,7 +39,7 @@ int test01(void)
 	alloc_mesh(q);
 	print_mesh(q); 
 
-	load_mesh(q);
+	read_mesh(q);
 	print_mesh(q,1); // verbose
 
 	release_mesh(q);
@@ -72,7 +74,7 @@ int test02(void)
 	alloc_mesh(q);
 	print_mesh(q); 
 
-	load_mesh(q);
+	read_mesh(q);
 	print_mesh(q,1); // verbose
 
 	release_mesh(q);
@@ -81,6 +83,22 @@ int test02(void)
 	free(q);
 
         printf("END OF TEST02\n");
+        printf("\n");
+	return err;
+}
+
+int test03(void)
+{
+	int err=0; 
+        printf("TEST03\n");
+        printf("	|Test load_mesh()\n");
+
+	char *fbase="example/square162.ascii"; 
+	struct st_mesh_info q;
+	load_mesh(&q,fbase);
+	print_mesh(&q);
+	
+        printf("END OF TEST03\n");
         printf("\n");
 	return err;
 }

@@ -37,6 +37,14 @@ void print_mesh(struct st_mesh_info *q, int flag)
 	printf("\n");
 }
 
+void load_mesh(struct st_mesh_info *q, const char *fbase)
+{
+	init_mesh(q,fbase);
+	read_info(q);
+	alloc_mesh(q);
+	read_mesh(q);
+}
+
 void init_mesh(struct st_mesh_info *q, const char *fbase)
 {
 	strcpy(q->fbase,fbase);
@@ -89,7 +97,7 @@ void alloc_mesh(struct st_mesh_info *q)
 	q->status=2;
 }
 
-void load_mesh(struct st_mesh_info *q)
+void read_mesh(struct st_mesh_info *q)
 {
 	//fprintf(stderr,"load_mesh(struct st_mesh_info *q)\n");
 	assert(q->status==2);
@@ -325,32 +333,6 @@ int dump_msh(const char * filename_in, const char * filename_out, int format)
 	fprintf(fout_info,"%d\t\t# 1=ASCII 2=BINARY\n",format);
 	fprintf(fout_info,"%d\t\t# number of nodes\n",nodes_num);
 	fprintf(fout_info,"%d\t\t# number of trigs\n",trigs_num);
-	fprintf(fout_info,"\n");
-	fprintf(fout_info,"\n");
-	fprintf(fout_info,"\n");
-	fprintf(fout_info,"\n");
-	fprintf(fout_info,"\n");
-	fprintf(fout_info,"\n");
-	fprintf(fout_info,"\n");
-	fprintf(fout_info,"\n");
-	fprintf(fout_info,"# This is the information file for the .nodes\n"); 
-	fprintf(fout_info,"# and the .trigs file generated from the specified\n");
-	fprintf(fout_info,"# .msh file. The first 10 lines are reserved\n");
-	fprintf(fout_info,"# for current or future use. Comments enter\n");
-	fprintf(fout_info,"# here:\n");
-	fprintf(fout_info,"#\n"); 
-	fprintf(fout_info,"# How to read this info file using C fscanf?\n");
-	fprintf(fout_info,"# Answer: the format strings are:\n");
-	fprintf(fout_info,"# 	.info:		\"%%d\\t\\t# 1=ASCII 2=BINARY\"\n");
-	fprintf(fout_info,"# 			\"%%d\\t\\t# number of nodes\"\n");
-	fprintf(fout_info,"# 			\"%%d\\t\\t# number of trigs\"\n");
-	fprintf(fout_info,"#	.nodes:		\"%%lf %%lf\"\n");
-	fprintf(fout_info,"#	.trigs:	\"%%d %%d %%d\"\n");
-	fprintf(fout_info,"#\n");
-	fprintf(fout_info,"#\n");
-	fprintf(fout_info,"#\n");
-	fprintf(fout_info,"#\n");
-	fprintf(fout_info,"#\n"); 
 	printf("	Finished writing into filename_out_info.\n");
 
 	// Free memory

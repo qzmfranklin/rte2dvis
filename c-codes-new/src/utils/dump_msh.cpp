@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "file_io.h"
+#include "utils.h"
 /*******************************************************************************/
 void test()
 {

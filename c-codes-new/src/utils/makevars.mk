@@ -62,11 +62,11 @@ ${DIR-utils}BINEXE:=dump_msh.exe
 ${DIR-utils}LIB:=utils QuadratureRules
 
 ${BIN}/dump_msh.exe: ${OBJ}/dump_msh.o \
+	${OBJ}/file_io.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
 
 ${LIB}/libutils.so ${LIB}/libutils.a: ${OBJ}/utils.o \
 	${OBJ}/StatVector.o ${OBJ}/Table.o ${OBJ}/TimeStamp.o \
-	${OBJ}/file_io.o
 
 ${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
 	${OBJ}/QuadratureRules.o \
@@ -99,6 +99,7 @@ ${BIN}/test_mkl_solvers.exe: ${OBJ}/test_mkl_solvers.o \
 	${LIB}/libutils.a ${LIB}/libutils.so
 
 ${BIN}/test_file_io.exe: ${OBJ}/test_file_io.o \
+	${OBJ}/file_io.o \
 	${LIB}/libutils.a ${LIB}/libutils.so
 
 ###############################################################################

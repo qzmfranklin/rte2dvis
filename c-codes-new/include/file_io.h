@@ -5,12 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 /*******************************************************************************/
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
-
 struct st_mesh_info {
 	int    status;	// st_mesh_info internal status
 
@@ -29,19 +24,14 @@ struct st_mesh_info {
  */
 void print_mesh  (struct st_mesh_info *q, int flag=0);
 
+/******************************************************************************/
+void load_mesh   (struct st_mesh_info *q, const char *fbase);
 void init_mesh   (struct st_mesh_info *q, const char *fbase);
 void read_info   (struct st_mesh_info *q);
 void alloc_mesh  (struct st_mesh_info *q);
-void load_mesh   (struct st_mesh_info *q);
+void read_mesh   (struct st_mesh_info *q);
 void release_mesh(struct st_mesh_info *q);
-
-/*
- * One monolithic function that reads all information.
- * Deprecated.
- */
-int fileio_read_info_nodes_triangles_from_txt(const char *filename_base,	
-		double **nodes, int *num_nodes, int **triangles, 
-		int *num_triangles );
+/******************************************************************************/
 
 /*
  * Read MSH file, dump the nodes and trigs into ASCII/BINARY files.
@@ -61,8 +51,5 @@ int fileio_read_info_nodes_triangles_from_txt(const char *filename_base,
  *   ------------------------------
  */ 
 int dump_msh(const char *filename_in, const char *filename_out, int format);
-//#ifdef __cplusplus
-//}
-//#endif
 /*******************************************************************************/
 #endif /* end of include guard _FILE_IO_H_ */
