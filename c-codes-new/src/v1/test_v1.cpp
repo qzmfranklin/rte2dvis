@@ -11,20 +11,7 @@ int main(int argc, char const* argv[])
 {
 	if (argc>1) link_stdout(argv[1]);
 
-	char fbase[]="example/square162.binary";
-	struct st_mesh_info mesh;
-	load_mesh(mesh,fbase); 
-	print_mesh(mesh);
-
-
-	//precalc();
-
-	//solve();
-
-	//dump();
-
-
-	release_mesh(mesh);
+	char *fbase="example/square162.binary";
 
 	if (argc>1) unlink_stdout();
 

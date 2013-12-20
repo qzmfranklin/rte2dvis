@@ -7,6 +7,9 @@
 #include "StatVector.h"
 #include "TimeStamp.h"
 /******************************************************************************/
+double ddotd(const int n, const double *restrict w, const double *restrict f);
+double _Complex ddotz(const int n, const double *restrict w, 
+		const double _Complex *restrict f);
 void cscale(const double _Complex scale, 
 		const int n, double _Complex *restrict v);
 void cdot(const int n, double _Complex *a,  

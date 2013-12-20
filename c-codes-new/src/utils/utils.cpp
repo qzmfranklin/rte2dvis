@@ -29,6 +29,24 @@
 /******************************************************************************/ 
 using namespace std;
 
+double ddotd(const int n, const double *restrict w, const double *restrict f)
+{
+	double val=0.0;
+	for (int i = 0; i < n; i++)
+		val += f[i]*w[i];
+	return val;
+}
+
+double _Complex ddotz(const int n, const double *restrict w, 
+		const double _Complex *restrict f)
+{
+	double _Complex val=0.0;
+	for (int i = 0; i < n; i++)
+		val += f[i]*w[i];
+	return val;
+}
+
+
 void cscale(const double _Complex scale, 
 		const int n, double _Complex *restrict v)
 {

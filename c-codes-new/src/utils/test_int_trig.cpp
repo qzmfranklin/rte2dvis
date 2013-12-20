@@ -46,6 +46,7 @@ int test06(void);
 int test07(void);
 int test08(void);
 int test09(void);
+int test10(void);
 int testxx(void);
 /******************************************************************************/
 int main(int argc, char const* argv[])
@@ -61,9 +62,10 @@ int main(int argc, char const* argv[])
 	test07();
 	test08();
 	test09();
+	test10();
 	//testxx();
 
-	if (argc>1) unlink_stdout();
+	if (argc>1) unlink_stdout(); 
 
 	return 0;
 }
@@ -590,13 +592,13 @@ int test09(void)
 #undef NU
 }
 
-int testxx(void)
+int test10(void)
 {
 #define NU 5
 #define NV 2
 	int err=0; 
-        printf("TESTxx\n");
-        printf("	|Test zit_arcsinh_atomic Legendre X Legendre\n");
+        printf("TEST10\n");
+        printf("	|Test qw_arcsinh\n");
 
 	struct st_quadrule *qu,*qv; 
 	qu=(struct st_quadrule*)mkl_malloc(
@@ -606,14 +608,76 @@ int testxx(void)
 	gGaussRule.Generate(NU,qu);
 	gGaussRule.Generate(NV,qv);
 
-	double work[2000]; // workspace
-	double _Complex val;
+	__declspec(align(64)) double work[2000]; // workspace
+	__declspec(align(64)) double q[1000], w[1000];
+	__declspec(align(64)) double _Complex f[1000];
+
+	double _Complex val,val2;
 	val = zit_arcsinh_atomic(qu,qv,p,&f08,work);
 
-	fprintf(stderr, "true val= %f + %f*I\n",creal(true_val_f08),cimag(true_val_f08));
-	fprintf(stderr, "val     = %f + %f*I\n",creal(val),cimag(val));
-	
-        printf("END OF TESTxx\n");
+	qw_arcsinh(qu,qv,p,q,w,work);
+	for (int i = 0; i < NU*NV; i++)
+		f[i] = (*f08)(q[2*i],q[2*i+1]);
+
+	val2 = ddotz(NU*NV,w,f);
+
+	fprintf(stdout, "true       = %f + %f*I\n",
+			creal(true_val_f08),
+			cimag(true_val_f08));
+	fprintf(stdout, "zit_arcsinh= %f + %f*I\n",
+			creal(val),
+			cimag(val));
+	fprintf(stdout, "qw_arcsinh = %f + %f*I\n",
+			creal(val),
+			cimag(val));
+
+        printf("END OF TEST10\n");
+        printf("\n");
+	return err; 
+#undef NV
+#undef NU
+}
+
+int testxx(void)
+{
+#define NU 5
+#define NV 2
+	int err=0; 
+        printf("TESTxx\n");
+        printf("	|Test qw_arcsinh\n");
+
+	struct st_quadrule *qu,*qv; 
+	qu=(struct st_quadrule*)mkl_malloc(
+			sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+	qv=(struct st_quadrule*)mkl_malloc(
+			sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
+	gGaussRule.Generate(NU,qu);
+	gGaussRule.Generate(NV,qv);
+
+	__declspec(align(64)) double work[2000]; // workspace
+	__declspec(align(64)) double q[1000], w[1000];
+	__declspec(align(64)) double _Complex f[1000];
+
+	double _Complex val,val2;
+	val = zit_arcsinh_atomic(qu,qv,p,&f08,work);
+
+	qw_arcsinh(qu,qv,p,q,w,work);
+	for (int i = 0; i < NU*NV; i++)
+		f[i] = (*f08)(q[2*i],q[2*i+1]);
+
+	val2 = ddotz(NU*NV,w,f);
+
+	fprintf(stderr, "true       = %f + %f*I\n",
+			creal(true_val_f08),
+			cimag(true_val_f08));
+	fprintf(stderr, "zit_arcsinh= %f + %f*I\n",
+			creal(val),
+			cimag(val));
+	fprintf(stderr, "qw_arcsinh = %f + %f*I\n",
+			creal(val),
+			cimag(val));
+
+        printf("END OF TEST10\n");
         printf("\n");
 	return err; 
 #undef NV

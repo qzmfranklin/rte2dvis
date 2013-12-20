@@ -11,6 +11,5 @@
 #include "LynessRule.h"
 #include "WandzuraRule.h" 
 #include "GaussRule.h" 
-#include "int_trig.h"
 /******************************************************************************/
 #endif /* End of protection macro _QUADRATURE_RULES_H_ */

@@ -14,9 +14,16 @@
  * 	y2	p[5]
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/*
+ * Generate abscissas and weights for arcsinh method.
+ * 	integral = sum(w[i]*f[a[i]]);
+ * where
+ * 	f is indeed f*r, i.e., eliminating the 1/r dependence.
+ */
+void qw_arcsinh(const struct st_quadrule *restrict qu,
+		const struct st_quadrule *restrict qv,
+		const double *p, double *restrict q, double *restrict w,
+		double *restrict work);
 
 /*
  * Double precision numerical integration over triangle using symmetric
@@ -114,8 +121,5 @@ double _Complex zit_arcsinh(const struct st_quadrule *restrict qu,
 		const struct st_quadrule *restrict qv,
 		const double *restrict p, const double *restrict p0,
 		double _Complex (*f)(double,double), double *restrict work);
-#ifdef __cplusplus
-}
-#endif
 /******************************************************************************/
 #endif
