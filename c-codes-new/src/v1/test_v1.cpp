@@ -7,13 +7,41 @@
 #include "toeplitz.h"
 #include "v1.h"
 /******************************************************************************/
+int test01(void);
+/******************************************************************************/
 int main(int argc, char const* argv[])
 {
 	if (argc>1) link_stdout(argv[1]);
 
-	char *fbase="example/square162.binary";
-
 	if (argc>1) unlink_stdout();
 
+	test01();
+
 	return 0;
+}
+
+int test01(void)
+{
+	int err=0; 
+        printf("TEST01\n");
+        printf("	|Test work flow of rte2dvis\n");
+
+	struct st_rte2dvis_info solver;
+	char *fbase="example/square162.binary";
+	const int Nd=39, flag=1;
+
+	init_rte2dvis(solver,fbase,Nd,flag);
+	print_rte2dvis(solver);
+	assert(!check_rte2dvis(solver));
+
+
+	printf("sizeof(struct st_rte2dvis_info)=%lu\n",sizeof(struct st_rte2dvis_info));
+
+
+
+	destroy_rte2dvis(solver);
+
+        printf("END OF TEST01\n");
+        printf("\n");
+	return err;
 }

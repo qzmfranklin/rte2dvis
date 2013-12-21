@@ -26,6 +26,12 @@ void qw_arcsinh(const struct st_quadrule *restrict qu,
 		double *restrict work);
 
 /*
+ * Compute the signs
+ */
+void sign_arcsinh(const double *restrict p, const double *restrict p0,
+		double *restrict sign);
+
+/*
  * Double precision numerical integration over triangle using symmetric
  * quadrature rules.
  * Input:

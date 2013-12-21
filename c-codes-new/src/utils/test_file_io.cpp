@@ -16,6 +16,7 @@ int main(int argc, char const* argv[])
 
 	if (argc>1) unlink_stdout(); 
 
+
 	return 0;
 }
 
@@ -49,7 +50,6 @@ int test01(void)
         printf("\n");
 	return err;
 }
-
 
 int test02(void)
 {

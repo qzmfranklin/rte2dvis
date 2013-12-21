@@ -1,12 +1,98 @@
 #ifndef _RTE2DVIS_V1_H_
 #define _RTE2DVIS_V1_H_
 /******************************************************************************/
+/*
+ * This header file defines the top level interface of the RTE solver.
+ * Work flow of rte2dvis:
+ *
+ * 	Call init_rte2dvis().
+ *
+ * 	Fill up g,A,B,rhs manually.
+ *
+ * 	Solve (A+B)sol=rhs for sol using some linear solver.
+ *
+ * 	Release g,A,B,rhs accordingly.
+ *
+ * 	Call destroy_rte2dvis().
+ */
+/******************************************************************************/
+struct st_rte2dvis_info {
+	/*
+	 * Top level information of the RTE solver
+	 * Must not be modified by the user.
+	 */
+	int                    version;		// 1=v1
+	int                    flag;		// 1=HOMOGENEOUS 2=INHOMOGENEOUS
+	int                    status;		// rte2dvis internal status
+	int                    pad		// padding mod for Nd Nm
+	int                    Ns;		// number of triangles
+	int                    Nd;		// max angular component index
+	int                    Nm;		// 2(Nd+1)
+	int                    Ng;		// Ns*Nm
 
+	/*
+	 * The following buffers are to be filled up by init_rte2dvis.
+	 * Must not be modified by the user.
+	 */
+	struct st_mesh_info   *mesh;		// mesh, defined in file_io.h
+	double                *area;		// signed area, right-handed 
 
+	/*
+	 * The following buffers are to be supplied/filled up by the user.
+	 * May be modified by the user when appropriate.
+	 */
+	double                *g;		// array of g^|m|, m=-Nd to +Nd. g[Nd]=1.0
+	double                *A;		// identity matrix, block-wise diagonal
+	double                *B;		// interaction matrix, block-wise Toeplitz-like
+	double                *rhs;		// input vector, right hand side
+	double                *sol;		// solution vector
+	double                *work;		// workspace
+};
 
+/*
+ * flag:
+ * 	0=CONCISE	 	1=VERBOSE
+ */
+void print_rte2dvis(struct st_rte2dvis_info &q);
 
+/*
+ * Fill up q from version to area.
+ * flag:
+ * 	1=HOMOGENEOUS 2=INHOMOGENEOUS
+ * About padding:
+ * 	The default padding is 8. See the source file for details.
+ */
+void init_rte2dvis(struct st_rte2dvis_info &q, const char *fbase, 
+		const int Nd, const int pad, const int flag);
 
+/*
+ * Check the consistency of the data.
+ */
+int check_rte2dvis(const struct st_rte2dvis_info &q);
 
+/*
+ * Release buffers initialized by init_rte2dvis.
+ */
+void destroy_rte2dvis(const struct st_rte2dvis_info &sovler);
+/******************************************************************************/
+/*
+ * The following routines are v1-specific.
+ */
+
+/*
+ * Fill up g,A,B,rhs
+ */
+void fill_rte2dvis_v1(struct st_rte2dvis_info &solver);
+
+/*
+ * Solve (A+B)sol=rhs for sol using some linear solver.
+ */
+void solve_rte2dvis_v1(struct st_rte2dvis_info &solver);
+
+/*
+ * Release g,A,B,rhs accordingly.
+ */
+void release_rte2dvis_v1(struct st_rte2dvis_info &solver);
 
 /******************************************************************************/
 #endif

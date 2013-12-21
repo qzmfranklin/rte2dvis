@@ -10,17 +10,15 @@
 /******************************************************************************/ 
 void print_mesh(struct st_mesh_info &q, int flag)
 {
-	printf("FORMAT\t\t= %d\n",	q.format);
+	printf("FORMAT\t\t= %d (1=ASCII 2=BINARY)\n",	q.format);
 	printf("STATUS\t\t= %d\n",	q.status);
 	printf("NUM_NODES\t= %d\n",	q.num_nodes);
 	printf("NUM_TRIGS\t= %d\n",	q.num_trigs);
 	printf("NODES\t\t= %p\n",	q.nodes);
 	printf("TRIGS\t\t= %p\n",	q.trigs);
 
-	if (!flag) {
-		printf("\n");
+	if (!flag)
 		return;
-	}
 
 	assert(q.status==3); // after calling load_mesh()
 	printf("nodes:\n");
@@ -35,7 +33,6 @@ void print_mesh(struct st_mesh_info &q, int flag)
 				q.trigs[6*i  ],q.trigs[6*i+1],
 				q.trigs[6*i+2],q.trigs[6*i+3],
 				q.trigs[6*i+4],q.trigs[6*i+5]);
-	printf("\n");
 }
 
 void load_mesh(struct st_mesh_info &q, const char *fbase)
@@ -138,13 +135,14 @@ void read_mesh(struct st_mesh_info &q)
 	fclose(fin_trigs);
 
 	// Assemble q.trigs
+	// Note: MSH indices starts from 1, C/C++ indices starts from 0
 	for (int i = 0; i < q.num_trigs; i++)  {
-		q.trigs[6*i  ] = q.nodes[2*trigs[2*i  ]  ];  // x0
-		q.trigs[6*i+1] = q.nodes[2*trigs[2*i  ]+1];  // y0
-		q.trigs[6*i+2] = q.nodes[2*trigs[2*i+1]  ];  // x1
-		q.trigs[6*i+3] = q.nodes[2*trigs[2*i+1]+1];  // y1
-		q.trigs[6*i+4] = q.nodes[2*trigs[2*i+2]  ];  // x2
-		q.trigs[6*i+5] = q.nodes[2*trigs[2*i+2]+1];  // y2
+		q.trigs[6*i  ] = q.nodes[2*trigs[3*i  ]-2];  // x0
+		q.trigs[6*i+1] = q.nodes[2*trigs[3*i  ]-1];  // y0
+		q.trigs[6*i+2] = q.nodes[2*trigs[3*i+1]-2];  // x1
+		q.trigs[6*i+3] = q.nodes[2*trigs[3*i+1]-1];  // y1
+		q.trigs[6*i+4] = q.nodes[2*trigs[3*i+2]-2];  // x2
+		q.trigs[6*i+5] = q.nodes[2*trigs[3*i+2]-1];  // y2
 	} 
 	mkl_free(trigs);
 

@@ -15,49 +15,6 @@
  * 	y2	p[5]
  */
 /******************************************************************************/ 
-void qw_arcsinh(const struct st_quadrule *restrict qu,
-		const struct st_quadrule *restrict qv,
-		const double *p, double *restrict q, double *restrict w,
-		double *restrict work)
-{
-	assert((qu->dim==1)&&(qv->dim==1));
-	double *u;
-	u  = work;
-
-	double p0p1[2],p0p2[2],p1p2[2],invp1p2,up1p2[2],Ah[4],xp[2],h,u0[2];
-	p0p1[0] = p[2] - p[0]; // x1-x0
-	p0p1[1] = p[3] - p[1]; // y1-y0
-	p0p2[0] = p[4] - p[0]; // x2-x0
-	p0p2[1] = p[5] - p[1]; // y2-y0
-	p1p2[0]	= p[4] - p[2]; // x2-x1
-	p1p2[1]	= p[5] - p[3]; // y2-y1
-	invp1p2 = 1.0/sqrt( p1p2[0]*p1p2[0] + p1p2[1]*p1p2[1] ); // inverse p1p2
-	up1p2[0]= invp1p2*p1p2[0];
-	up1p2[1]= invp1p2*p1p2[1];
-	h	= invp1p2*( -p1p2[0]*p[1] + p0p2[0]*p[3] - p0p1[0]*p[5]);
-	Ah[0]	= up1p2[0]*h;
-	Ah[1]	= -up1p2[1]*h;
-	Ah[2]	= up1p2[1]*h;
-	Ah[3]	= up1p2[0]*h;
-	xp[0]	= up1p2[0]*p0p1[0] + up1p2[1]*p0p1[1]; // x1p
-	xp[1]	= up1p2[0]*p0p2[0] + up1p2[1]*p0p2[1]; // x2p
-	u0[0]	= asinh(xp[0]/h); // u1
-	u0[1]	= asinh(xp[1]/h)-u0[0]; // u2-u1
-
-	for (int i = 0; i < qu->n; i++)
-		u[i] = u0[0] + u0[1]*(qu->x)[i]; 
-
-	for (int j = 0; j < qv->n; j++)
-		for (int i = 0; i < qu->n; i++)
-			w[i+qu->n*j] = (qu->w)[i]*(qv->w)[j]; 
-
-	for (int j = 0; j < qv->n; j++)
-		for (int i = 0; i < qv->n; i++) { 
-			int k=2*(i+qu->n*j);
-			q[k]   = p[0] + (qv->x)[j]*( Ah[0]*sinh(u[i]) + Ah[1] );
-			q[k+1] = p[1] + (qv->x)[j]*( Ah[2]*sinh(u[i]) + Ah[3] );
-		} 
-}
 
 double dit_symmetric(const struct st_quadrule *q, const double *restrict p,
 		double (*f)(double,double), double *restrict work)
@@ -214,6 +171,65 @@ static double det(const double *a1, const double *a2,
 		const double *b1, const double *b2)
 {
 	return (a1[0]-a2[0])*(b1[1]-b2[1]) - (a1[1]-a2[1])*(b1[0]-b2[0]);
+}
+
+void qw_arcsinh(const struct st_quadrule *restrict qu,
+		const struct st_quadrule *restrict qv,
+		const double *p, double *restrict q, double *restrict w,
+		double *restrict work)
+{
+	assert((qu->dim==1)&&(qv->dim==1));
+	double *u;
+	u  = work;
+
+	double p0p1[2],p0p2[2],p1p2[2],invp1p2,up1p2[2],Ah[4],xp[2],h,u0[2];
+	p0p1[0] = p[2] - p[0]; // x1-x0
+	p0p1[1] = p[3] - p[1]; // y1-y0
+	p0p2[0] = p[4] - p[0]; // x2-x0
+	p0p2[1] = p[5] - p[1]; // y2-y0
+	p1p2[0]	= p[4] - p[2]; // x2-x1
+	p1p2[1]	= p[5] - p[3]; // y2-y1
+	invp1p2 = 1.0/sqrt( p1p2[0]*p1p2[0] + p1p2[1]*p1p2[1] ); // inverse p1p2
+	up1p2[0]= invp1p2*p1p2[0];
+	up1p2[1]= invp1p2*p1p2[1];
+	h	= invp1p2*( -p1p2[0]*p[1] + p0p2[0]*p[3] - p0p1[0]*p[5]);
+	Ah[0]	= up1p2[0]*h;
+	Ah[1]	= -up1p2[1]*h;
+	Ah[2]	= up1p2[1]*h;
+	Ah[3]	= up1p2[0]*h;
+	xp[0]	= up1p2[0]*p0p1[0] + up1p2[1]*p0p1[1]; // x1p
+	xp[1]	= up1p2[0]*p0p2[0] + up1p2[1]*p0p2[1]; // x2p
+	u0[0]	= asinh(xp[0]/h); // u1
+	u0[1]	= asinh(xp[1]/h)-u0[0]; // u2-u1
+
+	for (int i = 0; i < qu->n; i++)
+		u[i] = u0[0] + u0[1]*(qu->x)[i]; 
+
+	for (int j = 0; j < qv->n; j++)
+		for (int i = 0; i < qu->n; i++)
+			w[i+qu->n*j] = (qu->w)[i]*(qv->w)[j]; 
+
+	for (int j = 0; j < qv->n; j++)
+		for (int i = 0; i < qv->n; i++) { 
+			int k=2*(i+qu->n*j);
+			q[k]   = p[0] + (qv->x)[j]*( Ah[0]*sinh(u[i]) + Ah[1] );
+			q[k+1] = p[1] + (qv->x)[j]*( Ah[2]*sinh(u[i]) + Ah[3] );
+		} 
+}
+
+void sign_arcsinh(const double *restrict p, const double *restrict p0,
+		double *restrict sign)
+{
+	double tmp[4];
+	tmp[0] = det(p+2,p ,p+4,p  );		// A
+	tmp[1] = det(p,  p0,p+2,p  )*tmp[0];	// s1
+	tmp[2] = det(p+2,p0,p+4,p+2)*tmp[0];	// s2
+	tmp[3] = det(p+4,p0,p,  p+4)*tmp[0];	// s3
+	for (int i = 0; i < 3; i++)
+		if (tmp[i+1]>0)
+			sign[i] = 1.0;
+		else
+			sign[i] =-1.0;
 }
 
 /*

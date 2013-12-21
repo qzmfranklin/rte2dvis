@@ -107,7 +107,7 @@ ${BIN}/test_file_io.exe: ${OBJ}/test_file_io.o \
 ${EXAMPLE}/square162.ascii.info : ${BIN}/dump_msh.exe \
 	${EXAMPLE}/square162.msh
 	@echo "Dumping ${EXAMPLE}/square162.msh to ASCII..."
-	@./$< 2 ${EXAMPLE}/square162.msh ${EXAMPLE}/square162.ascii >> log
+	@./$< 1 ${EXAMPLE}/square162.msh ${EXAMPLE}/square162.ascii >> log
 
 ${EXAMPLE}/square162.binary.info : ${BIN}/dump_msh.exe \
 	${EXAMPLE}/square162.msh
