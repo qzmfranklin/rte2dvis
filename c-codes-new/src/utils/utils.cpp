@@ -28,6 +28,15 @@
 } while(0)  
 /******************************************************************************/ 
 using namespace std;
+double *address64(double *in)
+{
+	unsigned long long int a = (unsigned long long int)in;
+	unsigned long long int b = a%64;
+	if (b==0)
+		return in;
+	else
+		return (double*)(a+64-b);
+}
 
 double ddotd(const int n, const double *restrict w, const double *restrict f)
 {

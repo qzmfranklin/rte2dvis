@@ -7,6 +7,7 @@
 #include "StatVector.h"
 #include "TimeStamp.h"
 /******************************************************************************/
+double *address64(double *address);
 double ddotd(const int n, const double *restrict w, const double *restrict f);
 double _Complex ddotz(const int n, const double *restrict w, 
 		const double _Complex *restrict f);

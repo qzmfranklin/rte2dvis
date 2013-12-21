@@ -24,11 +24,12 @@ struct st_rte2dvis_info {
 	int                    version;		// 1=v1
 	int                    flag;		// 1=HOMOGENEOUS 2=INHOMOGENEOUS
 	int                    status;		// rte2dvis internal status
-	int                    pad		// padding mod for Nd Nm
+	int                    pad;		// padding mod for Nd Nm
 	int                    Ns;		// number of triangles
 	int                    Nd;		// max angular component index
 	int                    Nm;		// 2(Nd+1)
 	int                    Ng;		// Ns*Nm
+	unsigned long long int mem;		// memory used in bytes
 
 	/*
 	 * The following buffers are to be filled up by init_rte2dvis.
@@ -41,7 +42,7 @@ struct st_rte2dvis_info {
 	 * The following buffers are to be supplied/filled up by the user.
 	 * May be modified by the user when appropriate.
 	 */
-	double                *g;		// array of g^|m|, m=-Nd to +Nd. g[Nd]=1.0
+	double                *f;		// phase function components f(m)
 	double                *A;		// identity matrix, block-wise diagonal
 	double                *B;		// interaction matrix, block-wise Toeplitz-like
 	double                *rhs;		// input vector, right hand side
@@ -73,26 +74,31 @@ int check_rte2dvis(const struct st_rte2dvis_info &q);
 /*
  * Release buffers initialized by init_rte2dvis.
  */
-void destroy_rte2dvis(const struct st_rte2dvis_info &sovler);
+void destroy_rte2dvis(struct st_rte2dvis_info &sovler);
 /******************************************************************************/
 /*
  * The following routines are v1-specific.
  */
 
 /*
+ * Allocate g,A,B,rhs,sol,work
+ */
+void alloc_rte2dvis_v1(struct st_rte2dvis_info &q);
+
+/*
  * Fill up g,A,B,rhs
  */
-void fill_rte2dvis_v1(struct st_rte2dvis_info &solver);
+void fill_rte2dvis_v1(struct st_rte2dvis_info &q);
 
 /*
  * Solve (A+B)sol=rhs for sol using some linear solver.
  */
-void solve_rte2dvis_v1(struct st_rte2dvis_info &solver);
+void solve_rte2dvis_v1(struct st_rte2dvis_info &q);
 
 /*
  * Release g,A,B,rhs accordingly.
  */
-void release_rte2dvis_v1(struct st_rte2dvis_info &solver);
+void release_rte2dvis_v1(struct st_rte2dvis_info &q);
 
 /******************************************************************************/
 #endif

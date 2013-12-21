@@ -235,7 +235,7 @@ void sign_arcsinh(const double *restrict p, const double *restrict p0,
 /*
  * Construct three triangles cyclically using p and p0, output to res.
  */
-static void cyc_trig(const double *p, const double *p0, double *&res)
+void construct_cyc_trig(const double *p, const double *p0, double *res)
 {
 	res[0]    = p0[0];
 	res[1]    = p0[1];
@@ -281,7 +281,7 @@ double dit_arcsinh(const struct st_quadrule *restrict qu,
 			w[i] = 1.0;
 		else
 			w[i] =-1.0;
-	cyc_trig(p,p0,pp);
+	construct_cyc_trig(p,p0,pp);
 
 	double val=0.0;
 	for (int i = 0; i < 3; i++)
@@ -381,7 +381,7 @@ double _Complex zit_arcsinh(const struct st_quadrule *restrict qu,
 			w[i] = 1.0;
 		else
 			w[i] =-1.0;
-	cyc_trig(p,p0,pp);
+	construct_cyc_trig(p,p0,pp);
 
 	double _Complex val=0.0;
 	for (int i = 0; i < 3; i++)

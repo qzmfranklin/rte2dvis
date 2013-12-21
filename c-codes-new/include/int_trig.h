@@ -32,6 +32,11 @@ void sign_arcsinh(const double *restrict p, const double *restrict p0,
 		double *restrict sign);
 
 /*
+ * Construct three triangles cyclically using p and p0, output to res.
+ */
+void construct_cyc_trig(const double *p, const double *p0, double *res);
+
+/*
  * Double precision numerical integration over triangle using symmetric
  * quadrature rules.
  * Input:

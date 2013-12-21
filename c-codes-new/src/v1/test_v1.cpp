@@ -28,18 +28,32 @@ int test01(void)
 
 	struct st_rte2dvis_info solver;
 	char *fbase="example/square162.binary";
-	const int Nd=39, flag=1;
+	const int Nd=10, pad=8, flag=1;
 
-	init_rte2dvis(solver,fbase,Nd,flag);
-	print_rte2dvis(solver);
+	init_rte2dvis(solver,fbase,Nd,pad,flag);
 	assert(!check_rte2dvis(solver));
+	//print_rte2dvis(solver);
+	//printf("\n");
 
+	alloc_rte2dvis_v1(solver);
+	//print_rte2dvis(solver);
+	//printf("\n");
 
-	printf("sizeof(struct st_rte2dvis_info)=%lu\n",sizeof(struct st_rte2dvis_info));
+	fill_rte2dvis_v1(solver);
+	//print_rte2dvis(solver);
+	//printf("\n");
 
+	solve_rte2dvis_v1(solver);
+	//print_rte2dvis(solver);
+	//printf("\n");
 
+	release_rte2dvis_v1(solver);
+	//print_rte2dvis(solver);
+	//printf("\n");
 
 	destroy_rte2dvis(solver);
+	//print_rte2dvis(solver);
+	//printf("\n");
 
         printf("END OF TEST01\n");
         printf("\n");
