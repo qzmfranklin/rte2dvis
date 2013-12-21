@@ -166,48 +166,53 @@ static void fill_solver_A(struct st_rte2dvis_info &q)
 
 /**************************************/
 #define RULE 6
-#define NU 50
+#define NU 20
 #define NV 3
-
 /*
  * Fill in matrix block B(n,np)
- * Homogeneous material, single-point testing, multi-point source
+ * Homogeneous material, single-point testing, multi-point source.
+ * The interface is really ugly, but fine...
  */
-static void fill_solver_B_homo_atomic(struct st_rte2dvis_info &q, 
-		const int n, const int np,
-		struct st_quadrule *quadrules,
-		double *restrict x, double *restrict w,
-		double _Complex *restrict f)
+
+static double distance(const struct st_rte2dvis_info &q, const int n, const int np)
 {
-	//TODO
-	//qw_arcsinh(quadrule+1,quadrule+2,p,x,w,work);
+	double *p=q.mesh->trigs;
+	double a[2],b[2],c[2];
+	a[0]=p[6*n   ]+p[6*n +2]+p[6*n +4]; // 3*x1
+	a[1]=p[6*n +1]+p[6*n +3]+p[6*n +5]; // 3*y1
+	b[0]=p[6*np  ]+p[6*np+2]+p[6*np+4]; // 3*x2
+	b[1]=p[6*np+1]+p[6*np+3]+p[6*np+5]; // 3*y2
+	c[0]=a[0]-b[0];
+	c[1]=a[1]-b[1];
+	return sqrt(
+			(c[0]*c[0]+c[1]*c[1])/3.0
+			);
 }
 
-static void fill_solver_B_homo(struct st_rte2dvis_info &q)
+static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 {
 	// Prepare quadrature rules.
 	using namespace QuadratureRules;
-	struct st_quadrule quadrules[3];
-	gWandzuraRule.Generate(RULE,quadrules);
-	gGaussRule.Generate(NU,quadrules+1);
-	gGaussRule.Generate(NV,quadrules+2);
-
-	// Prepare workspace.
-	double *x,*w;
-	double _Complex *f;
-	x=(double*)mkl_malloc(sizeof(double)*MAX(200,NU*NV),MALLOC_ALIGNMENT);
-	w=(double*)mkl_malloc(sizeof(double)*MAX(200,NU*NV),MALLOC_ALIGNMENT);
-	f=(double _Complex*)mkl_malloc(sizeof(double)*2*MAX(200,NU*NV),MALLOC_ALIGNMENT);
+	__declspec(align(64)) double xx[1000],ww[1000],work[2000];
+	__declspec(align(64)) double _Complex f[1000];
+	struct st_quadrule q[4];
+	gWandzuraRule.Generate(RULE,q);
+	gGaussRule.Generate(NU,q+1);
+	gGaussRule.Generate(NV,q+2);
+	q[3].x=xx;
+	q[3].w=ww;
 
 	// Fill in elements.
-	for (int n = 0; n < q.Ns; n++)
-		for (int np = 0; np < q.Ns; np++)
-			fill_solver_B_homo_atomic(q,n,np,quadrules,x,w,f);
+	double *trigs=solver.mesh->trigs;
+	double *x=q[3].x, *w=q[3].w;
+	double pp[18];
+	for (int np = 0; np < 1; np++) {
+		//construct_quadrule_arcsinh(q+1,q+2,trigs+np,q+3,work);
+		for (int n = 0; n < 1; n++) {
+		}
+	}
 
 	// Release memories.
-	mkl_free(x);
-	mkl_free(w);
-	mkl_free(f);
 	gWandzuraRule.ReleaseMemory();
 	gGaussRule.ReleaseMemory();
 }

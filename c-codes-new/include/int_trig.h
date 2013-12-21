@@ -14,22 +14,17 @@
  * 	y2	p[5]
  */
 
-/*
- * Generate abscissas and weights for arcsinh method.
- * 	integral = sum(w[i]*f[a[i]]);
- * where
- * 	f is indeed f*r, i.e., eliminating the 1/r dependence.
- */
-void qw_arcsinh(const struct st_quadrule *restrict qu,
-		const struct st_quadrule *restrict qv,
-		const double *p, double *restrict q, double *restrict w,
-		double *restrict work);
-
-/*
- * Compute the signs
- */
 void sign_arcsinh(const double *restrict p, const double *restrict p0,
 		double *restrict sign);
+
+void construct_quadrule_arcsinh_atomic(const struct st_quadrule *restrict qu,
+		const struct st_quadrule *restrict qv, const double *p,
+		double *restrict x, double *restrict w, double *restrict work);
+
+void construct_quadrule_arcsinh(const struct st_quadrule *restrict qu,
+		const struct st_quadrule *restrict qv, const double *p,
+		const double *p0, double *restrict xy, double *restrict ww,
+		double *restrict work);
 
 /*
  * Construct three triangles cyclically using p and p0, output to res.
