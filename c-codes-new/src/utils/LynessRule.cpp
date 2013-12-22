@@ -31,29 +31,13 @@ void LynessRule::Generate(int rule, int &order_num,
 	rule--;
 	assert( 0<=rule && rule<=lyness_rule_num() );
 	order_num = lyness_order( rule ); 
-	xy = (double*)mkl_malloc(3*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	xy= (double*)mkl_malloc(3*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	w = (double*)mkl_malloc(3*order_num*sizeof(double),MALLOC_ALIGNMENT);
 	assert(xy);
-	w = xy + 2*order_num;
+	assert(w);
 	_fxy.push(xy);
+	_fxy.push(w);
 	lyness_rule ( rule, order_num, w, xy );
-}
-
-void LynessRule::Generate(int rule, int &order_num, 
-		double *&x, double *&y, double *&w)
-{
-	//printf("LynessRule::Generate()\n");
-	Generate(rule,order_num,x,w);
-	y=x+order_num;
-	double *xx;
-	xx = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
-	assert(xx);
-	for (int i = 0; i < order_num; i++) {
-		xx[i] = x[2*i];
-		y[i] = x[2*i+1];
-	}
-	for (int i = 0; i < order_num; i++)
-		x[i] = xx[i]; 
-	mkl_free(xx);
 }
 
 
@@ -62,6 +46,10 @@ void LynessRule::ReleaseMemory()
 	while ( !_fxy.empty() ) { 
 		mkl_free( _fxy.top() );
 		_fxy.pop();
+	}
+	while ( !_fw.empty() ) { 
+		mkl_free( _fw.top() );
+		_fw.pop();
 	}
 }
 /******************************************************************************/

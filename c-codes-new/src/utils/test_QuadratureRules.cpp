@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <math.h>
+#include <complex.h>
 #include <string.h>
 #include "QuadratureRules.h"
 #include "utils.h"
@@ -6,17 +8,17 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 /*****************************************************************************/
-using namespace QuadratureRules;
 int main(int argc, char const* argv[]);
 void test01(int n);
 void test02(int n);
 void test03(int n);
 void test04(int n);
-void print_rule_gauss(int order_num, double *x, double *w);
-void print_rule(int order_num, double *xy, double *w);
-void print_rule(int order_num, double *x, double *y, double *w);
-void print_st_quadrule(struct st_quadrule *q);
-/*****************************************************************************/
+
+int test05(void);
+int test06(void);
+/******************************************************************************/ 
+using namespace QuadratureRules;
+/******************************************************************************/ 
 int main(int argc, char const* argv[])
 { 
 	if (argc>1) link_stdout(argv[1]);
@@ -27,6 +29,9 @@ int main(int argc, char const* argv[])
 	test04(100);
 
 	if (argc>1) unlink_stdout();
+
+	test05();
+	test06();
 
 	return 0;
 } 
@@ -41,7 +46,7 @@ void test01( int n )
 	for (int rule = 1; rule <= n; rule++) {
 		printf("rule = %d\n",rule);
 		gDunavantRule.Generate(rule,q);
-		print_st_quadrule(q);
+		print_quadrule(q);
 	}
 	mkl_free(q);
 }
@@ -56,7 +61,7 @@ void test02( int n )
 	for (int rule = 1; rule <= n; rule++) {
 		printf("rule = %d\n",rule);
 		gWandzuraRule.Generate(rule,q);
-		print_st_quadrule(q);
+		print_quadrule(q);
 	}
 	mkl_free(q);
 }
@@ -71,12 +76,13 @@ void test03( int n )
 	for (int rule = 1; rule <= n; rule++) {
 		printf("rule = %d\n",rule);
 		gLynessRule.Generate(rule,q);
-		print_st_quadrule(q);
+		print_quadrule(q);
 	}
 	mkl_free(q);
 }
 
-void test04( int n ) {
+void test04( int n ) 
+{
 	printf("	Test the Legendre rules.\n");
 	printf("		A = -1.0\n");
 	printf("		B = +1.0\n");
@@ -86,45 +92,83 @@ void test04( int n ) {
 	q=(struct st_quadrule*)mkl_malloc(sizeof(struct st_quadrule),MALLOC_ALIGNMENT);
 	for (int order = 1; order <= n; order++) {
 		gGaussRule.Generate(order,q); 
-		print_st_quadrule(q);
+		print_quadrule(q);
 	}
 	mkl_free(q);
 }
 
-void print_rule_gauss(int order_num, double *x, double *w)
+/*****************************************************************************/
+double f05(double *xy) { double x=xy[0],y=xy[1]; return x*y; }
+int test05(void)
 {
-	printf("	\t\tORDER = %2d\n",order_num);
-	printf("	\tx\t\t\tw\n");
-	for (int i = 0; i < order_num; i++)  
-		printf("	%10.6f\t\t%10.6f\n",
-				x[i], w[i] );
-	printf("\n");
+#define NU 10
+#define NV 2
+	int err=0; 
+        printf("TEST05\n");
+        printf("	|Test ArcSinhMethod::GenerateAtomic\n");
+
+	double p[] = {1.,0.,0.,2.,3.,2.};
+	double valf05=3.514983020486826813699771;
+
+	struct st_quadrule q[3];
+	gGaussRule.Generate(NU,q  );
+	gGaussRule.Generate(NV,q+1);
+	gArcSinhMethod.Init(q,q+1);
+	gArcSinhMethod.GenerateAtomic(p,q+2);
+
+	double f[3*NU*NV], val=0.0;
+	for (int i = 0; i < q[2].n; i++)
+		val += f05(q[2].x+2*i) * q[2].w[i];
+
+	printf("true value\t=%19.16f\n",valf05);
+	printf("my value\t=%19.16f\n"  ,val   );
+	printf("NU\t\t=%3d\n",NU);
+	printf("NV\t\t=%3d\n",NV);
+	printf("#SD\t\t=%5.1f\n"       ,-log(fabs((val-valf05)/valf05))/log(10.0));
+
+	ReleaseMemory();
+	
+        printf("END OF TEST05\n");
+        printf("\n");
+	return err;
+#undef NV
+#undef NU
 }
 
-void print_rule(int order_num, double *xy, double *w)
+double f06(double *xy) { double x=xy[0],y=xy[1]; return x*y; }
+int test06(void)
 {
-	printf("	\t\tORDER = %2d\n",order_num);
-	printf("	\tx\t\ty\t\t\tw\n");
-	for (int i = 0; i < order_num; i++)  
-		printf("	%10.6f\t%10.6f\t\t%10.6f\n",
-				xy[2*i], xy[2*i+1], w[i] );
-	printf("\n");
-}
+#define NU 10
+#define NV 2
+	int err=0; 
+        printf("TEST06\n");
+        printf("	|Test ArcSinhMethod::Generate\n");
 
-void print_rule(int order_num, double *x, double *y, double *w)
-{
-	printf("	\t\tORDER = %2d\n",order_num);
-	printf("	\tx\t\ty\t\t\tw\n");
-	for (int i = 0; i < order_num; i++)  
-		printf("	%10.6f\t%10.6f\t\t%10.6f\n",
-				x[i], y[i], w[i] );
-	printf("\n");
-}
+	double p[] = {1.,0.,0.,2.,3.,2.};
+	double p0[]= {0.,0.};
+	double valf06=2.528273711783832823373392;
 
-void print_st_quadrule(struct st_quadrule *q)
-{
-	if (q->dim==1)
-		print_rule_gauss(q->n,q->x,q->w);
-	else
-		print_rule(q->n,q->x,q->w);
+	struct st_quadrule q[3];
+	gGaussRule.Generate(NU,q  );
+	gGaussRule.Generate(NV,q+1);
+
+	gArcSinhMethod.Init(q,q+1);
+	gArcSinhMethod.Generate(p0,p,q+2);
+
+	double val=0.0;
+	for (int i = 0; i < q[2].n; i++)
+		val += q[2].w[i] *  f06( q[2].x+2*i );
+
+	printf("true value\t=%19.16f\n",valf06);
+	printf("my value\t=%19.16f\n"  ,val   );
+	printf("NU\t\t=%3d\n",NU);
+	printf("NV\t\t=%3d\n",NV);
+	printf("#SD\t\t=%5.1f\n"       ,-log(fabs((val-valf06)/valf06))/log(10.0)); 
+
+        printf("END OF TEST06\n");
+        printf("\n");
+	return err;
+#undef NU
+#undef NV
 }
+/******************************************************************************/

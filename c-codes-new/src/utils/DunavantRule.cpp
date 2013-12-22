@@ -16,58 +16,34 @@ DunavantRule gDunavantRule;
 void DunavantRule::Generate(const int rule, struct st_quadrule *&q)
 {
 	//printf("DunavantRule::Generate()\n");
-	int order_num;
-	double *xy, *w;
-	Generate(rule,order_num,xy,w);
+	assert(1<=rule && rule<=dunavant_rule_num());
+
+	int order_num = dunavant_order_num(rule); 
+	double *xy=(double*)mkl_malloc(2*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	double *w =(double*)mkl_malloc(1*order_num*sizeof(double),MALLOC_ALIGNMENT);
+	assert(xy);
+	assert(w);
+	_fxy.push(xy);
+	_fw.push(w);
+
+	dunavant_rule(rule,order_num,xy,w);
+
 	q->dim  = 2;
 	q->n    = order_num;
 	q->x    = xy;
 	q->w    = w;
 }
 
-void DunavantRule::Generate(const int rule, int &order_num, 
-		double *&xy, double *&w)
-{
-	//printf("DunavantRule::Generate()\n");
-	assert(1<=rule && rule<=dunavant_rule_num());
-	order_num = dunavant_order_num(rule); 
-	xy = (double*)mkl_malloc(3*order_num*sizeof(double),MALLOC_ALIGNMENT);
-	assert(xy);
-	w = xy + 2*order_num;
-	_fxy.push(xy);
-	dunavant_rule(rule,order_num,xy,w);
-}
-
-void DunavantRule::Generate(const int rule, int &order_num, 
-		double *&x, double *&y, double *&w)
-{
-	//printf("DunavantRule::Generate()\n");
-	Generate(rule,order_num,x,w);
-	y=x+order_num;
-	double *xx;
-	xx = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
-	assert(xx);
-	for (int i = 0; i < order_num; i++) {
-		xx[i] = x[2*i];
-		y[i] = x[2*i+1];
-	}
-	for (int i = 0; i < order_num; i++)
-		x[i] = xx[i]; 
-	mkl_free(xx);
-}
-
-
 void DunavantRule::ReleaseMemory() {
 	while ( !_fxy.empty() ) { 
 		mkl_free( _fxy.top() );
 		_fxy.pop();
 	}
+	while ( !_fw.empty() ) { 
+		mkl_free( _fw.top() );
+		_fw.pop();
+	}
 }
-
-
-
-
-
 //****************************************************************************80
 
 int DunavantRule::dunavant_degree ( int rule )

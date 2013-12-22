@@ -53,7 +53,8 @@ ${DIR-utils}INCS:=${INCS}
 #	DIRECTORY-SPECIFIC SOURCE FILES
 ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
 	DunavantRule.cpp GaussRule.cpp LynessRule.cpp \
-	WandzuraRule.cpp int_trig.cpp QuadratureRules.cpp \
+	WandzuraRule.cpp QuadratureRules.cpp \
+	ArcSinhMethod.cpp \
 	toeplitz.cpp file_io.cpp
 ###############################################################################
 #				STEP 4
@@ -71,21 +72,17 @@ ${LIB}/libutils.so ${LIB}/libutils.a: ${OBJ}/utils.o \
 ${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
 	${OBJ}/QuadratureRules.o \
 	${OBJ}/GaussRule.o ${OBJ}/DunavantRule.o \
-	${OBJ}/WandzuraRule.o ${OBJ}/LynessRule.o
+	${OBJ}/WandzuraRule.o ${OBJ}/LynessRule.o \
+	${OBJ}/ArcSinhMethod.o
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
 ${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe \
-	test_int_trig.exe test_toeplitz.exe test_mkl_solvers.exe \
+	test_toeplitz.exe test_mkl_solvers.exe \
 	test_file_io.exe
 
 ${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
-
-${BIN}/test_int_trig.exe: ${OBJ}/test_int_trig.o \
-	${OBJ}/int_trig.o \
-	${LIB}/libutils.a ${LIB}/libutils.so \
-	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
 
 ${BIN}/test_QuadratureRules.exe: ${OBJ}/test_QuadratureRules.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \

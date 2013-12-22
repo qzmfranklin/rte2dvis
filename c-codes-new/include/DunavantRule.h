@@ -11,24 +11,23 @@ namespace QuadratureRules {
 class DunavantRule {
 	private:
 		std::stack<double*> 	_fxy;
+		std::stack<double*> 	_fw;
 	public:
 		DunavantRule() {}
 		~DunavantRule() { ReleaseMemory(); }
 
 		void Generate(const int rule, struct st_quadrule *&q);
-		void Generate(const int rule, int &order_num, 
+		void GenerateAtomic(const int rule, int &order_num, 
 				double *&xy, double *&w); 
-		void Generate(const int rule, int &order_num, 
-				double *&x, double *&y, double *&w); 
 		int RuleNumber() { return dunavant_rule_num(); } 
 		int Order(const int rule) { return dunavant_order_num(rule); } 
 		int Degree(const int rule) { return dunavant_degree(rule); } 
 		void ReleaseMemory(); 
 
 	private:
+		void dunavant_rule ( int rule, int order_num, double xy[], double w[] );
 		int dunavant_degree ( int rule );
 		int dunavant_order_num ( int rule );
-		void dunavant_rule ( int rule, int order_num, double xy[], double w[] );
 		int dunavant_rule_num ( );
 		int *dunavant_suborder ( int rule, int suborder_num );
 		int dunavant_suborder_num ( int rule );
@@ -67,8 +66,8 @@ class DunavantRule {
 		void timestamp ( );
 }; // class DunavantRule
 
-extern DunavantRule gDunavantRule;
 
+extern DunavantRule gDunavantRule;
 
 } // namespace QuadratureRules
 /******************************************************************************/

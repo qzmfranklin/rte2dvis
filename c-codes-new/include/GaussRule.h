@@ -13,6 +13,7 @@ namespace QuadratureRules {
 class GaussRule {
 	private: 
 		std::stack<double*>	_fx;
+		std::stack<double*>	_fw;
 
 	public: 
 		GaussRule() {}
@@ -75,8 +76,8 @@ class GaussRule {
 		void sgqf ( int nt, double aj[], double bj[], double zemu, double t[], double wts[] );
 		void timestamp ( );
 };
-extern GaussRule gGaussRule;
 
+extern GaussRule gGaussRule;
 } // namespace QuadratureRules
 /******************************************************************************/
 #endif // End of protection macro _GAUSS_RULE_H_

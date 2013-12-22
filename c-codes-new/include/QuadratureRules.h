@@ -11,5 +11,16 @@
 #include "LynessRule.h"
 #include "WandzuraRule.h" 
 #include "GaussRule.h" 
+#include "ArcSinhMethod.h"
 /******************************************************************************/
+namespace QuadratureRules {
+
+void print_rule_1d(int order_num, double *x, double *w);
+void print_rule_2d(int order_num, double *xy, double *w);
+void print_quadrule(struct st_quadrule *q);
+
+void ReleaseMemory();
+
+} // namespace QuadratureRules
+
 #endif /* End of protection macro _QUADRATURE_RULES_H_ */

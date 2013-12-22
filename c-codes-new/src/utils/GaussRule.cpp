@@ -28,17 +28,23 @@ void GaussRule::Generate(const int order, double* &x, double* &w,
 {
 	//fprintf(stderr,"GaussRule::Generate1()\n");
 	assert( (order>0) && (a<b) && ((int)kind>0) && ((int)kind<9) );
-	x = (double*)mkl_malloc(2*order*sizeof(double),MALLOC_ALIGNMENT);
+	x = (double*)mkl_malloc(2lu*order*sizeof(double),MALLOC_ALIGNMENT);
+	w = (double*)mkl_malloc(1lu*order*sizeof(double),MALLOC_ALIGNMENT);
 	assert(x); 
-	w = x + order;
+	assert(w); 
 	cgqf(order,kind,alpha,beta,a,b,x,w); 
 	_fx.push(x);
+	_fw.push(w);
 }
 
 void GaussRule::ReleaseMemory() {
 	while ( !_fx.empty() ) { 
 		mkl_free( _fx.top() );
 		_fx.pop();
+	}
+	while ( !_fw.empty() ) { 
+		mkl_free( _fw.top() );
+		_fw.pop();
 	}
 }
 

@@ -39,34 +39,6 @@ void WandzuraRule::Generate(const int rule, int &order_num,
 	wandzura_rule(rule,order_num,xy,w);
 }
 
-void WandzuraRule::Generate(const int rule, int &order_num, 
-		double *&x, double *&y, double *&w)
-{
-	//printf("WandzuraRule::Generate()\n");
-	assert(1<=rule && rule<=wandzura_rule_num());
-	order_num = wandzura_order_num(rule); 
-	double *xy;
-	xy= (double*)mkl_malloc(2*order_num*sizeof(double),MALLOC_ALIGNMENT);
-	w = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
-	assert(xy);
-	assert(w);
-	wandzura_rule(rule,order_num,xy,w);
-
-	x = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
-	y = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
-	assert(x);
-	assert(y);
-	for (int i = 0; i < order_num; i++) {
-		x[i] = xy[2*i];
-		y[i] = xy[2*i+1];
-	}
-
-	_fxy.push(x);
-	_fxy.push(y);
-	_fxy.push(w);
-}
-
-
 void WandzuraRule::ReleaseMemory() {
 	while ( !_fxy.empty() ) { 
 		mkl_free( _fxy.top() );

@@ -14,6 +14,7 @@ using namespace std;
 class LynessRule {
 	private:
 		std::stack<double*> 	_fxy;
+		std::stack<double*> 	_fw;
 	public:
 		LynessRule() {}
 		~LynessRule() { ReleaseMemory(); }
@@ -52,8 +53,8 @@ class LynessRule {
 		int *i4vec_copy_new ( int n, int a1[] );
 };
 
-extern LynessRule gLynessRule;
 
+extern LynessRule gLynessRule;
 }
 
 /******************************************************************************/
