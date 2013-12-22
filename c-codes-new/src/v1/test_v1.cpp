@@ -32,30 +32,24 @@ int test01(void)
 
 	init_rte2dvis(solver,fbase,Nd,pad,flag);
 	assert(!check_rte2dvis(solver));
-	//print_rte2dvis(solver);
-	//printf("\n");
+	print_rte2dvis(solver);
 
 	alloc_rte2dvis_v1(solver);
-	//print_rte2dvis(solver);
-	//printf("\n");
+	print_rte2dvis(solver);
 
 	fill_rte2dvis_v1(solver);
-	//print_rte2dvis(solver);
-	//printf("\n");
+	print_rte2dvis(solver);
 
 	solve_rte2dvis_v1(solver);
-	//print_rte2dvis(solver);
-	//printf("\n");
+	print_rte2dvis(solver);
 
 	release_rte2dvis_v1(solver);
-	//print_rte2dvis(solver);
-	//printf("\n");
+	print_rte2dvis(solver);
 
 	destroy_rte2dvis(solver);
-	//print_rte2dvis(solver);
-	//printf("\n");
+	print_rte2dvis(solver);
 
-        printf("END OF TEST01\n");
-        printf("\n");
+	printf("END OF TEST01\n");
+	printf("\n");
 	return err;
 }

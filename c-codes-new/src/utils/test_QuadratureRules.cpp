@@ -28,10 +28,11 @@ int main(int argc, char const* argv[])
 	test03(100);
 	test04(100);
 
-	if (argc>1) unlink_stdout();
-
 	test05();
 	test06();
+
+	if (argc>1) unlink_stdout();
+
 
 	return 0;
 } 

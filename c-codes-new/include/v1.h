@@ -5,15 +5,19 @@
  * This header file defines the top level interface of the RTE solver.
  * Work flow of rte2dvis:
  *
- * 	Call init_rte2dvis().
+ * 	1.	Call init_rte2dvis().
  *
- * 	Fill up g,A,B,rhs manually.
+ * 	2.	Fill up g,A,B,rhs manually.
  *
- * 	Solve (A+B)sol=rhs for sol using some linear solver.
+ * 	3.	Solve (A+B)sol=rhs for sol using some linear solver.
  *
- * 	Release g,A,B,rhs accordingly.
+ * 	4.	Release g,A,B,rhs accordingly.
  *
- * 	Call destroy_rte2dvis().
+ * 	5.	Call destroy_rte2dvis().
+ *
+ * Among the above five steps, only the first and the last are provided in the
+ * common interface. All the rest are too general to be contained inside a
+ * interface.
  */
 /******************************************************************************/
 struct st_rte2dvis_info {
@@ -77,7 +81,8 @@ int check_rte2dvis(const struct st_rte2dvis_info &q);
 void destroy_rte2dvis(struct st_rte2dvis_info &sovler);
 /******************************************************************************/
 /*
- * The following routines are v1-specific.
+ * The following routines are v1-specific, i.e., not part of the common
+ * interface.
  */
 
 /*

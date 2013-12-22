@@ -17,8 +17,7 @@ void print_mesh(struct st_mesh_info &q, int flag)
 	printf("NODES\t\t= %p\n",	q.nodes);
 	printf("TRIGS\t\t= %p\n",	q.trigs);
 
-	if (!flag)
-		return;
+	if (!flag) { printf("\n"); return; }
 
 	assert(q.status==3); // after calling load_mesh()
 	printf("nodes:\n");
@@ -33,6 +32,7 @@ void print_mesh(struct st_mesh_info &q, int flag)
 				q.trigs[6*i  ],q.trigs[6*i+1],
 				q.trigs[6*i+2],q.trigs[6*i+3],
 				q.trigs[6*i+4],q.trigs[6*i+5]);
+	printf("\n");
 }
 
 void load_mesh(struct st_mesh_info &q, const char *fbase)

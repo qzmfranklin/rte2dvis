@@ -33,6 +33,8 @@ void print_rte2dvis(struct st_rte2dvis_info &q)
 	printf("rhs\t=%p\n",q.rhs);
 	printf("sol\t=%p\n",q.sol);
 	printf("work\t=%p\n",q.work);
+
+	printf("\n");
 }
 
 /*
@@ -165,15 +167,6 @@ static void fill_solver_A(struct st_rte2dvis_info &q)
 }
 
 /**************************************/
-#define RULE 6
-#define NU 20
-#define NV 3
-/*
- * Fill in matrix block B(n,np)
- * Homogeneous material, single-point testing, multi-point source.
- * The interface is really ugly, but fine...
- */
-
 static double distance(const struct st_rte2dvis_info &q, const int n, const int np)
 {
 	double *p=q.mesh->trigs;
@@ -184,41 +177,33 @@ static double distance(const struct st_rte2dvis_info &q, const int n, const int 
 	b[1]=p[6*np+1]+p[6*np+3]+p[6*np+5]; // 3*y2
 	c[0]=a[0]-b[0];
 	c[1]=a[1]-b[1];
-	return sqrt(
-			(c[0]*c[0]+c[1]*c[1])/3.0
-			);
+	return sqrt( (c[0]*c[0]+c[1]*c[1])/3.0 );
 }
 
 static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 {
+	// Modify the line below to change the quadrature rules.
+	const int RULE=6, NU=20, NV=3;
+
 	// Prepare quadrature rules.
 	using namespace QuadratureRules;
-	__declspec(align(64)) double xx[1000],ww[1000],work[2000];
 	__declspec(align(64)) double _Complex f[1000];
 	struct st_quadrule q[4];
 	gWandzuraRule.Generate(RULE,q);
-	gGaussRule.Generate(NU,q+1);
-	gGaussRule.Generate(NV,q+2);
-	q[3].x=xx;
-	q[3].w=ww;
+	gGaussRule.Generate(NU,q+2);
+	gGaussRule.Generate(NV,q+3);
+	gArcSinhMethod.Init(q+2,q+3);
 
-	// Fill in elements.
+	// Fill in elements. 1-point testing, multi-point source.
 	double *trigs=solver.mesh->trigs;
-	double *x=q[3].x, *w=q[3].w;
-	double pp[18];
 	for (int np = 0; np < 1; np++) {
-		//construct_quadrule_arcsinh(q+1,q+2,trigs+np,q+3,work);
+		gArcSinhMethod.Generate(p0,p,q+1);
 		for (int n = 0; n < 1; n++) {
 		}
 	}
 
-	// Release memories.
-	gWandzuraRule.ReleaseMemory();
-	gGaussRule.ReleaseMemory();
+	ReleaseMemory();
 }
-#undef RULE
-#undef NU
-#undef NV
 /**************************************/
 
 static void fill_solver_rhs(struct st_rte2dvis_info &q)

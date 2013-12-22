@@ -41,4 +41,15 @@ void ReleaseMemory()
 	gArcSinhMethod.ReleaseMemory();
 }
 
+const double std_ref_trig[6]={0.,0.,1.,0.,0.,1.};
+
+void ref_to_phy_trig(const int n, double *t, double *ref, double *phy)
+{
+	for ( int i = 0; i < 2; i++ )
+		for ( int j = 0; j < n; j++ )
+			phy[i+j*2] = t[i+0*2] * ( 1.0 - ref[0+j*2] - ref[1+j*2] )
+				   + t[i+1*2] *       + ref[0+j*2]
+				   + t[i+2*2] *                    + ref[1+j*2];
+}
+
 } // namespace QuadratureRules
