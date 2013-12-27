@@ -71,8 +71,8 @@ static double det(const double *a1, const double *a2,
 	return (a1[0]-a2[0])*(b1[1]-b2[1]) - (a1[1]-a2[1])*(b1[0]-b2[0]);
 }
 
-void ArcSinhMethod::Generate(const double *restrict p0, const double *restrict p,
-		struct st_quadrule *q)
+void ArcSinhMethod::Generate(struct st_quadrule *q, 
+		const double *restrict p, const double *restrict p0)
 {
 	//fprintf(stderr,"ArcSinhMethod::Generate()\n");
 	if (status==2) Init(_fqu,_fqv);
@@ -80,6 +80,7 @@ void ArcSinhMethod::Generate(const double *restrict p0, const double *restrict p
 
 	q->dim = 2;
 	q->n   = 3*_flwork;
+	q->a   = 1.0; // scale
 	q->x   = _fxy.top();
 	q->w   = _fw.top();
 
@@ -101,7 +102,7 @@ void ArcSinhMethod::Generate(const double *restrict p0, const double *restrict p
 	status=2;
 }
 
-void ArcSinhMethod::GenerateAtomic(const double *restrict p, struct st_quadrule *q)
+void ArcSinhMethod::GenerateAtomic(struct st_quadrule *q, const double *restrict p)
 {
 	//fprintf(stderr,"ArcSinhMethod::GenerateAtomic()\n");
 	if (status==2) Init(_fqu,_fqv);
@@ -158,8 +159,9 @@ void ArcSinhMethod::Atomic(const double *p0, const double *p1,
 
 	for (int j = 0; j < nv; j++)
 		for (int i = 0; i < nu; i++)
-			// h(u1-u2) is absorbed into weights.
+			//// h(u1-u2) is absorbed into weights.
 			w[i+nu*j] = fabs(h*u0[1])*wu[i]*wv[j]; 
+			//w[i+nu*j] = wu[i]*wv[j]; 
 
 	for (int j = 0; j < nv; j++)
 		for (int i = 0; i < nu; i++) { 

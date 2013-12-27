@@ -11,22 +11,32 @@ namespace QuadratureRules {
 
 class WandzuraRule {
 	private:
-		std::stack<double*> 	_fxy;
+		int status;
+		int _frule;
+		double *_fxy;
+		double *_fw;
+		double *_fwork;
+		size_t _flwork;
+		size_t _fsize;
 	public:
-		WandzuraRule() {}
-		~WandzuraRule() { ReleaseMemory(); }
+		size_t mem;	// memory consumption in bytes
 
-		void Generate(int rule, struct st_quadrule *q);
-		void Generate(const int rule, int &order_num, 
-				double *&xy, double *&w); 
-		void Generate(const int rule, int &order_num, 
-				double *&x, double *&y, double *&w); 
-		int RuleNumber() { return wandzura_rule_num(); } 
+		WandzuraRule(const int rule);
+		~WandzuraRule();
+		void Print();
+		void Reset(const int rule);
+		void Generate(struct st_quadrule *q, 
+				const double *restrict p=NULL);
 		int Order(const int rule) { return wandzura_order_num(rule); } 
-		int Degree(const int rule) { return wandzura_degree(rule); } 
+
+	private:
+		void AllocateMemory(const size_t size);
 		void ReleaseMemory();
 
-	public: 
+		/**************************************/
+
+
+	private: 
 		void file_name_inc ( char *file_name );
 		int i4_max ( int i1, int i2 );
 		int i4_min ( int i1, int i2 );
@@ -34,7 +44,7 @@ class WandzuraRule {
 		int i4_wrap ( int ival, int ilo, int ihi );
 		double r8_huge ( void );
 		int r8_nint ( double x );
-		void reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] );
+		void reference_to_physical_t3 ( const double t[], int n, double ref[], double phy[] );
 		int s_len_trim ( char *s );
 		void timestamp ( );
 		double triangle_area ( double t[2*3] );
@@ -64,10 +74,12 @@ class WandzuraRule {
 
 };
 
-// Declaration of a global WandzuraRule object gWandzuraRule.
-// gWandzuraRule is meant to be the ONLY WandzuraRule object
-// in the entire program.
+/*
+ * By defaut, uses the highest order quadrature rule
+ * 	RULE = 6, ORDER = 175
+ */
 extern WandzuraRule gWandzuraRule;
+
 } // namespace QuadratureRules
 /******************************************************************************/
 #endif // End of protection macro _WANDZURA_RULE_H_

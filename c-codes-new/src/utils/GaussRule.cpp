@@ -7,48 +7,103 @@
 #define MALLOC_ALIGNMENT 64
 namespace QuadratureRules { 
 /******************************************************************************/ 
-GaussRule gGaussRule; 
-/******************************************************************************/ 
-void GaussRule::Generate(const int order, struct st_quadrule *q,
-		const double a, const double b, const int kind, 
-		const double alpha, const double beta)
+
+GaussRule::GaussRule(const int order):
+	status(0),
+	_forder(0),
+	_fsize(0),
+	_fx(NULL),
+	_fw(NULL),
+	mem(0)
 {
-	//fprintf(stderr,"GaussRule::Generate2()\n");
-	double *x, *w;
-	Generate(order,x,w,a,b,kind,alpha,beta);
+	//fprintf(stderr,"GaussRule::GaussRule\n");
+	mem = sizeof(GaussRule);
+	Reset(order);
+}
+
+GaussRule::~GaussRule()
+{
+	//fprintf(stderr,"GaussRule::~GaussRule\n");
+	ReleaseMemory();
+}
+
+void GaussRule::Print()
+{
+	//fprintf(stderr,"GaussRule::Print()\n");
+	printf("status\t\t=%d (0=Non-Alloc'd 1=Alloc'd/Reset 2=Generated)\n",status);
+	printf("_forder\t\t=%d\n",_forder);
+	printf("_fsize\t\t=%lu\n",_fsize);
+	printf("mem\t\t=%lu bytes\n",mem);
+	printf("_fx\t\t=%p\n",_fx);
+	printf("_fw\t\t=%p\n",_fw);
+}
+
+void GaussRule::Reset(const int order)
+{
+	//fprintf(stderr,"GaussRule::Reset()\n");
+
+	if (order>_fsize) {
+		ReleaseMemory();
+		AllocateMemory((size_t)order);
+	}
+
+	_forder = order;
+
+	status=1;
+}
+
+void GaussRule::Generate( struct st_quadrule *q, const double a, const double b,
+		const int kind, const double alpha, const double beta)
+{
+	assert( (a<b) && ((int)kind>=1) && ((int)kind<=8) );
+
+	//fprintf(stderr,"GaussRule::Generate()\n");
+
+	cgqf(_forder,kind,alpha,beta,a,b,_fx,_fw); 
 	q->dim  = 1;
-	q->n    = order;
-	q->x    = x;
-	q->w    = w;
+	q->a    = 1.0;  // scale, already scaled to b-a in weights
+	q->n    = _forder;
+	q->x    = _fx;
+	q->w    = _fw;
+
+	status=2;
 }
 
-void GaussRule::Generate(const int order, double* &x, double* &w,
-		const double a, const double b, const int kind, 
-		const double alpha, const double beta)
+void GaussRule::ReleaseMemory()
 {
-	//fprintf(stderr,"GaussRule::Generate1()\n");
-	assert( (order>0) && (a<b) && ((int)kind>0) && ((int)kind<9) );
-	x = (double*)mkl_malloc(2lu*order*sizeof(double),MALLOC_ALIGNMENT);
-	w = (double*)mkl_malloc(1lu*order*sizeof(double),MALLOC_ALIGNMENT);
-	assert(x); 
-	assert(w); 
-	cgqf(order,kind,alpha,beta,a,b,x,w); 
-	_fx.push(x);
-	_fw.push(w);
+	if (status<=0) return;
+	//fprintf(stderr,"GaussRule::ReleaseMemory()\n"); 
+
+	mkl_free(_fx);
+	mkl_free(_fw);
+
+	mem -= sizeof(double)*2*_fsize;
+
+	_fsize = 0;
+
+	status=0;
 }
 
-void GaussRule::ReleaseMemory() {
-	while ( !_fx.empty() ) { 
-		mkl_free( _fx.top() );
-		_fx.pop();
-	}
-	while ( !_fw.empty() ) { 
-		mkl_free( _fw.top() );
-		_fw.pop();
-	}
+void GaussRule::AllocateMemory(const size_t size)
+{
+	assert(status==0); 
+	//fprintf(stderr,"GaussRule::AllocateMemory()\n"); 
+
+	_fx   =(double*)mkl_malloc(sizeof(double)*size,MALLOC_ALIGNMENT);
+	_fw   =(double*)mkl_malloc(sizeof(double)*size,MALLOC_ALIGNMENT);
+	assert(_fx);
+	assert(_fw);
+
+	_forder=size;
+	_fsize =size;
+
+	mem += sizeof(double)*2*size;
+
+	status=1;
 }
 
 
+/******************************************************************************/
 
 
 void GaussRule::cdgqf ( int nt, int kind, double alpha, double beta, double t[], double wts[] )

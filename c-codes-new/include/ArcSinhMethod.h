@@ -23,12 +23,14 @@ class ArcSinhMethod {
 
 		void Print();
 		void Init(struct st_quadrule *qu, struct st_quadrule *qv);
-		void Generate(const double *restrict p0, const double *restrict p,
-				struct st_quadrule *q);
-		void GenerateAtomic(const double *restrict p, struct st_quadrule *q);
+		void Generate(	struct st_quadrule *q, 
+				const double *restrict p, 
+				const double *restrict p0);
+		void GenerateAtomic(struct st_quadrule *q, 
+				const double *restrict p);
 		void ReleaseMemory();
 	private:
-		void Atomic(const double *p0, const double *p1, 
+		void Atomic(	const double *p0, const double *p1, 
 				const double *p2, double *restrict x, 
 				double *restrict w);
 };

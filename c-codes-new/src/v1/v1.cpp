@@ -22,7 +22,7 @@ void print_rte2dvis(struct st_rte2dvis_info &q)
 	printf("Nd\t=%d\n",q.Nd);
 	printf("Nm\t=%d\n",q.Nm);
 	printf("Ng\t=%d\n",q.Ng);
-	printf("mem\t=%luKB=%luMB\n",q.mem>>10,q.mem>>20);
+	printf("mem\t=%luKB\n",q.mem>>10);
 
 	//print_mesh(*q.mesh);
 	printf("area\t=%p\n",q.area);
@@ -189,6 +189,7 @@ static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 	using namespace QuadratureRules;
 	__declspec(align(64)) double _Complex f[1000];
 	struct st_quadrule q[4];
+	WandzuraRule g1(RULE);
 	gWandzuraRule.Generate(RULE,q);
 	gGaussRule.Generate(NU,q+2);
 	gGaussRule.Generate(NV,q+3);
@@ -201,16 +202,12 @@ static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 		for (int n = 0; n < 1; n++) {
 		}
 	}
-
-	ReleaseMemory();
 }
-/**************************************/
 
 static void fill_solver_rhs(struct st_rte2dvis_info &q)
 {
 	// rhs[Ns*(2*Nd+1)]
 }
-
 
 /*
  * Fill up g,A,B,rhs
@@ -221,9 +218,7 @@ void fill_rte2dvis_v1(struct st_rte2dvis_info &q)
 	
 	fill_solver_g(q);
 	fill_solver_A(q);
-	fill_solver_B_homo(q);
-
-
+	//fill_solver_B_homo(q);
 	fill_solver_rhs(q);
 
 	q.status=2;

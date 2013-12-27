@@ -9,42 +9,127 @@
 #define MALLOC_ALIGNMENT 64
 using namespace std; 
 namespace QuadratureRules {
+WandzuraRule gWandzuraRule(6);
 /******************************************************************************/
-WandzuraRule gWandzuraRule;
-/******************************************************************************/
-void WandzuraRule::Generate(const int rule, struct st_quadrule *q)
+WandzuraRule::WandzuraRule(const int rule):
+	status(0),
+	_frule(rule),
+	_fxy(NULL),
+	_fw(NULL),
+	_fwork(NULL),
+	_flwork(0),
+	_fsize(0)
 {
-	//printf("WandzuraRule::Generate()\n");
-	int order_num;
-	double *xy,*w;
-	Generate(rule,order_num,xy,w);
-	q->dim  = 2;
-	q->n    = order_num;
-	q->x    = xy;
-	q->w    = w;
+	//fprintf(stderr,"WandzuraRule::WandzuraRule()\n");
+	mem=sizeof(WandzuraRule);
+
+	Reset(_frule);
 }
 
-void WandzuraRule::Generate(const int rule, int &order_num, 
-		double *&xy, double *&w)
+WandzuraRule::~WandzuraRule()
 {
-	//printf("WandzuraRule::Generate()\n");
+	//fprintf(stderr,"WandzuraRule::~WandzuraRule()\n");
+	ReleaseMemory();
+}
+
+void WandzuraRule::Print()
+{
+	//fprintf(stderr,"WandzuraRule::Print()\n");
+	printf("status\t\t=%d (0=Non-Alloc'd 1=Alloc'd 2=Reset 3=Generated)\n",status);
+	printf("_frule\t\t=%d\n",_frule);
+	printf("_fsize\t\t=%lu\n",_fsize);
+	printf("_flwork\t\t=%lu\n",_flwork);
+	printf("mem\t\t=%lu bytes\n",mem);
+	printf("_fwork\t\t=%p\n",_fwork);
+	printf("_fxy\t\t=%p\n",_fxy);
+	printf("_fw\t\t=%p\n",_fw);
+}
+
+void WandzuraRule::Reset(const int rule)
+{
+	//fprintf(stderr,"WandzuraRule::Reset()\n");
 	assert(1<=rule && rule<=wandzura_rule_num());
-	order_num = wandzura_order_num(rule); 
-	xy = (double*)mkl_malloc(2*order_num*sizeof(double),MALLOC_ALIGNMENT);
-	w  = (double*)mkl_malloc(order_num*sizeof(double),MALLOC_ALIGNMENT);
-	assert(xy);
-	assert(w);
-	_fxy.push(xy);
-	_fxy.push(w);
-	wandzura_rule(rule,order_num,xy,w);
+
+	_frule=rule;
+
+	size_t _size = wandzura_order_num(_frule); 
+
+	if (_size*2<=_flwork) {
+		_fsize=_size;
+	}
+	else {
+		ReleaseMemory();
+		AllocateMemory(_size);
+	}
+
+	wandzura_rule(_frule,_size,_fxy,_fw);
+
+	status=2;
 }
 
-void WandzuraRule::ReleaseMemory() {
-	while ( !_fxy.empty() ) { 
-		mkl_free( _fxy.top() );
-		_fxy.pop();
-	}
+
+static double __trig_area__(const double *restrict p)
+{
+	double a = p[2]-p[0];
+	double b = p[3]-p[1];
+	double c = p[4]-p[0];
+	double d = p[5]-p[1];
+	return 0.5*fabs(a*d-c*b);
 }
+
+void WandzuraRule::Generate(struct st_quadrule *q, const double *restrict p)
+{
+	//fprintf(stderr,"WandzuraRule::Generate()\n");
+	assert(status==2);
+
+	if (!p)
+		q->x    = _fxy;
+	else {
+		reference_to_physical_t3(p,_fsize,_fxy,_fwork);
+		q->x    = _fwork;
+	}
+
+	q->dim  = 2;
+	q->a    = __trig_area__(p);  // scale
+	q->n    = _fsize;
+	q->w    = _fw; 
+	status=3;
+}
+
+void WandzuraRule::ReleaseMemory()
+{
+	//fprintf(stderr,"WandzuraRule::ReleaseMemory()\n");
+	if (status<=0) return;
+
+	mkl_free(_fxy);
+	mkl_free(_fw);
+	mkl_free(_fwork);
+
+	mem -= 5*_flwork/2;
+
+	status=0;
+}
+
+void WandzuraRule::AllocateMemory(const size_t size)
+{
+	//fprintf(stderr,"WandzuraRule::AllocateMemory()\n");
+	assert(status==0); 
+
+	_fxy  =(double*)mkl_malloc(sizeof(double)*2*size,MALLOC_ALIGNMENT);
+	_fw   =(double*)mkl_malloc(sizeof(double)*1*size,MALLOC_ALIGNMENT);
+	_fwork=(double*)mkl_malloc(sizeof(double)*2*size,MALLOC_ALIGNMENT);
+	assert(_fxy);
+	assert(_fw);
+	assert(_fwork);
+
+	_fsize =size;
+	_flwork=2*size;
+
+	mem += 5*size;
+
+	status=1;
+}
+
 /******************************************************************************/
 
 
@@ -467,7 +552,7 @@ int WandzuraRule::r8_nint ( double x )
 }
 //****************************************************************************80
 
-void WandzuraRule::reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] )
+void WandzuraRule::reference_to_physical_t3 ( const double t[], int n, double ref[], double phy[] )
 
 	//****************************************************************************80
 	//

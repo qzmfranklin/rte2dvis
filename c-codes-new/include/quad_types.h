@@ -13,6 +13,8 @@
  * 		1	1D line
  * 		2	2D triangle
  * 		3	3D tetrahedron
+ * 	scale:
+ * 		integral = a * sum{f(x[i])*w[i]}
  * *p represents a triangle:
  * 	x0	p[0]
  * 	y0	p[1]
@@ -24,6 +26,7 @@
 struct st_quadrule {
 	int dim;	// dimension
 	int n;		// number of points
+	double a;	// scale
 	double *x;	// abscissa
 	double *w;	// weights
 }; 

@@ -1,7 +1,6 @@
 #ifndef _GAUSS_QUADRATURES_H_
 #define _GAUSS_QUADRATURES_H_
 /******************************************************************************/
-
 #include "quad_types.h"
 #include <stack>
 #include <mkl.h>
@@ -10,26 +9,6 @@
 /******************************************************************************/
 
 namespace QuadratureRules { 
-class GaussRule {
-	private: 
-		std::stack<double*>	_fx;
-		std::stack<double*>	_fw;
-
-	public: 
-		GaussRule() {}
-		~GaussRule() { ReleaseMemory(); }
-
-		enum {
-			kLegendre = 1,
-			kChebyshevI,
-			kGegenbauer,
-			kJacobi,
-			kGeneralizedLaguerre,
-			kGeneralizedHerite,
-			kExponential,
-			kRational
-		};
-
 /*
  * Input, int KIND, the rule.
  * 1, Legendre,             (a,b)       1.0
@@ -41,23 +20,40 @@ class GaussRule {
  * 7, Exponential,          (a,b)       |x-(a+b)/2.0|^alpha
  * 8, Rational,             (a,inf)     (x-a)^alpha*(x+b)^beta
  */
-		void Generate(	const int order,
-				struct st_quadrule *q,
-				const double a	= 0.0,
-				const double b	= 1.0,
-				const int kind	= kLegendre, 
-				const double alpha= 0.0,
-				const double beta= 0.0); 
+class GaussRule {
+	private: 
+		int status;
+		int _forder;
+		size_t _fsize;
+		double *_fx;
+		double *_fw;
+	public: 
+		size_t mem;
 
-		void Generate(	const int order,
-				double* &x, double* &w,
-				const double a	= 0.0,
-				const double b	= 1.0,
-				const int kind	= kLegendre, 
+		void Print(); 
+		GaussRule(const int order);
+		~GaussRule();
+		void Reset(const int order);
+		void Generate(  struct st_quadrule *q,
+				const double a = 0.0,
+				const double b = 1.0,	
+				const int kind = kLegendre, 
 				const double alpha= 0.0,
-				const double beta= 0.0); 
-
+				const double beta = 0.0); 
+		int Order() const { return _forder; }
+		enum {
+			kLegendre = 1,
+			kChebyshevI,
+			kGegenbauer,
+			kJacobi,
+			kGeneralizedLaguerre,
+			kGeneralizedHermite,
+			kExponential,
+			kRational
+		};
 		void ReleaseMemory();
+	private:
+		void AllocateMemory(const size_t size);
 
 		/**************************************/ 
 	private:
