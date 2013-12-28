@@ -28,6 +28,7 @@ class ArcSinhMethod {
 				const double *restrict p0);
 		void GenerateAtomic(struct st_quadrule *q, 
 				const double *restrict p);
+		int Order() { return _fqu->n * _fqv->n; }
 		void ReleaseMemory();
 	private:
 		void Atomic(	const double *p0, const double *p1, 

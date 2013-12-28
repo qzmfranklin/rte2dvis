@@ -8,7 +8,7 @@
 
 void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
 {
-	//fprintf(stderr, "create_fftw_plans(n=%d,plans,flag)\n",n);
+	fprintf(stderr, "create_fftw_plans(n=%d,plans,flag)\n",n);
 	fftw_complex *work1,*work2;
 	work1 =(fftw_complex*)mkl_malloc(
 			n*sizeof(fftw_complex),MALLOC_ALIGNMENT);
@@ -39,9 +39,10 @@ void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
 
 void destroy_fftw_plans(fftw_plan *restrict plans)
 {
-	//fprintf(stderr, "destroy_fftw_plans(plans)\n");
+	fprintf(stderr, "destroy_fftw_plans(plans)\n");
 	for (int i = 0; i < 4; i++)
 		fftw_destroy_plan(plans[i]);
+	mkl_free(plans);
 }
 
 void zicrfmv(const int n, const double _Complex *restrict zf,

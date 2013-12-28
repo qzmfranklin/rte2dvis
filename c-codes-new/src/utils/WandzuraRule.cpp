@@ -80,7 +80,7 @@ static double __trig_area__(const double *restrict p)
 void WandzuraRule::Generate(struct st_quadrule *q, const double *restrict p)
 {
 	//fprintf(stderr,"WandzuraRule::Generate()\n");
-	assert(status==2);
+	assert(status>=2);
 
 	if (!p)
 		q->x    = _fxy;

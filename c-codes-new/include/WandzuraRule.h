@@ -27,7 +27,7 @@ class WandzuraRule {
 		void Reset(const int rule);
 		void Generate(struct st_quadrule *q, 
 				const double *restrict p=NULL);
-		int Order(const int rule) { return wandzura_order_num(rule); } 
+		int Order() { return wandzura_order_num(_frule); } 
 
 	private:
 		void AllocateMemory(const size_t size);

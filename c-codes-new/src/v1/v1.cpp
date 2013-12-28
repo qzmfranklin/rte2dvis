@@ -26,6 +26,7 @@ void print_rte2dvis(struct st_rte2dvis_info &q)
 
 	//print_mesh(*q.mesh);
 	printf("area\t=%p\n",q.area);
+	printf("cntr\t=%p\n",q.cntr);
 
 	printf("g\t=%p\n",q.f);
 	printf("A\t=%p\n",q.A);
@@ -49,6 +50,8 @@ static double det(const double *a1, const double *a2,
 void init_rte2dvis(struct st_rte2dvis_info &q, const char *fabse, 
 		const int Nd, const int pad, const int flag)
 {
+	fprintf(stderr,"init_rte2dvis\n");
+
 	// version, flag
 	q.version = 1;
 	q.flag = flag; 
@@ -62,18 +65,33 @@ void init_rte2dvis(struct st_rte2dvis_info &q, const char *fabse,
 	q.Ns = q.mesh->num_trigs;
 
 	// area
-	q.area=(double*)mkl_malloc(
-			q.Ns*sizeof(double),MALLOC_ALIGNMENT);
+	q.area=(double*)mkl_malloc(sizeof(double)*q.Ns,MALLOC_ALIGNMENT);
 	double *p = q.mesh->trigs;
 	for (int i = 0; i < q.Ns; i++)
 		// area[i] = 0.5*Det[p0-p1,p0-p2]
 		q.area[i] = 0.5*det(p+6*i,p+6*i+2,p+6*i,p+6*i+4);
 
+	// cntr
+	q.cntr=(double*)mkl_malloc(sizeof(double)*2*q.Ns,MALLOC_ALIGNMENT);
+	double xx = 1.0/3.0;
+	for (int i = 0; i < q.Ns; i++) {
+		double *pp=p+6*i;
+		q.cntr[2*i  ] = xx * (pp[0]+pp[2]+pp[4]);
+		q.cntr[2*i+1] = xx * (pp[1]+pp[3]+pp[5]);
+	}
+
 	// Nd, Nm, Ng
-	q.Nm = 2*Nd+1+ pad - (2*Nd+1)%pad;
-	q.Nd = (q.Nm-1)/2;
+	if (pad) {
+		q.Nm = 2*Nd+1+ pad - (2*Nd+1)%pad;
+		q.Nd = (q.Nm-1)/2;
+	} else {
+		q.Nd = Nd;
+		q.Nm = 2*Nd+1;
+	}
 	q.Ng = q.Ns * (2*q.Nd+1);
 
+	// plans
+	create_fftw_plans(2*q.Nm,q.plans);
 
 	// f, A, B, rhs, sol, work
 	q.f    = NULL;
@@ -86,7 +104,9 @@ void init_rte2dvis(struct st_rte2dvis_info &q, const char *fabse,
 	// mem
 	q.mem  = sizeof(struct st_rte2dvis_info)
 		+sizeof(struct st_mesh_info)
-		+sizeof(double)*q.Ns;
+		+sizeof(double)*q.Ns
+		+sizeof(fftw_plan)*4
+		+sizeof(double)*2*q.Ns;
 
 	// status
 	q.status = 0;
@@ -94,17 +114,23 @@ void init_rte2dvis(struct st_rte2dvis_info &q, const char *fabse,
 
 int check_rte2dvis(const struct st_rte2dvis_info &q)
 {
+	fprintf(stderr,"check_rte2dvis\n");
 	return 0;
 }
 
 void destroy_rte2dvis(struct st_rte2dvis_info &q)
 {
+	fprintf(stderr,"destroy_rte2dvis\n");
+	destroy_fftw_plans(q.plans);
 	release_mesh(*(q.mesh));
 	mkl_free(q.mesh);
 	mkl_free(q.area); 
 
 	q.mem -= sizeof(struct st_mesh_info)
-		+sizeof(double)*q.Ns;
+		+sizeof(double)*q.Ns
+		+sizeof(fftw_plan)*4
+		+sizeof(double)*2*q.Ns;
+
 	q.status=-1;
 }
 /******************************************************************************/
@@ -115,6 +141,7 @@ void destroy_rte2dvis(struct st_rte2dvis_info &q)
  */
 void alloc_rte2dvis_v1(struct st_rte2dvis_info &q)
 {
+	fprintf(stderr,"alloc_rte2dvis_v1\n");
 	assert(q.status==0);
 
 	// f(m)=g^|m|
@@ -123,26 +150,28 @@ void alloc_rte2dvis_v1(struct st_rte2dvis_info &q)
 	// rhs[Ns*(2*Nd+1)]
 	// sol[Ns*(2*Nd+1)]
 	// work[Nm] is the tmp workspace in FFT convolution.
-	q.f   =(double*)mkl_malloc(sizeof(double)*(2*q.Nd+1),MALLOC_ALIGNMENT);
-	q.A   =(double*)mkl_malloc(sizeof(double)*q.Ns,MALLOC_ALIGNMENT);
-	q.B   =(double*)mkl_malloc(sizeof(double)*q.flag*2*q.Ns*q.Ns*q.Nm,MALLOC_ALIGNMENT);
-	q.rhs =(double*)mkl_malloc(sizeof(double)*q.Ns*(2*q.Nd+1),MALLOC_ALIGNMENT);
-	q.sol =(double*)mkl_malloc(sizeof(double)*q.Ns*(2*q.Nd+1),MALLOC_ALIGNMENT);
-	q.work=(double*)mkl_malloc(sizeof(double)*q.Nm,MALLOC_ALIGNMENT); 
+	int flag=q.flag, Ns=q.Ns, Nd=q.Nd, Nm=q.Nm, Ng=q.Ng;
+	q.f   =(double*)mkl_malloc(sizeof(double)*(2*Nd+1),MALLOC_ALIGNMENT);
+	q.A   =(double*)mkl_malloc(sizeof(double)*Ns,MALLOC_ALIGNMENT);
+	q.B   =(double*)mkl_malloc(sizeof(double)*2*flag*Ns*Ns*2*Nm,MALLOC_ALIGNMENT);
+	q.rhs =(double*)mkl_malloc(sizeof(double)*2*Ng,MALLOC_ALIGNMENT);
+	q.sol =(double*)mkl_malloc(sizeof(double)*2*Ng,MALLOC_ALIGNMENT);
+	q.work=(double*)mkl_malloc(sizeof(double)*2*Ns*2*Nm,MALLOC_ALIGNMENT); 
 
 	q.mem+=sizeof(double)*(
-			2*q.Nd+1
-			+q.Ns
-			+q.Ns*(2*q.Nd+1)
-			+q.Ns*(2*q.Nd+1)
-			+q.Nm
-			+q.flag*2*q.Ns*q.Ns*q.Nm
+			2*Nd+1
+			+Ns
+			+flag*2*Ns*Ns*2*Nm
+			+2*Ng
+			+2*Ng
+			+2*Ns*2*Nm
 			);
 	q.status=1;
 }
 
-static void fill_solver_g(struct st_rte2dvis_info &q)
+static void fill_solver_f(struct st_rte2dvis_info &q)
 {
+	fprintf(stderr,"fill_solver_f\n");
 	// Modify the following line to change the g.
 	double g=0.6;
 	// HG phase function: f(m)=g^|m|
@@ -158,6 +187,7 @@ static void fill_solver_g(struct st_rte2dvis_info &q)
 
 static void fill_solver_A(struct st_rte2dvis_info &q)
 {
+	fprintf(stderr,"fill_solver_A\n");
 	// A=2*pi*area(n)*delta(n,np)*delta(m,mp)
 	// Note that q.area stores the signed areas.
 	for (int i = 0; i < q.Ns; i++)
@@ -166,47 +196,151 @@ static void fill_solver_A(struct st_rte2dvis_info &q)
 		//fprintf(stderr, "q.A[%4d]=%f\n",i,q.A[i]);
 }
 
-/**************************************/
-static double distance(const struct st_rte2dvis_info &q, const int n, const int np)
+static double distance(double p1[2], double p2[2])
 {
-	double *p=q.mesh->trigs;
-	double a[2],b[2],c[2];
-	a[0]=p[6*n   ]+p[6*n +2]+p[6*n +4]; // 3*x1
-	a[1]=p[6*n +1]+p[6*n +3]+p[6*n +5]; // 3*y1
-	b[0]=p[6*np  ]+p[6*np+2]+p[6*np+4]; // 3*x2
-	b[1]=p[6*np+1]+p[6*np+3]+p[6*np+5]; // 3*y2
-	c[0]=a[0]-b[0];
-	c[1]=a[1]-b[1];
-	return sqrt( (c[0]*c[0]+c[1]*c[1])/3.0 );
+	double a,b;
+	a=p1[0]-p2[0];
+	b=p1[1]-p2[1];
+	return sqrt(a*a+b*b);
+}
+
+static void scale(const double a, const int n, double _Complex *v)
+{
+	for (int i = 0; i < n; i++)
+		v[i] *= a;
 }
 
 static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 {
-	// Modify the line below to change the quadrature rules.
-	const int RULE=6, NU=20, NV=3;
+	fprintf(stderr,"fill_solver_B_homo\n");
+	// quadrature rules
+	const int RULE=6, NU=100, NV=3, MAX_NUM=1500;
+	// critical distance
+	const double dmin=0.25;
 
 	// Prepare quadrature rules.
 	using namespace QuadratureRules;
-	__declspec(align(64)) double _Complex f[1000];
 	struct st_quadrule q[4];
-	WandzuraRule g1(RULE);
-	gWandzuraRule.Generate(RULE,q);
-	gGaussRule.Generate(NU,q+2);
-	gGaussRule.Generate(NV,q+3);
-	gArcSinhMethod.Init(q+2,q+3);
+	WandzuraRule  g0(RULE);
+	ArcSinhMethod g1;
+	GaussRule     g2(NU);
+	GaussRule     g3(NV);
+	g2.Generate(q+2,0.0,1.0);
+	g3.Generate(q+3,0.0,1.0);
+	g1.Init(q+2,q+3);
+
+	assert(MAX_NUM>=g0.Order());
+	assert(MAX_NUM>=3*NU*NV);
 
 	// Fill in elements. 1-point testing, multi-point source.
-	double *trigs=solver.mesh->trigs;
-	for (int np = 0; np < 1; np++) {
-		gArcSinhMethod.Generate(p0,p,q+1);
-		for (int n = 0; n < 1; n++) {
+	double *p=solver.mesh->trigs;
+	double *area=solver.area;
+	double *cntr=solver.cntr;
+	fftw_plan *plans=solver.plans;
+	int Ns=solver.Ns, Nd=solver.Nd, Nm=solver.Nm, arcsinh_count=0;
+	__declspec(align(64)) double _Complex E[MAX_NUM], wER[MAX_NUM];
+	for (int np = 0; np < Ns; np++) {
+		g0.Generate(q,p+6*np);
+		for (int n = 0; n < Ns; n++) {
+			double _Complex *z;
+			z=((double _Complex*)solver.B)+(n+np*Ns)*2*Nm;
+			//printf("B[%3d,%3d]=%p\n",n,np,z);
+			int M;
+			if ( distance(cntr+2*n,cntr+2*np)>dmin ) {
+				// Non-singular, Wandzura
+				//printf("[%4d,%4d] symmetric\n",n,np);
+				double dx,dy,r;
+				M = g0.Order();
+				for (int i = 0; i < g0.Order(); i++) {
+					dx  = cntr[2*n  ] - q->x[2*i  ];
+					dy  = cntr[2*n+1] - q->x[2*i+1];
+					r   = sqrt(dx*dx+dy*dy);
+					E[i]= (dx-dy*I)/r;
+					wER[i] = q->w[i]/r;
+				}
+			} else {
+				// Singular/Near-singular, ArcSinh
+				//printf("[%4d,%4d] arcsinh\n",n,np);
+				g1.Generate(q+1,p+6*np,cntr+2*n);
+				M = g1.Order();
+				for (int i = 0; i < M; i++) {
+					double dx,dy,r;
+					dx  = cntr[2*n  ] - q[1].x[2*i  ];
+					dy  = cntr[2*n+1] - q[1].x[2*i+1];
+					r   = sqrt(dx*dx+dy*dy);
+					E[i]= (dx-dy*I)/r;
+					wER[i]= q->w[i];
+				}
+				arcsinh_count++;
+			}
+			// Fill z
+			memset(z,0,sizeof(double)*2*Nm);
+			for (int i = 0; i < M; i++)
+				z[0] += wER[i];
+			for (int dm = 1; dm < 2*Nd+1; dm++) {
+				for (int i = 0; i < M; i++)
+					wER[i] *= E[i];
+				for (int i = 0; i < M; i++)
+					z[i] += wER[i];
+			}
+			for (int dm = 2*Nd+1; dm <= 2*(Nm-Nd)-1; dm++)
+				z[dm] = 0.0;
+			for (int dm = 2*(Nm-Nd); dm <= 2*Nm-1; dm++)
+				z[dm] = conj(z[2*Nm-dm]);
+			// in-place FFT z, divide by 2*Nm
+			fftw_execute_dft(plans[IFWD],(fftw_complex*)z,(fftw_complex*)z);
+			scale(0.5/Nm,2*Nm,z);
+			//for (int i = 0; i <= 2*Nm-1; i++)
+				//printf("z[%3d] = %7.4f + %7.4f*I\n",i,creal(z[i]),cimag(z[i]));
+		}
+	}
+	printf("arcsinh_count/(Ns*Ns) = %f\n",(double)arcsinh_count/(Ns*Ns));
+}
+
+
+/*
+ * Out-of-place multiplication for homogeneous problem.
+ */
+static void mul_homo(struct st_rte2dvis_info &q, 
+		const double _Complex *restrict in,
+		double _Complex *restrict out)
+{
+	// mu_t and mu_s
+	const double mut=0.4, mus=0.3;
+
+	int Ns=q.Ns, Nm=q.Nm, Nd=q.Nd;
+	double *f=q.f, *A=q.A;
+	double _Complex *B=(double _Complex*)q.B;
+	double _Complex *work=(double _Complex*)q.work;
+	for (int np = 0; np < Ns; np++) {
+		double _Complex *oo=out+np*2*Nm;
+		for (int n = 0; n < Ns; n++) {
+			for (int i = 0; i < 2*Nd+1; i++)
+				oo[i] = (mut-mus*f[i])*in[i+np*2*Nm];
+			memset(oo+2*Nd+1,0,sizeof(double)*2*(Nm-2*Nd-1));
+			fftw_execute_dft(q.plans[OFWD],
+					(fftw_complex*)oo,
+					(fftw_complex*)work);
+			for (int i = 0; i < 2*Nm; i++)
+				oo[i] *= B[i+(n+np*Ns)*2*Nm];
+			fftw_execute_dft(q.plans[OBWD], 
+					(fftw_complex*)work,
+					(fftw_complex*)oo);
+			memset(oo+2*Nd+1,0,sizeof(double)*2*(Nm-2*Nd-1));
 		}
 	}
 }
 
 static void fill_solver_rhs(struct st_rte2dvis_info &q)
 {
-	// rhs[Ns*(2*Nd+1)]
+	fprintf(stderr,"fill_solver_rhs\n");
+	// rhs[Ns*(2*Nd+1)] TODO
+	double _Complex *rhs=(double _Complex*)q.rhs;
+	int lda=2*q.Nd+1;
+	for (int i = 0; i < q.Ns; i++) {
+		for (int j = 0; j < lda; j++)
+			rhs[j+i*lda] = j;
+	}
 }
 
 /*
@@ -214,11 +348,12 @@ static void fill_solver_rhs(struct st_rte2dvis_info &q)
  */
 void fill_rte2dvis_v1(struct st_rte2dvis_info &q)
 {
+	fprintf(stderr,"fill_rte2dvis_v1\n");
 	assert(q.status==1);
 	
-	fill_solver_g(q);
+	fill_solver_f(q);
 	fill_solver_A(q);
-	//fill_solver_B_homo(q);
+	fill_solver_B_homo(q);
 	fill_solver_rhs(q);
 
 	q.status=2;
@@ -226,12 +361,16 @@ void fill_rte2dvis_v1(struct st_rte2dvis_info &q)
 
 void solve_rte2dvis_v1(struct st_rte2dvis_info &q)
 {
+	fprintf(stderr,"solve_rte2dvis_v1\n");
 	assert(q.status==2);
+
+
 	q.status=3;
 }
 
 void release_rte2dvis_v1(struct st_rte2dvis_info &q)
 {
+	fprintf(stderr,"release_rte2dvis_v1\n");
 	assert(q.status>=1); 
 
 	mkl_free(q.f   );
@@ -244,10 +383,10 @@ void release_rte2dvis_v1(struct st_rte2dvis_info &q)
 	q.mem-=sizeof(double)*(
 			2*q.Nd+1
 			+q.Ns
-			+q.Ns*(2*q.Nd+1)
-			+q.Ns*(2*q.Nd+1)
-			+q.Nm
-			+q.flag*2*q.Ns*q.Ns*q.Nm
+			+q.flag*2*q.Ns*q.Ns*2*q.Nm
+			+2*q.Ng
+			+2*q.Ng
+			+2*q.Ns*2*q.Nm
 			);
 	q.status=-2;
 }

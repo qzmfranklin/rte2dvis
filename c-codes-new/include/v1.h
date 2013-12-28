@@ -25,33 +25,35 @@ struct st_rte2dvis_info {
 	 * Top level information of the RTE solver
 	 * Must not be modified by the user.
 	 */
-	int                    version;		// 1=v1
-	int                    flag;		// 1=HOMOGENEOUS 2=INHOMOGENEOUS
-	int                    status;		// rte2dvis internal status
-	int                    pad;		// padding mod for Nd Nm
-	int                    Ns;		// number of triangles
-	int                    Nd;		// max angular component index
-	int                    Nm;		// 2(Nd+1)
-	int                    Ng;		// Ns*Nm
-	unsigned long long int mem;		// memory used in bytes
+	int                   version;		// 1=v1
+	int                   flag;		// 1=HOMOGENEOUS 2=INHOMOGENEOUS
+	int                   status;		// rte2dvis internal status
+	int                   pad;		// padding mod for Nd Nm
+	int                   Ns;		// number of triangles
+	int                   Nd;		// max angular component index
+	int                   Nm;		// 2(Nd+1)
+	int                   Ng;		// Ns*Nm
+	size_t                mem;		// memory used in bytes
+	fftw_plan            *plans;		// fftw plans: IFWD IBWD OFWD OBWD
 
 	/*
 	 * The following buffers are to be filled up by init_rte2dvis.
 	 * Must not be modified by the user.
 	 */
-	struct st_mesh_info   *mesh;		// mesh, defined in file_io.h
-	double                *area;		// signed area, right-handed 
+	struct st_mesh_info  *mesh;		// mesh, defined in file_io.h
+	double               *area;		// [Ns] signed area, right-handed 
+	double               *cntr;		// [2Ns]centers of triangles
 
 	/*
 	 * The following buffers are to be supplied/filled up by the user.
 	 * May be modified by the user when appropriate.
 	 */
-	double                *f;		// phase function components f(m)
-	double                *A;		// identity matrix, block-wise diagonal
-	double                *B;		// interaction matrix, block-wise Toeplitz-like
-	double                *rhs;		// input vector, right hand side
-	double                *sol;		// solution vector
-	double                *work;		// workspace
+	double               *f;		// phase function components f(m)
+	double               *A;		// identity matrix, block-wise diagonal
+	double               *B;		// interaction matrix, block-wise Toeplitz-like
+	double               *rhs;		// input vector, right hand side
+	double               *sol;		// solution vector
+	double               *work;		// workspace
 };
 
 /*
