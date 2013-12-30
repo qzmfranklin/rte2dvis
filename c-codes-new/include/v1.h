@@ -100,7 +100,7 @@ void fill_rte2dvis_v1(struct st_rte2dvis_info &q);
 /*
  * Solve (A+B)sol=rhs for sol using some linear solver.
  */
-void solve_rte2dvis_v1(struct st_rte2dvis_info &q);
+int solve_rte2dvis_v1(struct st_rte2dvis_info &q);
 
 /*
  * Release g,A,B,rhs accordingly.

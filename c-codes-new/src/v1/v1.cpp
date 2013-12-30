@@ -156,7 +156,7 @@ void alloc_rte2dvis_v1(struct st_rte2dvis_info &q)
 	q.B   =(double*)mkl_malloc(sizeof(double)*2*flag*Ns*Ns*2*Nm,MALLOC_ALIGNMENT);
 	q.rhs =(double*)mkl_malloc(sizeof(double)*2*Ng,MALLOC_ALIGNMENT);
 	q.sol =(double*)mkl_malloc(sizeof(double)*2*Ng,MALLOC_ALIGNMENT);
-	q.work=(double*)mkl_malloc(sizeof(double)*2*Ns*2*Nm,MALLOC_ALIGNMENT); 
+	q.work=(double*)mkl_malloc(sizeof(double)*2*2*Nm,MALLOC_ALIGNMENT); 
 
 	q.mem+=sizeof(double)*(
 			2*Nd+1
@@ -164,7 +164,7 @@ void alloc_rte2dvis_v1(struct st_rte2dvis_info &q)
 			+flag*2*Ns*Ns*2*Nm
 			+2*Ng
 			+2*Ng
-			+2*Ns*2*Nm
+			+2*2*Nm
 			);
 	q.status=1;
 }
@@ -269,7 +269,7 @@ static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 					dy  = cntr[2*n+1] - q[1].x[2*i+1];
 					r   = sqrt(dx*dx+dy*dy);
 					E[i]= (dx-dy*I)/r;
-					wER[i]= q->w[i];
+					wER[i]= q[1].w[i];
 				}
 				arcsinh_count++;
 			}
@@ -281,15 +281,15 @@ static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 				for (int i = 0; i < M; i++)
 					wER[i] *= E[i];
 				for (int i = 0; i < M; i++)
-					z[i] += wER[i];
+					z[dm]  += wER[i];
 			}
 			for (int dm = 2*Nd+1; dm <= 2*(Nm-Nd)-1; dm++)
 				z[dm] = 0.0;
 			for (int dm = 2*(Nm-Nd); dm <= 2*Nm-1; dm++)
 				z[dm] = conj(z[2*Nm-dm]);
-			// in-place FFT z, divide by 2*Nm
-			fftw_execute_dft(plans[IFWD],(fftw_complex*)z,(fftw_complex*)z);
-			scale(0.5/Nm,2*Nm,z);
+			// in-place FFT z, divide by 2*Nm, multiply by S(n)
+			//fftw_execute_dft(plans[IFWD],(fftw_complex*)z,(fftw_complex*)z);
+			scale(0.5/Nm*fabs(solver.area[n])*1.0E5,2*Nm,z);
 			//for (int i = 0; i <= 2*Nm-1; i++)
 				//printf("z[%3d] = %7.4f + %7.4f*I\n",i,creal(z[i]),cimag(z[i]));
 		}
@@ -302,7 +302,7 @@ static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
  * Out-of-place multiplication for homogeneous problem.
  */
 static void mul_homo(struct st_rte2dvis_info &q, 
-		const double _Complex *restrict in,
+		const double _Complex *restrict in, 
 		double _Complex *restrict out)
 {
 	// mu_t and mu_s
@@ -311,22 +311,28 @@ static void mul_homo(struct st_rte2dvis_info &q,
 	int Ns=q.Ns, Nm=q.Nm, Nd=q.Nd;
 	double *f=q.f, *A=q.A;
 	double _Complex *B=(double _Complex*)q.B;
-	double _Complex *work=(double _Complex*)q.work;
+	fftw_complex *work=(fftw_complex *)q.work;
+	memset(out,0,Ns*(2*Nd+1));
+	for (int n = 0; n < Ns; n++)
+		for (int m = 0; m < 2*Nd+1; m++)
+			out[m+n*(2*Nd+1)] += in[m+n*(2*Nd+1)] * A[n];
 	for (int np = 0; np < Ns; np++) {
-		double _Complex *oo=out+np*2*Nm;
 		for (int n = 0; n < Ns; n++) {
+			// copy into workspace
 			for (int i = 0; i < 2*Nd+1; i++)
-				oo[i] = (mut-mus*f[i])*in[i+np*2*Nm];
-			memset(oo+2*Nd+1,0,sizeof(double)*2*(Nm-2*Nd-1));
-			fftw_execute_dft(q.plans[OFWD],
-					(fftw_complex*)oo,
-					(fftw_complex*)work);
+				work[i] = (mut-mus*f[i])*in[i+np*(2*Nd+1)];
+			// padding zeros
+			memset(work+2*Nd+1,0,sizeof(double)*2*(Nm-2*Nd-1));
+			// transform workspace
+			fftw_execute_dft(q.plans[IFWD],work,work);
+			// convolution in frequency domain
 			for (int i = 0; i < 2*Nm; i++)
-				oo[i] *= B[i+(n+np*Ns)*2*Nm];
-			fftw_execute_dft(q.plans[OBWD], 
-					(fftw_complex*)work,
-					(fftw_complex*)oo);
-			memset(oo+2*Nd+1,0,sizeof(double)*2*(Nm-2*Nd-1));
+				work[i]*= B[i+(n+np*Ns)*2*Nm];
+			// FFT back
+			fftw_execute_dft(q.plans[IBWD],work,work);
+			// copy to out
+			for (int i = 0; i < 2*Nd+1; i++)
+				out[i+np*(2*Nd+1)] += work[i];
 		}
 	}
 }
@@ -336,11 +342,10 @@ static void fill_solver_rhs(struct st_rte2dvis_info &q)
 	fprintf(stderr,"fill_solver_rhs\n");
 	// rhs[Ns*(2*Nd+1)] TODO
 	double _Complex *rhs=(double _Complex*)q.rhs;
-	int lda=2*q.Nd+1;
-	for (int i = 0; i < q.Ns; i++) {
-		for (int j = 0; j < lda; j++)
-			rhs[j+i*lda] = j;
-	}
+	double _Complex *sol=(double _Complex*)q.sol;
+	for (int i = 0; i < q.Ng; i++)
+		sol[i] = i;
+	mul_homo(q,sol,rhs);
 }
 
 /*
@@ -359,13 +364,83 @@ void fill_rte2dvis_v1(struct st_rte2dvis_info &q)
 	q.status=2;
 }
 
-void solve_rte2dvis_v1(struct st_rte2dvis_info &q)
+int solve_rte2dvis_v1(struct st_rte2dvis_info &q)
 {
+#define MAX_ITR_NUM 50
+#define PAR_SIZE 128
 	fprintf(stderr,"solve_rte2dvis_v1\n");
 	assert(q.status==2);
 
+	int Nd=q.Nd, Nm=q.Nm, Ns=q.Ns, Ng=q.Ng;
+	double *sol=q.sol, *rhs=q.rhs;
+
+	/*
+	 * Allocate storage for the iterative solver.
+	 */
+	int ipar[PAR_SIZE],RCI_request,ivar=2*Ng,itercount;
+	double dpar[PAR_SIZE], *tmp;
+	size_t ltmp=(2*MAX_ITR_NUM+1)*ivar+MAX_ITR_NUM*((MAX_ITR_NUM+9)/2+1);
+	tmp=(double*)mkl_malloc(sizeof(double)*ltmp,MALLOC_ALIGNMENT);
+
+	/*
+	 * Initialize the solver.
+	 */
+	dfgmres_init(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp);
+	if (RCI_request) { MKL_Free_Buffers(); return RCI_request; }
+
+	/*
+	 * Set the desired parameters:
+	 * LOGICAL parameters:
+	 * 	ipar[8]:  do automatic residual stopping test
+	 * 	ipar[9]:  do residual stopping test: dpar[5]<dpar[4]
+	 * 	ipar[11]: automatic check norm of next generated vector??
+	 * 	ipar[14]: max number of non-restart iteration, default 150
+	 * DOUBLE parameters:
+	 * 	dpar[0]:  set the relative tolerance to 1.0E-5
+	 */
+	ipar[8]		= 1;
+	ipar[9]		= 0;
+	ipar[11]	= 1;
+	ipar[14]	= MAX_ITR_NUM;
+	dpar[0]		= 1.0E-10;
+
+	/*
+	 * Check consistency of newly assigned parameters.
+	 */
+	dfgmres_check(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp);
+	if (RCI_request) { MKL_Free_Buffers(); return RCI_request; }
+
+	/*
+	 * Solve!
+	 * RCI_request:
+	 * 	0	completed
+	 * 	1	go on iterating
+	 */
+	dfgmres(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp);
+	while (RCI_request==1) {
+		//printf("tmp+ipar[21]-1=%p\n",tmp+ipar[21]-1);
+		//printf("        [22]  =%p\n",tmp+ipar[22]-1);
+		mul_homo(q,(double _Complex*)(tmp+ipar[21]-1),
+				(double _Complex*)(tmp+ipar[22]-1));
+		dfgmres(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp); 
+	}
+	printf("RCI_request=%d\n",RCI_request);
+
+	/*
+	 * Extract solution, print, clear buffers.
+	 */
+	dfgmres_get(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp,&itercount);
+	printf("\n");
+	printf("Solver finished after %d iterations.\n",itercount);
+	MKL_Free_Buffers();
+
+	mkl_free(tmp);
 
 	q.status=3;
+
+	return 0;
+#undef MAX_ITR_NUM
+#undef PAR_SIZE
 }
 
 void release_rte2dvis_v1(struct st_rte2dvis_info &q)
@@ -386,7 +461,7 @@ void release_rte2dvis_v1(struct st_rte2dvis_info &q)
 			+q.flag*2*q.Ns*q.Ns*2*q.Nm
 			+2*q.Ng
 			+2*q.Ng
-			+2*q.Ns*2*q.Nm
+			+2*2*q.Nm
 			);
 	q.status=-2;
 }

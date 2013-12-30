@@ -2,6 +2,7 @@
 #define _UTILS_H_
 /******************************************************************************/
 #include <complex.h>
+#include <fftw3.h>
 #include "Table.h"
 #include "Random.h"
 #include "StatVector.h"
@@ -38,5 +39,16 @@ void print_cvector(const char* desc, const int n,
 		double _Complex *restrict v, int incx=1);
 void print_cmatrix(const char* desc, const int m, const int n, 
 		double _Complex *restrict a, int lda=0);
+
+enum fftw_plan_kind {
+	IFWD	= 0,	// in-place forward
+	IBWD,		// in-place backward
+	OFWD,		// out-of-place forward
+	OBWD,		// out-of-place backward
+}; 
+void create_fftw_plans(const int n, fftw_plan *restrict &plans, 
+		int flag = FFTW_MEASURE|FFTW_PATIENT);
+void destroy_fftw_plans(fftw_plan *restrict plans);
+
 /******************************************************************************/
 #endif

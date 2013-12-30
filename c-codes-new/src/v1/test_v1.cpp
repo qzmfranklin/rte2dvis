@@ -28,19 +28,31 @@ int test01(void)
 
 	struct st_rte2dvis_info solver;
 	char *fbase="example/square162.binary";
-	const int Nd=100, pad=0, flag=1;
+	const int Nd=0, pad=0, flag=1;
 
 	init_rte2dvis(solver,fbase,Nd,pad,flag);
-	print_rte2dvis(solver);
-	//print_vector("pt",50,solver.mesh->trigs);
+	print_vector("pt",50,solver.mesh->trigs);
 	//print_vector("area",50,solver.area);
 	//print_vector("cntr",50,solver.cntr);
 
 	assert(!check_rte2dvis(solver));
 
 	alloc_rte2dvis_v1(solver);
+	//print_rte2dvis(solver);
+
 	fill_rte2dvis_v1(solver);
+	print_cvector("B[0]",20,(double _Complex*)solver.B);
+	print_cvector("rhs",20,(double _Complex*)solver.rhs);
+	print_cvector("expected solution",40,(double _Complex*)solver.sol);
+
+	for (int i = 0; i < solver.Ng; i++) {
+		solver.sol[2*i  ] = 2.;
+		solver.sol[2*i+1] = 3.;
+	}
+	print_cvector("initial guess",40,(double _Complex*)solver.sol);
 	solve_rte2dvis_v1(solver);
+	print_cvector("solution",solver.Ng,(double _Complex*)solver.sol);
+
 	release_rte2dvis_v1(solver);
 
 	destroy_rte2dvis(solver);

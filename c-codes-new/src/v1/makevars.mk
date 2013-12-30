@@ -62,13 +62,13 @@ ${DIR-v1}LIB:=
 #	DIRECTORY-SPECIFIC TEST FILES
 ${DIR-v1}TSTEXE:=test_v1.exe
 
-${BIN}/test_v1.exe: ${OBJ}/test_v1.o \
-	${OBJ}/v1.o ${OBJ}/file_io.o \
+${BIN}/test_Solver_v1.exe: ${OBJ}/test_Solver_v1.o \
+	${OBJ}/Solver_v1.o ${OBJ}/file_io.o \
 	${OBJ}/toeplitz.o ${OBJ}/int_trig.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \
 	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
 
-${OUTPUT}/test_v1.txt: ${BIN}/test_v1.exe \
+${OUTPUT}/test_Solver_v1.txt: ${BIN}/test_Solver_v1.exe \
 	${EXAMPLE}/square162.binary.info
 
 ###############################################################################

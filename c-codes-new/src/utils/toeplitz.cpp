@@ -6,7 +6,7 @@
 #define MALLOC_ALIGNMENT 64
 /******************************************************************************/ 
 
-void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
+void __create_fftw_plans___old(const int n, fftw_plan *restrict &plans, int flag)
 {
 	fprintf(stderr, "create_fftw_plans(n=%d,plans,flag)\n",n);
 	fftw_complex *work1,*work2;
@@ -37,7 +37,7 @@ void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
 	mkl_free(work2);
 }
 
-void destroy_fftw_plans(fftw_plan *restrict plans)
+void __destroy_fftw_plans___old(fftw_plan *restrict plans)
 {
 	fprintf(stderr, "destroy_fftw_plans(plans)\n");
 	for (int i = 0; i < 4; i++)
