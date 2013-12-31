@@ -84,7 +84,7 @@ void ArcSinhMethod::Generate(struct st_quadrule *q,
 	q->x   = _fxy.top();
 	q->w   = _fw.top();
 
-	Atomic(p0,p  ,p+2,q->x          ,q->w          );
+	Atomic(p0,p  ,p+2,q->x         ,q->w         );
 	Atomic(p0,p+2,p+4,q->x+2*_fsize,q->w+1*_fsize);
 	Atomic(p0,p+4,p  ,q->x+4*_fsize,q->w+2*_fsize); 
 
@@ -135,7 +135,7 @@ void ArcSinhMethod::Atomic(const double *p0, const double *p1,
 	invp1p2 = 1.0/sqrt(p1p2[0]*p1p2[0] + p1p2[1]*p1p2[1] ); // inverse p1p2
 	p1p2[0]*= invp1p2;
 	p1p2[1]*= invp1p2;
-	h	= invp1p2*(-p1p2[0]*p0[1] + p0p2[0]*p1[1] - p0p1[0]*p2[1]);
+	h	= -p1p2[0]*p0[1] + invp1p2*(p0p2[0]*p1[1] - p0p1[0]*p2[1]);
 	Ah[0]	= p1p2[0]*h;
 	Ah[1]	= -p1p2[1]*h;
 	Ah[2]	= p1p2[1]*h;
@@ -144,6 +144,14 @@ void ArcSinhMethod::Atomic(const double *p0, const double *p1,
 	xp[1]	= p1p2[0]*p0p2[0] + p1p2[1]*p0p2[1]; // x2p
 	u0[0]	= asinh(xp[0]/h); // u1
 	u0[1]	= asinh(xp[1]/h)-u0[0]; // u2-u1
+
+	printf("h    =%f\n",h);
+
+	printf("invp1p2=%f\n",invp1p2);
+	printf("xp[0]=%f\n",xp[0]);
+	printf("xp[1]=%f\n",xp[1]);
+	printf("u0[0]=%f\n",u0[0]);
+	printf("u0[1]=%f\n",u0[1]);
 
 	int nu,nv;
 	double *xu,*xv,*wu,*wv;

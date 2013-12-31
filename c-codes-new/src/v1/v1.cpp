@@ -213,9 +213,8 @@ static void scale(const double a, const int n, double _Complex *v)
 static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 {
 	fprintf(stderr,"fill_solver_B_homo\n");
-	// quadrature rules
+	// quadrature rules, critical distance
 	const int RULE=6, NU=100, NV=3, MAX_NUM=1500;
-	// critical distance
 	const double dmin=0.25;
 
 	// Prepare quadrature rules.
@@ -274,7 +273,7 @@ static void fill_solver_B_homo(struct st_rte2dvis_info &solver)
 				arcsinh_count++;
 			}
 			// Fill z
-			memset(z,0,sizeof(double)*2*Nm);
+			memset(z,0,sizeof(double)*2*2*Nm);
 			for (int i = 0; i < M; i++)
 				z[0] += wER[i];
 			for (int dm = 1; dm < 2*Nd+1; dm++) {

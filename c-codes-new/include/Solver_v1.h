@@ -21,10 +21,10 @@ class Solver_v1 {
 		int                   Nd;	// max angular component index
 		int                   Nm;	// 2*Nd+1 plus some padding
 		int                   Ng;	// Ns*Nm
-		size_t                mem;	// memory used in bytes
 		fftw_plan            *plans;	// fftw plans: IFWD IBWD OFWD OBWD
 
 		struct st_mesh_info  *mesh;	// mesh, defined in file_io.h
+		double               *p;	// mesh->trigs, convenience pointer
 		double               *area;	// [Ns] signed area, right-handed 
 		double               *cntr;	// [2Ns]centers of triangles
 

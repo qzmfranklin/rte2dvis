@@ -12,9 +12,9 @@ int main(int argc, char const* argv[])
 {
 	if (argc>1) link_stdout(argv[1]);
 
+	test01();
 	if (argc>1) unlink_stdout();
 
-	test01();
 
 	return 0;
 }
@@ -25,17 +25,15 @@ int test01(void)
         printf("TEST01\n");
         printf("	|Test work flow of rte2dvis\n");
 
-	char *fbase="example/square162.binary";
-	const int Nd=0, pad=0;
-	Solver_v1 s(fbase,Nd,pad);
-	s.Check();
-	s.Debug();
-
 	__declspec(align(64)) double _Complex sol[2000];
+	const char *fbase="example/square162.binary";
+	const int Nd=1, pad=0;
+	Solver_v1 s(fbase,Nd,pad);
+	s.Print();
+	//s.Check();
+	//s.Debug();
 
 	s.Solve(sol);
-
-
 
 	printf("END OF TEST01\n");
 	printf("\n");

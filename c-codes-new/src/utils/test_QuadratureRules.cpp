@@ -25,9 +25,9 @@ int main(int argc, char const* argv[])
 	test01();
 	test02();
 	test05();
-	test06();
-
 	if (argc>1) unlink_stdout();
+
+	test06();
 
 
 
@@ -107,14 +107,18 @@ int test02(void)
 double f05(double *xy) { double x=xy[0],y=xy[1]; return x*y; }
 int test05(void)
 {
-#define NU 10
+#define NU 3
 #define NV 2
 	int err=0; 
         printf("TEST05\n");
         printf("	|Test ArcSinhMethod::GenerateAtomic\n");
 
-	const double p[] = {1.,0.,0.,2.,3.,2.};
-	const double valf05=3.514983020486826813699771;
+	//const double p[] = {1.,0.,0.,2.,3.,2.};
+	//const double valf05=3.514983020486826813699771;
+	//const double p[] = {0.,2.,1.,0.,3.,2.};
+	//const double valf05=3.514983020486826813699771;
+	const double p[] = {3.,2.,0.,2.,1.,0.};
+	const double valf05=6.02253479203185;
 
 	struct st_quadrule q[3];
 
@@ -125,6 +129,8 @@ int test05(void)
 	ArcSinhMethod g3;
 	g3.Init(q,q+1);
 	g3.GenerateAtomic(q+2,p);
+
+	print_quadrule(q+2);
 
 	double f[3*NU*NV], val=0.0;
 	for (int i = 0; i < q[2].n; i++)
@@ -153,8 +159,12 @@ int test06(void)
 	printf("	|Test ArcSinhMethod::Generate\n");
 
 	double p[] = {1.,0.,0.,2.,3.,2.};
-	double p0[]= {0.,0.};
-	double valf06=2.528273711783832823373392;
+	//double p0[]= {0.,0.};
+	//double valf06=2.528273711783832823373392;
+	//double p0[]= {2.,4.};
+	//double valf06=2.18960215940999;
+	double p0[]= {3.,0.};
+	double valf06=2.71513646150163;
 
 	struct st_quadrule q[3];
 
@@ -165,6 +175,9 @@ int test06(void)
 	ArcSinhMethod g3;
 	g3.Init(q,q+1);
 	g3.Generate(q+2,p,p0);
+
+	print_quadrule(q+2);
+
 
 	double val=0.0;
 	for (int i = 0; i < q[2].n; i++)
