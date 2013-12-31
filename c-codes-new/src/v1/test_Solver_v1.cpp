@@ -16,6 +16,7 @@ int main(int argc, char const* argv[])
 	if (argc>1) unlink_stdout();
 
 
+
 	return 0;
 }
 
@@ -27,11 +28,11 @@ int test01(void)
 
 	__declspec(align(64)) double _Complex sol[2000];
 	const char *fbase="example/square162.binary";
-	const int Nd=1, pad=0;
+	const int Nd=127, pad=8;
 	Solver_v1 s(fbase,Nd,pad);
 	s.Print();
-	//s.Check();
-	//s.Debug();
+	s.Check();
+	s.Debug();
 
 	s.Solve(sol);
 

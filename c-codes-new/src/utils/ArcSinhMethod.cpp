@@ -145,13 +145,13 @@ void ArcSinhMethod::Atomic(const double *p0, const double *p1,
 	u0[0]	= asinh(xp[0]/h); // u1
 	u0[1]	= asinh(xp[1]/h)-u0[0]; // u2-u1
 
-	printf("h    =%f\n",h);
+	//printf("h    =%f\n",h);
 
-	printf("invp1p2=%f\n",invp1p2);
-	printf("xp[0]=%f\n",xp[0]);
-	printf("xp[1]=%f\n",xp[1]);
-	printf("u0[0]=%f\n",u0[0]);
-	printf("u0[1]=%f\n",u0[1]);
+	//printf("invp1p2=%f\n",invp1p2);
+	//printf("xp[0]=%f\n",xp[0]);
+	//printf("xp[1]=%f\n",xp[1]);
+	//printf("u0[0]=%f\n",u0[0]);
+	//printf("u0[1]=%f\n",u0[1]);
 
 	int nu,nv;
 	double *xu,*xv,*wu,*wv;

@@ -4,7 +4,6 @@
 #include <fftw3.h>
 #include "utils.h"
 #include "QuadratureRules.h"
-#include "toeplitz.h"
 #include "file_io.h"
 #include "Solver_v1.h"
 /******************************************************************************/
@@ -33,6 +32,7 @@ Solver_v1::Solver_v1(const char* fbase, const int ND, const int PAD)
 	Fill_mesh(fbase); 
 
 	assert(status==2);
+	work=(double _Complex*)mkl_malloc(sizeof(double)*2*2*Nm,64);
 	create_fftw_plans(2*Nm,plans);
 	Fill_area();
 	Fill_cntr();
@@ -41,7 +41,6 @@ Solver_v1::Solver_v1(const char* fbase, const int ND, const int PAD)
 	Fill_B();
 	Fill_rhs();
 
-	work=(double _Complex*)mkl_malloc(sizeof(double)*2*2*Nm,64);
 
 	status=3;
 }
@@ -56,14 +55,14 @@ void Solver_v1::Check()
 	assert(f);
 	assert(A);
 	assert(B);
-	assert(rhs);
 	assert(work);
+	assert(rhs);
 }
 
 void Solver_v1::Debug()
 {
-	assert(status>=3);
 #define N 30
+	assert(status>=3);
 	//for (int i = 0; i < N; i++)
 		//printf("pt[%3d]=(%f,%f)(%f,%f)(%f,%f)\n",
 				//i+1,
@@ -71,33 +70,68 @@ void Solver_v1::Debug()
 				//p[6*i+2],p[6*i+3],
 				//p[6*i+4],p[6*i+5]);
 	//for (int i = 0; i < N; i++)
-		//printf("area[%3d]=%f\n",
-				//i+1,
-				//area[i]);
+		//printf("area[%3d]=%f\n",i+1,area[i]);
 	//for (int i = 0; i < N; i++)
 		//printf("cntr[%3d]=(%f,%f)\n",
 				//i+1,
 				//cntr[2*i+0],
 				//cntr[2*i+1]); 
+
+	//mul(rhs,rhs);
+
+	//for (int n = 0; n < Ns; n++) {
+		//for (int m = 0; m < 2*Nd+1; m++) {
+			//printf("rhs[%4d,%4d]=%20.10f + %20.10fI\n",
+					//n+1,m-Nd,
+					//creal(rhs[m+n*(2*Nd+1)]),
+					//cimag(rhs[m+n*(2*Nd+1)]));
+		//}
+	//}
+
+
 #undef N
-	for (int np = 0; np < Ns; np++)
-		for (int n = 0; n < Ns; n++)
-			for (int dm = 0; dm < 2*Nd; dm++)
-				printf("B[%3d,%3d,%3d]=%g + %g*I\n",
-						n+1,np+1,dm,
-						creal(B[dm+(n+np*Ns)*2*Nm]),
-						cimag(B[dm+(n+np*Ns)*2*Nm])
-						);
 }
 
 void Solver_v1::Solve(double _Complex *restrict sol)
 {
-	//TODO
+	fprintf(stderr,"Solver_v1::Solve\n");
+	assert(status==3);
 }
 
-void Solver_v1::mul(const double *restrict in, double *restrict out)
+void Solver_v1::mul(const double _Complex *in, double _Complex *out)
 {
-	//TODO
+	// mu_t and mu_s
+	const double mut=0.4, mus=0.3;
+
+	fprintf(stderr,"Solver_v1::mul\n");
+
+	// Identity term A
+	for (int n = 0; n < Ns; n++)
+		for (int m = 0; m < 2*Nd+1; m++)
+			out[m+n*(2*Nd+1)] = in[m+n*(2*Nd+1)] * A[n];
+
+
+	// Interaction term B
+	for (int np = 0; np < Ns; np++) {
+		for (int n = 0; n < Ns; n++) {
+			// copy into workspace
+			for (int i = 0; i < 2*Nd+1; i++)
+				//printf("[%3d,%3d,%3d]\n",n+1,np+1,i);
+				work[i] = (mut-mus*f[i])*in[i+np*(2*Nd+1)];
+			// padding zeros
+			memset(work+2*Nd+1,0,sizeof(double)*(2*Nm-2*Nd-1));
+			// transform workspace
+			fftw_execute_dft(plans[IFWD],(fftw_complex*)work,(fftw_complex*)work);
+			// convolution in frequency domain
+			for (int i = 0; i < 2*Nm; i++)
+				work[i]*= B[i+(n+np*Ns)*2*Nm];
+			// FFT back, normalization is incorporated in B
+			fftw_execute_dft(plans[IBWD],(fftw_complex*)work,(fftw_complex*)work);
+			// copy out
+			for (int i = 0; i < 2*Nd+1; i++)
+				out[i+np*(2*Nd+1)] += work[i];
+		}
+	}
 }
 
 void Solver_v1::Print()
@@ -199,7 +233,7 @@ static void scale(const double a, const int n, double _Complex *v)
 void Solver_v1::Fill_B()
 {
 	// quadrature rules, critical distance
-	const int RULE=6, NU=100, NV=3, MAX_NUM=1500;
+	const int RULE=6, NU=5, NV=3, MAX_NUM=1500;
 	const double dmin=0.35;
 	__declspec(align(64)) double _Complex E[MAX_NUM], wER[MAX_NUM];
 
@@ -217,20 +251,17 @@ void Solver_v1::Fill_B()
 	g2.Generate(q+2,0.0,1.0);
 	g3.Generate(q+3,0.0,1.0);
 	g1.Init(q+2,q+3);
-	g1.Generate(q+1,p,cntr);
 
 	int arcsinh_count=0;
 	for (int np = 0; np < Ns; np++) {
 		g0.Generate(q,p+6*np);
 		for (int n = 0; n < Ns; n++) {
-			double _Complex *z=B+(n+np*Ns)*2*Nm;
 			int M;
 			if ( distance(cntr+2*n,cntr+2*np)>dmin ) {
-				// Non-singular, Wandzura
-				//printf("[%4d,%4d] symmetric\n",n,np);
-				double dx,dy,r;
+				// Non-singular
 				M = g0.Order();
 				for (int i = 0; i < g0.Order(); i++) {
+					double dx,dy,r;
 					dx  = cntr[2*n  ] - q->x[2*i  ];
 					dy  = cntr[2*n+1] - q->x[2*i+1];
 					r   = sqrt(dx*dx+dy*dy);
@@ -238,21 +269,21 @@ void Solver_v1::Fill_B()
 					wER[i] = q->w[i]/r;
 				}
 			} else {
-				// Singular/Near-singular, ArcSinh
-				//printf("[%4d,%4d] arcsinh\n",n,np);
+				// Singular, near-singular
 				g1.Generate(q+1,p+6*np,cntr+2*n);
 				M = g1.Order();
 				for (int i = 0; i < M; i++) {
-					double dx,dy,r;
+					double dx,dy,invr;
 					dx  = cntr[2*n  ] - q[1].x[2*i  ];
 					dy  = cntr[2*n+1] - q[1].x[2*i+1];
-					r   = sqrt(dx*dx+dy*dy);
-					E[i]= (dx-dy*I)/r;
+					invr= 1.0/sqrt(dx*dx+dy*dy);
+					E[i]= invr*(dx-dy*I);
 					wER[i]= q[1].w[i];
 				}
 				arcsinh_count++;
 			}
-			// Fill z
+			// Fill one B block
+			double _Complex *z=B+(n+np*Ns)*2*Nm;
 			memset(z,0,sizeof(double)*2*2*Nm);
 			for (int i = 0; i < M; i++)
 				z[0] += wER[i];
@@ -267,20 +298,21 @@ void Solver_v1::Fill_B()
 			for (int dm = 2*(Nm-Nd); dm <= 2*Nm-1; dm++)
 				z[dm] = conj(z[2*Nm-dm]);
 			// in-place FFT z, divide by 2*Nm, multiply by S(n)
-			//fftw_execute_dft(plans[IFWD],(fftw_complex*)z,(fftw_complex*)z);
-			//scale(0.5/Nm*fabs(area[n]),2*Nm,z);
+			fftw_execute_dft(plans[IFWD],(fftw_complex*)z,(fftw_complex*)z);
+			scale(0.5/Nm*fabs(area[n]),2*Nm,z);
 		}
 	}
 	printf("arcsinh_count/(Ns*Ns) = %f\n",(double)arcsinh_count/(Ns*Ns));
 
-
-	for (int np = 0; np < Ns; np++)
-		for (int n = 0; n < Ns; n++)
-			for (int dm = 0; dm <= 2*Nd; dm++)
-				printf("B[%3d,%3d,%3d]=%f + %fI\n",n+1,np+1,dm,
-						creal(B[dm+(n+np*Ns)*2*Nm]),
-						cimag(B[dm+(n+np*Ns)*2*Nm]));
-
+	/*
+	 *for (int np = 0; np < Ns; np++)
+	 *        for (int n = 0; n < Ns; n++)
+	 *                for (int dm = 0; dm < 2*Nm; dm++)
+	 *                        printf("B[%3d,%3d,%3d]=%20.10f + %20.10fI\n",
+	 *                                        n+1,np+1,dm,
+	 *                                        creal(B[dm+(n+np*Ns)*2*Nm]),
+	 *                                        cimag(B[dm+(n+np*Ns)*2*Nm]));
+	 */
 
 }
 void Solver_v1::Fill_rhs()
@@ -288,6 +320,13 @@ void Solver_v1::Fill_rhs()
 	assert(status==2);
 	fprintf(stderr,"Solver_v1::Fill_rhs()\n");
 	rhs=(double _Complex*)mkl_malloc(sizeof(double)*2*Ng,64);
+	for (int n = 0; n < Ns; n++)
+		for (int m = 0; m < 2*Nd+1; m++)
+			rhs[m+n*(2*Nd+1)] = 1.0;
+
+	mul(rhs,rhs);
+
+
 	// TODO
 }
 void Solver_v1::ReleaseMemory()

@@ -51,7 +51,7 @@ ${DIR-v1}INCS:=${INCS}
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
-${DIR-v1}CPPFILES:=v1.cpp
+${DIR-v1}CPPFILES:=Solver_v1.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -64,7 +64,6 @@ ${DIR-v1}TSTEXE:=test_v1.exe
 
 ${BIN}/test_Solver_v1.exe: ${OBJ}/test_Solver_v1.o \
 	${OBJ}/Solver_v1.o ${OBJ}/file_io.o \
-	${OBJ}/toeplitz.o ${OBJ}/int_trig.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \
 	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
 

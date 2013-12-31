@@ -39,7 +39,7 @@ class Solver_v1 {
 		void Check();
 		void Debug();
 		void Solve(double _Complex *restrict sol);
-		void mul(const double *restrict in, double *restrict out);
+		void mul(const double _Complex *in, double _Complex *out);
 
 		void Print();
 	private:
@@ -50,6 +50,7 @@ class Solver_v1 {
 		void Fill_A();
 		void Fill_B();
 		void Fill_rhs();
+
 
 		void ReleaseMemory();
 };
