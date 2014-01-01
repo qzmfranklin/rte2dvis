@@ -38,11 +38,14 @@ class Solver_v1 {
 		~Solver_v1() { ReleaseMemory(); }
 		void Check();
 		void Debug();
-		void Solve(double _Complex *restrict sol);
+		int Solve(double _Complex *restrict sol);
 		void mul(const double _Complex *in, double _Complex *out);
+		void mul_omp(const double _Complex *in, double _Complex *out,
+				const int nthreads);
 
 		void Print();
 	private:
+		void Alloc_work();
 		void Fill_mesh(const char* fbase);
 		void Fill_area();
 		void Fill_cntr();

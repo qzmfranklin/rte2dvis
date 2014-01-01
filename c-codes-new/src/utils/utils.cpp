@@ -313,7 +313,7 @@ void print_cvector(const char* desc, const int n,
 	assrt(incx>0);
 	printf("%s = \n",desc);
 	for (int i = 0; i < n; i++)
-		printf("%7.3f+%7.3fI ",creal(v[i*incx]),cimag(v[i*incx]));
+		printf("%7.4f+%7.4fI ",creal(v[i*incx]),cimag(v[i*incx]));
 	printf("\n");
 }
 

@@ -1,4 +1,5 @@
 #include <complex.h>
+#include <omp.h>
 #include <math.h>
 #include <mkl.h>
 #include <fftw3.h>
@@ -9,6 +10,13 @@
 /******************************************************************************/
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
+/******************************************************************************/ 
+// maximal number of threads
+static const int NUM_THREAD_MAX=8;
+// mu_t and mu_s
+static const double mut=0.4, mus=0.3;
+// HG phase function: f(m)=g^|m|
+static const double g=0.6; 
 /******************************************************************************/ 
 Solver_v1::Solver_v1(const char* fbase, const int ND, const int PAD)
 {
@@ -32,7 +40,7 @@ Solver_v1::Solver_v1(const char* fbase, const int ND, const int PAD)
 	Fill_mesh(fbase); 
 
 	assert(status==2);
-	work=(double _Complex*)mkl_malloc(sizeof(double)*2*2*Nm,64);
+	work=(double _Complex*)mkl_malloc(sizeof(double)*2*2*Nm*NUM_THREAD_MAX,64);
 	create_fftw_plans(2*Nm,plans);
 	Fill_area();
 	Fill_cntr();
@@ -61,75 +69,201 @@ void Solver_v1::Check()
 
 void Solver_v1::Debug()
 {
-#define N 30
+	const int N=MIN(Ns,30);
 	assert(status>=3);
-	//for (int i = 0; i < N; i++)
-		//printf("pt[%3d]=(%f,%f)(%f,%f)(%f,%f)\n",
-				//i+1,
-				//p[6*i+0],p[6*i+1],
-				//p[6*i+2],p[6*i+3],
-				//p[6*i+4],p[6*i+5]);
-	//for (int i = 0; i < N; i++)
-		//printf("area[%3d]=%f\n",i+1,area[i]);
-	//for (int i = 0; i < N; i++)
-		//printf("cntr[%3d]=(%f,%f)\n",
-				//i+1,
-				//cntr[2*i+0],
-				//cntr[2*i+1]); 
+	for (int i = 0; i < N; i++)
+		printf("pt[%3d]=(%f,%f)(%f,%f)(%f,%f)\n",
+				i+1,
+				p[6*i+0],p[6*i+1],
+				p[6*i+2],p[6*i+3],
+				p[6*i+4],p[6*i+5]);
+	for (int i = 0; i < N; i++)
+		printf("area[%3d]=%f\n",i+1,area[i]);
+	for (int i = 0; i < N; i++)
+		printf("cntr[%3d]=(%f,%f)\n",
+				i+1,
+				cntr[2*i+0],
+				cntr[2*i+1]); 
 
 	//mul(rhs,rhs);
 
-	//for (int n = 0; n < Ns; n++) {
-		//for (int m = 0; m < 2*Nd+1; m++) {
-			//printf("rhs[%4d,%4d]=%20.10f + %20.10fI\n",
-					//n+1,m-Nd,
-					//creal(rhs[m+n*(2*Nd+1)]),
-					//cimag(rhs[m+n*(2*Nd+1)]));
-		//}
-	//}
-
-
-#undef N
+	for (int n = 0; n < Ns; n++) {
+		for (int m = 0; m < 2*Nd+1; m++) {
+			printf("rhs[%4d,%4d]=%20.10f + %20.10fI\n",
+					n+1,m-Nd,
+					creal(rhs[m+n*(2*Nd+1)]),
+					cimag(rhs[m+n*(2*Nd+1)]));
+		}
+	}
 }
 
-void Solver_v1::Solve(double _Complex *restrict sol)
+int Solver_v1::Solve(double _Complex *restrict sol)
 {
 	fprintf(stderr,"Solver_v1::Solve\n");
-	assert(status==3);
+	assert(status>=3);
+
+#define MAX_ITR_NUM 6000
+#define PAR_SIZE 128
+	 /*
+	  * Prepare the inputs.
+	  */
+	double _Complex *expected_sol=
+		(double _Complex*)mkl_malloc(sizeof(double)*2*Ng,64);
+	for (int i = 0; i < Ng; i++)
+		expected_sol[i] = 1.0/Ns + 2.0/Ns*I;
+	mul(expected_sol,rhs);
+	print_cvector("rhs",10,rhs);
+	
+	/*
+	 * Allocate storage for the iterative solver.
+	 */
+	double _Complex *solution=
+		(double _Complex*)mkl_malloc(sizeof(double)*2*Ng,64);
+	for (int i = 0; i < Ng; i++)
+		solution[i] = 0.05;
+	//init_vector(2*Ng,(double*)solution); 
+	print_cvector("initial guess for the solution",10,solution);
+
+	int ipar[PAR_SIZE],RCI_request,ivar,itercount;
+	double dpar[PAR_SIZE],*tmp;
+	ivar = 2*Ng;
+	{ size_t ltmp=(2*MAX_ITR_NUM+1)*ivar+MAX_ITR_NUM*(MAX_ITR_NUM+9)/2+1;
+	tmp=(double*)mkl_malloc(sizeof(double)*ltmp,64); }
+
+	/*
+	 * Initialize the solver.
+	 */
+	dfgmres_init(&ivar,(double*)solution,(double*)rhs,&RCI_request,ipar,dpar,tmp);
+	if (RCI_request) { MKL_Free_Buffers(); return RCI_request; }
+
+	/*
+	 * Set parameters.
+	 * LOGICAL parameters:
+	 *	 ipar[4]:  max num_iteration, default min(n,150)
+	 *	 ipar[8]:  do automatic residual stopping test
+	 *	 ipar[9]:  do residual stopping test: dpar[5]<dpar[4]
+	 *	 ipar[11]: automatic check norm of next generated vector
+	 *	 ipar[14]: max non-restart num_iteration, default min(n,150)
+	 * DOUBLE parameters:
+	 *	 dpar[0]:  set the relative tolerance to 1.0E-5
+	 */
+	ipar[4]		= MAX_ITR_NUM;
+	ipar[8]		= 1;
+	ipar[9]		= 0;
+	ipar[11]	= 1;
+	ipar[14]	= MAX_ITR_NUM;
+	dpar[0]		= 1e-5;
+
+	/*
+	 * Check consistency of newly assigned parameters.
+	 */
+	dfgmres_check(&ivar,(double*)solution,(double*)rhs,&RCI_request,ipar,dpar,tmp);
+	if (RCI_request) { MKL_Free_Buffers(); return RCI_request; }
+
+	/*
+	 * Solve!
+	 * RCI_request:
+	 *	 0	completed
+	 *	 1	go on iterating
+	 */
+	dfgmres(&ivar,(double*)solution,(double*)rhs,&RCI_request,ipar,dpar,tmp);
+	while (RCI_request==1) {
+		mul_omp((double _Complex*)(tmp+ipar[21]-1),
+				(double _Complex*)(tmp+ipar[22]-1),
+				8);
+		dfgmres(&ivar,(double*)solution,(double*)rhs,&RCI_request,ipar,dpar,tmp); 
+	}
+
+	/*
+	 * Extract solution, print, clear buffers.
+	 */
+	dfgmres_get(&ivar,(double*)solution,(double*)rhs,
+			&RCI_request,ipar,dpar,tmp,&itercount);
+	printf("Solver finished after %d iterations.\n",itercount);
+	printf("Exit code (RCI_request) = %d\n",RCI_request);
+	print_cvector("expected_sol",10,expected_sol);
+	print_cvector("solution",10,solution);
+	MKL_Free_Buffers(); 
+
+#undef PAR_SIZE
+#undef N
+	status=4;
+	mkl_free(expected_sol);
+	mkl_free(solution);
+	mkl_free(tmp);
+
+	return RCI_request;
 }
 
 void Solver_v1::mul(const double _Complex *in, double _Complex *out)
 {
+	assert(status>=2);
 	// mu_t and mu_s
-	const double mut=0.4, mus=0.3;
 
-	fprintf(stderr,"Solver_v1::mul\n");
+	//fprintf(stderr,"Solver_v1::mul\n");
 
 	// Identity term A
 	for (int n = 0; n < Ns; n++)
 		for (int m = 0; m < 2*Nd+1; m++)
 			out[m+n*(2*Nd+1)] = in[m+n*(2*Nd+1)] * A[n];
 
-
 	// Interaction term B
-	for (int np = 0; np < Ns; np++) {
-		for (int n = 0; n < Ns; n++) {
+	for (int n = 0; n < Ns; n++) {
+		fftw_complex *wk=work;
+		for (int np = 0; np < Ns; np++) {
 			// copy into workspace
 			for (int i = 0; i < 2*Nd+1; i++)
-				//printf("[%3d,%3d,%3d]\n",n+1,np+1,i);
-				work[i] = (mut-mus*f[i])*in[i+np*(2*Nd+1)];
+				wk[i] = (mut-mus*f[i])*in[i+np*(2*Nd+1)];
 			// padding zeros
-			memset(work+2*Nd+1,0,sizeof(double)*(2*Nm-2*Nd-1));
-			// transform workspace
-			fftw_execute_dft(plans[IFWD],(fftw_complex*)work,(fftw_complex*)work);
+			memset(wk+2*Nd+1,0,sizeof(double)*(2*Nm-2*Nd-1));
+			// transform wkspace
+			fftw_execute_dft(plans[IFWD],wk,wk);
 			// convolution in frequency domain
 			for (int i = 0; i < 2*Nm; i++)
-				work[i]*= B[i+(n+np*Ns)*2*Nm];
+				wk[i]*= B[i+(n+np*Ns)*2*Nm];
 			// FFT back, normalization is incorporated in B
-			fftw_execute_dft(plans[IBWD],(fftw_complex*)work,(fftw_complex*)work);
+			fftw_execute_dft(plans[IBWD],wk,wk);
 			// copy out
 			for (int i = 0; i < 2*Nd+1; i++)
-				out[i+np*(2*Nd+1)] += work[i];
+				out[i+n*(2*Nd+1)] += wk[i];
+		}
+	}
+}
+
+void Solver_v1::mul_omp(const double _Complex *in, double _Complex *out,
+		const int nthreads)
+{
+	assert(nthreads<=NUM_THREAD_MAX);
+	assert(status>=2);
+	//fprintf(stderr,"Solver_v1::mul_omp\n");
+
+	// Identity term A
+	for (int n = 0; n < Ns; n++)
+		for (int m = 0; m < 2*Nd+1; m++)
+			out[m+n*(2*Nd+1)] = in[m+n*(2*Nd+1)] * A[n];
+
+	// Interaction term B
+	#pragma omp parallel for 		\
+	num_threads(nthreads)			\
+	default(shared)
+	for (int n = 0; n < Ns; n++) {
+		fftw_complex *wk=work+2*Nm*omp_get_thread_num();
+		for (int np = 0; np < Ns; np++) {
+			// copy into workspace
+			for (int i = 0; i < 2*Nd+1; i++)
+				wk[i] = (mut-mus*f[i])*in[i+np*(2*Nd+1)];
+			// padding zeros
+			memset(wk+2*Nd+1,0,sizeof(double)*(2*Nm-2*Nd-1));
+			// transform wkspace
+			fftw_execute_dft(plans[IFWD],wk,wk);
+			// convolution in frequency domain
+			for (int i = 0; i < 2*Nm; i++)
+				wk[i]*= B[i+(n+np*Ns)*2*Nm];
+			// FFT back, normalization is incorporated in B
+			fftw_execute_dft(plans[IBWD],wk,wk);
+			// copy out
+			for (int i = 0; i < 2*Nd+1; i++)
+				out[i+n*(2*Nd+1)] += wk[i];
 		}
 	}
 }
@@ -197,9 +331,6 @@ void Solver_v1::Fill_cntr()
 }
 void Solver_v1::Fill_f()
 {
-	// HG phase function: f(m)=g^|m|
-	const double g=0.6;
-
 	assert(status==2);
 	fprintf(stderr,"Solver_v1::Fill_f()\n");
 	f=(double*)mkl_malloc(sizeof(double)*(2*Nd+1),64);
@@ -233,7 +364,7 @@ static void scale(const double a, const int n, double _Complex *v)
 void Solver_v1::Fill_B()
 {
 	// quadrature rules, critical distance
-	const int RULE=6, NU=5, NV=3, MAX_NUM=1500;
+	const int RULE=3, NU=12, NV=3, MAX_NUM=1500;
 	const double dmin=0.35;
 	__declspec(align(64)) double _Complex E[MAX_NUM], wER[MAX_NUM];
 
@@ -260,13 +391,13 @@ void Solver_v1::Fill_B()
 			if ( distance(cntr+2*n,cntr+2*np)>dmin ) {
 				// Non-singular
 				M = g0.Order();
-				for (int i = 0; i < g0.Order(); i++) {
-					double dx,dy,r;
-					dx  = cntr[2*n  ] - q->x[2*i  ];
-					dy  = cntr[2*n+1] - q->x[2*i+1];
-					r   = sqrt(dx*dx+dy*dy);
-					E[i]= (dx-dy*I)/r;
-					wER[i] = q->w[i]/r;
+				for (int i = 0; i < M; i++) {
+					double dx,dy,invr;
+					dx     = cntr[2*n  ] - q->x[2*i  ];
+					dy     = cntr[2*n+1] - q->x[2*i+1];
+					invr   = 1.0/sqrt(dx*dx+dy*dy);
+					E[i]   = invr*(dx-dy*I);
+					wER[i] = invr*q->w[i];
 				}
 			} else {
 				// Singular, near-singular
@@ -274,10 +405,10 @@ void Solver_v1::Fill_B()
 				M = g1.Order();
 				for (int i = 0; i < M; i++) {
 					double dx,dy,invr;
-					dx  = cntr[2*n  ] - q[1].x[2*i  ];
-					dy  = cntr[2*n+1] - q[1].x[2*i+1];
-					invr= 1.0/sqrt(dx*dx+dy*dy);
-					E[i]= invr*(dx-dy*I);
+					dx    = cntr[2*n  ] - q[1].x[2*i  ];
+					dy    = cntr[2*n+1] - q[1].x[2*i+1];
+					invr  = 1.0/sqrt(dx*dx+dy*dy);
+					E[i]  = invr*(dx-dy*I);
 					wER[i]= q[1].w[i];
 				}
 				arcsinh_count++;
@@ -297,22 +428,20 @@ void Solver_v1::Fill_B()
 				z[dm] = 0.0;
 			for (int dm = 2*(Nm-Nd); dm <= 2*Nm-1; dm++)
 				z[dm] = conj(z[2*Nm-dm]);
-			// in-place FFT z, divide by 2*Nm, multiply by S(n)
-			fftw_execute_dft(plans[IFWD],(fftw_complex*)z,(fftw_complex*)z);
-			scale(0.5/Nm*fabs(area[n]),2*Nm,z);
+			// divide by 2*Nm, multiply by S(n), in-place FFT
+			fftw_execute_dft(plans[IFWD],z,z);
+			scale(fabs(area[n]/(2*Nm)),2*Nm,z);
 		}
 	}
 	printf("arcsinh_count/(Ns*Ns) = %f\n",(double)arcsinh_count/(Ns*Ns));
 
-	/*
-	 *for (int np = 0; np < Ns; np++)
-	 *        for (int n = 0; n < Ns; n++)
-	 *                for (int dm = 0; dm < 2*Nm; dm++)
-	 *                        printf("B[%3d,%3d,%3d]=%20.10f + %20.10fI\n",
-	 *                                        n+1,np+1,dm,
-	 *                                        creal(B[dm+(n+np*Ns)*2*Nm]),
-	 *                                        cimag(B[dm+(n+np*Ns)*2*Nm]));
-	 */
+	//for (int np = 0; np < Ns; np++)
+		//for (int n = 0; n < Ns; n++)
+			//for (int dm = 0; dm < 2*Nm; dm++)
+				//printf("B[%3d,%3d,%3d]=%20.10f + %20.10fI\n",
+						//n+1,np+1,dm,
+						//creal(B[dm+(n+np*Ns)*2*Nm]),
+						//cimag(B[dm+(n+np*Ns)*2*Nm]));
 
 }
 void Solver_v1::Fill_rhs()
@@ -320,14 +449,7 @@ void Solver_v1::Fill_rhs()
 	assert(status==2);
 	fprintf(stderr,"Solver_v1::Fill_rhs()\n");
 	rhs=(double _Complex*)mkl_malloc(sizeof(double)*2*Ng,64);
-	for (int n = 0; n < Ns; n++)
-		for (int m = 0; m < 2*Nd+1; m++)
-			rhs[m+n*(2*Nd+1)] = 1.0;
-
-	mul(rhs,rhs);
-
-
-	// TODO
+	//TODO
 }
 void Solver_v1::ReleaseMemory()
 {
