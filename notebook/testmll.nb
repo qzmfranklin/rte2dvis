@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[      7622,        187]
-NotebookOptionsPosition[      7199,        168]
-NotebookOutlinePosition[      7536,        183]
-CellTagsIndexPosition[      7493,        180]
+NotebookDataLength[      9933,        256]
+NotebookOptionsPosition[      9432,        235]
+NotebookOutlinePosition[      9769,        250]
+CellTagsIndexPosition[      9726,        247]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -164,7 +164,74 @@ Cell[BoxData[
      "0.009421666963733`"}], "}"}]}], "}"}]], "Output",
  CellChangeTimes->{3.5980525251219797`*^9, 3.59805256685758*^9, 
   3.598053805757257*^9, 3.5980552825568113`*^9}]
-}, Open  ]]
+}, Open  ]],
+
+Cell["Linux Ubuntu 12.04LTS", "Text",
+ CellChangeTimes->{{3.598113505588169*^9, 3.598113512443532*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"dir", ",", "src"}], "]"}], "\n", 
+ RowBox[{
+  RowBox[{"dir", "=", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"src", "=", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<dunavant-rule.cpp\>\"", ",", "\"\<legendre-rule.cpp\>\"", ",", 
+      "\"\<mll.cpp\>\""}], "}"}], "//", 
+    RowBox[{
+     RowBox[{"Map", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"FileNameJoin", "[", 
+         RowBox[{"{", 
+          RowBox[{"dir", ",", "#"}], "}"}], "]"}], "&"}], ",", "#"}], "]"}], 
+     "&"}]}]}], ";"}], "\n", 
+ RowBox[{"lib", "=", 
+  RowBox[{"CreateLibrary", "[", 
+   RowBox[{"src", ",", "\"\<libmll\>\""}], "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"LegendreRule", "=", 
+   RowBox[{"LibraryFunctionLoad", "[", 
+    RowBox[{"lib", ",", "\"\<LegendreRule_MLL\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"Integer", ",", "Real", ",", "Real"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"DunavantRule", "=", 
+   RowBox[{"LibraryFunctionLoad", "[", 
+    RowBox[{"lib", ",", "\"\<DunavantRule_MLL\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"Integer", ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}]}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"LegendreRule", "[", 
+   RowBox[{"10", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}], "\n", 
+ RowBox[{
+  RowBox[{"DunavantRule", "[", 
+   RowBox[{"10", ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"3", ",", "2"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}]}], "}"}]}], "]"}], "//", 
+  "Quiet"}], "\n", 
+ RowBox[{"LibraryFunctionUnload", "[", "LegendreRule", "]"}], "\n", 
+ RowBox[{"LibraryFunctionUnload", "[", "DunavantRule", "]"}]}], "Input",
+ CellChangeTimes->{{3.5981135019122267`*^9, 3.598113501916576*^9}}]
 },
 WindowSize->{927, 1028},
 WindowMargins->{{Automatic, -7}, {Automatic, 0}},
@@ -188,7 +255,9 @@ Cell[CellGroupData[{
 Cell[1406, 42, 2366, 53, 209, "Input"],
 Cell[3775, 97, 875, 19, 77, "Output"],
 Cell[4653, 118, 2530, 47, 231, "Output"]
-}, Open  ]]
+}, Open  ]],
+Cell[7198, 168, 103, 1, 31, "Text"],
+Cell[7304, 171, 2124, 62, 297, "Input"]
 }
 ]
 *)
