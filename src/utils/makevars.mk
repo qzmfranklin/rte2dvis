@@ -54,8 +54,7 @@ ${DIR-utils}INCS:=${INCS}
 ${DIR-utils}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
 	DunavantRule.cpp GaussRule.cpp LynessRule.cpp \
 	WandzuraRule.cpp QuadratureRules.cpp \
-	ArcSinhMethod.cpp \
-	toeplitz.cpp file_io.cpp
+	ArcSinhMethod.cpp file_io.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -78,8 +77,7 @@ ${LIB}/libQuadratureRules.so ${LIB}/libQuadratureRules.a: \
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
 ${DIR-utils}TSTEXE:=test_utils.exe test_QuadratureRules.exe \
-	test_toeplitz.exe test_mkl_solvers.exe \
-	test_file_io.exe
+	test_mkl_solvers.exe test_file_io.exe
 
 ${BIN}/test_utils.exe: ${OBJ}/test_utils.o \
 	${LIB}/libutils.a ${LIB}/libutils.so 
@@ -88,29 +86,12 @@ ${BIN}/test_QuadratureRules.exe: ${OBJ}/test_QuadratureRules.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \
 	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
 
-${BIN}/test_toeplitz.exe: ${OBJ}/test_toeplitz.o \
-	${OBJ}/toeplitz.o \
-	${LIB}/libutils.a ${LIB}/libutils.so
-
 ${BIN}/test_mkl_solvers.exe: ${OBJ}/test_mkl_solvers.o \
 	${LIB}/libutils.a ${LIB}/libutils.so
 
 ${BIN}/test_file_io.exe: ${OBJ}/test_file_io.o \
 	${OBJ}/file_io.o \
-	${LIB}/libutils.a ${LIB}/libutils.so \
-	${EXAMPLE}/square162.ascii.info \
-	${EXAMPLE}/square162.binary.info
-
-${EXAMPLE}/square162.ascii.info : ${BIN}/dump_msh.exe \
-	${EXAMPLE}/square162.msh
-	@echo "Dumping ${EXAMPLE}/square162.msh to ASCII..."
-	@./$< 1 ${EXAMPLE}/square162.msh ${EXAMPLE}/square162.ascii >> log
-
-${EXAMPLE}/square162.binary.info : ${BIN}/dump_msh.exe \
-	${EXAMPLE}/square162.msh
-	@echo "Dumping ${EXAMPLE}/square162.msh to BINARY..."
-	@./$< 2 ${EXAMPLE}/square162.msh ${EXAMPLE}/square162.binary >> log
-
+	${LIB}/libutils.a ${LIB}/libutils.so
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

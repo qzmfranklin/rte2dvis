@@ -59,9 +59,10 @@
 #  ultimate goal is to realize building with only one pass.
 #  	If you have any suggestions and/or ideas, please let me know.
 ###############################################################################
--include Makefile.proj# The top level project file
--include Makefile.vars# The top level variables' file
+MAKE_DIR:=MAKE/
+-include ${MAKE_DIR}Makefile.proj# The top level project file
+-include ${MAKE_DIR}Makefile.vars# The top level variables' file
 -include ${MKVFILES}# The makevars.mk's in the subdirectories
 -include ${DEPFILES}# Dependency files (*.d files)
--include Makefile.targets# The top level PHONY targets' file, except for check
+-include ${MAKE_DIR}Makefile.targets# The top level PHONY targets' file, except for check
 ###############################################################################

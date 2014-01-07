@@ -5,7 +5,6 @@
 #include <ctime>
 #include <iostream>
 #include "DunavantRule.h"
-#include "int_trig.h"
 #define MALLOC_ALIGNMENT 64
 using namespace std; 
 namespace QuadratureRules { 

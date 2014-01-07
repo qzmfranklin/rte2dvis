@@ -4,7 +4,6 @@
 #include "utils.h"
 #include "file_io.h"
 #include "QuadratureRules.h"
-#include "toeplitz.h"
 #include "v1.h"
 /******************************************************************************/
 int test01(void);

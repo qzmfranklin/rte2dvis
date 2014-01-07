@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     12233,        315]
-NotebookOptionsPosition[     11508,        286]
-NotebookOutlinePosition[     11845,        301]
-CellTagsIndexPosition[     11802,        298]
+NotebookDataLength[      7622,        187]
+NotebookOptionsPosition[      7199,        168]
+NotebookOutlinePosition[      7536,        183]
+CellTagsIndexPosition[      7493,        180]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -25,13 +25,20 @@ Cell[BoxData[{
   RowBox[{"$LibraryPath", " ", "=", " ", 
    RowBox[{"AppendTo", "[", 
     RowBox[{"$LibraryPath", ",", " ", 
-     RowBox[{"NotebookDirectory", "[", "]"}]}], "]"}]}], ";"}]}], "Input",
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+        "\"\<../build/lib\>\""}], "}"}], "]"}]}], "]"}]}], ";"}]}], "Input",
  CellChangeTimes->{{3.590961991868662*^9, 3.590962048355736*^9}, {
    3.597674016678235*^9, 3.5976740171499357`*^9}, 3.597675111719596*^9, 
-   3.5976875841358957`*^9}],
+   3.5976875841358957`*^9, {3.598053781231634*^9, 3.598053802002563*^9}, {
+   3.598055271129376*^9, 3.598055280467918*^9}}],
 
 Cell["On my MacOsX", "Text",
  CellChangeTimes->{{3.5980506057477903`*^9, 3.5980506083635674`*^9}}],
+
+Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{"ClearAll", "[", 
@@ -88,88 +95,6 @@ Cell[BoxData[{
    3.597673986165677*^9, 3.597673995762067*^9}, {3.597674068346365*^9, 
    3.597674080868435*^9}, {3.597675154340143*^9, 3.597675165020838*^9}}],
 
-Cell["On my personal Ubuntu 12.04:", "Text",
- CellChangeTimes->{{3.598050592279586*^9, 3.598050612971737*^9}}],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{
-  "dir", "=", "\"\</home/qzmfrank/codes/rte2dvis/c-codes-new/src/mll/\>\""}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"src", "=", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"FileNameJoin", "[", 
-      RowBox[{"{", 
-       RowBox[{"dir", ",", "\"\<dunavant-rule.cpp\>\""}], "}"}], "]"}], ",", 
-     RowBox[{"FileNameJoin", "[", 
-      RowBox[{"{", 
-       RowBox[{"dir", ",", "\"\<legendre-rule.cpp\>\""}], "}"}], "]"}], ",", 
-     RowBox[{"FileNameJoin", "[", 
-      RowBox[{"{", 
-       RowBox[{"dir", ",", "\"\<mll.cpp\>\""}], "}"}], "]"}]}], "}"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"lib", "=", 
-  RowBox[{"CreateLibrary", "[", 
-   RowBox[{"src", ",", "\"\<libmll\>\""}], "]"}]}]}], "Input",
- CellChangeTimes->{{3.5980498378933764`*^9, 3.598049842915666*^9}, {
-   3.598049940175262*^9, 3.598049971805602*^9}, {3.598050041681778*^9, 
-   3.598050117576933*^9}, 3.59805020976127*^9, {3.5980503699470463`*^9, 
-   3.598050402575626*^9}, {3.59805049212808*^9, 3.598050519345078*^9}}],
-
-Cell[BoxData["\<\"/home/qzmfrank/.Mathematica/SystemFiles/LibraryResources/\
-Linux-x86-64/libmll.so\"\>"], "Output",
- CellChangeTimes->{
-  3.598050403525803*^9, {3.598050507538611*^9, 3.598050520911592*^9}, 
-   3.598050742357422*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"LegendreRule", "=", 
-   RowBox[{"LibraryFunctionLoad", "[", 
-    RowBox[{"lib", ",", "\"\<LegendreRule_MLL\>\"", ",", 
-     RowBox[{"{", 
-      RowBox[{"Integer", ",", "Real", ",", "Real"}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"DunavantRule", "=", 
-   RowBox[{"LibraryFunctionLoad", "[", 
-    RowBox[{"\"\<libmll\>\"", ",", "\"\<DunavantRule_MLL\>\"", ",", 
-     RowBox[{"{", 
-      RowBox[{"Integer", ",", 
-       RowBox[{"{", 
-        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}]}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"LegendreRule", "[", 
-   RowBox[{"10", ",", "0", ",", "1"}], "]"}], "//", 
-  "Quiet"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"DunavantRule", "[", 
-   RowBox[{"10", ",", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"1", ",", "0"}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"3", ",", "2"}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"0", ",", "2"}], "}"}]}], "}"}]}], "]"}], "//", 
-  "Quiet"}]}], "Input",
- CellChangeTimes->{{3.598050137029677*^9, 3.5980501890303507`*^9}, {
-  3.598050392207301*^9, 3.598050444747098*^9}}],
-
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
@@ -188,8 +113,8 @@ Cell[BoxData[
      "0.13463335965499734`", ",", "0.10954318125799097`", ",", 
      "0.07472567457529056`", ",", "0.033335672154344256`"}], "}"}]}], 
   "}"}]], "Output",
- CellChangeTimes->{{3.598050436595174*^9, 3.598050447364312*^9}, 
-   3.598050523489663*^9}],
+ CellChangeTimes->{3.5980525251219797`*^9, 3.59805256685758*^9, 
+  3.598053805757257*^9, 3.598055282554852*^9}],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -237,51 +162,8 @@ Cell[BoxData[
      "0.009421666963733`", ",", "0.009421666963733`", ",", 
      "0.009421666963733`", ",", "0.009421666963733`", ",", 
      "0.009421666963733`"}], "}"}]}], "}"}]], "Output",
- CellChangeTimes->{{3.598050436595174*^9, 3.598050447364312*^9}, 
-   3.598050523491865*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"CCompilers", "[", "Full", "]"}]], "Input",
- CellChangeTimes->{{3.598050536415053*^9, 3.598050561542017*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"\<\"Name\"\>", "\[Rule]", "\<\"GCC\"\>"}], ",", 
-     RowBox[{"\<\"Compiler\"\>", "\[Rule]", 
-      "CCompilerDriver`GCCCompiler`GCCCompiler"}], ",", 
-     RowBox[{"\<\"CompilerInstallation\"\>", "\[Rule]", "\<\"/usr/bin\"\>"}], 
-     ",", 
-     RowBox[{"\<\"CompilerName\"\>", "\[Rule]", "Automatic"}]}], "}"}], ",", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"\<\"Name\"\>", "\[Rule]", "\<\"GCC\"\>"}], ",", 
-     RowBox[{"\<\"Compiler\"\>", "\[Rule]", 
-      "CCompilerDriver`GCCCompiler`GCCCompiler"}], ",", 
-     RowBox[{"\<\"CompilerInstallation\"\>", 
-      "\[Rule]", "\<\"/usr/bin/X11\"\>"}], ",", 
-     RowBox[{"\<\"CompilerName\"\>", "\[Rule]", "Automatic"}]}], "}"}], ",", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"\<\"Name\"\>", "\[Rule]", "\<\"Intel Compiler\"\>"}], ",", 
-     RowBox[{"\<\"Compiler\"\>", "\[Rule]", 
-      "CCompilerDriver`IntelCompiler`IntelCompiler"}], ",", 
-     RowBox[{"\<\"CompilerInstallation\"\>", "\[Rule]", "None"}], ",", 
-     RowBox[{"\<\"CompilerName\"\>", "\[Rule]", "Automatic"}]}], "}"}], ",", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"\<\"Name\"\>", "\[Rule]", "\<\"Generic C Compiler\"\>"}], ",", 
-     RowBox[{"\<\"Compiler\"\>", "\[Rule]", 
-      "CCompilerDriver`GenericCCompiler`GenericCCompiler"}], ",", 
-     RowBox[{"\<\"CompilerInstallation\"\>", "\[Rule]", "None"}], ",", 
-     RowBox[{"\<\"CompilerName\"\>", "\[Rule]", "Automatic"}]}], "}"}]}], 
-  "}"}]], "Output",
- CellChangeTimes->{{3.598050539630707*^9, 3.59805056186653*^9}}]
+ CellChangeTimes->{3.5980525251219797`*^9, 3.59805256685758*^9, 
+  3.598053805757257*^9, 3.5980552825568113`*^9}]
 }, Open  ]]
 },
 WindowSize->{927, 1028},
@@ -300,22 +182,12 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[557, 20, 499, 10, 77, "Input"],
-Cell[1059, 32, 98, 1, 31, "Text"],
-Cell[1160, 35, 2366, 53, 209, "Input"],
-Cell[3529, 90, 110, 1, 31, "Text"],
+Cell[557, 20, 723, 15, 99, "Input"],
+Cell[1283, 37, 98, 1, 31, "Text"],
 Cell[CellGroupData[{
-Cell[3664, 95, 1042, 25, 99, "Input"],
-Cell[4709, 122, 233, 4, 32, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[4979, 131, 1390, 39, 143, "Input"],
-Cell[6372, 172, 855, 19, 77, "Output"],
-Cell[7230, 193, 2508, 47, 231, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[9775, 245, 132, 2, 32, "Input"],
-Cell[9910, 249, 1582, 34, 187, "Output"]
+Cell[1406, 42, 2366, 53, 209, "Input"],
+Cell[3775, 97, 875, 19, 77, "Output"],
+Cell[4653, 118, 2530, 47, 231, "Output"]
 }, Open  ]]
 }
 ]
