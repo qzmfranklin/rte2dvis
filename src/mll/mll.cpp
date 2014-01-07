@@ -2,16 +2,25 @@
 #include "mll.h"
 #include "legendre-rule.h"
 #include "dunavant-rule.h" 
+#include "arcsinh-rule.h" 
 #include <stdio.h>
 #include <fftw3.h>
 #include <malloc.h>
 #include <math.h>
 #include <stdlib.h>
 /******************************************************************************/
-/* Input:	
- * 	order		Integer
- * 	xmin		Real
- * 	xmax		Real
+static double det(const double *a1, const double *a2, 
+		const double *b1, const double *b2)
+{
+	return (a1[0]-a2[0])*(b1[1]-b2[1]) - (a1[1]-a2[1])*(b1[0]-b2[0]);
+}
+
+/*
+ * Input:	
+ * 	p		{Real,2,"Shared"}
+ * 	p0		{Real,1,"Shared"}
+ * 	qu		{Real,2,"Shared"}
+ * 	qv		{Real,2,"Shared"}
  * Output:
  * 	RES		{Real,2,"Shared"}
  */
@@ -21,27 +30,49 @@ DLLEXPORT int ArcSinhRule_MLL( WolframLibraryData libData, mint Argc,
 	int err = LIBRARY_NO_ERROR; 
 
 	/*Receive from LibraryLink*/
-	mint rule;
-	MTensor NODE_XY2;
-	rule = MArgument_getInteger(Args[0]);
-	NODE_XY2 = MArgument_getMTensor(Args[1]);
-	double *node_xy2;
-	node_xy2 = libData->MTensor_getRealData(NODE_XY2);
+	MTensor const Tp  = MArgument_getMTensor(Args[0]);	// triangle
+	MTensor const Tp0 = MArgument_getMTensor(Args[1]);	// singular point
+	MTensor const Tqu = MArgument_getMTensor(Args[2]);
+	MTensor const Tqv = MArgument_getMTensor(Args[3]);
+	double const *p   = libData->MTensor_getRealData(Tp );
+	double const *p0  = libData->MTensor_getRealData(Tp0);
+	double const *xu  = libData->MTensor_getRealData(Tqu);
+	double const *xv  = libData->MTensor_getRealData(Tqv);
+	mint const   *dimu= libData->MTensor_getDimensions(Tqu);
+	mint const   *dimv= libData->MTensor_getDimensions(Tqv);
+	const int     nu  = (int)dimu[1];
+	const int     nv  = (int)dimv[1];
+	double const *wu  = xu+nu;
+	double const *wv  = xv+nv;
+
+	/*Allocate Memory*/
+	MTensor RES;
+	const int N=nu*nv;
+	mint dims[2]={3,3*N};
+	mint rank=2;
+	libData->MTensor_new(MType_Real,rank,dims,&RES);
+	double *res = libData->MTensor_getRealData(RES);
+	double *y   = res + 3*N;
+	double *w   = res + 6*N;
+
+	/*Construct ArcSinh Rule*/
+	double work[1000];
+	arcsinh_rule_atomic(res    ,y    ,w    ,p0,p  ,p+2,nu,xu,wu,nv,xv,wv,work);
+	arcsinh_rule_atomic(res+N  ,y+N  ,w+N  ,p0,p+2,p+4,nu,xu,wu,nv,xv,wv,work);
+	arcsinh_rule_atomic(res+2*N,y+2*N,w+2*N,p0,p+4,p  ,nu,xu,wu,nv,xv,wv,work);
+
+	double tmp[4];
+	tmp[0] = det(p+2,p ,p+4,p  );		// A
+	tmp[1] = det(p,  p0,p+2,p  )*tmp[0];	// s1: p0 p1 p2
+	tmp[2] = det(p+2,p0,p+4,p+2)*tmp[0];	// s2: p0 p2 p3
+	tmp[3] = det(p+4,p0,p,  p+4)*tmp[0];	// s3: p0 p3 p1
+
+	for (int j = 0; j < 3; j++)
+		if (tmp[j+1]<0.0)
+			for (int i = 0; i < N; i++)
+				w[j*N+i] *= -1.0;
 
 	/*Send to LibraryLink*/
-	MTensor RES;
-	mint dims[2]={3,order_num};
-	mint rank=2;
-	libData->MTensor_new( MType_Real, rank, dims, &RES );
-	mreal *res;
-	res = libData->MTensor_getRealData(RES);
-	mint i;
-	for (i = 0; i < order_num; i++) {
-		res[i+0*order_num] = (mreal) xy2[0+i*2];
-		res[i+1*order_num] = (mreal) xy2[1+i*2];
-		res[i+2*order_num] = (mreal) w[i]; // normalized to 1.0
-		/**res[i+2*order_num] = (mreal) w[i]*fabs(area2);*/
-	}
 	MArgument_setMTensor(Res,RES);
 
 	/*Disown MTensor*/
@@ -50,7 +81,8 @@ DLLEXPORT int ArcSinhRule_MLL( WolframLibraryData libData, mint Argc,
 	return LIBRARY_NO_ERROR;
 }
 
-/* Input:	
+/* 
+ * Input:	
  * 	order		Integer
  * 	xmin		Real
  * 	xmax		Real

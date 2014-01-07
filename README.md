@@ -1,9 +1,10 @@
-codes
-=====
+# Volume Integral Solver of 2D Radiative Transport Equation
 
-Personal code repository
+(Learning markdown, copied from
+http://jbt.github.io/markdown-editor/
+)
 
-# (GitHub-Flavored) Markdown Editor
+
 
 Basic useful feature list:
 
@@ -22,7 +23,7 @@ Look, a list!
  * bar
  * baz
 
-And here's some code!
+Code samples here:
 
 ```javascript
 $(function(){

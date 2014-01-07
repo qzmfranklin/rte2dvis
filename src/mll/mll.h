@@ -9,6 +9,8 @@ extern "C" {
 DLLEXPORT mint WolframLibrary_getVersion();
 DLLEXPORT int WolframLibrary_initialize( WolframLibraryData libData);
 DLLEXPORT void WolframLibrary_uninitialize( WolframLibraryData libData);
+DLLEXPORT int ArcSinhRule_MLL( WolframLibraryData libData, mint Argc, 
+		MArgument *Args, MArgument Res);
 DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, 
 		MArgument *Args, MArgument Res);
 DLLEXPORT int DunavantRule_MLL( WolframLibraryData libData, mint Argc, 
