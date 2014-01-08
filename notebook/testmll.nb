@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[      6802,        200]
-NotebookOptionsPosition[      6491,        184]
-NotebookOutlinePosition[      6831,        199]
-CellTagsIndexPosition[      6788,        196]
+NotebookDataLength[      7775,        238]
+NotebookOptionsPosition[      7280,        216]
+NotebookOutlinePosition[      7618,        231]
+CellTagsIndexPosition[      7575,        228]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -49,17 +49,17 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{"lib", "=", 
    RowBox[{"CreateLibrary", "[", 
-    RowBox[{"src", ",", "\"\<libmll\>\""}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+    RowBox[{"src", ",", "\"\<libmll\>\""}], "]"}]}], ";"}], "\n", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"dir", ",", "src"}], "]"}], "\n", 
  RowBox[{
   RowBox[{"Print", "[", 
-   RowBox[{"\"\<lib=\>\"", ",", "lib"}], "]"}], 
-  ";"}], "\[IndentingNewLine]", 
+   RowBox[{"\"\<lib=\>\"", ",", "lib"}], "]"}], ";"}], "\n", 
  RowBox[{"ClearAll", "[", 
-  RowBox[{"LegendreRuleMLL", ",", "DunavantRuleMLL", ",", "ArcSinhRuleMLL"}], 
+  RowBox[{"LegendreRule", ",", "DunavantRule", ",", "ArcSinhRule"}], 
   "]"}], "\n", 
  RowBox[{
-  RowBox[{"LegendreRuleMLL", "=", 
+  RowBox[{"LegendreRule", "=", 
    RowBox[{"LibraryFunctionLoad", "[", 
     RowBox[{"lib", ",", "\"\<LegendreRule_MLL\>\"", ",", 
      RowBox[{"{", 
@@ -68,7 +68,7 @@ Cell[BoxData[{
       RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
   ";"}], "\n", 
  RowBox[{
-  RowBox[{"DunavantRuleMLL", "=", 
+  RowBox[{"DunavantRule", "=", 
    RowBox[{"LibraryFunctionLoad", "[", 
     RowBox[{"lib", ",", "\"\<DunavantRule_MLL\>\"", ",", 
      RowBox[{"{", 
@@ -80,7 +80,7 @@ Cell[BoxData[{
       RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
   ";"}], "\n", 
  RowBox[{
-  RowBox[{"ArcSinhRuleMLL", "=", 
+  RowBox[{"ArcSinhRule", "=", 
    RowBox[{"LibraryFunctionLoad", "[", 
     RowBox[{"lib", ",", "\"\<ArcSinhRule_MLL\>\"", ",", 
      RowBox[{"{", 
@@ -96,17 +96,17 @@ Cell[BoxData[{
      ",", 
      RowBox[{"{", 
       RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"ClearAll", "[", 
-  RowBox[{"p", ",", "p0", ",", "qu", ",", "qv"}], 
-  "]"}], "\[IndentingNewLine]", 
+  ";", 
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"pp", ",", "p0", ",", "nu", ",", "nv", ",", "qu", ",", "qv"}], 
+   "]"}]}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"LegendreRuleMLL", "[", 
+   RowBox[{"LegendreRule", "[", 
     RowBox[{"10", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"DunavantRuleMLL", "[", 
+   RowBox[{"DunavantRule", "[", 
     RowBox[{"10", ",", 
      RowBox[{"{", 
       RowBox[{
@@ -118,7 +118,7 @@ Cell[BoxData[{
         RowBox[{"0", ",", "2"}], "}"}]}], "}"}]}], "]"}], "//", "Quiet"}], 
   ";"}], "\n", 
  RowBox[{
-  RowBox[{"p", "=", 
+  RowBox[{"pp", "=", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
@@ -126,34 +126,37 @@ Cell[BoxData[{
      RowBox[{"{", 
       RowBox[{"0", ",", "2"}], "}"}], ",", 
      RowBox[{"{", 
-      RowBox[{"3", ",", "2"}], "}"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+      RowBox[{"3", ",", "2"}], "}"}]}], "}"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{"p0", "=", 
    RowBox[{"{", 
-    RowBox[{"3", ",", "0"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{"3", ",", "0"}], "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"nu", ",", "nv"}], "}"}], "=", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "2"}], "}"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{"qu", "=", 
    RowBox[{
-    RowBox[{"LegendreRuleMLL", "[", 
-     RowBox[{"10", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+    RowBox[{"LegendreRule", "[", 
+     RowBox[{"nu", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}]}], 
+  ";"}], "\n", 
  RowBox[{
   RowBox[{"qv", "=", 
    RowBox[{
-    RowBox[{"LegendreRuleMLL", "[", 
-     RowBox[{"2", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+    RowBox[{"LegendreRule", "[", 
+     RowBox[{"nv", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}]}], 
+  ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{
-    RowBox[{
-     RowBox[{"ArcSinhRuleMLL", "[", 
-      RowBox[{"p", ",", "p0", ",", "qu", ",", "qv"}], "]"}], "//", "Quiet"}], 
-    "//", "Transpose"}], "//", "TableForm"}], ";"}], "\n", 
- RowBox[{"LibraryFunctionUnload", "[", "LegendreRuleMLL", "]"}], "\n", 
- RowBox[{"LibraryFunctionUnload", "[", "DunavantRuleMLL", 
-  "]"}], "\[IndentingNewLine]", 
- RowBox[{"LibraryFunctionUnload", "[", "ArcSinhRuleMLL", "]"}]}], "Code",
+   RowBox[{"ArcSinhRule", "[", 
+    RowBox[{"pp", ",", "p0", ",", "qu", ",", "qv"}], "]"}], "//", "Quiet"}], 
+  ";"}], "\n", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"pp", ",", "p0", ",", "nu", ",", "nv", ",", "qu", ",", "qv"}], 
+  "]"}]}], "Code",
  CellChangeTimes->{{3.5981135019122267`*^9, 3.598113501916576*^9}, {
    3.598117200788151*^9, 3.598117224088195*^9}, {3.598117258961364*^9, 
    3.5981173117618837`*^9}, {3.598117350681714*^9, 3.598117418298089*^9}, {
@@ -165,7 +168,8 @@ Cell[BoxData[{
    3.5981219275751*^9}, {3.598122171546075*^9, 3.5981222041567507`*^9}, {
    3.598122650181472*^9, 3.598122687373124*^9}, {3.598122948848118*^9, 
    3.5981229601003513`*^9}, {3.598123026833531*^9, 3.598123053846781*^9}, {
-   3.598123178104404*^9, 3.598123178919223*^9}}],
+   3.598123178104404*^9, 3.598123178919223*^9}, {3.5981245670997143`*^9, 
+   3.59812461561655*^9}}],
 
 Cell[BoxData[
  InterpretationBox[
@@ -179,11 +183,39 @@ libmll.so\"\>"}],
   Editable->False]], "Print",
  CellChangeTimes->{{3.5981221919711647`*^9, 3.5981222056980133`*^9}, {
    3.598122934501347*^9, 3.598122981438148*^9}, {3.5981230227210007`*^9, 
-   3.598123050486979*^9}, 3.5981231800758257`*^9}]
+   3.598123050486979*^9}, 3.5981231800758257`*^9, {3.598124570844743*^9, 
+   3.598124617277742*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<Developer`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.598124705707654*^9, 3.5981247110098867`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"data", "=", 
+   RowBox[{"RandomComplex", "[", 
+    RowBox[{
+     RowBox[{"1", "+", "\[ImaginaryI]"}], ",", "20"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"data", "//", "PackedArrayQ"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ByteCount", "[", "data", "]"}], "/", "8"}], "-", "13"}]}], "Input",\
+
+ CellChangeTimes->{{3.598124659838825*^9, 3.598124839498086*^9}}],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{{3.598124695528653*^9, 3.598124840165571*^9}}],
+
+Cell[BoxData["40"], "Output",
+ CellChangeTimes->{{3.598124695528653*^9, 3.598124840167572*^9}}]
 }, Open  ]]
 },
 WindowSize->{927, 1018},
-WindowMargins->{{23, Automatic}, {-163, Automatic}},
+WindowMargins->{{15, Automatic}, {-7, Automatic}},
 FrontEndVersion->"9.0 for Linux x86 (64-bit) (November 20, 2012)",
 StyleDefinitions->"Default.nb"
 ]
@@ -199,8 +231,14 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[579, 22, 5374, 145, 432, "Code"],
-Cell[5956, 169, 519, 12, 23, "Print"]
+Cell[579, 22, 5305, 149, 413, "Code"],
+Cell[5887, 173, 569, 13, 23, "Print"]
+}, Open  ]],
+Cell[6471, 189, 143, 2, 32, "Input"],
+Cell[CellGroupData[{
+Cell[6639, 195, 427, 12, 77, "Input"],
+Cell[7069, 209, 97, 1, 32, "Output"],
+Cell[7169, 212, 95, 1, 32, "Output"]
 }, Open  ]]
 }
 ]
