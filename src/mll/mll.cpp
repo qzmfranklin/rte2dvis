@@ -1,35 +1,48 @@
 #include <complex.h>
 #include <assert.h>
 #include <string.h>
-#include "WolframLibrary.h" 
-#include "mll.h"
 #include "legendre-rule.h"
 #include "dunavant-rule.h" 
 #include "arcsinh-rule.h" 
-//#include "utils.h"
+#include "utils.h"
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
 #include <stdlib.h>
+
+#include "WolframLibrary.h" 
+#include "mll.h"
 /******************************************************************************/
-DLLEXPORT int test_complex( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
+DLLEXPORT int test( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
 	int err = LIBRARY_NO_ERROR; 
 
 	/*Receive from LibraryLink*/
-	MTensor Tv = MArgument_getMTensor(Args[0]);
+	MTensor const Tv = MArgument_getMTensor(Args[0]);
 	double _Complex *v=(double _Complex*)libData->MTensor_getComplexData(Tv);
 	mint const *dim=libData->MTensor_getDimensions(Tv);
 	const int n=dim[0];
 
-	/*Norm*/
-	double _Complex val=0.0;
-	for (int i = 0; i < n; i++)
-		val += v[i] * conj(v[i]);
-	double out =sqrt(creal(val));
+	/*Allocate Memory*/
+	MTensor TRes;
+	mint dims[1]={n};
+	mint rank=1;
+	libData->MTensor_new(MType_Complex,rank,dims,&TRes);
+	double _Complex *a = (double _Complex*)libData->MTensor_getComplexData(TRes);
+	memset(a,0,sizeof(double)*2*n);
+
+	/*FFTW*/
+	// Alignment Issue
+	//fftw_plan plans[4];
+	//create_fftw_plans(n,plans,FFTW_MEASURE|FFTW_PATIENT);
+	//fftw_execute_dft(plans[OFWD],(fftw_complex*)v,(fftw_complex*)a);
+	//destroy_fftw_plans(plans);
 
 	/*Send to LibraryLink*/
-	MArgument_setReal(Res,out);
+	MArgument_setMTensor(Res,TRes);
+
+	/*Disown MTensor*/
+	libData->MTensor_disown(TRes); 
 
 	return LIBRARY_NO_ERROR;
 }
@@ -60,7 +73,7 @@ DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	/*Compute b*/
 	memset(b,0,sizeof(double)*2*2*Nm);
 	const int _LWORK=2000;
-	assert(_LWORK>=M);
+	//assert(_LWORK>=M);
 	double _Complex e[_LWORK],wer[_LWORK];
 	for (int i = 0; i < M; i++) {
 		double dx = p0[0] - x[i];
@@ -120,7 +133,7 @@ DLLEXPORT int BHomoN_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	/*Compute b*/
 	memset(b,0,sizeof(double)*2*2*Nm);
 	const int _LWORK=2000;
-	assert(_LWORK>=M);
+	//assert(_LWORK>=M);
 	double _Complex e[_LWORK],wer[_LWORK];
 	for (int i = 0; i < M; i++) {
 		double dx = p0[0] - x[i];
@@ -154,40 +167,70 @@ DLLEXPORT int BHomoN_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	return LIBRARY_NO_ERROR;
 }
 
-DLLEXPORT int HomoMulBX_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
+/**************************************/
+static void scale(const double scale, const int n, double _Complex *a)
+{
+	for (int i = 0; i < n; i++)
+		a[i] *= scale;
+}
+
+DLLEXPORT int HomoMul_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
 	int err = LIBRARY_NO_ERROR; 
 
 	/*Receive from LibraryLink*/
-	// HomoMulBX[X, A, B, gTbl, \[Mu]t, \[Mu]s, Ns, Nd, Nm]
+	MTensor const   TX = MArgument_getMTensor(Args[0]);	// Ns(2Nd+1)
+	MTensor const   TA = MArgument_getMTensor(Args[1]);	// Ns
+	MTensor const   TB = MArgument_getMTensor(Args[2]);	// Ns, Ns, 2Nm
+	MTensor const   Tg = MArgument_getMTensor(Args[3]);	// 2Nd+1
+	const double   mut = MArgument_getReal(Args[4]);	// mut=mus(scattering)+mua(absorbing)
+	const double   mus = MArgument_getReal(Args[5]);	// mus
+	mint const   *dimA = libData->MTensor_getDimensions(TA);
+	mint const   *dimB = libData->MTensor_getDimensions(TB);
+	mint const   *dimg = libData->MTensor_getDimensions(Tg);
+	const int       Ns = dimA[0];
+	const int       Nm = dimB[2]/2;
+	const int       Nd = (dimg[0]-1)/2;
+	const int       Ng = Ns*(2*Nd+1);
+	double _Complex *X = (double _Complex*)libData->MTensor_getComplexData(TX);
+	double          *A = libData->MTensor_getRealData(TA);
+	double          *B = libData->MTensor_getRealData(TB);
+	double          *g = libData->MTensor_getRealData(Tg);
 
-	const MTensor  TX  = MArgument_getMTensor(Args[0]);	// Ns, 2Nd+1
-	const MTensor  TA  = MArgument_getMTensor(Args[1]);	// Ns
-	const MTensor  TB  = MArgument_getMTensor(Args[2]);	// Ns, Ns, 2Nm
-	const MTensor  Tg  = MArgument_getMTensor(Args[3]);	// 2Nd+1
-	const double   mut = MArgument_getReal(Args[4]);
-	const double   mus = MArgument_getReal(Args[5]);
-	const int      Ns  = MArgument_getInteger(Args[6]);
-	const int      Nd  = MArgument_getInteger(Args[7]);
-	const int      Nm  = MArgument_getInteger(Args[8]);
-
-	const double _Complex *X = (double _Complex*)libData->MTensor_getComplexData(TX);
-	const double          *A = libData->MTensor_getRealData(TA);
-	const double          *B = libData->MTensor_getRealData(TB);
-	const double          *g = libData->MTensor_getRealData(Tg);
-
-	/*Allocate Memory*/
+	/*Allocate Memory/Workspace*/
 	MTensor TRes;
-	mint dims[1]={2*Nm};
+	mint dims[1]={Ng};
 	mint rank=1;
 	libData->MTensor_new(MType_Complex,rank,dims,&TRes);
-	double _Complex *Y = (double _Complex*)libData->MTensor_getComplexData(TRes);
+	double _Complex *Y=(double _Complex*)libData->MTensor_getComplexData(TRes);
+
+	const int _LWORK=4001;
+	assert(_LWORK>2*Nm);
+	double _Complex work[_LWORK] __attribute__((aligned(64)));
+
+	/*FFTW plans*/
+	fftw_plan pf=fftw_plan_dft_1d(2*Nm,work,work,
+			FFTW_FORWARD ,FFTW_MEASURE|FFTW_PATIENT);
+	fftw_plan pb=fftw_plan_dft_1d(2*Nm,work,work,
+			FFTW_BACKWARD,FFTW_MEASURE|FFTW_PATIENT);
+	//fftw_execute(p);
 
 	/*Compute Y*/
-	//memset(b,0,sizeof(double)*2*2*Nm);
-	//const int _LWORK=2000;
-	//assert(_LWORK>=M);
-	//double _Complex e[_LWORK],wer[_LWORK];
+	memset(Y,0,sizeof(double)*2*Ng);
+	// B[Ns,Ns,2*Nm] is row-major
+	for (int n = 0; n < Ns; n++) {
+		for (int np = 0; np < Ns; np++) {
+			for (int i = 0; i < 2*Nd+1; i++)
+				work[i]  = (mut-mus*g[i]) * X[i+(2*Nd+1)*np];
+			memset(work+2*Nd+1,0,sizeof(double)*2*(2*Nm-2*Nd-1));
+			fftw_execute(pf);
+			for (int i = 0; i < 2*Nm; i++)
+				work[i] *= B[i+(np+n*Ns)*2*Nm]; // row-major
+			fftw_execute(pb);
+			for (int i = 0; i < 2*Nd+1; i++)
+				Y[i+n*(2*Nd+1)] += work[i];
+		}
+	}
 
 	/*Send to LibraryLink*/
 	MArgument_setMTensor(Res,TRes);
@@ -195,6 +238,9 @@ DLLEXPORT int HomoMulBX_MLL( WolframLibraryData libData, mint Argc, MArgument *A
 	/*Disown MTensor*/
 	libData->MTensor_disown(TRes);
 
+	/*Free FFTW plans/Workspace*/ 
+	fftw_destroy_plan(pf);
+	fftw_destroy_plan(pb);
 
 	return LIBRARY_NO_ERROR;
 }
@@ -206,15 +252,6 @@ static double det(const double *a1, const double *a2,
 	return (a1[0]-a2[0])*(b1[1]-b2[1]) - (a1[1]-a2[1])*(b1[0]-b2[0]);
 }
 
-/*
- * Input:	
- * 	p		{Real,2,"Shared"}
- * 	p0		{Real,1,"Shared"}
- * 	qu		{Real,2,"Shared"}
- * 	qv		{Real,2,"Shared"}
- * Output:
- * 	RES		{Real,2,"Shared"}
- */
 DLLEXPORT int ArcSinhRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
 	int err = LIBRARY_NO_ERROR; 
@@ -247,7 +284,7 @@ DLLEXPORT int ArcSinhRule_MLL( WolframLibraryData libData, mint Argc, MArgument 
 
 	/*Construct ArcSinh Rule*/
 	const int _LWORK=2000;
-	assert(_LWORK>=N);
+	//assert(_LWORK>=N);
 	double work[_LWORK];
 	arcsinh_rule_atomic(res    ,y    ,w    ,p0,p  ,p+2,nu,xu,wu,nv,xv,wv,work);
 	arcsinh_rule_atomic(res+N  ,y+N  ,w+N  ,p0,p+2,p+4,nu,xu,wu,nv,xv,wv,work);
@@ -273,21 +310,13 @@ DLLEXPORT int ArcSinhRule_MLL( WolframLibraryData libData, mint Argc, MArgument 
 	return LIBRARY_NO_ERROR;
 }
 
-/* 
- * Input:	
- * 	order		Integer
- * 	xmin		Real
- * 	xmax		Real
- * Output:
- * 	RES		{Real,2,"Shared"}
- */
 DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
 	int err = LIBRARY_NO_ERROR; 
 	/*Receive from LibraryLink*/
 	mint order;
 	mreal xmin;
-	mreal xmax;
+mreal xmax;
 	order = MArgument_getInteger(Args[0]);
 	xmin = MArgument_getReal(Args[1]);
 	xmax = MArgument_getReal(Args[2]);
@@ -329,19 +358,12 @@ DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, MArgument
 	return LIBRARY_NO_ERROR;
 }
 
-/*
- * Input:
- * 	rule		Integer
- * 	NODE_XY2	{Real,2,"Constatn"}
- * Output:
- * 	RES		{Real,2,"Shared"}
- */
 DLLEXPORT int DunavantRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
 	int err = LIBRARY_NO_ERROR;
 
 	/*Receive from LibraryLink*/
-	mint rule;
+mint rule;
 	MTensor NODE_XY2;
 	rule = MArgument_getInteger(Args[0]);
 	NODE_XY2 = MArgument_getMTensor(Args[1]);

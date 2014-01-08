@@ -103,7 +103,8 @@ ${DIR-mll}BINEXE:=
 ${DIR-mll}LIB:=mll
 
 ${LIB}/libmll.so: ${OBJ}/mll.o \
-	${OBJ}/dunavant-rule.o ${OBJ}/legendre-rule.o
+	${OBJ}/dunavant-rule.o ${OBJ}/legendre-rule.o \
+	${OBJ}/utils.o
 
 ###############################################################################
 #				STEP 5

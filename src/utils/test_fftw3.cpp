@@ -29,7 +29,7 @@ int test01(void)
 		a[i]=i; 
 	print_cvector("a(ORIG)",N,a);
 
-	fftw_plan *plans;
+	fftw_plan plans[4];
 	create_fftw_plans(N,plans,FFTW_ESTIMATE);
 
 	fftw_execute_dft(plans[OFWD],(fftw_complex*)a,(fftw_complex*)b);

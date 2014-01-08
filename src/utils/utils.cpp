@@ -1,4 +1,5 @@
-#include "utils.h"
+#include <fftw3.h>
+#include <mkl.h>
 #include <emmintrin.h>
 #include <cmath>
 #include <cstdio>
@@ -10,9 +11,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h> 
+#include "utils.h"
 /******************************************************************************/
-#define MALLOC_ALIGNMENT 64
-/******************************************************************************/ 
 /*
  * based on http://stackoverflow.com/questions/5252375/custom-c-assert-macro
  * works outside debug mode too
@@ -329,17 +329,15 @@ void print_cmatrix(const char* desc, const int m, const int n,
 	}
 }
 
-void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
+void create_fftw_plans(const int n, fftw_plan *plans, const int flag)
 {
 	//fprintf(stderr, "create_fftw_plans(n=%d,plans,flag)\n",n);
 	fftw_complex *work1,*work2;
-	work1 =(fftw_complex*)mkl_malloc(
-			n*sizeof(fftw_complex),MALLOC_ALIGNMENT);
-	work2 =(fftw_complex*)mkl_malloc(n*sizeof(
-				fftw_complex),MALLOC_ALIGNMENT);
+	//work1        = fftw_alloc_complex(n);
+	//work2        = fftw_alloc_complex(n);
+	work1=(fftw_complex*)mkl_malloc(sizeof(double)*2*n,64);
+	work2=(fftw_complex*)mkl_malloc(sizeof(double)*2*n,64);
 
-	plans       = (fftw_plan*)mkl_malloc(
-			4*sizeof(fftw_plan),MALLOC_ALIGNMENT);
 	plans[IFWD] = fftw_plan_dft_1d(n,
 			(fftw_complex*)work1,
 			(fftw_complex*)work1,
@@ -356,6 +354,9 @@ void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
 			(fftw_complex*)work1,
 			(fftw_complex*)work2,
 			FFTW_BACKWARD,flag);
+
+	//fftw_free(work1);
+	//fftw_free(work2);
 	mkl_free(work1);
 	mkl_free(work2);
 }
@@ -365,7 +366,6 @@ void destroy_fftw_plans(fftw_plan *restrict plans)
 	//fprintf(stderr, "destroy_fftw_plans(plans)\n");
 	for (int i = 0; i < 4; i++)
 		fftw_destroy_plan(plans[i]);
-	mkl_free(plans);
 }
 
 /******************************************************************************/

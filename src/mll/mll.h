@@ -5,11 +5,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-DLLEXPORT int test_complex( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res); 
+DLLEXPORT int test( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res); 
 /**************************************/
 DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
 DLLEXPORT int BHomoN_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
-DLLEXPORT int HomoMulBX_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
+DLLEXPORT int HomoMul_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
 /**************************************/
 DLLEXPORT int ArcSinhRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
 DLLEXPORT int LegendreRule_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);

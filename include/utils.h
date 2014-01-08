@@ -46,8 +46,8 @@ enum fftw_plan_kind {
 	OFWD,		// out-of-place forward
 	OBWD,		// out-of-place backward
 }; 
-void create_fftw_plans(const int n, fftw_plan *restrict &plans, 
-		int flag = FFTW_MEASURE|FFTW_PATIENT);
+void create_fftw_plans(const int n, fftw_plan *plans, 
+		const int flag = FFTW_MEASURE|FFTW_PATIENT);
 void destroy_fftw_plans(fftw_plan *restrict plans);
 
 /******************************************************************************/
