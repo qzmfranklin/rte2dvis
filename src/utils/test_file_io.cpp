@@ -26,7 +26,7 @@ int test01(void)
         printf("TEST01\n");
         printf("	|Test work flow of read\n"); 
 
-	char *fbase="example/square162.ascii"; 
+	char *fbase="msh/square162"; 
 
 	struct st_mesh_info q;
 	printf("sizeof(struct st_mesh_info=%lu\n",sizeof(struct st_mesh_info)); 
@@ -57,7 +57,7 @@ int test02(void)
         printf("TEST02\n");
         printf("	|Test work flow of read\n"); 
 
-	char *fbase="example/square162.binary"; 
+	char *fbase="msh/square162"; 
 
 	struct st_mesh_info q;
 
@@ -87,7 +87,7 @@ int test03(void)
         printf("TEST03\n");
         printf("	|Test load_mesh()\n");
 
-	char *fbase="example/square162.ascii"; 
+	char *fbase="msh/square162"; 
 	struct st_mesh_info q;
 	load_mesh(q,fbase);
 	print_mesh(q);

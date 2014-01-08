@@ -6,6 +6,7 @@
 #include "legendre-rule.h"
 #include "dunavant-rule.h" 
 #include "arcsinh-rule.h" 
+//#include "utils.h"
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
@@ -142,6 +143,51 @@ DLLEXPORT int BHomoN_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	// Fill b[2(Nm-Nd)] -> b[2Nm-1] with conjugates
 	for (int dm = 2*(Nm-Nd); dm <= 2*Nm-1; dm++)
 		b[dm] = conj(b[2*Nm-dm]);
+
+	/*Send to LibraryLink*/
+	MArgument_setMTensor(Res,TRes);
+
+	/*Disown MTensor*/
+	libData->MTensor_disown(TRes);
+
+
+	return LIBRARY_NO_ERROR;
+}
+
+DLLEXPORT int HomoMulBX_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
+{
+	int err = LIBRARY_NO_ERROR; 
+
+	/*Receive from LibraryLink*/
+	// HomoMulBX[X, A, B, gTbl, \[Mu]t, \[Mu]s, Ns, Nd, Nm]
+
+	const MTensor  TX  = MArgument_getMTensor(Args[0]);	// Ns, 2Nd+1
+	const MTensor  TA  = MArgument_getMTensor(Args[1]);	// Ns
+	const MTensor  TB  = MArgument_getMTensor(Args[2]);	// Ns, Ns, 2Nm
+	const MTensor  Tg  = MArgument_getMTensor(Args[3]);	// 2Nd+1
+	const double   mut = MArgument_getReal(Args[4]);
+	const double   mus = MArgument_getReal(Args[5]);
+	const int      Ns  = MArgument_getInteger(Args[6]);
+	const int      Nd  = MArgument_getInteger(Args[7]);
+	const int      Nm  = MArgument_getInteger(Args[8]);
+
+	const double _Complex *X = (double _Complex*)libData->MTensor_getComplexData(TX);
+	const double          *A = libData->MTensor_getRealData(TA);
+	const double          *B = libData->MTensor_getRealData(TB);
+	const double          *g = libData->MTensor_getRealData(Tg);
+
+	/*Allocate Memory*/
+	MTensor TRes;
+	mint dims[1]={2*Nm};
+	mint rank=1;
+	libData->MTensor_new(MType_Complex,rank,dims,&TRes);
+	double _Complex *Y = (double _Complex*)libData->MTensor_getComplexData(TRes);
+
+	/*Compute Y*/
+	//memset(b,0,sizeof(double)*2*2*Nm);
+	//const int _LWORK=2000;
+	//assert(_LWORK>=M);
+	//double _Complex e[_LWORK],wer[_LWORK];
 
 	/*Send to LibraryLink*/
 	MArgument_setMTensor(Res,TRes);

@@ -66,10 +66,6 @@ ${BIN}/test_Solver_v1.exe: ${OBJ}/test_Solver_v1.o \
 	${OBJ}/Solver_v1.o ${OBJ}/file_io.o \
 	${LIB}/libutils.a ${LIB}/libutils.so \
 	${LIB}/libQuadratureRules.a ${LIB}/libQuadratureRules.so
-
-${OUTPUT}/test_Solver_v1.txt: ${BIN}/test_Solver_v1.exe \
-	${EXAMPLE}/square162.binary.info
-
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

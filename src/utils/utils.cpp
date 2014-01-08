@@ -313,7 +313,7 @@ void print_cvector(const char* desc, const int n,
 	assrt(incx>0);
 	printf("%s = \n",desc);
 	for (int i = 0; i < n; i++)
-		printf("%7.4f+%7.4fI ",creal(v[i*incx]),cimag(v[i*incx]));
+		printf("%20.15f+%20.15fI\n",creal(v[i*incx]),cimag(v[i*incx]));
 	printf("\n");
 }
 
@@ -331,7 +331,7 @@ void print_cmatrix(const char* desc, const int m, const int n,
 
 void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
 {
-	fprintf(stderr, "create_fftw_plans(n=%d,plans,flag)\n",n);
+	//fprintf(stderr, "create_fftw_plans(n=%d,plans,flag)\n",n);
 	fftw_complex *work1,*work2;
 	work1 =(fftw_complex*)mkl_malloc(
 			n*sizeof(fftw_complex),MALLOC_ALIGNMENT);
@@ -362,7 +362,7 @@ void create_fftw_plans(const int n, fftw_plan *restrict &plans, int flag)
 
 void destroy_fftw_plans(fftw_plan *restrict plans)
 {
-	fprintf(stderr, "destroy_fftw_plans(plans)\n");
+	//fprintf(stderr, "destroy_fftw_plans(plans)\n");
 	for (int i = 0; i < 4; i++)
 		fftw_destroy_plan(plans[i]);
 	mkl_free(plans);
