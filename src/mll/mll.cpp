@@ -25,24 +25,25 @@ DLLEXPORT int test( WolframLibraryData libData, mint Argc, MArgument *Args, MArg
 
 	/*Allocate Memory*/
 	MTensor TRes;
-	mint dims[1]={n};
-	mint rank=1;
+	mint dims[2]={8,n};
+	mint rank=2;
 	libData->MTensor_new(MType_Complex,rank,dims,&TRes);
 	double _Complex *a = (double _Complex*)libData->MTensor_getComplexData(TRes);
-	memset(a,0,sizeof(double)*2*n);
-
-	/*FFTW*/
-	// Alignment Issue
-	//fftw_plan plans[4];
-	//create_fftw_plans(n,plans,FFTW_MEASURE|FFTW_PATIENT);
-	//fftw_execute_dft(plans[OFWD],(fftw_complex*)v,(fftw_complex*)a);
-	//destroy_fftw_plans(plans);
 
 	/*Send to LibraryLink*/
 	MArgument_setMTensor(Res,TRes);
 
+	/*Set*/
+	//#pragma omp parallel for \
+	//num_threads(8)
+	for (int i = 0; i < 8*n; i++)
+		a[i] = i-i*I;
+
 	/*Disown MTensor*/
-	libData->MTensor_disown(TRes); 
+	//libData->MTensor_disown(TRes); 
+	//libData->MTensor_disown(Tv); 
+	libData->MTensor_free(TRes);
+	libData->MTensor_free(Tv);
 
 	return LIBRARY_NO_ERROR;
 }
@@ -73,7 +74,7 @@ DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	/*Compute b*/
 	memset(b,0,sizeof(double)*2*2*Nm);
 	const int _LWORK=2000;
-	//assert(_LWORK>=M);
+	assert(_LWORK>=M);
 	double _Complex e[_LWORK],wer[_LWORK];
 	for (int i = 0; i < M; i++) {
 		double dx = p0[0] - x[i];
@@ -133,7 +134,7 @@ DLLEXPORT int BHomoN_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	/*Compute b*/
 	memset(b,0,sizeof(double)*2*2*Nm);
 	const int _LWORK=2000;
-	//assert(_LWORK>=M);
+	assert(_LWORK>=M);
 	double _Complex e[_LWORK],wer[_LWORK];
 	for (int i = 0; i < M; i++) {
 		double dx = p0[0] - x[i];
@@ -174,6 +175,82 @@ static void scale(const double scale, const int n, double _Complex *a)
 		a[i] *= scale;
 }
 
+/*
+ *
+ *DLLEXPORT int HomoMulOMP_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
+ *{
+ *#define NUM_THREAD 8
+ *        int err = LIBRARY_NO_ERROR; 
+ *
+ *        [>Receive from LibraryLink<]
+ *        MTensor const   TX = MArgument_getMTensor(Args[0]);	// Ns(2Nd+1)
+ *        MTensor const   TA = MArgument_getMTensor(Args[1]);	// Ns
+ *        MTensor const   TB = MArgument_getMTensor(Args[2]);	// Ns, Ns, 2Nm
+ *        MTensor const   Tg = MArgument_getMTensor(Args[3]);	// 2Nd+1
+ *        const double   mut = MArgument_getReal(Args[4]);	// mut=mus(scattering)+mua(absorbing)
+ *        const double   mus = MArgument_getReal(Args[5]);	// mus
+ *        mint const   *dimA = libData->MTensor_getDimensions(TA);
+ *        mint const   *dimB = libData->MTensor_getDimensions(TB);
+ *        mint const   *dimg = libData->MTensor_getDimensions(Tg);
+ *        const int       Ns = dimA[0];
+ *        const int       Nm = dimB[2]/2;
+ *        const int       Nd = (dimg[0]-1)/2;
+ *        const int       Ng = Ns*(2*Nd+1);
+ *        double _Complex *X = (double _Complex*)libData->MTensor_getComplexData(TX);
+ *        double          *A = libData->MTensor_getRealData(TA);
+ *        double          *B = libData->MTensor_getRealData(TB);
+ *        double          *g = libData->MTensor_getRealData(Tg);
+ *
+ *        [>Allocate Memory/Workspace<]
+ *        MTensor TRes;
+ *        mint dims[1]={Ng};
+ *        mint rank=1;
+ *        libData->MTensor_new(MType_Complex,rank,dims,&TRes);
+ *        double _Complex *Y=(double _Complex*)libData->MTensor_getComplexData(TRes);
+ *
+ *        const int _LWORK=4001;
+ *        assert(_LWORK>2*Nm);
+ *        double _Complex work[_LWORK] __attribute__((aligned(64)));
+ *
+ *        [>FFTW plans<]
+ *        fftw_plan pf=fftw_plan_dft_1d(2*Nm,work,work,
+ *                        FFTW_FORWARD ,FFTW_MEASURE|FFTW_PATIENT);
+ *        fftw_plan pb=fftw_plan_dft_1d(2*Nm,work,work,
+ *                        FFTW_BACKWARD,FFTW_MEASURE|FFTW_PATIENT);
+ *        //fftw_execute(p);
+ *
+ *        [>Compute Y<]
+ *        memset(Y,0,sizeof(double)*2*Ng);
+ *        // B[Ns,Ns,2*Nm] is row-major
+ *        for (int n = 0; n < Ns; n++) {
+ *                for (int np = 0; np < Ns; np++) {
+ *                        for (int i = 0; i < 2*Nd+1; i++)
+ *                                work[i]  = (mut-mus*g[i]) * X[i+(2*Nd+1)*np];
+ *                        memset(work+2*Nd+1,0,sizeof(double)*2*(2*Nm-2*Nd-1));
+ *                        fftw_execute(pf);
+ *                        for (int i = 0; i < 2*Nm; i++)
+ *                                work[i] *= B[i+(np+n*Ns)*2*Nm]; // row-major
+ *                        fftw_execute(pb);
+ *                        for (int i = 0; i < 2*Nd+1; i++)
+ *                                Y[i+n*(2*Nd+1)] += work[i];
+ *                }
+ *        }
+ *
+ *        [>Send to LibraryLink<]
+ *        MArgument_setMTensor(Res,TRes);
+ *
+ *        [>Disown MTensor<]
+ *        libData->MTensor_disown(TRes);
+ *
+ *        [>Free FFTW plans/Workspace<] 
+ *        fftw_destroy_plan(pf);
+ *        fftw_destroy_plan(pb);
+ *
+ *        return LIBRARY_NO_ERROR;
+ *#undef NUM_THREAD
+ *}
+ */
+
 DLLEXPORT int HomoMul_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
 	int err = LIBRARY_NO_ERROR; 
@@ -203,10 +280,12 @@ DLLEXPORT int HomoMul_MLL( WolframLibraryData libData, mint Argc, MArgument *Arg
 	mint rank=1;
 	libData->MTensor_new(MType_Complex,rank,dims,&TRes);
 	double _Complex *Y=(double _Complex*)libData->MTensor_getComplexData(TRes);
+	//memset(Y,0,sizeof(double)*2*Ng);
 
 	const int _LWORK=4001;
 	assert(_LWORK>2*Nm);
 	double _Complex work[_LWORK] __attribute__((aligned(64)));
+	//double _Complex work[_LWORK];
 
 	/*FFTW plans*/
 	fftw_plan pf=fftw_plan_dft_1d(2*Nm,work,work,
@@ -216,7 +295,9 @@ DLLEXPORT int HomoMul_MLL( WolframLibraryData libData, mint Argc, MArgument *Arg
 	//fftw_execute(p);
 
 	/*Compute Y*/
-	memset(Y,0,sizeof(double)*2*Ng);
+	for (int n = 0; n < Ns; n++)
+		for (int i = 0; i < 2*Nd+1; i++)
+			Y[i+n*(2*Nd+1)] = A[n] * X[i+n*(2*Nd+1)];
 	// B[Ns,Ns,2*Nm] is row-major
 	for (int n = 0; n < Ns; n++) {
 		for (int np = 0; np < Ns; np++) {
@@ -284,7 +365,7 @@ DLLEXPORT int ArcSinhRule_MLL( WolframLibraryData libData, mint Argc, MArgument 
 
 	/*Construct ArcSinh Rule*/
 	const int _LWORK=2000;
-	//assert(_LWORK>=N);
+	assert(_LWORK>=N);
 	double work[_LWORK];
 	arcsinh_rule_atomic(res    ,y    ,w    ,p0,p  ,p+2,nu,xu,wu,nv,xv,wv,work);
 	arcsinh_rule_atomic(res+N  ,y+N  ,w+N  ,p0,p+2,p+4,nu,xu,wu,nv,xv,wv,work);
