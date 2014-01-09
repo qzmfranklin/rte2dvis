@@ -1,0 +1,349 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     11278,        340]
+NotebookOptionsPosition[     10704,        315]
+NotebookOutlinePosition[     11041,        330]
+CellTagsIndexPosition[     10998,        327]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<Developer`\>\"", "]"}], "\n", 
+ RowBox[{"Needs", "[", "\"\<CCompilerDriver`\>\"", "]"}], "\n", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"dir", ",", "src", ",", "lib"}], "]"}], "\n", 
+ RowBox[{
+  RowBox[{"dir", "=", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<../src/mll\>\""}], 
+     "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"src", "=", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<dunavant-rule.cpp\>\"", ",", "\"\<legendre-rule.cpp\>\"", ",", 
+      "\"\<arcsinh-rule.cpp\>\"", ",", "\"\<mll.cpp\>\""}], "}"}], "//", 
+    RowBox[{
+     RowBox[{"Map", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"FileNameJoin", "[", 
+         RowBox[{"{", 
+          RowBox[{"dir", ",", "#"}], "}"}], "]"}], "&"}], ",", "#"}], "]"}], 
+     "&"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"lib", "=", 
+   RowBox[{"CreateLibrary", "[", 
+    RowBox[{"src", ",", "\"\<libmll\>\""}], "]"}]}], ";"}], "\n", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"dir", ",", "src"}], "]"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<lib=\>\"", ",", "lib"}], "]"}], ";"}], "\n", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"LegendreRule", ",", "DunavantRule", ",", "ArcSinhRule"}], 
+  "]"}], "\n", 
+ RowBox[{
+  RowBox[{"LegendreRule", "=", 
+   RowBox[{"LibraryFunctionLoad", "[", 
+    RowBox[{"lib", ",", "\"\<LegendreRule_MLL\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"Integer", ",", "Real", ",", "Real"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"DunavantRule", "=", 
+   RowBox[{"LibraryFunctionLoad", "[", 
+    RowBox[{"lib", ",", "\"\<DunavantRule_MLL\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"Integer", ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}]}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ArcSinhRule", "=", 
+   RowBox[{"LibraryFunctionLoad", "[", 
+    RowBox[{"lib", ",", "\"\<ArcSinhRule_MLL\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "1", ",", "\"\<Constant\>\""}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}]}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
+  ";", 
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"pp", ",", "p0", ",", "nu", ",", "nv", ",", "qu", ",", "qv"}], 
+   "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"LegendreRule", "[", 
+    RowBox[{"10", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"DunavantRule", "[", 
+    RowBox[{"10", ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"3", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}]}], "]"}], "//", "Quiet"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"pp", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "2"}], "}"}]}], "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"p0", "=", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "0"}], "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"nu", ",", "nv"}], "}"}], "=", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "2"}], "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"qu", "=", 
+   RowBox[{
+    RowBox[{"LegendreRule", "[", 
+     RowBox[{"nu", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"qv", "=", 
+   RowBox[{
+    RowBox[{"LegendreRule", "[", 
+     RowBox[{"nv", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ArcSinhRule", "[", 
+    RowBox[{"pp", ",", "p0", ",", "qu", ",", "qv"}], "]"}], "//", "Quiet"}], 
+  ";"}], "\n", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"pp", ",", "p0", ",", "nu", ",", "nv", ",", "qu", ",", "qv"}], 
+  "]"}]}], "Code",
+ CellChangeTimes->{{3.5981135019122267`*^9, 3.598113501916576*^9}, {
+   3.598117200788151*^9, 3.598117224088195*^9}, {3.598117258961364*^9, 
+   3.5981173117618837`*^9}, {3.598117350681714*^9, 3.598117418298089*^9}, {
+   3.5981174529975567`*^9, 3.598117549590735*^9}, {3.598118314212565*^9, 
+   3.598118319579389*^9}, {3.598121144069165*^9, 3.598121169881062*^9}, 
+   3.5981212269491987`*^9, {3.598121417908381*^9, 3.598121418493743*^9}, {
+   3.598121460878222*^9, 3.598121531591962*^9}, 3.5981216533370667`*^9, {
+   3.598121847402746*^9, 3.598121849161476*^9}, {3.5981219020473557`*^9, 
+   3.5981219275751*^9}, {3.598122171546075*^9, 3.5981222041567507`*^9}, {
+   3.598122650181472*^9, 3.598122687373124*^9}, {3.598122948848118*^9, 
+   3.5981229601003513`*^9}, {3.598123026833531*^9, 3.598123053846781*^9}, {
+   3.598123178104404*^9, 3.598123178919223*^9}, {3.5981245670997143`*^9, 
+   3.59812461561655*^9}, {3.598178673612632*^9, 3.5981786740738907`*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"lib=\"\>", 
+   "\[InvisibleSpace]", \
+"\<\"/home/qzmfrank/.Mathematica/SystemFiles/LibraryResources/Linux-x86-64/\
+libmll.so\"\>"}],
+  SequenceForm[
+  "lib=", "/home/qzmfrank/.Mathematica/SystemFiles/LibraryResources/Linux-x86-\
+64/libmll.so"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.5981221919711647`*^9, 3.5981222056980133`*^9}, {
+   3.598122934501347*^9, 3.598122981438148*^9}, {3.5981230227210007`*^9, 
+   3.598123050486979*^9}, 3.5981231800758257`*^9, {3.598124570844743*^9, 
+   3.598124617277742*^9}, 3.598178087931241*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"data", "=", 
+   RowBox[{"RandomComplex", "[", 
+    RowBox[{
+     RowBox[{"1", "+", "\[ImaginaryI]"}], ",", "20"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"data", "//", "PackedArrayQ"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ByteCount", "[", "data", "]"}], "/", "8"}], "-", "13"}]}], "Input",\
+
+ CellChangeTimes->{{3.598124659838825*^9, 3.598124839498086*^9}}],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{{3.598124695528653*^9, 3.598124840165571*^9}, {
+  3.598178663357794*^9, 3.598178677064745*^9}}],
+
+Cell[BoxData["40"], "Output",
+ CellChangeTimes->{{3.598124695528653*^9, 3.598124840165571*^9}, {
+  3.598178663357794*^9, 3.5981786770668173`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"n", "=", "11"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"a", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"i", "-", "1"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "n"}], "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"index", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"i", "\[Equal]", "1"}], ",", "1", ",", 
+       RowBox[{"n", "-", "i", "+", "2"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "n"}], "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    SqrtBox["n"], 
+    RowBox[{"Fourier", "[", 
+     RowBox[{"a", ",", "index"}], "]"}]}], "//", "Chop"}], "//", 
+  "TableForm"}]}], "Input",
+ CellChangeTimes->{{3.59817807194092*^9, 3.598178142694878*^9}, {
+  3.598178177004341*^9, 3.598178245913272*^9}, {3.5981782817894497`*^9, 
+  3.598178351025985*^9}, {3.598178385105941*^9, 3.598178386432266*^9}, {
+  3.598178416770177*^9, 3.598178474238564*^9}, {3.598178506437883*^9, 
+  3.598178548659587*^9}, {3.5981785798821373`*^9, 3.598178580230421*^9}, {
+  3.598178690382946*^9, 3.598178712814558*^9}, {3.598178843350965*^9, 
+  3.598178850809362*^9}, {3.598178912148234*^9, 3.598178920731208*^9}, {
+  3.598178961599889*^9, 3.598178995455104*^9}, {3.598179031449*^9, 
+  3.598179038817297*^9}, {3.598179073494999*^9, 3.598179079273677*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  TagBox[GridBox[{
+     {"55.00000000000001`"},
+     {
+      RowBox[{
+       RowBox[{"-", "5.5`"}], "+", 
+       RowBox[{"18.731279813890875`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.5`"}], "+", 
+       RowBox[{"8.558167051364919`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.499999999999999`"}], "+", 
+       RowBox[{"4.765777128986845`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.5`"}], "+", 
+       RowBox[{"2.5117658384695534`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.5`"}], "+", 
+       RowBox[{"0.7907806169723515`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.499999999999999`"}], "-", 
+       RowBox[{"0.7907806169723528`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.5`"}], "-", 
+       RowBox[{"2.5117658384695547`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.500000000000001`"}], "-", 
+       RowBox[{"4.765777128986849`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.5`"}], "-", 
+       RowBox[{"8.55816705136493`", " ", "\[ImaginaryI]"}]}]},
+     {
+      RowBox[{
+       RowBox[{"-", "5.5`"}], "-", 
+       RowBox[{"18.73127981389088`", " ", "\[ImaginaryI]"}]}]}
+    },
+    GridBoxAlignment->{
+     "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+      "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.5599999999999999]}, 
+        Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}, "RowsIndexed" -> {}}],
+   Column],
+  Function[BoxForm`e$, 
+   TableForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{3.598179079856299*^9}]
+}, Open  ]]
+},
+WindowSize->{927, 1028},
+WindowMargins->{{-6, Automatic}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Linux x86 (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 5412, 150, 432, "Code"],
+Cell[5994, 174, 591, 13, 23, "Print"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6622, 192, 427, 12, 77, "Input"],
+Cell[7052, 206, 146, 2, 32, "Output"],
+Cell[7201, 210, 146, 2, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7384, 217, 1430, 35, 110, "Input"],
+Cell[8817, 254, 1871, 58, 213, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

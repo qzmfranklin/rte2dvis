@@ -1,0 +1,209 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      6802,        200]
+NotebookOptionsPosition[      6491,        184]
+NotebookOutlinePosition[      6831,        199]
+CellTagsIndexPosition[      6788,        196]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<CCompilerDriver`\>\"", "]"}], "\n", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"dir", ",", "src", ",", "lib"}], "]"}], "\n", 
+ RowBox[{
+  RowBox[{"dir", "=", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<../src/mll\>\""}], 
+     "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"src", "=", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<dunavant-rule.cpp\>\"", ",", "\"\<legendre-rule.cpp\>\"", ",", 
+      "\"\<arcsinh-rule.cpp\>\"", ",", "\"\<mll.cpp\>\""}], "}"}], "//", 
+    RowBox[{
+     RowBox[{"Map", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"FileNameJoin", "[", 
+         RowBox[{"{", 
+          RowBox[{"dir", ",", "#"}], "}"}], "]"}], "&"}], ",", "#"}], "]"}], 
+     "&"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"lib", "=", 
+   RowBox[{"CreateLibrary", "[", 
+    RowBox[{"src", ",", "\"\<libmll\>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<lib=\>\"", ",", "lib"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"LegendreRuleMLL", ",", "DunavantRuleMLL", ",", "ArcSinhRuleMLL"}], 
+  "]"}], "\n", 
+ RowBox[{
+  RowBox[{"LegendreRuleMLL", "=", 
+   RowBox[{"LibraryFunctionLoad", "[", 
+    RowBox[{"lib", ",", "\"\<LegendreRule_MLL\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"Integer", ",", "Real", ",", "Real"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"DunavantRuleMLL", "=", 
+   RowBox[{"LibraryFunctionLoad", "[", 
+    RowBox[{"lib", ",", "\"\<DunavantRule_MLL\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"Integer", ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}]}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ArcSinhRuleMLL", "=", 
+   RowBox[{"LibraryFunctionLoad", "[", 
+    RowBox[{"lib", ",", "\"\<ArcSinhRule_MLL\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "1", ",", "\"\<Constant\>\""}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Real", ",", "2", ",", "\"\<Constant\>\""}], "}"}]}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{"Real", ",", "2", ",", "\"\<Shared\>\""}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"p", ",", "p0", ",", "qu", ",", "qv"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"LegendreRuleMLL", "[", 
+    RowBox[{"10", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"DunavantRuleMLL", "[", 
+    RowBox[{"10", ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"3", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}]}], "]"}], "//", "Quiet"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"p", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "2"}], "}"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"p0", "=", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "0"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"qu", "=", 
+   RowBox[{
+    RowBox[{"LegendreRuleMLL", "[", 
+     RowBox[{"10", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"qv", "=", 
+   RowBox[{
+    RowBox[{"LegendreRuleMLL", "[", 
+     RowBox[{"2", ",", "0", ",", "1"}], "]"}], "//", "Quiet"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"ArcSinhRuleMLL", "[", 
+      RowBox[{"p", ",", "p0", ",", "qu", ",", "qv"}], "]"}], "//", "Quiet"}], 
+    "//", "Transpose"}], "//", "TableForm"}], ";"}], "\n", 
+ RowBox[{"LibraryFunctionUnload", "[", "LegendreRuleMLL", "]"}], "\n", 
+ RowBox[{"LibraryFunctionUnload", "[", "DunavantRuleMLL", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"LibraryFunctionUnload", "[", "ArcSinhRuleMLL", "]"}]}], "Code",
+ CellChangeTimes->{{3.5981135019122267`*^9, 3.598113501916576*^9}, {
+   3.598117200788151*^9, 3.598117224088195*^9}, {3.598117258961364*^9, 
+   3.5981173117618837`*^9}, {3.598117350681714*^9, 3.598117418298089*^9}, {
+   3.5981174529975567`*^9, 3.598117549590735*^9}, {3.598118314212565*^9, 
+   3.598118319579389*^9}, {3.598121144069165*^9, 3.598121169881062*^9}, 
+   3.5981212269491987`*^9, {3.598121417908381*^9, 3.598121418493743*^9}, {
+   3.598121460878222*^9, 3.598121531591962*^9}, 3.5981216533370667`*^9, {
+   3.598121847402746*^9, 3.598121849161476*^9}, {3.5981219020473557`*^9, 
+   3.5981219275751*^9}, {3.598122171546075*^9, 3.5981222041567507`*^9}, {
+   3.598122650181472*^9, 3.598122687373124*^9}, {3.598122948848118*^9, 
+   3.5981229601003513`*^9}, {3.598123026833531*^9, 3.598123053846781*^9}, {
+   3.598123178104404*^9, 3.598123178919223*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"lib=\"\>", 
+   "\[InvisibleSpace]", \
+"\<\"/home/qzmfrank/.Mathematica/SystemFiles/LibraryResources/Linux-x86-64/\
+libmll.so\"\>"}],
+  SequenceForm[
+  "lib=", "/home/qzmfrank/.Mathematica/SystemFiles/LibraryResources/Linux-x86-\
+64/libmll.so"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.5981221919711647`*^9, 3.5981222056980133`*^9}, {
+   3.598122934501347*^9, 3.598122981438148*^9}, {3.5981230227210007`*^9, 
+   3.598123050486979*^9}, 3.5981231800758257`*^9}]
+}, Open  ]]
+},
+WindowSize->{927, 1018},
+WindowMargins->{{23, Automatic}, {-163, Automatic}},
+FrontEndVersion->"9.0 for Linux x86 (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 5374, 145, 432, "Code"],
+Cell[5956, 169, 519, 12, 23, "Print"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
