@@ -68,14 +68,21 @@ DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	MTensor TRes;
 	mint dims[1]={2*Nm};
 	mint rank=1;
-	libData->MTensor_new(MType_Complex,rank,dims,&TRes);
-	double _Complex *b = (double _Complex*)libData->MTensor_getComplexData(TRes);
+	libData->MTensor_new(MType_Real,rank,dims,&TRes);
+	double *z = libData->MTensor_getRealData(TRes);
+
+	/*Allocate Workspace*/
+	const int _LWORK=2000;
+	assert(_LWORK>=M);
+	assert(_LWORK>=2*Nm);
+	double _Complex e[_LWORK],wer[_LWORK],b[_LWORK];
+	//double _Complex b[_LWORK] __attribute__((aligned(64)));
+	
+	/*FFTW plan*/
+	fftw_plan p=fftw_plan_dft_1d(2*Nm,b,b,FFTW_FORWARD,FFTW_ESTIMATE);
 
 	/*Compute b*/
 	memset(b,0,sizeof(double)*2*2*Nm);
-	const int _LWORK=2000;
-	assert(_LWORK>=M);
-	double _Complex e[_LWORK],wer[_LWORK];
 	for (int i = 0; i < M; i++) {
 		double dx = p0[0] - x[i];
 		double dy = p0[1] - y[i];
@@ -98,12 +105,20 @@ DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	for (int dm = 2*(Nm-Nd); dm <= 2*Nm-1; dm++)
 		b[dm] = conj(b[2*Nm-dm]);
 
+	/*FFTW b to z*/
+	fftw_execute(p);
+	const double xx=0.5/Nm;
+	for (int i = 0; i < 2*Nm; i++)
+		z[i]  = xx * creal(b[i]);
+
 	/*Send to LibraryLink*/
 	MArgument_setMTensor(Res,TRes);
 
 	/*Disown MTensor*/
 	libData->MTensor_disown(TRes);
 
+	/*Release FFTW plan*/
+	fftw_destroy_plan(p);
 
 	return LIBRARY_NO_ERROR;
 }
@@ -128,14 +143,21 @@ DLLEXPORT int BHomoN_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	MTensor TRes;
 	mint dims[1]={2*Nm};
 	mint rank=1;
-	libData->MTensor_new(MType_Complex,rank,dims,&TRes);
-	double _Complex *b = (double _Complex*)libData->MTensor_getComplexData(TRes);
+	libData->MTensor_new(MType_Real,rank,dims,&TRes);
+	double *z = libData->MTensor_getRealData(TRes);
+
+	/*Allocate Workspace*/
+	const int _LWORK=2000;
+	assert(_LWORK>=M);
+	assert(_LWORK>=2*Nm);
+	double _Complex e[_LWORK],wer[_LWORK],b[_LWORK];
+	//double _Complex b[_LWORK] __attribute__((aligned(64)));
+	
+	/*FFTW plan*/
+	fftw_plan p=fftw_plan_dft_1d(2*Nm,b,b,FFTW_FORWARD,FFTW_ESTIMATE);
 
 	/*Compute b*/
 	memset(b,0,sizeof(double)*2*2*Nm);
-	const int _LWORK=2000;
-	assert(_LWORK>=M);
-	double _Complex e[_LWORK],wer[_LWORK];
 	for (int i = 0; i < M; i++) {
 		double dx = p0[0] - x[i];
 		double dy = p0[1] - y[i];
@@ -158,12 +180,20 @@ DLLEXPORT int BHomoN_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	for (int dm = 2*(Nm-Nd); dm <= 2*Nm-1; dm++)
 		b[dm] = conj(b[2*Nm-dm]);
 
+	/*FFTW b to z*/
+	fftw_execute(p);
+	const double xx=0.5/Nm;
+	for (int i = 0; i < 2*Nm; i++)
+		z[i]  = xx * creal(b[i]);
+
 	/*Send to LibraryLink*/
 	MArgument_setMTensor(Res,TRes);
 
 	/*Disown MTensor*/
 	libData->MTensor_disown(TRes);
 
+	/*Release Memory*/
+	fftw_destroy_plan(p);
 
 	return LIBRARY_NO_ERROR;
 }
