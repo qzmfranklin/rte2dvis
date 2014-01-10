@@ -75,11 +75,13 @@ DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	const int _LWORK=2000;
 	assert(_LWORK>=M);
 	assert(_LWORK>=2*Nm);
-	double _Complex e[_LWORK],wer[_LWORK],b[_LWORK];
+	double _Complex e[_LWORK],wer[_LWORK];
+	double _Complex b[_LWORK];
 	//double _Complex b[_LWORK] __attribute__((aligned(64)));
 	
 	/*FFTW plan*/
-	fftw_plan p=fftw_plan_dft_1d(2*Nm,b,b,FFTW_FORWARD,FFTW_ESTIMATE);
+	fftw_plan p=fftw_plan_dft_1d(2*Nm,(fftw_complex*)b,
+			(fftw_complex*)b,FFTW_FORWARD,FFTW_ESTIMATE);
 
 	/*Compute b*/
 	memset(b,0,sizeof(double)*2*2*Nm);
@@ -87,7 +89,7 @@ DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 		double dx = p0[0] - x[i];
 		double dy = p0[1] - y[i];
 		double inv= 1.0/sqrt(dx*dx+dy*dy);
-		e[i]   = inv*(dx-dy*I);
+		e[i]   = inv*(dx-dy*_Complex_I);
 		wer[i] = w[i];
 	}
 	// Fill b[0]
@@ -150,11 +152,13 @@ DLLEXPORT int BHomoN_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 	const int _LWORK=2000;
 	assert(_LWORK>=M);
 	assert(_LWORK>=2*Nm);
-	double _Complex e[_LWORK],wer[_LWORK],b[_LWORK];
+	double _Complex e[_LWORK],wer[_LWORK];
+	double _Complex b[_LWORK];
 	//double _Complex b[_LWORK] __attribute__((aligned(64)));
 	
 	/*FFTW plan*/
-	fftw_plan p=fftw_plan_dft_1d(2*Nm,b,b,FFTW_FORWARD,FFTW_ESTIMATE);
+	fftw_plan p=fftw_plan_dft_1d(2*Nm,(fftw_complex*)b,
+			(fftw_complex*)b,FFTW_FORWARD,FFTW_ESTIMATE);
 
 	/*Compute b*/
 	memset(b,0,sizeof(double)*2*2*Nm);
@@ -318,9 +322,9 @@ DLLEXPORT int HomoMul_MLL( WolframLibraryData libData, mint Argc, MArgument *Arg
 	//double _Complex work[_LWORK];
 
 	/*FFTW plans*/
-	fftw_plan pf=fftw_plan_dft_1d(2*Nm,work,work,
+	fftw_plan pf=fftw_plan_dft_1d(2*Nm,(fftw_complex*)work,(fftw_complex*)work,
 			FFTW_FORWARD ,FFTW_MEASURE|FFTW_PATIENT);
-	fftw_plan pb=fftw_plan_dft_1d(2*Nm,work,work,
+	fftw_plan pb=fftw_plan_dft_1d(2*Nm,(fftw_complex*)work,(fftw_complex*)work,
 			FFTW_BACKWARD,FFTW_MEASURE|FFTW_PATIENT);
 	//fftw_execute(p);
 
