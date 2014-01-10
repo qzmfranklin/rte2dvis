@@ -73,6 +73,185 @@ static double r2rd(const double *u, const double *v)
 	return sqrt(a*a+b*b);
 }
 
+// TODO
+DLLEXPORT int BHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
+{
+	int err = LIBRARY_NO_ERROR; 
+
+	/*Receive from LibraryLink*/
+	MTensor const  Tp = MArgument_getMTensor(Args[0]);	// Ns, 3, 2
+	const int      Nd = (int)MArgument_getInteger(Args[1]);
+	const int      Nm = (int)MArgument_getInteger(Args[2]);
+	const int   rule1 = (int)MArgument_getInteger(Args[3]);	// testing
+	const int   rule2 = (int)MArgument_getInteger(Args[4]);	// source
+	const int      nu = (int)MArgument_getInteger(Args[5]); // source
+	const int      nv = (int)MArgument_getInteger(Args[6]); // source
+
+	double         *p = libData->MTensor_getRealData(Tp);
+	mint const  *dimp = libData->MTensor_getDimensions(Tp);
+	const int      Ns = (int)(dimp[0]);
+	const int      Ng = Ns*(2*Nd+1);
+
+	const int     nn1 = dunavant_order_num(rule1);
+	const int     nn2 = dunavant_order_num(rule2);
+	const int      ns = 3*nu*nv;
+
+	/*Construct MTensor*/
+	MTensor TRes;
+	mint dims[]={Ns,Ns,2*Nm};
+	libData->MTensor_new(MType_Real,3,dims,&TRes);
+	double *B = libData->MTensor_getRealData(TRes);
+
+	/*Allocate Memory*/ 
+	double *area=(double*)mkl_malloc(sizeof(double)*Ns,64);
+	double *cntr=(double*)mkl_malloc(sizeof(double)*2*Ns,64);
+
+	// testing
+	double *xy01=(double*)mkl_malloc(sizeof(double)*2*nn1,64);
+	double *xyn1=(double*)mkl_malloc(sizeof(double)*2*nn1,64);
+	double  *wn1=(double*)mkl_malloc(sizeof(double)*nn1,64);
+
+	// source
+	double *xy02=(double*)mkl_malloc(sizeof(double)*2*nn2,64);
+	double *xyn2=(double*)mkl_malloc(sizeof(double)*2*nn2,64);
+	double  *wn2=(double*)mkl_malloc(sizeof(double)*nn2,64);
+
+	double *xu =(double*)mkl_malloc(sizeof(double)*nu,64);
+	double *wu =(double*)mkl_malloc(sizeof(double)*nu,64);
+	double *xv =(double*)mkl_malloc(sizeof(double)*nv,64);
+	double *wv =(double*)mkl_malloc(sizeof(double)*nv,64);
+	double *xys=(double*)mkl_malloc(sizeof(double)*2*ns,64);
+	double *ws =(double*)mkl_malloc(sizeof(double)*ns,64);
+
+	double _Complex *b  =(double _Complex*)mkl_malloc(sizeof(double)*2*2*Nm,64);
+	double _Complex *e  =(double _Complex*)mkl_malloc(sizeof(double)*2*MAX(nn1,MAX(nn2,ns)),64);
+	double _Complex *wer=(double _Complex*)mkl_malloc(sizeof(double)*2*MAX(nn1,MAX(nn2,ns)),64); 
+
+	double *work=(double*)mkl_malloc(sizeof(double)*3*nu*nv,64);
+
+	/*Release Memory*/
+	mkl_free(area);
+	mkl_free(cntr);
+
+	mkl_free(xy01);
+	mkl_free(xyn1);
+	mkl_free(wn1 );
+
+	mkl_free(xy02);
+	mkl_free(xyn2);
+	mkl_free(wn2 );
+
+	mkl_free(xu );
+	mkl_free(wu );
+	mkl_free(xv );
+	mkl_free(wv );
+	mkl_free(xys);
+	mkl_free(ws );
+
+	mkl_free(b  );
+	mkl_free(e  );
+	mkl_free(wer);
+
+	mkl_free(work);
+
+	//[>Compute area, cntr<] 
+	//for (int i = 0; i < Ns; i++)
+		//area[i] = 0.5*fabs(det(p+i*6+2,p+i*6,p+i*6+4,p+i*6));
+	//{ 
+		//const double xx=1.0/3.0;
+		//for (int i = 0; i < Ns; i++) {
+			//cntr[2*i  ] = xx * (p[6*i  ]+p[6*i+2]+p[6*i+4]);
+			//cntr[2*i+1] = xx * (p[6*i+1]+p[6*i+3]+p[6*i+5]);
+		//}
+	//}
+
+	/*Init Quadrature Rules*/
+	//dunavant_rule(rule,nn,xy0,wn);
+	////reference_to_physical_t3(p+i*6,nn,xy0,xyn);
+	////                     xmin,  xmax
+	//cgqf(nu,1.0,0.0,0.0,    0.0,  1.0,   xu,wu);
+	//cgqf(nv,1.0,0.0,0.0,    0.0,  1.0,   xv,wv);
+	
+	/*FFTW plan*/
+	//fftw_plan plan= fftw_plan_dft_1d(2*Nm,
+			//(fftw_complex*)b,
+			//(fftw_complex*)b,
+			//FFTW_FORWARD,
+			//FFTW_MEASURE|FFTW_PATIENT);
+
+	// Note: B [Ns,Ns,2Nm] is row-major real tensor
+/*
+ *        for (int np = 0; np < Ns; np++) {
+ *                reference_to_physical_t3(p+6*np,nn,xy0,xyn);
+ *                for (int n = 0; n < Ns; n++) {
+ *                        double *p0=cntr+2*n;
+ *                        int M;
+ *                        memset(b,0,sizeof(double)*2*2*Nm);
+ *                        if (r2rd(cntr+2*n,cntr+2*np)>4*0.8774*sqrt(area[np])) {
+ *                                // Non-singular
+ *                                M = nn;
+ *                                for (int i = 0; i < M; i++) {
+ *                                        const double dx = p0[0] - xyn[2*i  ];
+ *                                        const double dy = p0[1] - xyn[2*i+1];
+ *                                        const double inv= 1.0/sqrt(dx*dx+dy*dy);
+ *                                        e[i]   = inv*(dx-dy*I);
+ *                                        wer[i] = inv*wn[i];
+ *                                }
+ *                        } else {
+ *                                // Singular, near-singular
+ *                                M = 3*nu*nv;
+ *                                arcsinh_rule_xy(xys,ws,
+ *                                                p0,p+6*np,
+ *                                                nu,xu,wu,
+ *                                                nv,xv,wv,
+ *                                                work);
+ *                                for (int i = 0; i < M; i++) {
+ *                                        const double dx = p0[0] - xys[2*i  ];
+ *                                        const double dy = p0[1] - xys[2*i+1];
+ *                                        const double inv= 1.0/sqrt(dx*dx+dy*dy);
+ *                                        e[i]   = inv*(dx-dy*I);
+ *                                        wer[i] = ws[i];
+ *                                }
+ *                        }
+ *                        // Fill b[0]
+ *                        for (int i = 0; i < M; i++)
+ *                                b[0] += wer[i];
+ *                        // Fill b[1] -> b[2Nd]
+ *                        for (int dm = 1; dm < 2*Nd; dm++) {
+ *                                for (int i = 0; i < M; i++)
+ *                                        wer[i] *= e[i];
+ *                                for (int i = 0; i < M; i++)
+ *                                        b[dm]  += wer[i];
+ *                        }
+ *                        // Pad b[2Nd+1] -> b[2(Nm-Nd)-1] with zeros
+ *                        // Fill b[2(Nm-Nd)] -> b[2Nm-1] with complex conjugates
+ *                        for (int i = 2*(Nm-Nd); i <= 2*Nm-1; i++)
+ *                                b[i] = conj(b[2*Nm-i]);
+ *
+ *                        [>FFTW b to B<]
+ *                        fftw_execute(plan);	// in-place b
+ *                        {
+ *                                const double xx=area[n]*0.5/Nm;
+ *                                for (int i = 0; i < 2*Nm; i++)
+ *                                        // B is row-major in LibraryLink
+ *                                        B[i+(np+n*Ns)*2*Nm]  = xx * creal(b[i]);
+ *                        }
+ *                }
+ *        }
+ */
+
+	/*Send to LibraryLink*/
+	MArgument_setMTensor(Res,TRes);
+
+	/*Disown MTensor*/
+	libData->MTensor_disown(TRes);
+
+
+	//[>Destroy FFTW plan<]
+	//fftw_destroy_plan(plan);
+
+	return LIBRARY_NO_ERROR;
+}
 DLLEXPORT int BHomo_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
 	int err = LIBRARY_NO_ERROR; 

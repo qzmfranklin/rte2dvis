@@ -7,6 +7,7 @@ extern "C" {
 #endif
 DLLEXPORT int test( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res); 
 /**************************************/
+DLLEXPORT int BHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
 DLLEXPORT int BHomo_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
 /**************************************/
 DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res);
