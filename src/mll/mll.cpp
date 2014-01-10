@@ -205,7 +205,7 @@ DLLEXPORT int BHomoS_MLL( WolframLibraryData libData, mint Argc, MArgument *Args
 		double dx = p0[0] - x[i];
 		double dy = p0[1] - y[i];
 		double inv= 1.0/sqrt(dx*dx+dy*dy);
-		e[i]   = inv*(dx-dy*I);
+		e[i]   = inv*(dx-dy*_Complex_I);
 		wer[i] = w[i];
 	}
 	// Fill b[0]
@@ -362,9 +362,9 @@ DLLEXPORT int HomoMul_MLL( WolframLibraryData libData, mint Argc, MArgument *Arg
 	//double _Complex work[_LWORK];
 
 	/*FFTW plans*/
-	fftw_plan pf=fftw_plan_dft_1d(2*Nm,work,work,
+	fftw_plan pf=fftw_plan_dft_1d(2*Nm,(fftw_complex*)work,(fftw_complex*)work,
 			FFTW_FORWARD ,FFTW_MEASURE|FFTW_PATIENT);
-	fftw_plan pb=fftw_plan_dft_1d(2*Nm,work,work,
+	fftw_plan pb=fftw_plan_dft_1d(2*Nm,(fftw_complex*)work,(fftw_complex*)work,
 			FFTW_BACKWARD,FFTW_MEASURE|FFTW_PATIENT);
 	//fftw_execute(p);
 

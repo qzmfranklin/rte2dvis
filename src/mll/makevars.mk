@@ -90,8 +90,10 @@ ${DIR-mll}QUIET:=@
 #  	Note that one _cannot_ drop any of the global compiling and linking
 #  options. So only specify options that are definitely needed by the entire
 #  project at the top level Makefile.
-${DIR-mll}CXXFLAGS:=-fPIC -O3
-${DIR-mll}INCS:=${MLL_INCS} -iquote include
+#${DIR-mll}CXXFLAGS:=-fPIC -O3
+#${DIR-mll}INCS:=${MLL_INCS} -iquote include
+${DIR-mll}CXXFLAGS:=${CXXFLAGS}
+${DIR-mll}INCS:=${INCS} ${MLL_INCS} -I/usr/include/malloc/
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
