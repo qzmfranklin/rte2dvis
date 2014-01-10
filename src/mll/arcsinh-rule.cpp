@@ -17,8 +17,8 @@ void arcsinh_rule_xy(double *xy, double *w,
 	const int N=nu*nv;
 
 	arcsinh_rule_atomic_xy(xy    ,w    ,p0,p  ,p+2,nu,xu,wu,nv,xv,wv,work);
-	arcsinh_rule_atomic_xy(xy+N  ,w+N  ,p0,p+2,p+4,nu,xu,wu,nv,xv,wv,work);
-	arcsinh_rule_atomic_xy(xy+2*N,w+2*N,p0,p+4,p  ,nu,xu,wu,nv,xv,wv,work);
+	arcsinh_rule_atomic_xy(xy+2*N,w+N  ,p0,p+2,p+4,nu,xu,wu,nv,xv,wv,work);
+	arcsinh_rule_atomic_xy(xy+4*N,w+2*N,p0,p+4,p  ,nu,xu,wu,nv,xv,wv,work);
 
 	double tmp[4];
 	tmp[0] = det(p+2,p ,p+4,p  );		// A
@@ -65,7 +65,7 @@ void arcsinh_rule_atomic_xy(double *xy, double *w,
 
 	for (int j = 0; j < nv; j++)
 		for (int i = 0; i < nu; i++)
-			//// h(u1-u2) is absorbed into weights.
+			// h(u1-u2) is absorbed into weights.
 			w[i+nu*j] = fabs(h*u0[1])*wu[i]*wv[j]; 
 
 	for (int j = 0; j < nv; j++)
