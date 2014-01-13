@@ -3604,26 +3604,48 @@ matrix-vector (M-V) multiplication of $B(n,n^\prime)$ can be done at the cost of
 $O(N\log(N))$ in time and $O(N)$ in storage.
 \\
 
-Emperically, the number of significant digits (SD) depends linearly on the 
-required precision and the number of sample points (order) for the non-singular integral:
-\begin{equation}
-	\text{order}
-	=	
-		1.2*
-		\text{SD} 
-		+
-		4*
-		\text{precision}
-		+10
-\end{equation}
+Use the quadrature rules to evaluate the $V_{sc}$ in
+Eq.\eqref{eq:der-Vscnm-1pt}:
 
-Dunavant and Wandzura methods are good for non-singular integrals,
-and the Arcsinh method is good for near-singular and singular integrals.
-Both methods are already implemented in Mathematica, not in C/C++ yet.
+\begin{align}
+	\begin{split}
+		(V_{sc})_{nm}
+		=&
+			\int d\vectorsym{r}
+			S_n(\vectorsym{r})
+			\int d\vectorsym{r}^\prime
+			\frac
+			{
+				e^{-i m \phi_{\vectorsym{r}-\vectorsym{r}^\prime}}
+			}
+			{\lvert \vectorsym{r}-\vectorsym{r}^\prime \rvert}
+			\mu_s(\vectorsym{r}^\prime)
+			f(\phi_{\vectorsym{r}-\vectorsym{r}^\prime}-\phi^I)
+			e^{-\tau(\vectorsym{r}^\prime,-\unitvectorsym{s}^I)} 
+		\\
+		=&
+			\sum \limits_{n^\prime=1}^{N_s}
+			S(n)
+			S(n^\prime)
+			\sum \limits_{j_n=1}^{M_n}
+			\sum \limits_{j_{n^\prime}=1}^{M_{n^\prime}}
+			w_{j_n}
+			w_{j_{n^\prime}} 
+			\mu_s(\vectorsym{r}_{{j_{n^\prime}}})
+			\frac
+			{ e^{-i m\phi_{\vectorsym{r}_{j_n}
+			-\vectorsym{r}_{{j_{n^\prime}}}}} }
+			{\lvert\vectorsym{r}_{j_n}-\vectorsym{r}_{{j_{n^\prime}}}\rvert}
+			f(\phi_{\vectorsym{r}_{j_n}-\vectorsym{r}_{j_n^\prime}}-\phi^I)
+			e^{\tau(\vectorsym{r}_{j_n^\prime},-\unitvectorsym{s}^I)}
+	\end{split}
+\end{align}
 \\
+Note that we are using the convention that the weights are normalized to unity.
 
-The new $B$ is still rank-deficient. (plots go here to illustrate this point)
-Adaptive numerical integration strategy applies here.
+
+
+
 
 
 
