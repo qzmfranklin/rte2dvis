@@ -121,8 +121,8 @@ ifeq (${PLATFORM},Darwin)
 	OMP_INCS	:=
 	OMP_LIBS	:=-openmp
 	#	OpenMPI Library
-	MPI_INCS	:='mpicxx -showme:compile'
-	MPI_LIBS	:='mpicxx -showme:link'
+	#MPI_INCS	:='mpicxx -showme:compile'
+	#MPI_LIBS	:='mpicxx -showme:link'
 	#	MathLink for MacOSX-x86-64
 	ML_DIR		:=/Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
 	ML_INCS		:=-I${ML_DIR}
