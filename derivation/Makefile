@@ -1,13 +1,17 @@
-.PHONY: all clean cleanxx
+SRC:=main.tex sec1.tex
+DVI:=$(SRC:%.tex=%.dvi)
+PDF:=derivation.pdf
 
-all: derivation.pdf
-%.pdf: %.dvi
-	@dvipdf $^
-derivation.dvi: derivation.tex
-	@latex $^
-	@latex $^
-	@latex $^
+all: ${PDF}
+
 clean:
-	@rm -rf *.aux *.bbl *.blg *.log *.synctex *.tex.bak *.dvi *.out *.toc
+	rm -f *.aux *.dvi *.log *.out log
 cleanxx: clean
-	@rm -rf *.pdf
+	rm -f *.pdf
+
+${PDF}: ${DVI}
+	dvipdf $< $@
+%.dvi: %.tex
+	latex $< $@
+	latex $< $@
+	latex $< $@
