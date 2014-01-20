@@ -1,10 +1,77 @@
 \documentclass[main]{subfiles} 
 \begin{document}
-\section{Radative Transport Equation}
-\label{sec:Radative Transport Equation}
+\section{Section1}
+\label{sec:Section1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Contents of section 1
-This is the first line of this section.
-\eqref{eq:a} is a reference.
+In general, RTE can be written as:
+\begin{equation*}
+	\begin{split}
+		\uv{s}\cdot\grad\psi(\v{r},\uv{s})
+		+\mu_t(\v{r})&\psi(\v{r},\uv{s})
+		\\
+		-\mu_s(\v{r})\int d\uv{s}^\prime
+		f(\uv{s}\cdot\uv{s}^\p)&\psi(\v{r},\uv{s}^\p)
+		=q(\v{r},\uv{s})
+	\end{split}
+\end{equation*}
+with
+\begin{center} \begin{tabular}{lll}
+	\v{r}	&	$[L]^{+1}$	& position vector		\\
+	\uv{s}	&	$[L]^{0}$	& unit direction vector		\\
+	$\psi$	&	$[L]^{0}$	& specific intensity		\\
+	$q$	&	$[L]^{-1}$	& source			\\
+	$f$	&	$[L]^{0}$	& phase function		\\
+	$\mu_s$	&	$[L]^{-1}$	& scattering cross-section	\\
+	$\mu_a$	&	$[L]^{-1}$	& absorption cross-section	\\
+	$\mu_t$	&	$[L]^{-1}$	& $\mu_a+\mu_s$, total cross-section	\\
+\end{tabular} \end{center}
 
+We can construct the volume integral equation (VIE):
+\begin{equation} \label{vie}
+	\begin{split}
+		\psi(\v{r},\uv{s}) +& \int d\v{r}^\p d\uv{s}^\p
+		g(\v{r},\uv{s};\v{r}^\p,\uv{s}^\p)
+		\mu_t(\v{r}^\p)\psi(\v{r}^\p,\uv{s}^\p)
+		\\
+		-& \int d\v{r}^\p d\uv{s}^\p g(\v{r},\uv{s};\v{r}^\p,\uv{s}^\p)
+		\mu_s(\v{r}^\p) \int d\uv{s}^\pp
+		f(\uv{s}^\p\cdot\uv{s}^\pp)\psi(\v{r}^\p,\uv{s}^\pp)
+		\\
+		=& \int d\v{r}^\p d\uv{s}^\p
+		g(\v{r},\uv{s};\v{r}^\p,\uv{s}^\p)q(\v{r}^\p,\uv{s}^\p)
+	\end{split}
+\end{equation}
+where $g$ is the free space Green's function:
+\begin{equation} \label{gt}
+	g_t(\v{r},\uv{s};\v{r}^\p,\uv{s}^\p) = \frac{1}{\abs{\v{r}-\v{r}^\p}} 
+	\delta(\uv{s}-\uv{s}_{\v{r}-\v{r}^\p})
+	\delta(\uv{s}^\p-\uv{s}_{\v{r}-\v{r}^\p})
+\end{equation}
+
+In 2D, \eqref{vie} and \eqref{gt} are
+\begin{equation} \label{vie2d}
+	\begin{split} 
+		\psi(\v{r},\phi) +& \int d\v{r}^\p d\phi^\p
+		g(\v{r},\phi;\v{r}^\p,\phi^\p)
+		\mu_t(\v{r}^\p)\psi(\v{r}^\p,\phi^\p)
+		\\
+		-& \int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p)
+		\mu_s(\v{r}^\p) \int d\phi^\pp
+		f(\phi^\p-\phi^\pp)\psi(\v{r}^\p,\phi^\pp)
+		\\
+		=& \int d\v{r}^\p d\phi^\p
+		g(\v{r},\phi;\v{r}^\p,\phi^\p)q(\v{r}^\p,\phi^\p)
+	\end{split}
+\end{equation}
+and
+\begin{equation} \label{gt2d}
+	g_t(\v{r},\phi;\v{r}^\p,\phi^\p) = \frac{1}{\abs{\v{r}-\v{r}^\p}} 
+	\delta(\phi-\phi_{\v{r}-\v{r}^\p})
+	\delta(\phi^\p-\phi_{\v{r}-\v{r}^\p})
+\end{equation}
+respectively.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \end{document}

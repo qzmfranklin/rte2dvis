@@ -3,6 +3,7 @@ derivation/log
 derivation/*.aux
 derivation/*.out
 derivation/*.pdf
+derivation/*.log
 derivation/*.dvi
 derivation/*.toc 
 derivation/~*
