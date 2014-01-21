@@ -1,0 +1,47 @@
+\documentclass[main]{subfiles} 
+\begin{document}
+\section{Appendix1}
+\label{sec:Appendix1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This part documents the quadrature rules employed in computing the matrix
+elements. 
+
+In short, the integral of interest takes on the following form:
+\begin{equation*}
+	I=\iint\limits_\Omega dx dy\frac{f(x,y)}{\sqrt{(x-x_0)^2+(y-y_0)^2}}
+\end{equation*}
+where $\Omega$ is defined by the three nodes
+$P_0(x_0,y_0)$, $P_1(x_1,y_1)$, $P_2(x_2,y_2)$ and $f(x,y)$ is a smooth function.
+
+Use the arcsinh transfrom method to cancel the singularity at $P_0$ and
+transform the triangular domain into a rectangular domain. Let 
+$\left\{\xi_u^i,w_u^i\right\}_{i=1}^{M_u}$ and 
+$\left\{\xi_v^j,w_v^j\right\}_{j=1}^{M_v}$ be the Legendre quadrature rules over
+the $(0,1)$ for the angular part and the radial part, respectively. Then
+\begin{equation*}
+	I=\abs{h(u_1-u_2)}\sum\nolimits_{i,j}^{M_u,M_v}w_u^i w_v^j
+	f(x,y)\big\vert_{(i,j)}
+\end{equation*}
+with
+\begin{align*}
+x_1^\p=&\left[(x_2-x_1)(x_1-x_0)+(y_2-y_1)(y_1-y_0)\right]/P_1 P_2 \\
+x_2^\p=&\left[(x_2-x_1)(x_2-x_0)+(y_2-y_1)(y_2-y_0)\right]/P_1 P_2 \\
+h=& \left[-(x_2-x_1)y_0+(x_2-x_0)y_1-(x_1-x_0)y_2\right]/P_1 P_2 \\
+u_1=& \sinh^{-1}(x_1^\p/h) \ \ \ \ \ \ \ \ \ u_2= \sinh^{-1}(x_2^\p/h) \\
+u^i=& u_1+(u_2-u_1)\xi_u^i \ \ \ \ \ v^j=h\xi_v^j
+\end{align*}
+and
+\begin{align*}
+	\mathbf{A} =& \frac{1}{P_1 P_2} \begin{pmatrix}
+		x_2-x_1 & -y_2+y_1 \\
+		y_2-y_1 & x_2-x_1
+	\end{pmatrix}	\\
+	\begin{pmatrix} x \\ y \end{pmatrix} \bigg\vert_{(i,j)} =&
+	\begin{pmatrix} x_0 \\ y_0 \end{pmatrix} + \mathbf{A}\cdot
+	\begin{pmatrix} v^j\sinh{u^i} \\ v^j \end{pmatrix}
+\end{align*}
+
+Note that there is no assumption on which one of $u_1$ and $u_2$ is larger. The
+above equations can be coded without modification.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

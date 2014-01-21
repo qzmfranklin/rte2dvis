@@ -8,6 +8,7 @@ Expand the specific intensity $\psi(\v{r},\phi)$:
 	\psi(\v{r},\phi)=\sum\limits_{n=1}^{N_s}\sum\limits_{m=-N_d}^{N_d}
 	X_{nm}\xi_{nm}(\v{r},\phi)
 \end{equation*}
+
 In this paper, the basis function is chosen as
 \begin{align*}
 	\xi_{nm}(\v{r},\phi) =& S_n(\v{r})e^{i m \phi}		\\ 
@@ -16,6 +17,7 @@ In this paper, the basis function is chosen as
 		0, & \v{r}\notin S_n
 	\end{cases}
 \end{align*}
+
 The latter sections, the following notations are used:
 \begin{center} \begin{tabular}{lll}
 	$S_n(\v{r})$	&	the pulse function		\\
@@ -25,5 +27,48 @@ The latter sections, the following notations are used:
 	$\sum\nolimits_{n=1}^{N_s}\sum\nolimits_{m=-N_d}^{N_d}$	\\
 \end{tabular} \end{center}
 
+Write
+\begin{equation} \label{expansion of psi}
+	\psi(\v{r},\phi)=\sum\limits_{n^\p,m^\p}
+	X_{n^\p m^\p}\xi_{n^\p m^\p}(\v{r},\phi)
+\end{equation}
+
+Plug \eqref{expansion of psi} into \eqref{vie2d}, multiply by
+$\xi_{nm}^{*}(\v{r},\phi)$, integrate over $d\v{r}d\phi$, we get a set of linear
+equations:
+\begin{equation*}
+	\sum\limits_{n^\p,m^\p}Z_{(nm)(n^\p m^\p)}X_{n^\p m^\p}=V_{nm}
+\end{equation*}
+with
+\begin{align*}
+	\begin{split} 
+		Z_{(nm)(n^\p m^\p)} =& A_{(nm)(n^\p m^\p)}+B_{(nm)(n^\p m^\p)}
+	\end{split}
+	\\
+	\begin{split} 
+		A_{(nm)(n^\p m^\p)} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)
+		\xi_{n^\p m^\p}(\v{r},\phi) \\ =& \int d\v{r} S_n(\v{r}) 
+		S_{n^\p}(\v{r}) \int d\phi e^{-i m \phi} e^{+i m^\p \phi} \\ =& 
+		2\pi S(n) \delta_{nn^\p}\delta_{mm^\p}
+	\end{split}
+	\\
+	\begin{split} 
+		B_{(nm)(n^\p m^\p)} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)
+		\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p) \\
+		\times& \mu_t(\v{r}^\p)\xi_{n^\p m^\p}(\v{r}^\p,\phi^\p) -
+		\int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi) \\ \times&
+		\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p)
+		\mu_s(\v{r}^\p) \\ \times& \int d\phi^\pp
+		f(\phi^\p-\phi^\pp)\xi_{n^\p m^\p}(\v{r}^\p,\phi^\pp)
+	\end{split}
+	\\
+	V_{nm} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)\psi^I(\v{r},\phi)
+	\\
+	\psi^I(\v{r},\phi) \equiv& \int d\v{r}^\p d\phi^\p
+	g(\v{r},\phi;\v{r}^\p,\phi^\p)q(\v{r}^\p,\phi^\p)
+\end{align*}
+
+Note that $(n,m)$ represents the filed point, whereas $(n^\p,m^\p)$ represents 
+the source point.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \end{document}

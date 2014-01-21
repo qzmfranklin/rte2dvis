@@ -1,4 +1,4 @@
-SRC:=sec1.tex sec2.tex
+SRC:=abs.tex sec1.tex sec2.tex sec3.tex sec4.tex app1.tex bib1.tex
 DVI:=main.dvi $(SRC:%.tex=%.dvi)
 PDF:=out.pdf
 

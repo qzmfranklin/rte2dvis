@@ -1,8 +1,10 @@
 \input{physicsheader}
 
+\usepackage{indentfirst}
 \usepackage{subfiles} 
 \usepackage{hyperref}
 \usepackage{xr}
+\usepackage[toc,page]{appendix}
 
 % The following commands are needed to make physicsheader work right
 \let\vaccent=\v % rename builtin command \v{} to \vaccent{}
@@ -19,14 +21,32 @@
 \title{A Fast Volume Integral Solver for 2D Scalar Radiative Transport Equation}
 %\author{Zhongming Qu, Eric Michielssen, John Schotland}
 \author{\LaTeX \ by Zhongming Qu}
+
 \begin{document}
+%\numberwithin{equation}{section}
 \maketitle
 
-\numberwithin{equation}{section}
+
+\begin{abstract}
+	\subfile{abs}
+\end{abstract}
 
 
 % Include all the sections here
 \subfile{sec1}
 \subfile{sec2}
+\subfile{sec3}
+\subfile{sec4}
+
+\begin{appendices}
+\subfile{app1}
+\end{appendices}
+
+\begin{thebibliography}{9}
+\subfile{bib1}
+\end{thebibliography}
+
+
+
 
 \end{document} 

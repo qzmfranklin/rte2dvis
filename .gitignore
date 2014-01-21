@@ -1,12 +1,12 @@
-derivation/*.pdf
-derivation/log
-derivation/*.aux
-derivation/*.out
-derivation/*.pdf
-derivation/*.log
-derivation/*.dvi
-derivation/*.toc 
-derivation/~*
+*.pdf
+log
+*.aux
+*.out
+*.pdf
+*.log
+*.dvi
+*.toc 
+~*
 
 msh/*
 !msh/*.msh
@@ -17,13 +17,6 @@ MLL-demo
 MLL-lib
 ML-exe
 notebook/mesh/
-
-c-codes/msh
-!c-codes/build
-!c-codes/DEBUG
-!c-codes/OUTPUT
-c-codes/doc/*
-!c-codes/doc/Doxyfile
 
 *.tgz
 *.txt

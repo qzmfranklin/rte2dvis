@@ -1,0 +1,31 @@
+\documentclass[main]{subfiles} 
+\begin{document}
+\section{Section4}
+\label{sec:Section4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Assuming planewave incidence, numerically compute the right hand side 
+(\textit{r.h.s.}), i.e., the input vector:
+\begin{equation*} 
+	V_{nm} = \sum\limits_{n^\p}^{N_s} D(n,n^\p,m)
+\end{equation*}
+where $D$ is a rank-3 tensor:
+\begin{equation*} \begin{split} 
+	D(n,n^\p,m) =& \sum\limits_{j_n=1}^{M_n}
+	\sum\limits_{j_{n^\p}=1}^{M_{n^\p}}
+	w_{j_n}w_{j_{j^\p}}\mu_s(\v{r}_{j_{n^\p}}) 
+	\frac{e^{-i m\phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}}}
+	{\abs{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}} \\ \times&
+	f(\phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}})
+	e^{-\tau(\v{r}_{j_{n^\p}},-\uv{s}^I)}
+\end{split} \end{equation*}
+
+$\tau(\v{r},-\uv{s}^I)\equiv\int_{C_{\v{r},-\uv{s}^I}}\mu_t dl$, where the
+integral path $C_{\v{r},-\uv{s}^I}$ is the ray that starts from $\v{r}$ and in
+the direction pointed by $-\uv{s}^I$. For later use,
+$\tau(\v{r}^\p\to\v{r}) \equiv \int_{C_{\v{r}^\p\to\v{r}}}$, where
+$C_{\v{r}^\p\to\v{r}}$ is the line segment from $\v{r}^\p$ to $\v{r}$.
+
+In principle, computing $\tau$ requires ray tracing. Done with a tree-structure
+[TODO].
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
