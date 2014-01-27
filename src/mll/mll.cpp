@@ -1053,3 +1053,22 @@ DLLEXPORT void WolframLibrary_uninitialize( WolframLibraryData libData)
 	return;
 } 
 /******************************************************************************/
+
+
+
+
+void function_name()
+{
+	switch (var) {
+		case 1:
+			break;
+		case 1:
+			break;
+		case 1:
+			break;
+		case 1:
+			break;
+		case 1:
+			break;
+	}
+}

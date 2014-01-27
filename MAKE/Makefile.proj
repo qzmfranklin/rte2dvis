@@ -4,6 +4,7 @@
 #	Be careful! Do NOT accidentally insert some spaces!
 # ${RELEASE_NAME} is the name of the tarball generated when one enters
 # 	$ make dist
+QUIET		:=@
 PROJECT_NAME	:=rte2dvis
 VERSION		:=v0.01
 DATE_TIME	:=$(shell date "+%Y-%m-%d")
@@ -13,16 +14,6 @@ AUTHOR_NAME	:=Zhongming Qu
 AUTHOR_EMAIL	:=qzmfrank@umich.edu
 ###############################################################################
 #				STEP 2
-#QUIET MODE
-#	One can comment out the following line to get into verbose mode. Note,
-#  however, this flag does NOT control the directory specific building rules.
-#  If one wishes to turn on the verbose flag for a specific subdirectoy, one 
-#  needs to go to that subdirectory and modify the QUIET flag in that 
-#  makevars.mk. This is done so to help debugging the build system itself.
-#  	Usually no need to turn to the verbose mode.
-QUIET		:=@
-###############################################################################
-#				STEP 3
 #PROJECT STRUCTURAL DIRECTORIES
 #	This part follows the usual convention of GNU projects. Modify it only
 #  when one has very strong reasons.
@@ -39,29 +30,8 @@ DEBUG		:=${BUILD}/DEBUG# Debugging output
 OUTPUT		:=${BUILD}/OUTPUT# Output 
 STRUCTURAL_DIRS	:=${BUILD} ${OBJ} ${BIN} ${LIB} ${ASM} ${DEBUG} ${OUTPUT}
 ###############################################################################
-#				STEP 4
+#				STEP 3
 #PROJECT-WIDE COMMON COMPILATION OPTIONS
-#	The author of this set of template files is using a MacBookPro. If one 
-#  needs to build the same project in a different architecture, e.g., Linux or
-#  other Unix-like system, one would most probably only need to modify the 
-#  compiling options and linking libraries below. Of course, if one has some
-#  architecture-dependent options in some subdirectories, he/she also needs to
-#  modify those parts accordingly.
-#  	All the subdirectories inherit the compiling and linking options 
-#  specified in this STEP. Note that one _cannot_ drop any of the global 
-#  compiling and linking options. So only specify options that are definitely 
-#  needed by the entire project here.
-#
-#  	Update 2013-12-06: Changed ${CC} to icpc. In general, there is no
-#  explicit harm for using icpc for both compiling and linking. As long as
-#  the programmer confines himself to using standard C++ languages, the
-#  code should still be portable. The drawback, however, is obvious. One
-#  might inadvertently use some C++ features in some otherwise pure C
-#  codes, making the the code imcompatible with C compilers. This can be a
-#  problem if this project needs to talk to another C project. However, in
-#  that case, why do we just use C++ altogether? Even for scientific
-#  computation, C++ is good enough as long as we refrain from using the
-#  fancy features, such as templates and virtual functions, of C++.
 CC		:=icpc
 CXX		:=icpc
 # Compiling options for .c files:
@@ -86,7 +56,7 @@ CFLAGS 		:=-O3							\
 CXXFLAGS	:=${CFLAGS}# Compilig options for .cpp files.
 ASMFLAGS	:=-S -fsource-asm# Source code commeNted assembly code.
 ###############################################################################
-#				STEP 5
+#				STEP 4
 #PROJECT-WIDE INCLUDE AND LINKAGE OPTIONS
 ifeq (${PLATFORM},Linux)
 	#	FFTW3 Library for Linux
