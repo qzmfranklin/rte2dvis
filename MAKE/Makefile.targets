@@ -45,12 +45,12 @@ rmdir:
 	@echo "${B_RED}WARNING: Deleting ${STRUCTURAL_DIRS}${NONE}"
 	${QUIET}rm -rf ${STRUCTURAL_DIRS}
 help:
-	@echo ""
+	@echo
 	@echo "Welcome! Here is a brief guide to using this Makefile by"
 	@echo "\t${AUTHOR_NAME} <${AUTHOR_EMAIL}>"
 	@echo "\t\t${B_RED}TOP LEVEL PHONY TARGETS${NONE}"
 	@echo "${GREEN}all${NONE}\t\t"\
-		"Generate ${BUILD}/*.o and ${BIN}/*.{exe,a,dylib}."
+		"Generate ${BUILD}/*.o and ${BIN}/*.exe."
 	@echo "${GREEN}asm${NONE}\t\t"\
 		"Generate ${ASM}/*.s."
 	@echo "${GREEN}check${NONE}\t\t"\
@@ -69,14 +69,17 @@ help:
 		"Generate ${BUILD}/*.exe."
 	@echo "${GREEN}todolist${NONE}\t"\
 		"List files with TODO and/or FIXME."
+	@echo
+	@echo
 	@echo "\t\t${B_RED}DIRECTORY-SPECIFIC PHONY TARGETS${NONE}"
-	@echo "\t\tSome phony targets are defined for"
-	@echo "\tevery subdirectoies in the src/ directory,"
-	@echo "\t<subdir>, to do tasks that are specific to"
-	@echo "\tor associated with <subdir>."
-	@echo "\t\tNote that <subdir> does not have the "
-	@echo "\tslash at the end, e.g., <subdir>="
-	@echo "\tsrc/subdir001, _not_ <subdir>=src/subdir001/."
+	@echo " \t\t\tSome phony targets are defined for"
+	@echo " \t\tevery subdirectoies in the src/ directory,"
+	@echo " \t\t<subdir>, to do tasks that are specific to"
+	@echo " \t\tor associated with <subdir>."
+	@echo " \t\t\tNote that <subdir> does not have the "
+	@echo " \t\tslash at the end, e.g., <subdir>="
+	@echo " \t\tsrc/subdir001, _not_ <subdir>=src/subdir001/."
+	@echo
 	@echo "${GREEN}<subdir>-all${NONE}\t"\
 		"Generate ${BUILD}/*.o and ${BIN}/*.exe associated with <subdir>"
 	@echo "${GREEN}<subdir>-asm${NONE}\t"\

@@ -4,6 +4,7 @@
 #include <string.h>
 #include "legendre-rule.h"
 #include "dunavant-rule.h" 
+#include "wandzura-rule.h" 
 #include "arcsinh-rule.h" 
 #include <stdio.h>
 #include <malloc.h>
@@ -52,14 +53,6 @@ DLLEXPORT int test( WolframLibraryData libData, mint Argc, MArgument *Args, MArg
 	return LIBRARY_NO_ERROR;
 }
 
-
-//static void _dunavant_rule_(int rule, double p[6], double *xy, double *w, double *work)
-//{
-	//const int N = dunavant_order_num(rule);
-	//dunavant_rule(rule,N,work,w);
-	//reference_to_physical_t3(p,N,work,xy);
-//}
-
 static double det(const double *a1, const double *a2, 
 		const double *b1, const double *b2)
 {
@@ -91,7 +84,8 @@ DLLEXPORT int BHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *A
 	const int      Ns = (int)(dimp[0]);
 	const int      Ng = Ns*(2*Nd+1);
 
-	const int     nn1 = dunavant_order_num(rule1);
+	//const int     nn1 = dunavant_order_num(rule1);
+	const int     nn1 = wandzura_order_num(rule1);
 	const int     nn2 = dunavant_order_num(rule2);
 	const int      ns = 3*nu*nv;
 
@@ -141,7 +135,8 @@ DLLEXPORT int BHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *A
 	}
 
 	/*Init Quadrature Rules*/
-	dunavant_rule(rule1,nn1,xy01,wn1);
+	//dunavant_rule(rule1,nn1,xy01,wn1);
+	wandzura_rule(rule1,nn1,xy01,wn1);
 	dunavant_rule(rule2,nn2,xy02,wn2);
 	//reference_to_physical_t3(p+i*6,nn,xy0,xyn);
 	//                     xmin,  xmax
@@ -167,7 +162,7 @@ DLLEXPORT int BHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *A
 				const double *p0=xyn1+2*j;
 				int M;
 				memset(b,0,sizeof(double)*2*2*Nm);
-				if (r2rd(p0,cntr+2*np)>4*0.8774*sqrt(area[np])) {
+				if (r2rd(p0,cntr+2*np)>6*0.8774*sqrt(area[np])) {
 					// Non-singular
 					M = nn2;
 					for (int i = 0; i < M; i++) {
@@ -1053,22 +1048,3 @@ DLLEXPORT void WolframLibrary_uninitialize( WolframLibraryData libData)
 	return;
 } 
 /******************************************************************************/
-
-
-
-
-void function_name()
-{
-	switch (var) {
-		case 1:
-			break;
-		case 1:
-			break;
-		case 1:
-			break;
-		case 1:
-			break;
-		case 1:
-			break;
-	}
-}

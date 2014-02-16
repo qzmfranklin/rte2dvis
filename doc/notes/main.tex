@@ -1,0 +1,44 @@
+\input{physicsheader}
+
+\usepackage{indentfirst}
+\usepackage{subfiles} 
+\usepackage{hyperref}
+\usepackage{xr}
+\usepackage[toc,page]{appendix}
+
+% The following commands are needed to make physicsheader work right
+\let\vaccent=\v % rename builtin command \v{} to \vaccent{}
+\renewcommand{\v}[1]{\ensuremath{\mathbf{#1}}} % for vectors
+\let\underdot=\d % rename builtin command \d{} to \underdot{}
+\renewcommand{\d}[2]{\frac{d #1}{d #2}} % for derivatives
+\let\baraccent=\= % rename builtin command \= to \baraccent
+\renewcommand{\=}[1]{\stackrel{#1}{=}} % for putting numbers above = 
+
+\newcommand{\p}[0]{\ensuremath{\prime}} % prime
+\newcommand{\pp}[0]{\ensuremath{{\prime\prime}}} % double prime
+\newcommand{\ppp}[0]{\ensuremath{{\prime\prime\prime}}} % double prime
+
+\title{}
+%\author{Zhongming Qu, Eric Michielssen, John Schotland}
+\author{\LaTeX \ by Zhongming Qu}
+
+\begin{document}
+%\numberwithin{equation}{section}
+\maketitle
+
+%\begin{abstract}
+	%\subfile{abs}
+%\end{abstract}
+
+% Include all the sections here
+\subfile{sec1}
+
+%\begin{appendices}
+%\subfile{app1}
+%\end{appendices}
+
+%\begin{thebibliography}{9}
+%\subfile{bib1}
+%\end{thebibliography} 
+
+\end{document} 

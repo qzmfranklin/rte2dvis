@@ -15,6 +15,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.  
 ################################################################################
+MAKE_DIR:=MAKE/
+-include ${MAKE_DIR}Makefile.proj# The top level project file
+-include ${MAKE_DIR}Makefile.vars# The top level variables' file
+-include ${MKVFILES}# The makevars.mk's in the subdirectories
+-include ${DEPFILES}# Dependency files (*.d files)
+-include ${MAKE_DIR}Makefile.targets# The top level PHONY targets' file, except for check
+###############################################################################
 #	Welcome! The comments in this file will guide you through the process.
 #  Please read all the comments very carefully before changing anything.
 #  	The idea of this set of template files (Makefile, Makefile.vars, and
@@ -58,11 +65,4 @@
 #  with possible future scripts, aims to do only thing and do it well. The
 #  ultimate goal is to realize building with only one pass.
 #  	If you have any suggestions and/or ideas, please let me know.
-###############################################################################
-MAKE_DIR:=MAKE/
--include ${MAKE_DIR}Makefile.proj# The top level project file
--include ${MAKE_DIR}Makefile.vars# The top level variables' file
--include ${MKVFILES}# The makevars.mk's in the subdirectories
--include ${DEPFILES}# Dependency files (*.d files)
--include ${MAKE_DIR}Makefile.targets# The top level PHONY targets' file, except for check
 ###############################################################################
