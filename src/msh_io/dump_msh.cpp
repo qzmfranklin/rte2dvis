@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <getopt.h>
 #include <limits.h>
 #include <float.h>
 #include <string.h>
@@ -7,42 +8,106 @@
 #include "msh_io.h"
 #include "utils.h"
 /*******************************************************************************/
-void test_limits()
-{
-	// Read out system-dependent constants
-	printf("	FILENAME_MAX	= %d\n",FILENAME_MAX);
-	printf("	BUFSIZ		= %d\n",BUFSIZ);
+static char fname_in[FILENAME_MAX];
+static char fname_out[FILENAME_MAX];
+static int format=2; // 1=ACSII 2=BINARY(default)
 
-	printf("	INT_MAX		= %d\n",INT_MAX);
-	printf("	INT_MIN		= %d\n",INT_MIN);
-
-	printf("	FLT_EPSILON	= %g\n",FLT_EPSILON);
-	printf("	FLT_MIN		= %g\n",FLT_MIN);
-	printf("	FLT_MAX		= %g\n",FLT_MAX);
-	/*printf("	FLT_MIN_EXP	= %d\n",FLT_MIN_EXP);*/
-	/*printf("	FLT_MAX_EXP	= %d\n",FLT_MAX_EXP);*/
-	printf("	FLT_MIN_10_EXP	= %d\n",FLT_MIN_10_EXP);
-	printf("	FLT_MAX_10_EXP	= %d\n",FLT_MAX_10_EXP);
-
-	printf("	DBL_EPSILON	= %g\n",DBL_EPSILON);
-	printf("	DBL_MIN		= %g\n",DBL_MIN);
-	/*printf("	DBL_MAX		= %g\n",DBL_MAX);*/
-	printf("	DBL_MAX		= too many digits...\n");
-	/*printf("	DBL_MIN_EXP	= %d\n",DBL_MIN_EXP);*/
-	/*printf("	DBL_MAX_EXP	= %d\n",DBL_MAX_EXP);*/
-	printf("	DBL_MIN_10_EXP	= %d\n",DBL_MIN_10_EXP);
-	printf("	DBL_MAX_10_EXP	= %d\n",DBL_MAX_10_EXP);
-	printf("\n");
-}
-
+static void print_usage();
+static void test_limits();
+static void opt_proc(int argc, char *argv[]);
+/******************************************************************************/ 
 int main(int argc, char *argv[])
 { 
-	test_limits();
+	//test_limits();
+	opt_proc(argc,argv);
 
-	int err=0;
-	printf("###############################################################################\n");
-	/*printf("--------------------------------------------------\n");*/
-	printf("BEGIN:	|DUMP_MSH.EXE\n");
+	return dump_msh(fname_in,fname_out,format); 
+} 
+
+void opt_proc(int argc, char *argv[])
+{
+	fname_out[0]='\0';
+
+	while (1) {
+		static struct option long_options[] = {
+			{"ascii",no_argument,0,'a'},
+			{"binary",no_argument,0,'b'},
+			{"help",no_argument,0,'h'},
+			{0,0,0,0}
+		};
+		/* getopt_long stores the option index here. */
+		int option_index = 0;
+
+		int c = getopt_long (argc, argv, "abho:",
+				long_options, &option_index);
+
+		/* Detect the end of the options. */
+		if (c == -1) break;
+
+		switch (c) {
+		case 0:
+			/* If this option set a flag, do nothing else now. */
+			if (long_options[option_index].flag != 0)
+				break;
+			printf ("option %s", long_options[option_index].name);
+			if (optarg)
+				printf (" with arg %s", optarg);
+			printf ("\n");
+			break;
+		case 'a':
+			format=1;
+			break;
+		case 'b':
+			format=2;
+			break;
+		case 'h':
+			print_usage();
+			exit(0);
+			break;
+		case 'o':
+			//if (!optarg) {
+				//printf("option -o requires an argument!\n");
+				//exit(1);
+			//}
+			strcpy(fname_out,optarg);
+			printf("%s\n",optarg);
+			break;
+		case '?':
+			/* getopt_long already printed an error message. */
+			printf("%s\n",optarg);
+			break;
+		default:
+			abort();
+		}
+	}
+
+	// The remaining command line arguments is the GSM file. 
+	if (optind>=argc) {
+		printf("Requires a MSH file as argument!\n");
+		exit(1);
+	}
+	strcpy(fname_in,argv[optind]);
+
+	// If not specified -o [target], use the same file name as the input 
+	if (fname_out[0]=='\0')
+		strcpy(fname_out,fname_in);
+
+	{// Delete extension ".msh", if any.
+		char * temp= strstr(fname_out,".msh");
+		if (temp) *temp=0;
+	} 
+
+	// Output format
+	if (format==1)
+		printf("Output to ASCII...\n");
+	else if (format==2) 
+		printf("Output to BINARY...\n");
+
+	printf("\n"); 
+}
+
+void print_usage()
+{
 	printf("	|This executable aims to read the nodes\n");
 	printf("	|and triangles from the given MSH file,\n");
 	printf("	|then dump the nodes and triangles into\n");
@@ -72,66 +137,33 @@ int main(int argc, char *argv[])
 	printf("	|		myname.triangles\n");
 	printf("	------------------------------\n");
 	printf("\n");
+}
 
+void test_limits()
+{
+	// Read out system-dependent constants
+	printf("	FILENAME_MAX	= %d\n",FILENAME_MAX);
+	printf("	BUFSIZ		= %d\n",BUFSIZ);
 
-	int format;
-	char cwd[FILENAME_MAX];
-	char filename_source[FILENAME_MAX];
-	char filename_target_base[FILENAME_MAX]; 
-	char filename_in[FILENAME_MAX];
-	char filename_out[FILENAME_MAX];
-	getcwd(cwd,FILENAME_MAX);
-	strcpy(filename_in,	cwd);
-	strcpy(filename_out,	cwd);
-	if (argc<3) {
-		// 0 argument
-		fprintf(stderr,"	ERROR:		REQUIRES AT LEAST TWO ARGUMENTS:\n");
-		fprintf(stderr,"			argv[1] = [format]\n");
-		fprintf(stderr,"			argv[2] = [source]\n");
-		fprintf(stderr,"			argv[3] = [target-base] (optional)\n"); 
-		err += 1;
-		return err;
-	} else if (argc<4) {
-		fprintf(stderr,"	WARNING:	[target-base] undefined,\n");
-		fprintf(stderr,"			use [target-base]=[source].\n"); 
-		format=atoi(argv[1]);
-		strcpy(filename_source,		argv[2]);
-		strcpy(filename_target_base,	argv[2]);
-	} else if (argc<5) {
-		format=atoi(argv[1]);
-		strcpy(filename_source,		argv[2]);
-		strcpy(filename_target_base,	argv[3]);
-	} else {
-		fprintf(stderr,"	WARNING:	Only the first two arguments are used.\n");
-		fprintf(stderr,"			Proceed as usual...\n");
-		format=atoi(argv[1]);
-		strcpy(filename_source,		argv[2]);
-		strcpy(filename_target_base,	argv[3]);
-	} 
-	{	// Delete extension ".msh", if any.
-		char * temp= strstr(filename_target_base,".msh");
-		if (temp) *temp=0;
-	} 
-	strcat(filename_in,"/");
-	strcat(filename_in,filename_source);
-	strcat(filename_out,"/");
-	strcat(filename_out,filename_target_base); 
+	printf("	INT_MAX		= %d\n",INT_MAX);
+	printf("	INT_MIN		= %d\n",INT_MIN);
+
+	printf("	FLT_EPSILON	= %g\n",FLT_EPSILON);
+	printf("	FLT_MIN		= %g\n",FLT_MIN);
+	printf("	FLT_MAX		= %g\n",FLT_MAX);
+	/*printf("	FLT_MIN_EXP	= %d\n",FLT_MIN_EXP);*/
+	/*printf("	FLT_MAX_EXP	= %d\n",FLT_MAX_EXP);*/
+	printf("	FLT_MIN_10_EXP	= %d\n",FLT_MIN_10_EXP);
+	printf("	FLT_MAX_10_EXP	= %d\n",FLT_MAX_10_EXP);
+
+	printf("	DBL_EPSILON	= %g\n",DBL_EPSILON);
+	printf("	DBL_MIN		= %g\n",DBL_MIN);
+	/*printf("	DBL_MAX		= %g\n",DBL_MAX);*/
+	printf("	DBL_MAX		= too many digits...\n");
+	/*printf("	DBL_MIN_EXP	= %d\n",DBL_MIN_EXP);*/
+	/*printf("	DBL_MAX_EXP	= %d\n",DBL_MAX_EXP);*/
+	printf("	DBL_MIN_10_EXP	= %d\n",DBL_MIN_10_EXP);
+	printf("	DBL_MAX_10_EXP	= %d\n",DBL_MAX_10_EXP);
 	printf("\n");
+}
 
-
-	printf("	Calling FILEIO_DUMP_MSH_FILE(filename_in,filename_out)...\n");
-	printf("		filename_in	= %s\n",filename_in);
-	printf("		filename_out	= %s\n",filename_out); 
-
-	// Calling fileio_dump_msh_file
-	err += dump_msh(filename_in,filename_out,format); 
-
-	if (!err)
-		printf("	Successfully dumped nodes and triangles!\n");
-	else
-		fprintf(stderr,"	ERROR:		err = %d\n",err);
-
-	printf("END:	DUMP-MSH-FILE.EXE\n");
-	printf("###############################################################################\n");
-	return 0;
-} 
