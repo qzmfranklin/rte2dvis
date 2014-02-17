@@ -4,10 +4,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "file_io.h"
+#include "msh_io.h"
 #include "utils.h"
 /*******************************************************************************/
-void test()
+void test_limits()
 {
 	// Read out system-dependent constants
 	printf("	FILENAME_MAX	= %d\n",FILENAME_MAX);
@@ -37,7 +37,7 @@ void test()
 
 int main(int argc, char *argv[])
 { 
-	test();
+	test_limits();
 
 	int err=0;
 	printf("###############################################################################\n");

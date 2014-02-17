@@ -17,57 +17,27 @@
 ################################################################################
 #				STEP 1
 #	DIRECTORY NAME FROM THE ROOT DIRECTORY
-#
-#  The ${DIR001} variable will be used through the rest of this 
-#  makevars.mk file to achieve modularity.
-#  	Be very careful:
-# 		NO SPACE ( tab is OK )
-# 		NO DEFERRED-EVALUATION ( always use colon-equal, i.e., := ) #
 DIR001:=src/utils# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following line to be verbose.
 ${DIR001}QUIET:=@
 ###############################################################################
 #				STEP 2
 #	DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-#
-#  Options specified here are used in this directory. By default, all builds 
-#  use the same options. When different compiling and/or linking options 
-#  need to be assigned to different targets, the programmer needs to list all
-#  the speical target-prerequisite dependencies manually.
-#  	By default, the local options inherits the corresponding global ones 
-#  from the Makefile in the root directory. If one wishes to add any 
-#  additional options that are specific to this very directory, add them after 
-#  the global ones. For example:
-# 	 	${DIR001}CFLAGS :=${CFLAGS} [directory-specific options]
-#  	Usually, ${DIR001}INCS and should not need to be modified if
-#  the build in this directory does not require some extra libraries and/or 
-#  hearder files. But in case it did, free at ease to modify these two 
-#  variables.
-#  	Note that one _cannot_ drop any of the global compiling and linking
-#  options. So only specify options that are definitely needed by the entire
-#  project at the top level Makefile.
 ${DIR001}CXXFLAGS:=${CXXFLAGS}
 ${DIR001}INCS:=${INCS}
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
-${DIR001}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
-	file_io.cpp
+${DIR001}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
-${DIR001}BINEXE:=dump_msh.exe
-
-${BIN}/dump_msh.exe: ${OBJ}/dump_msh.o ${OBJ}/file_io.o
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR001}TSTEXE:= test_mkl_solvers.exe test_file_io.exe
+${DIR001}TSTEXE:= test_mkl_solvers.exe
 
 ${BIN}/test_mkl_solvers.exe: ${OBJ}/test_mkl_solvers.o ${OBJ}/utils.o
-
-${BIN}/test_file_io.exe: ${OBJ}/test_file_io.o ${OBJ}/file_io.o \
-	${OBJ}/utils.o
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or
@@ -184,7 +154,7 @@ ${DIR001}-asm: ${${DIR001}ASMFILES} ${${DIR001}TSTASM} \
 	@echo Finished generating "${B_BLUE}$@${NONE}".  
 ${DIR001}-check: ${${DIR001}TSTEXE:${BIN}/%.exe=${OUTPUT}/%.txt}
 ${DIR001}-list:
-	@echo \#\#\#\#\#\#\#\#"${B_BROWN}BEGIN $@${NONE}"\#\#\#\#\#\#\#\#
+	@echo \#\#\#\#\#\#\#\#"${B_BROWN}$@${NONE}"\#\#\#\#\#\#\#\#
 	@$(foreach dir, 						\
 		CFILES CPPFILES TSTCPP BINCPP				\
 		,							\

@@ -17,22 +17,14 @@ struct st_mesh_info {
 	char   fbase[FILENAME_MAX];	// file base name
 };
 
+void load_mesh   (struct st_mesh_info &q, const char *fbase);
+void release_mesh(struct st_mesh_info &q);
 /*
  * flag:
  * 	0	show less
  * 	1	show more
  */
 void print_mesh  (struct st_mesh_info &q, int flag=0);
-
-/*
- * driver routine
- */
-void load_mesh   (struct st_mesh_info &q, const char *fbase);
-
-/*
- * release memory
- */
-void release_mesh(struct st_mesh_info &q);
 /******************************************************************************/
 /*
  * The following routines are not supposed to be called by the user.
