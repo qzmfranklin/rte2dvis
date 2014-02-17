@@ -1,5 +1,5 @@
-#ifndef _FILE_IO_H_
-#define _FILE_IO_H_
+#ifndef _MSH_IO_H_
+#define _MSH_IO_H_
 /******************************************************************************/
 #include <unistd.h>
 #include <string.h>
@@ -27,14 +27,6 @@ void release_mesh(struct st_mesh_info &q);
 void print_mesh  (struct st_mesh_info &q, int flag=0);
 /******************************************************************************/
 /*
- * The following routines are not supposed to be called by the user.
- */
-void init_mesh   (struct st_mesh_info &q, const char *fbase);
-void read_info   (struct st_mesh_info &q);
-void alloc_mesh  (struct st_mesh_info &q);
-void read_mesh   (struct st_mesh_info &q);
-
-/*
  * Read MSH file, dump the nodes and trigs into ASCII/BINARY files.
  *   |output filenames are:
  *   |	filename_in.nodes
@@ -53,4 +45,4 @@ void read_mesh   (struct st_mesh_info &q);
  */ 
 int dump_msh(const char *filename_in, const char *filename_out, int format);
 /*******************************************************************************/
-#endif /* end of include guard _FILE_IO_H_ */
+#endif /* end of include guard _MSH_IO_H_ */

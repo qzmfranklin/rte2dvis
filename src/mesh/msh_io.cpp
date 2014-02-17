@@ -8,6 +8,12 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 /******************************************************************************/ 
+static void init_mesh   (struct st_mesh_info &q, const char *fbase);
+static void read_info   (struct st_mesh_info &q);
+static void alloc_mesh  (struct st_mesh_info &q);
+static void read_mesh   (struct st_mesh_info &q);
+/******************************************************************************/
+
 void print_mesh(struct st_mesh_info &q, int flag)
 {
 	printf("FORMAT\t\t= %d (1=ASCII 2=BINARY)\n",	q.format);
@@ -162,32 +168,32 @@ void release_mesh(struct st_mesh_info &q)
 }
 
 /******************************************************************************/
-int dump_msh(const char * filename_in, const char * filename_out, int format)
+int dump_msh(const char * fname_in, const char * fname_out, int format)
 {
 	int err=0;
-	// Default filename_out
-	if (  !filename_out  ) {
-		printf("	filename_out == NULL, proceed with default filename_out:\n");
-		printf("		%s\n",filename_in);
-		filename_out = filename_in;
+	// Default fname_out
+	if (  !fname_out  ) {
+		printf("	fname_out == NULL, proceed with default fname_out:\n");
+		printf("		%s\n",fname_in);
+		fname_out = fname_in;
 	}
-	assert( filename_out);
+	assert( fname_out);
 	// Construct ouuput file names
-	char *filename_out_nodes;
-	char *filename_out_trigs;
-	char *filename_out_info;
-	filename_out_nodes 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
-	filename_out_trigs 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
-	filename_out_info 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
-	assert(filename_out_nodes);
-	assert(filename_out_trigs);
-	assert(filename_out_info );
-	strcpy(filename_out_nodes,filename_out);
-	strcpy(filename_out_trigs,filename_out);
-	strcpy(filename_out_info, filename_out);
-	strcat(filename_out_nodes,".nodes");
-	strcat(filename_out_trigs,".trigs");
-	strcat(filename_out_info, ".info" );
+	char *fname_out_nodes;
+	char *fname_out_trigs;
+	char *fname_out_info;
+	fname_out_nodes 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
+	fname_out_trigs 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
+	fname_out_info 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
+	assert(fname_out_nodes);
+	assert(fname_out_trigs);
+	assert(fname_out_info );
+	strcpy(fname_out_nodes,fname_out);
+	strcpy(fname_out_trigs,fname_out);
+	strcpy(fname_out_info, fname_out);
+	strcat(fname_out_nodes,".nodes");
+	strcat(fname_out_trigs,".trigs");
+	strcat(fname_out_info, ".info" );
 
 	// Open 4 files:
 	// 	fin:		input MSH file
@@ -200,44 +206,45 @@ int dump_msh(const char * filename_in, const char * filename_out, int format)
 	FILE *fout_trigs;
 	FILE *fout_info;
 	// open fin for read
-	printf("	Opening file for read:\n");
-	printf("		%s\n",filename_in);
-	if (  !(fin=fopen(filename_in,"r"))  ) {
-		printf("	Cannot open file for read:\n");
-		printf("	err = err + 1\n");
+	//printf("	Opening file for read:\n");
+	//printf("		%s\n",fname_in);
+	if (  !(fin=fopen(fname_in,"r"))  ) {
+		//printf("	Cannot open file for read:\n");
+		//printf("	err = err + 1\n");
 		err += 1;
 	}	
 	// open fout_nodes for write
-	printf("	Opening file for write:\n");
-	printf("		%s\n",filename_out_nodes);
-	if (  !(fout_nodes=fopen(filename_out_nodes,"w"))  ) {
-		printf("	Cannot open file for write:\n");
-		printf("	err = err + 2\n");
+	//printf("	Opening file for write:\n");
+	//printf("		%s\n",fname_out_nodes);
+	if (  !(fout_nodes=fopen(fname_out_nodes,"w"))  ) {
+		//printf("	Cannot open file for write:\n");
+		//printf("	err = err + 2\n");
 		err += 2;
 	}	
 	// open fout_trigs for write
-	printf("	Opening file for write:\n");
-	printf("		%s\n",filename_out_trigs);
-	if (  !(fout_trigs=fopen(filename_out_trigs,"w"))  ) {
-		printf("	Cannot open file for write:\n");
-		printf("	err = err + 4\n");
+	//printf("	Opening file for write:\n");
+	//printf("		%s\n",fname_out_trigs);
+	if (  !(fout_trigs=fopen(fname_out_trigs,"w"))  ) {
+		//printf("	Cannot open file for write:\n");
+		//printf("	err = err + 4\n");
 		err += 4;
 	}	
 	// open fout_info for write
-	printf("	Opening file for write:\n");
-	printf("		%s\n",filename_out_info);
-	if (  !(fout_info=fopen(filename_out_info,"w"))  ) {
-		printf("	Cannot open file for write:\n");
-		printf("	err = err + 8\n");
+	//printf("	Opening file for write:\n");
+	//printf("		%s\n",fname_out_info);
+	if (  !(fout_info=fopen(fname_out_info,"w"))  ) {
+		//printf("	Cannot open file for write:\n");
+		//printf("	err = err + 8\n");
 		err += 8;
 	}	
 	// Abort if either occured
 	if (  err  ) {
-		printf("	Abort with err = %2d\n",err);
+		//printf("	Abort with err = %2d\n",err);
 		return err;
-	} else  
-		printf("	Successfully opened all 4 files!\n");
-	/*printf("	------------------------------\n");*/
+	} else {
+		//printf("	Successfully opened all 4 files!\n");
+	}
+	//printf("	------------------------------\n");
 
 	int nodes_num;
 	int num_elements;
@@ -249,24 +256,24 @@ int dump_msh(const char * filename_in, const char * filename_out, int format)
 	char buff[BUFSIZ];
 	int i=0;
 	// Find nodes
-	printf("	Search for \"%s\"...\n",str_Nodes);
+	//printf("	Search for \"%s\"...\n",str_Nodes);
 	while (  (fgets(buff,BUFSIZ,fin))  ) {
 		i++;
 		if ( strstr(buff,str_Nodes)  ) {
-			printf("		Found \"%s\" at line %d\n",str_Nodes,i);
+			//printf("		Found \"%s\" at line %d\n",str_Nodes,i);
 			break;
 		}
 	}
 	// Scan nodes and write to fout_nodes
 	fscanf(fin,"%d",&nodes_num);
-	printf("	Number of nodes is\n");
-	printf("		%d\n",nodes_num);
-	printf("	Start scanning nodes and writing to filename_out_nodes...\n");
+	//printf("	Number of nodes is\n");
+	//printf("		%d\n",nodes_num);
+	//printf("	Start scanning nodes and writing to fname_out_nodes...\n");
 	for (i = 0; i < nodes_num; i++) {
 		int ip,z_zero;
 		double x,y;
 		fscanf(fin,"%d %lf %lf %d\n",&ip,&x,&y,&z_zero);
-		/*printf("\t\t\t%3d\t%12.8E\t%12.8E\n",ip,x,y);*/
+		//printf("\t\t\t%3d\t%12.8E\t%12.8E\n",ip,x,y);
 		switch (format) {
 		case 1:  // ASCII
 			fprintf(fout_nodes,"%+25.19E %+25.19E\n",x,y);
@@ -277,26 +284,26 @@ int dump_msh(const char * filename_in, const char * filename_out, int format)
 			break;
 		}
 	}
-	printf("	Finished scanning nodes and writing.\n");
-	/*printf("	------------------------------\n");*/
+	//printf("	Finished scanning nodes and writing.\n");
+	//printf("	------------------------------\n");
 	// Find trigs
 	rewind(fin);
 	i=0;
-	printf("	Search for \"%s\"...\n",str_Elements);
+	//printf("	Search for \"%s\"...\n",str_Elements);
 	while (  (fgets(buff,BUFSIZ,fin))  ) {
 		i++;
 		if ( strstr(buff,str_Elements)  ) {
-			printf("		Found \"%s\" at line %d\n.",str_Elements,i);
+			//printf("		Found \"%s\" at line %d\n.",str_Elements,i);
 			break;
 		}
 	}
 	// Scan trigs and write to fout_trigs
 	fscanf(fin,"%d",&num_elements);
 	i++;
-	printf("	Number of elements is\n");
-	printf("		%d\n",num_elements);
+	//printf("	Number of elements is\n");
+	//printf("		%d\n",num_elements);
 	trigs_num=0;
-	printf("	Start Scanning elements and writing trigs to filename_out_trigs...\n");
+	//printf("	Start Scanning elements and writing trigs to fname_out_trigs...\n");
 	int j;
 	for ( j = 0; j < num_elements; j++) {
 		int tri[5],n1,n2,n3;
@@ -306,15 +313,15 @@ int dump_msh(const char * filename_in, const char * filename_out, int format)
 		if (  (tri[1]==2) && (tri[4]==6)  ) {
 			trigs_num++;
 			if (  trigs_num == 1  ) {
-				printf("		Found first triangle\n");
-				printf("			at line %d\n",i);
-				printf("			as element #%d\n",j+1);
+				//printf("		Found first triangle\n");
+				//printf("			at line %d\n",i);
+				//printf("			as element #%d\n",j+1);
 			}
 			sscanf(buff," %d %d %d\n",&n1,&n2,&n3);
 			/*printf("\t\t\t%3d\t%d\t%d\t%d\n",i+1,n1,n2,n3);*/
 			switch (format) {
 			case 1:  // ASCII
-				fprintf(fout_trigs,"%12d %12d %12d\n",n1,n2,n3);
+				//fprintf(fout_trigs,"%12d %12d %12d\n",n1,n2,n3);
 				break;
 			case 2:  // BINARY
 				fwrite(&n1,sizeof(int),1,fout_trigs);
@@ -324,30 +331,30 @@ int dump_msh(const char * filename_in, const char * filename_out, int format)
 			}
 		}
 	}
-	printf("	Finished scanning elements and writing trigs.\n");
-	printf("	Found %d trigs.\n",trigs_num);
+	//printf("	Finished scanning elements and writing trigs.\n");
+	//printf("	Found %d trigs.\n",trigs_num);
 	// Write to fout_info
-	/*printf("	------------------------------\n"); */
-	printf("	Start writing into filename_out_info...\n");
+	//printf("	------------------------------\n"); 
+	//printf("	Start writing into fname_out_info...\n");
 	fprintf(fout_info,"%d\t\t# 1=ASCII 2=BINARY\n",format);
 	fprintf(fout_info,"%d\t\t# number of nodes\n",nodes_num);
 	fprintf(fout_info,"%d\t\t# number of trigs\n",trigs_num);
-	printf("	Finished writing into filename_out_info.\n");
+	//printf("	Finished writing into fname_out_info.\n");
 
 	// Free memory
-	/*printf("	------------------------------\n");*/
-	printf("	Freeing memory...\n");
+	//printf("	------------------------------\n");
+	//printf("	Freeing memory...\n");
 	fclose(fin);
 	fclose(fout_nodes);
 	fclose(fout_trigs);
 	fclose(fout_info);
-	free(filename_out_nodes);
-	free(filename_out_trigs);
-	free(filename_out_info);
-	/*printf("	------------------------------\n");*/
+	free(fname_out_nodes);
+	free(fname_out_trigs);
+	free(fname_out_info);
+	//printf("	------------------------------\n");
 
-	printf("END:	FILEIO_DUMP_MSH_FILE\n");
-	printf("--------------------------------------------------\n");
+	//printf("END:	FILEIO_DUMP_MSH_FILE\n");
+	//printf("--------------------------------------------------\n");
 
 	return err;
 }

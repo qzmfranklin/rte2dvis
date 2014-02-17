@@ -17,7 +17,7 @@
 ################################################################################
 #				STEP 1
 #	DIRECTORY NAME FROM THE ROOT DIRECTORY
-DIR002:=src/msh_io# Please, NO SPACE 
+DIR002:=src/mesh# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following line to be verbose.
 ${DIR002}QUIET:=@
 ###############################################################################
@@ -28,7 +28,7 @@ ${DIR002}INCS:=${INCS}
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
-${DIR002}CPPFILES:=msh_io.cpp
+${DIR002}CPPFILES:=msh_io.cpp msh_ray_tracing.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -38,10 +38,13 @@ ${BIN}/dump_msh.exe: ${OBJ}/dump_msh.o ${OBJ}/msh_io.o
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR002}TSTEXE:= test_msh_io.exe
+${DIR002}TSTEXE:= test_msh_io.exe test_msh_ray_tracing.exe
 
 ${BIN}/test_msh_io.exe: ${OBJ}/test_msh_io.o ${OBJ}/msh_io.o \
 	${OBJ}/utils.o
+
+${BIN}/test_msh_ray_tracing.exe: ${OBJ}/test_msh_ray_tracing.o \
+	${OBJ}/msh_io.o ${OBJ}/utils.o
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or
