@@ -44,7 +44,7 @@ ${BIN}/test_msh_io.exe: ${OBJ}/test_msh_io.o ${OBJ}/msh_io.o \
 	${OBJ}/utils.o
 
 ${BIN}/test_msh_ray_tracing.exe: ${OBJ}/test_msh_ray_tracing.o \
-	${OBJ}/msh_io.o ${OBJ}/utils.o
+	${OBJ}/msh_io.o ${OBJ}/utils.o ${OBJ}/msh_ray_tracing.o
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

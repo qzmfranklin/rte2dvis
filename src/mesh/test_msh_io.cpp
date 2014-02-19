@@ -29,8 +29,8 @@ int main(int argc, char const* argv[])
  *
  *        char *fbase="msh/square162"; 
  *
- *        struct st_mesh_info q;
- *        printf("sizeof(struct st_mesh_info=%lu\n",sizeof(struct st_mesh_info)); 
+ *        struct st_mesh q;
+ *        printf("sizeof(struct st_mesh=%lu\n",sizeof(struct st_mesh)); 
  *
  *        init_mesh(q,fbase);
  *        print_mesh(q);
@@ -62,7 +62,7 @@ int main(int argc, char const* argv[])
  *
  *        char *fbase="msh/square162"; 
  *
- *        struct st_mesh_info q;
+ *        struct st_mesh q;
  *
  *        init_mesh(q,fbase);
  *        print_mesh(q);
@@ -92,10 +92,11 @@ int test03(void)
         printf("	|Test load_mesh()\n");
 
 	char *fbase="msh/square162"; 
-	struct st_mesh_info q;
-	load_mesh(q,fbase);
-	print_mesh(q);
+	struct st_mesh *q;
+	q=load_mesh(fbase);
+	print_mesh(q,PRINT_INFO_VERBOSE);
 	
+	destroy_mesh(q);
         printf("END OF TEST03\n");
         printf("\n");
 	return err;
