@@ -1,4 +1,5 @@
 #include "msh_ray_tracing.h"
+#include <math.h>
 #include <assert.h>
 #include <stdio.h>
 #include <mkl.h>
@@ -6,12 +7,30 @@
 static int ipow(int m, int n); // returns m^n
 static int meshnode_isin(struct st_meshnode *node, const double x0, const double y0);
 static void print_node(struct st_meshnode *node);
+
+// si=sin(phi) ic=1.0/cos(phi) x0=p[0] y0=p[1]
+static int square_ray_isint(const double x1, const double y1, const double x2, const double y2, 
+		const double x0, const double y0, const double si, const double ic);
+static double trig_ray_seg(const double *restrict trig, 
+		const double x0, const double y0, const double si, const double ic);
 /******************************************************************************/
+double meshtree_ray_seg(const struct st_mesh *restrict t, 
+		const double p[2], const double phi)
+{
+	//TODO
+	//double si,ic;
+	//sincos(phi,&si,&ic);
+	//ic = 1.0/ic;
+
+
+	return 0.0;
+}
+
 struct st_meshtree *create_meshtree(const int num_trigs, 
 		const double *restrict trigs, const double *restrict limits,
 		const int npl)
 {
-	fprintf(stderr,"create_meshtree()\n");
+	//fprintf(stderr,"create_meshtree()\n");
 
 	if (npl<1) {
 		fprintf(stderr,"t->npl=%d, should be at least 1. Abort.\n",npl);
@@ -145,10 +164,32 @@ struct st_meshtree *create_meshtree(const int num_trigs,
 
 void destroy_meshtree(struct st_meshtree *t)
 {
-	fprintf(stderr,"destroy_meshtree()\n");
+	//fprintf(stderr,"destroy_meshtree()\n");
 
+	mkl_free(t->ptt);
 	mkl_free(t->root);
 	mkl_free(t);
+}
+/******************************************************************************/
+// si = sin(phi)	ic = 1.0.cos(phi)
+static int square_ray_isint(const double x1, const double y1, const double x2, const double y2, 
+		const double x0, const double y0, const double si, const double ic)
+{
+	double t1, t2;
+	t1 = (x1-x0)*ic;
+	t2 = (x2-x0)*ic;
+	{ // the line does not touch the square at all
+		int n1=0, n2=0;
+		const double f1=y0+t1*si;
+		const double f2=y0+t2*si;
+		if (f1<y1) n1--;
+		if (f1>y2) n1++;
+		if (f2<y1) n2--;
+		if (f2>y2) n2++;
+		if (n1*n2>0) return 0;
+	}
+	if (t1>0.0 | t2>0.0) return 1;
+	return 0;
 }
 
 static int meshnode_isin(struct st_meshnode *node, const double x0, const double y0)

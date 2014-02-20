@@ -24,7 +24,7 @@ int test01(void)
 	struct st_mesh *q = load_mesh(fbase);
 			//	xmin, ymin, xmax, ymax
 	const double limits[]={	0.0,  0.0,  1.0,  1.0}; 
-	const int npl=4; // number of packed levels
+	const int npl=3; // number of packed levels
 	struct st_meshtree *t;
 	t=create_meshtree(q->num_trigs,q->trigs,limits,npl);
 

@@ -4,6 +4,8 @@
 #include "StatVector.h"
 /******************************************************************************/
 /*
+ * Measures the number of CPU cycles that has passed between tic() and toc().
+ *
  * Example of usage:
  *
  * 	#define N 100

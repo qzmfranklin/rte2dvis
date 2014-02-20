@@ -151,15 +151,19 @@ DumpMSHFileTo2DATFiles[filename];
 
 {\[Mu]a,\[Mu]s}={Log[4.0],0.0};
 \[Mu]t=\[Mu]a+\[Mu]s;
-g=0.5;
+
+{\[Phi]s, \[Mu]a, \[Mu]s} = {0.0, Log[2.0], 5 Log[2.0]};
+\[Mu]t = \[Mu]a + \[Mu]s;
+g=0.9;
+Print["g=",g];
 phis=0;
 (*Nd=10;*)
 Nd=ToExpression[$CommandLine[[5]]];
 padding=1;
 
 ClearAll[iG,iL,ToCmplxPckdArry]
-iG[{n_,m_},{Ns_,Nd_}]:=(n-1)*(2Nd+1)+m+Nd+1
-iL[ng_,{Ns_,Nd_}]:={IntegerPart[(ng-1)/(2Nd+1)+1],Mod[ng-Nd-1,(2Nd+1),-Nd]}
+(*iG[{n_,m_},{Ns_,Nd_}]:=(n-1)*(2Nd+1)+m+Nd+1*)
+(*iL[ng_,{Ns_,Nd_}]:={IntegerPart[(ng-1)/(2Nd+1)+1],Mod[ng-Nd-1,(2Nd+1),-Nd]}*)
 ToCmplxPckdArry=ToPackedArray[N[Re[#]]]+I ToPackedArray[N[Im[#]]]&;
 
 ClearAll[TriPtPreCalc,CntrPreCalc,r2rRPreCalc,SignedAreaPreCalc]
@@ -195,9 +199,9 @@ Ng=Ns(2Nd+1);
 Print["{p,t}=",PackedArrayQ/@{p,t}];
 Print["{Ns,Nd,Nm,Ng}=",{Ns,Nd,Nm,Ng}];
 gTbl=g^Abs[#]&/@Range[-Nd,Nd]//ToPackedArray;
-iGTbl=Table[iG[{n,m},{Ns,Nd}],{n,Ns},{m,-Nd,Nd}]//ToPackedArray;
-iLTbl=iL[#,{Ns,Nd}]&/@Range[Ng]//ToPackedArray;
-Print["{gTbl,iGTbl,iLTbl}=",PackedArrayQ/@{gTbl,iGTbl,iLTbl}];
+(*iGTbl=Table[iG[{n,m},{Ns,Nd}],{n,Ns},{m,-Nd,Nd}]//ToPackedArray;*)
+(*iLTbl=iL[#,{Ns,Nd}]&/@Range[Ng]//ToPackedArray;*)
+(*Print["{gTbl,iGTbl,iLTbl}=",PackedArrayQ/@{gTbl,iGTbl,iLTbl}];*)
 Tpt=(pt=TriPtPreCalc[p,t];)//AbsoluteTiming//#[[1]]&;
 Tcntr=(cntr=CntrPreCalc[pt];)//AbsoluteTiming//#[[1]]&;
 Tr2rR=(r2rR=r2rRPreCalc[cntr];)//AbsoluteTiming//#[[1]]&;
@@ -211,8 +215,9 @@ SetDirectory[FileNameJoin[{"HOME"/.GetEnvironment["HOME"],"tmp"}]];
 <<"B.mx";
 ResetDirectory[];
 *)
-ClearAll[RULE1,RULE2,NU,NV,\[Phi]s,\[Mu]a,\[Mu]s,\[Mu]t,V1]
+ClearAll[RULE1,RULE2,NU,NV,V1]
 {RULE1,RULE2,NU,NV}={2,19,2Nd+5,3};
+Print["RULE1=",RULE1];
 (*BHomo[pt,Nd,Nm,RULE,NU,NV]//Quiet;*)
 B=BHomoFull[pt,Nd,Nm,RULE1,RULE2,NU,NV]//Quiet//ToPackedArray;
 (*SetDirectory[FileNameJoin[{"HOME"/.GetEnvironment["HOME"],"tmp"}]];*)
@@ -220,8 +225,6 @@ B=BHomoFull[pt,Nd,Nm,RULE1,RULE2,NU,NV]//Quiet//ToPackedArray;
 (*ResetDirectory[];*)
 Print["{A,B}=",PackedArrayQ/@{A,B}]; 
 
-{\[Phi]s, \[Mu]a, \[Mu]s} = {0.0, Log[2.0], 5 Log[2.0]};
-\[Mu]t = \[Mu]a + \[Mu]s;
 V1 = VHomoFull[pt, g, \[Phi]s, \[Mu]s, Nd, RULE1, RULE2, NU, NV] // 
    Quiet;
 Print["V1=",PackedArrayQ[V1]];
