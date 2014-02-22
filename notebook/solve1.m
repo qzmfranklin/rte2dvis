@@ -216,7 +216,7 @@ SetDirectory[FileNameJoin[{"HOME"/.GetEnvironment["HOME"],"tmp"}]];
 ResetDirectory[];
 *)
 ClearAll[RULE1,RULE2,NU,NV,V1]
-{RULE1,RULE2,NU,NV}={2,19,2Nd+5,3};
+{RULE1,RULE2,NU,NV}={3,19,2Nd+5,3};
 Print["RULE1=",RULE1];
 (*BHomo[pt,Nd,Nm,RULE,NU,NV]//Quiet;*)
 B=BHomoFull[pt,Nd,Nm,RULE1,RULE2,NU,NV]//Quiet//ToPackedArray;
