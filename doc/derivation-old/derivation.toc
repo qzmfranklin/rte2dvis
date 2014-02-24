@@ -1,0 +1,47 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Intro: From RTE to VIE}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}RTE}{3}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}VIE}{3}{subsection.1.2}
+\contentsline {section}{\numberline {2}2D and 3D Formalism}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}3D Formalism}{4}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}2D Formalism}{4}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}2D Heyney-Greenstein Phase Function}{5}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Things to Do}{5}{subsection.2.4}
+\contentsline {section}{\numberline {3}Discretizing the VIE}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Finite Element Expansion}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Garlekin Test Procedure}{6}{subsection.3.2}
+\contentsline {section}{\numberline {4}Calculating Matrix Elements}{7}{section.4}
+\contentsline {subsection}{\numberline {4.1}Identity Term - $A_{(n m)(n^\prime m^\prime )}$ }{7}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Interaction Term - $B_{(n m)(n^\prime m^\prime )}$}{8}{subsection.4.2}
+\contentsline {subsubsection}{\numberline {4.2.1}$B^t_{(n m)(n^\prime m^\prime )} \ n\neq n^\prime $}{8}{subsubsection.4.2.1}
+\contentsline {subsubsection}{\numberline {4.2.2}$B^s_{(n m)(n^\prime m^\prime )} \ n\neq n^\prime $}{8}{subsubsection.4.2.2}
+\contentsline {subsubsection}{\numberline {4.2.3}$B^t_{(n m)(n^\prime m^\prime )} \ n=n^\prime $}{8}{subsubsection.4.2.3}
+\contentsline {subsubsection}{\numberline {4.2.4}$B^s_{(n m)(n^\prime m^\prime )} \ n=n^\prime $}{9}{subsubsection.4.2.4}
+\contentsline {subsection}{\numberline {4.3}Input Vector - $V_{n m}$}{9}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.4}$Z=A+B$}{9}{subsection.4.4}
+\contentsline {section}{\numberline {5}Accelerations}{10}{section.5}
+\contentsline {subsection}{\numberline {5.1}Acceleration on $N_d$}{10}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Acceleration on $N_s$ (not yet)}{10}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Matrix-Vector Multiplication without Assembling the Matrix}{10}{subsection.5.3}
+\contentsline {section}{\numberline {6}Better Convergence}{11}{section.6}
+\contentsline {subsection}{\numberline {6.1}Convergence Issue}{11}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Extracting $\psi _b$}{12}{subsection.6.2}
+\contentsline {subsubsection}{\numberline {6.2.1}General}{12}{subsubsection.6.2.1}
+\contentsline {subsubsection}{\numberline {6.2.2}2D}{13}{subsubsection.6.2.2}
+\contentsline {section}{\numberline {7}Quadrature Rules}{15}{section.7}
+\contentsline {subsection}{\numberline {7.1}Gaussian Quadrature Rules (not finished yet)}{15}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Singular and Near-Singular Integrations}{16}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Radial-Angular Method}{18}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}Duffy Transform}{20}{subsection.7.4}
+\contentsline {section}{\numberline {8}Quadrature Result}{20}{section.8}
+\contentsline {subsection}{\numberline {8.1}Quadrature Rules on Triangle Domain}{20}{subsection.8.1}
+\contentsline {subsection}{\numberline {8.2}Calculating Matrix Elements - Quadrature}{21}{subsection.8.2}
+\contentsline {section}{\numberline {9}Code Implementation}{22}{section.9}
+\contentsline {subsection}{\numberline {9.1}Mesh Generation}{22}{subsection.9.1}
+\contentsline {subsection}{\numberline {9.2}Pre-Computation}{22}{subsection.9.2}
+\contentsline {subsection}{\numberline {9.3}Fast M-V Multiplication}{22}{subsection.9.3}
+\contentsline {subsection}{\numberline {9.4}Iterative Solver}{22}{subsection.9.4}
+\contentsline {subsection}{\numberline {9.5}First Order - $\psi _b$}{22}{subsection.9.5}
+\contentsline {subsection}{\numberline {9.6}Second Order - $\psi _b$ and $\psi _{sb}$}{22}{subsection.9.6}
+\contentsline {subsection}{\numberline {9.7}Quadrature Rules}{22}{subsection.9.7}
+\contentsline {section}{\numberline {10}What's Next?}{22}{section.10}
