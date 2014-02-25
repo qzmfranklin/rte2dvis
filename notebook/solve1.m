@@ -143,23 +143,33 @@ Plot[Exp[-\[Mu]t x]/(2\[Pi]),{x,0,1},PlotStyle->{Thick,Red,Dashed},PlotRange->{0
 
 Needs["Developer`"]
 
+ClearAll[RULE1];
+RULE1=ToExpression[$CommandLine[[4]]];
+
 ClearAll[filename,\[Mu]a,\[Mu]s,\[Mu]t,g,phis,Nd,padding]
 (*filename=FileNameJoin[{Directory[],"../msh","t4.msh"}];*)
 (*filename=FileNameJoin[{Directory[],"../msh","square162.msh"}];*)
-filename=FileNameJoin[{Directory[],"../msh","square"<>$CommandLine[[4]]<>".msh"}];
+filename=FileNameJoin[{Directory[],"../msh","square"<>$CommandLine[[5]]<>".msh"}];
 DumpMSHFileTo2DATFiles[filename];
 
 {\[Mu]a,\[Mu]s}={Log[4.0],0.0};
 \[Mu]t=\[Mu]a+\[Mu]s;
+
+{\[Phi]s, \[Mu]a, \[Mu]s} = {0.0, Log[3.0], 2 Log[2.0]};
+\[Mu]t = \[Mu]a + \[Mu]s;
 g=0.5;
+(*{\[Phi]s, \[Mu]a, \[Mu]s} = {0.0, Log[2.0], 5 Log[2.0]};*)
+(*\[Mu]t = \[Mu]a + \[Mu]s;*)
+(*g=0.9;*)
+Print["g=",g];
 phis=0;
 (*Nd=10;*)
-Nd=ToExpression[$CommandLine[[5]]];
+Nd=ToExpression[$CommandLine[[6]]];
 padding=1;
 
 ClearAll[iG,iL,ToCmplxPckdArry]
-iG[{n_,m_},{Ns_,Nd_}]:=(n-1)*(2Nd+1)+m+Nd+1
-iL[ng_,{Ns_,Nd_}]:={IntegerPart[(ng-1)/(2Nd+1)+1],Mod[ng-Nd-1,(2Nd+1),-Nd]}
+(*iG[{n_,m_},{Ns_,Nd_}]:=(n-1)*(2Nd+1)+m+Nd+1*)
+(*iL[ng_,{Ns_,Nd_}]:={IntegerPart[(ng-1)/(2Nd+1)+1],Mod[ng-Nd-1,(2Nd+1),-Nd]}*)
 ToCmplxPckdArry=ToPackedArray[N[Re[#]]]+I ToPackedArray[N[Im[#]]]&;
 
 ClearAll[TriPtPreCalc,CntrPreCalc,r2rRPreCalc,SignedAreaPreCalc]
@@ -195,9 +205,9 @@ Ng=Ns(2Nd+1);
 Print["{p,t}=",PackedArrayQ/@{p,t}];
 Print["{Ns,Nd,Nm,Ng}=",{Ns,Nd,Nm,Ng}];
 gTbl=g^Abs[#]&/@Range[-Nd,Nd]//ToPackedArray;
-iGTbl=Table[iG[{n,m},{Ns,Nd}],{n,Ns},{m,-Nd,Nd}]//ToPackedArray;
-iLTbl=iL[#,{Ns,Nd}]&/@Range[Ng]//ToPackedArray;
-Print["{gTbl,iGTbl,iLTbl}=",PackedArrayQ/@{gTbl,iGTbl,iLTbl}];
+(*iGTbl=Table[iG[{n,m},{Ns,Nd}],{n,Ns},{m,-Nd,Nd}]//ToPackedArray;*)
+(*iLTbl=iL[#,{Ns,Nd}]&/@Range[Ng]//ToPackedArray;*)
+(*Print["{gTbl,iGTbl,iLTbl}=",PackedArrayQ/@{gTbl,iGTbl,iLTbl}];*)
 Tpt=(pt=TriPtPreCalc[p,t];)//AbsoluteTiming//#[[1]]&;
 Tcntr=(cntr=CntrPreCalc[pt];)//AbsoluteTiming//#[[1]]&;
 Tr2rR=(r2rR=r2rRPreCalc[cntr];)//AbsoluteTiming//#[[1]]&;
@@ -211,42 +221,45 @@ SetDirectory[FileNameJoin[{"HOME"/.GetEnvironment["HOME"],"tmp"}]];
 <<"B.mx";
 ResetDirectory[];
 *)
-ClearAll[RULE1,RULE2,NU,NV,\[Phi]s,\[Mu]a,\[Mu]s,\[Mu]t,V1]
-{RULE1,RULE2,NU,NV}={2,19,2Nd+5,3};
+(*ClearAll[RULE1,RULE2,NU,NV,V1]*)
+(*{RULE1,RULE2,NU,NV}={1,19,2Nd+5,3};*)
+ClearAll[RULE2,NU,NV,V1]
+{RULE2,NU,NV}={19,2Nd+5,3};
+Print["RULE1=",RULE1];
 (*BHomo[pt,Nd,Nm,RULE,NU,NV]//Quiet;*)
-B=BHomoFull[pt,Nd,Nm,RULE1,RULE2,NU,NV]//Quiet//ToPackedArray;
+(*B=BHomoFull[pt,Nd,Nm,RULE1,RULE2,NU,NV]//Quiet//ToPackedArray;*)
 (*SetDirectory[FileNameJoin[{"HOME"/.GetEnvironment["HOME"],"tmp"}]];*)
 (*DumpSave["B.mx",B];*)
 (*ResetDirectory[];*)
 Print["{A,B}=",PackedArrayQ/@{A,B}]; 
 
-{\[Phi]s, \[Mu]a, \[Mu]s} = {0.0, Log[2.0], 5 Log[2.0]};
-\[Mu]t = \[Mu]a + \[Mu]s;
 V1 = VHomoFull[pt, g, \[Phi]s, \[Mu]s, Nd, RULE1, RULE2, NU, NV] // 
    Quiet;
 Print["V1=",PackedArrayQ[V1]];
 
-ClearAll[RULE1,RULE2,NU,NV]
+(*ClearAll[RULE1,RULE2,NU,NV]*)
+ClearAll[RULE2,NU,NV]
 
 ClearAll[n,np,rc,q0,q1,rule,Nu,Nv,qu,qv]
 
 
-ClearAll[X1]
-X1 = LinearSolve[HomoMul[#, A, B, gTbl, \[Mu]t, \[Mu]s] &, V1, 
-    Method -> {"Krylov", Tolerance -> 10^-20, Method -> Automatic, 
-      "Preconditioner" -> Automatic, MaxIterations -> 60, 
-      "ResidualNormFunction" -> Automatic}] // Quiet;
-Print["Z.X1-V1: max relative err=", 
-  Abs[(HomoMul[X1, A, B, gTbl, \[Mu]t, \[Mu]s] - V1)/V1] // Quiet // 
-    Flatten // Max];
+(*ClearAll[X1]*)
+(*X1 = LinearSolve[HomoMul[#, A, B, gTbl, \[Mu]t, \[Mu]s] &, V1,*)
+    (*Method -> {"Krylov", Tolerance -> 10^-20, Method -> Automatic,*)
+      (*"Preconditioner" -> Automatic, MaxIterations -> 60,*)
+      (*"ResidualNormFunction" -> Automatic}] // Quiet;*)
+(*Print["Z.X1-V1: max relative err=",*)
+  (*Abs[(HomoMul[X1, A, B, gTbl, \[Mu]t, \[Mu]s] - V1)/V1] // Quiet //*)
+    (*Flatten // Max];*)
 
 
 
 
 ClearAll[dir]
-dir=FileNameJoin[{Directory[],"sol"}];
+dir=FileNameJoin[{Directory[],"sol"<>ToString[RULE1]}];
 CreateDirectory[dir]//Quiet;
 SetDirectory[dir];
-Export[ToString[Ns] <> "_" <> ToString[Nd], X1, "Complex128"];
+(*Export[ToString[Ns] <> "_" <> ToString[Nd], X1, "Complex128"];*)
+Export[ToString[Ns] <> "_" <> ToString[Nd] <> ".rhs", V1, "Complex128"];
 
 ResetDirectory[];

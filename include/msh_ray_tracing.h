@@ -49,18 +49,21 @@ struct st_meshtree *create_meshtree(const int num_trigs,
 		const int npl);
 void destroy_meshtree(struct st_meshtree *t);
 
+
 /*
- * Line parameters:
- * 	ln[0]	slope
- * 	ln[1]	y-intercept
- * Point:
+ * TODO
+ * Line parameters:  y = k x + b
+ * 	ln[0]	k  slope
+ * 	ln[1]	b  y-intercept
+ * Ray parameters:   (x-x0)*cos(phi) + (y-y0)*sin(phi) = 0
  * 	p0[0]	x0
  * 	p0[1]	y0
  * Note:
  * 	ln[0] (slope) must not be inifity or 0.
  */ 
 double meshtree_line_seg(struct st_mesh *restrict t, double ln[2]);
-double meshtree_ray_seg(struct st_mesh *restrict t, double ln[2], double p0[2]);
+double meshtree_ray_seg(const struct st_mesh *restrict t, 
+		const double p0[2], const double phi);
 	
 #ifdef __cplusplus
 }

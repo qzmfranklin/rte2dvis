@@ -1,0 +1,3397 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[    134891,       3388]
+NotebookOptionsPosition[    133207,       3329]
+NotebookOutlinePosition[    133544,       3344]
+CellTagsIndexPosition[    133501,       3341]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[{
+ "Unit Square ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["N", "s"], "=", "162"}], TraditionalForm]]],
+ "\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Mu]", "a"], "=", 
+    RowBox[{
+     RowBox[{"log", "(", "3", ")"}], "=", "1.0986122886681098`"}]}], 
+   TraditionalForm]]],
+ "\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Mu]", "s"], "=", 
+    RowBox[{
+     RowBox[{"2", 
+      RowBox[{"log", "(", "2", ")"}]}], "=", "1.3862943611198906`"}]}], 
+   TraditionalForm]]],
+ "\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"g", "=", "0.5"}], TraditionalForm]]]
+}], "Section",
+ CellChangeTimes->{{3.60157260861243*^9, 3.601572709761133*^9}, {
+  3.601572747219468*^9, 3.6015727476597843`*^9}, {3.601575055750622*^9, 
+  3.6015750946333523`*^9}, {3.6015760144158278`*^9, 3.601576017878253*^9}, {
+  3.6015760837830143`*^9, 3.601576084047489*^9}}],
+
+Cell["\<\
+The specific intensity for a triangle centered at (0.63,0.71)
+\tRULE1\t\t# of point\tdegree of exactness
+\t1\t\t7\t\t5
+\t2\t\t25\t\t10
+\t3\t\t54\t\t15
+\t4\t\t84\t\t20
+\t5\t\t126\t\t25
+\t6\t\t175\t\t30\
+\>", "Text",
+ CellChangeTimes->{{3.601573933723194*^9, 3.601573961435155*^9}, {
+  3.6015740120505667`*^9, 3.601574012386413*^9}, {3.601575126314495*^9, 
+  3.601575132557164*^9}, {3.601575164398655*^9, 3.601575267421591*^9}, {
+  3.602162997127879*^9, 3.602163006346917*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["L2 Error", "Subsection",
+ CellChangeTimes->{{3.6021628662086067`*^9, 3.60216286833644*^9}}],
+
+Cell["\<\
+y axis = -Log[Abs[relative err]]/Log[10]\
+\>", "Text",
+ CellChangeTimes->{{3.6021629029560413`*^9, 3.602162935905073*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{GraphicsBox[{{{}, 
+      GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGDQBWIQDQEf7Gc4r77YncXgABVwSO1x6J358J89hMvhcL3p
+SFvvob9QvoDD28s7nguxwvgiDt3MP45aN/6B8iUc3A7cjxVXgfFlHL4szs/x
+fvQbyldw+DG3YmnKVhhfyeFMQEzxhSkw/gf7A04lr5X3scPdU9Nz1UhnK6sD
+zD3PODP63vuyOMDcc68+iGdGMrMDzD0GVzSzz25ncoC5x5XxbTWHNYwv46Ax
+p0ks7w6jA8w9EXfqbsyeDOMrOXCXcj13iYLxP9iXsqUIKa9BuIdN2cWLlwfh
+HoPP1VI+WTD7BRyaZlw6uC4KZp+IQwd714cnU2HmSTgcPWb4TI0RxpdxkPa+
+Gh7UDwt/BYfIQl9uHzMYX8nh5LnFn67e+g8PH/NjLr2Nmrxw90z3L9bYwMwN
+d0+b7unE2wc54O6ptf3t+yoA5n4RBwm/7RU8rmxw9/x/kW1tXgzzj4zDnFMP
+OX3Pw8JXwcFP7pPFZh8YX8nBeVpOm8oDmH8/2LvsecGc/ZMf7p76BaE/2U4h
+3BO38qA810tOuHvW8QduU5wDc5+IQxb3pb9Bc2Duk3CYoeY9N+MczH0yDrHV
+cuobdWB8BYcO22tMVqtg7lVy2P7gxdxoc1YHAOAMrMM=
+       "], {{{}, {}, {
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          LineBox[{1, 2, 3, 4, 5, 6, 7, 8, 9}]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          LineBox[{10, 11, 12, 13, 14, 15, 16, 17, 18}]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          LineBox[{19, 20, 21, 22, 23, 24, 25, 26, 27}]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          LineBox[{28, 29, 30, 31, 32, 33, 34, 35, 36}]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          LineBox[{37, 38, 39, 40, 41, 42, 43, 44, 45}]}}, {{
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           1], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           2], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           3], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           4], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           5], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           7], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           8], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           9]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           10], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           11], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           12], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           13], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           14], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           15], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           16], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           17], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           18]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           19], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           20], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           21], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           22], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           23], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           25], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           26], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           27]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 28], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 29], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 30], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 31], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 32], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 33], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 34], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 35], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 36]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 37], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 38], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 39], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 40], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 41], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 42], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 43], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 44], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 45]}, {}}}], {}}, {}}, AspectRatio -> 
+    NCache[GoldenRatio^(-1), 0.6180339887498948], Axes -> True, 
+    AxesLabel -> {
+      FormBox["\"Nd/10\"", TraditionalForm], 
+      FormBox["\"#SD\"", TraditionalForm]}, 
+    AxesOrigin -> {1., 1.7238316065095658`}, Method -> {}, PlotLabel -> 
+    FormBox["\"relative L2 error in the\\n number of siginificant digits\"", 
+      TraditionalForm], 
+    PlotRange -> {{1., 9.}, {1.7238316065095658`, 3.9967861466789447`}}, 
+    PlotRangeClipping -> True, 
+    PlotRangePadding -> {{0.16, 0.16}, {0.04545909080338758, 
+     0.04545909080338758}}],TemplateBox[{
+     TagBox[
+      FrameBox[
+       StyleBox["1", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["2", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["3", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["4", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["5", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"]}, "LineLegend", DisplayFunction -> (StyleBox[
+      StyleBox[
+       PaneBox[
+        TagBox[
+         GridBox[{{
+            TagBox[
+             GridBox[{{
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledCircle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledSquare]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #2}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    LineBox[{{0, 10.88}, {20, 10.88}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDiamond]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], FontSize -> 
+                    10.88, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.88}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.13235294117647062`] -> 
+                  Baseline)], #3}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledUpTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #4}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDownTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #5}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {Center, Left}, "Rows" -> {{Baseline}}}, 
+              AutoDelete -> False, 
+              GridBoxDividers -> {
+               "Columns" -> {{False}}, "Rows" -> {{False}}}, 
+              GridBoxItemSize -> {"Columns" -> {{All}}, "Rows" -> {{All}}}, 
+              GridBoxSpacings -> {"Columns" -> {{0.5}}, "Rows" -> {{0.8}}}], 
+             "Grid"]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          GridBoxSpacings -> {"Columns" -> {{1}}, "Rows" -> {{0}}}], "Grid"], 
+        Alignment -> Left, AppearanceElements -> None, 
+        ImageMargins -> {{5, 5}, {5, 5}}, ImageSizeAction -> "ResizeToFit"], 
+       LineIndent -> 0, StripOnInput -> False], {FontFamily -> "Times"}, 
+      Background -> Automatic, StripOnInput -> False]& ), Editable -> True, 
+    InterpretationFunction :> (RowBox[{"LineLegend", "[", 
+       RowBox[{
+         RowBox[{"{", 
+           RowBox[{
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24720000000000014`", ",", "0.24`", ",", "0.6`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.24`", ",", "0.4428931686004542`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.5470136627990908`", ",", "0.24`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.6`", ",", "0.33692049419863584`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.3531726744018182`", ",", "0.6`"}], 
+                 "]"}], "]"}]}], "}"}], ",", 
+         RowBox[{"{", 
+           RowBox[{#, ",", #2, ",", #3, ",", #4, ",", #5}], "}"}], ",", 
+         RowBox[{"LegendLayout", "\[Rule]", "\"Column\""}], ",", 
+         RowBox[{"LegendMarkers", "\[Rule]", "Automatic"}]}], "]"}]& )]},
+  "Legended",
+  DisplayFunction->(GridBox[{{
+      TagBox[
+       ItemBox[
+        PaneBox[
+         TagBox[#, "SkipImageSizeLevel"], Alignment -> {Center, Baseline}, 
+         BaselinePosition -> Baseline], DefaultBaseStyle -> "Labeled"], 
+       "SkipImageSizeLevel"], 
+      ItemBox[#2, DefaultBaseStyle -> "LabeledLabel"]}}, 
+    GridBoxAlignment -> {"Columns" -> {{Center}}, "Rows" -> {{Center}}}, 
+    AutoDelete -> False, GridBoxItemSize -> Automatic, 
+    BaselinePosition -> {1, 1}]& ),
+  Editable->True,
+  InterpretationFunction->(RowBox[{"Legended", "[", 
+     RowBox[{#, ",", 
+       RowBox[{"Placed", "[", 
+         RowBox[{#2, ",", "After"}], "]"}]}], "]"}]& )]], "Output",
+ CellChangeTimes->{3.602162649245042*^9}],
+
+Cell["New", "Text",
+ CellChangeTimes->{{3.602260075602096*^9, 3.60226007592284*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{GraphicsBox[{{{}, 
+      GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGDQBWIQDQEf7Hl1JGatz2JwgAo4uJ7Ls1n28J89hMvhcJr5
+7ryJh/5C+QIOtqs3y4qwwvgiDgvmbze3afwD5Us47BS+3yOuAuPLOKwW/NDs
+/eg3lK/gYOZzZFPKVhhfyeFMQEzxhSkw/gd7E+2Hm933scPdk702p8toK6sD
+zD0JXiWzPvqyOMDc0/7af/mMZGYHmHusF3EuObudyQHmnn+rciZzWMP4Mg4s
+l52U8u4wOsDcU75Z5f7syTC+kgN3KddzlygY/4P9y3cXbrmtQbjnm/PthcI8
+CPesMu5Q88uC2S/goM1yIWZ9FMw+EYdJVzM1n06FmSfhUF+w8a8aI4wv4/C9
+cWpyUD8s/BUcKjw+C/qYwfhKDifPLf509dZ/ePisXrcxdKkmL9w9bQVcDduY
+ueHuYci7nnv3IAfcPaorf7x4FQBzv4iDssz0jTyubHD37Jz0Osi8GOYfGYdy
+xkWivudh4avgkPt1uv1mHxhfycF5Wk6bygOYfz/Y71gSeqbvJz/cPfkH3wTw
+nkK458bLs9o8Lznh7gmr9gtUmgNzn4hD6c2NZsFzYO6TcAi+cGpLxjmY+2Qc
+LDbdM9qoA+MrOCwXqeG0WgVzr5LD9gcv5kabszoAAMKysQo=
+       "], {{{}, {}, {
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          LineBox[{1, 2, 3, 4, 5, 6, 7, 8, 9}]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          LineBox[{10, 11, 12, 13, 14, 15, 16, 17, 18}]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          LineBox[{19, 20, 21, 22, 23, 24, 25, 26, 27}]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          LineBox[{28, 29, 30, 31, 32, 33, 34, 35, 36}]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          LineBox[{37, 38, 39, 40, 41, 42, 43, 44, 45}]}}, {{
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           1], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           2], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           3], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           4], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           5], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           7], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           8], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           9]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           10], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           11], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           12], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           13], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           14], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           15], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           16], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           17], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           18]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           19], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           20], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           21], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           22], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           23], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           25], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           26], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           27]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 28], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 29], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 30], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 31], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 32], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 33], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 34], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 35], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 36]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 37], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 38], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 39], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 40], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 41], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 42], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 43], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 44], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 45]}, {}}}], {}}, {}}, AspectRatio -> 
+    NCache[GoldenRatio^(-1), 0.6180339887498948], Axes -> True, 
+    AxesLabel -> {
+      FormBox["\"Nd/10\"", TraditionalForm], 
+      FormBox["\"#SD\"", TraditionalForm]}, 
+    AxesOrigin -> {1., 1.7238316065095658`}, Method -> {}, PlotLabel -> 
+    FormBox["\"relative L2 error in the\\n number of siginificant digits\"", 
+      TraditionalForm], 
+    PlotRange -> {{1., 9.}, {1.7238316065095658`, 3.996854397166853}}, 
+    PlotRangeClipping -> True, 
+    PlotRangePadding -> {{0.16, 0.16}, {0.04546045581314575, 
+     0.04546045581314575}}],TemplateBox[{
+     TagBox[
+      FrameBox[
+       StyleBox["1", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["2", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["3", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["4", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["5", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"]}, "LineLegend", DisplayFunction -> (StyleBox[
+      StyleBox[
+       PaneBox[
+        TagBox[
+         GridBox[{{
+            TagBox[
+             GridBox[{{
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledCircle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledSquare]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #2}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    LineBox[{{0, 10.88}, {20, 10.88}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDiamond]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], FontSize -> 
+                    10.88, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.88}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.13235294117647062`] -> 
+                  Baseline)], #3}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledUpTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #4}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDownTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #5}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {Center, Left}, "Rows" -> {{Baseline}}}, 
+              AutoDelete -> False, 
+              GridBoxDividers -> {
+               "Columns" -> {{False}}, "Rows" -> {{False}}}, 
+              GridBoxItemSize -> {"Columns" -> {{All}}, "Rows" -> {{All}}}, 
+              GridBoxSpacings -> {"Columns" -> {{0.5}}, "Rows" -> {{0.8}}}], 
+             "Grid"]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          GridBoxSpacings -> {"Columns" -> {{1}}, "Rows" -> {{0}}}], "Grid"], 
+        Alignment -> Left, AppearanceElements -> None, 
+        ImageMargins -> {{5, 5}, {5, 5}}, ImageSizeAction -> "ResizeToFit"], 
+       LineIndent -> 0, StripOnInput -> False], {FontFamily -> "Times"}, 
+      Background -> Automatic, StripOnInput -> False]& ), Editable -> True, 
+    InterpretationFunction :> (RowBox[{"LineLegend", "[", 
+       RowBox[{
+         RowBox[{"{", 
+           RowBox[{
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24720000000000014`", ",", "0.24`", ",", "0.6`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.24`", ",", "0.4428931686004542`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.5470136627990908`", ",", "0.24`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.6`", ",", "0.33692049419863584`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.3531726744018182`", ",", "0.6`"}], 
+                 "]"}], "]"}]}], "}"}], ",", 
+         RowBox[{"{", 
+           RowBox[{#, ",", #2, ",", #3, ",", #4, ",", #5}], "}"}], ",", 
+         RowBox[{"LegendLayout", "\[Rule]", "\"Column\""}], ",", 
+         RowBox[{"LegendMarkers", "\[Rule]", "Automatic"}]}], "]"}]& )]},
+  "Legended",
+  DisplayFunction->(GridBox[{{
+      TagBox[
+       ItemBox[
+        PaneBox[
+         TagBox[#, "SkipImageSizeLevel"], Alignment -> {Center, Baseline}, 
+         BaselinePosition -> Baseline], DefaultBaseStyle -> "Labeled"], 
+       "SkipImageSizeLevel"], 
+      ItemBox[#2, DefaultBaseStyle -> "LabeledLabel"]}}, 
+    GridBoxAlignment -> {"Columns" -> {{Center}}, "Rows" -> {{Center}}}, 
+    AutoDelete -> False, GridBoxItemSize -> Automatic, 
+    BaselinePosition -> {1, 1}]& ),
+  Editable->True,
+  InterpretationFunction->(RowBox[{"Legended", "[", 
+     RowBox[{#, ",", 
+       RowBox[{"Placed", "[", 
+         RowBox[{#2, ",", "After"}], "]"}]}], "]"}]& )]], "Output",
+ CellChangeTimes->{3.602260043280088*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Unit Square ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["N", "s"], "=", "162"}], TraditionalForm]]],
+ "\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Mu]", "a"], "=", 
+    RowBox[{
+     RowBox[{"log", "(", "2", ")"}], "=", "0.6931471805599453`"}]}], 
+   TraditionalForm]]],
+ "\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Mu]", "s"], "=", 
+    RowBox[{
+     RowBox[{"5", 
+      RowBox[{"log", "(", "2", ")"}]}], "=", "3.4657359027997265`"}]}], 
+   TraditionalForm]]],
+ "\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"g", "=", "0.9"}], TraditionalForm]]]
+}], "Section",
+ CellChangeTimes->{{3.60157260861243*^9, 3.601572709761133*^9}, {
+  3.601572747219468*^9, 3.6015727476597843`*^9}, {3.601575055750622*^9, 
+  3.6015750946333523`*^9}, {3.6015760144158278`*^9, 3.601576080223414*^9}}],
+
+Cell["\<\
+The specific intensity for a triangle centered at (0.63,0.71)\
+\>", "Text",
+ CellChangeTimes->{3.601581867831867*^9}],
+
+Cell[CellGroupData[{
+
+Cell["L2 Error", "Subsection",
+ CellChangeTimes->{{3.602162849109517*^9, 3.602162850468985*^9}}],
+
+Cell["\<\
+Legends are for RULE1=1,2,3,4,5
+Highest RULE1=6\
+\>", "Text",
+ CellChangeTimes->{{3.602096450055964*^9, 3.602096463631956*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{GraphicsBox[{{{}, 
+      GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGDQBWIQDQEf7J3WSa99fPS3PVTAgVHqya0/Sb+gfA6HKp1L
+PhOTf0L5Ag5az/em5i39AeWLOHytu9D6VwzGl3DotzJa/3HVdyhfxsG0r+Fq
+cySMr+DwbkH9NR45GF/JgXfb59nsn7/Zw9yzu3eL8fZOZgeYe3btOBT5fQuT
+A8w9n41VGFq3MDrA3PORu2l+9kMGB5h7zKrOOuqZwfgSDoUicm7+sf/h7vla
+fE6ko+Uf3D29Wx69nXTtL9w9B/X/imz2+At3T5hbxtP0tQj3ZBo23Z3cg3DP
+upKC1UUBCPfsCl7HUuyGcI9m1Eepirv/4OGj1/b35ZPmv3D3uNise3sx7w/c
+Pe2PFt1Y2P8b7p7sPeHhq+78grunY7/Oys4cDrh7ZldMb1iQyw53z2J+jR0y
+hWxw98z7/+9Qpi4r3D3255rD34qywMOnrrnhapQezH8yDgJalw4+LoD5T8Gh
+5fWTt6euwPyn5LBSNk6QLxDG/2Bfl2DmMqeMC+4e/h9fXJpjOOHusWKWvVew
+A+ZeAQfm///l8iNg7hVx4Al3dtfhg7lXwuG3cMwJM1aYe2Uc/DrcTa4awNyr
+4PDq5NSl4i0w9yo5hCZ9+1/0lckBANeuvHQ=
+       "], {{{}, {}, {
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          LineBox[{1, 2, 3, 4, 5, 6, 7, 8, 9}]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          LineBox[{10, 11, 12, 13, 14, 15, 16, 17, 18}]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          LineBox[{19, 20, 21, 22, 23, 24, 25, 26, 27}]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          LineBox[{28, 29, 30, 31, 32, 33, 34, 35, 36}]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          LineBox[{37, 38, 39, 40, 41, 42, 43, 44, 45}]}}, {{
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           1], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           2], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           3], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           4], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           5], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           7], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           8], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           9]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           10], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           11], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           12], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           13], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           14], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           15], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           16], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           17], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           18]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           19], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           20], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           21], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           22], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           23], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           25], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           26], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           27]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 28], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 29], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 30], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 31], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 32], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 33], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 34], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 35], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 36]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 37], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 38], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 39], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 40], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 41], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 42], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 43], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 44], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 45]}, {}}}], {}}, {}}, AspectRatio -> 
+    NCache[GoldenRatio^(-1), 0.6180339887498948], Axes -> True, 
+    AxesLabel -> {
+      FormBox["\"Nd/10\"", TraditionalForm], 
+      FormBox["\"#SD\"", TraditionalForm]}, 
+    AxesOrigin -> {1., 1.434333428561675}, Method -> {}, PlotLabel -> 
+    FormBox["\"relative L2 error in the\\n number of siginificant digits\"", 
+      TraditionalForm], 
+    PlotRange -> {{1., 9.}, {1.434333428561675, 3.307915242108776}}, 
+    PlotRangeClipping -> True, 
+    PlotRangePadding -> {{0.16, 0.16}, {0.03747163627094202, 
+     0.03747163627094202}}],TemplateBox[{
+     TagBox[
+      FrameBox[
+       StyleBox["1", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["2", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["3", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["4", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["5", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"]}, "LineLegend", DisplayFunction -> (StyleBox[
+      StyleBox[
+       PaneBox[
+        TagBox[
+         GridBox[{{
+            TagBox[
+             GridBox[{{
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledCircle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledSquare]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #2}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    LineBox[{{0, 10.88}, {20, 10.88}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDiamond]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], FontSize -> 
+                    10.88, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.88}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.13235294117647062`] -> 
+                  Baseline)], #3}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledUpTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #4}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDownTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #5}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {Center, Left}, "Rows" -> {{Baseline}}}, 
+              AutoDelete -> False, 
+              GridBoxDividers -> {
+               "Columns" -> {{False}}, "Rows" -> {{False}}}, 
+              GridBoxItemSize -> {"Columns" -> {{All}}, "Rows" -> {{All}}}, 
+              GridBoxSpacings -> {"Columns" -> {{0.5}}, "Rows" -> {{0.8}}}], 
+             "Grid"]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          GridBoxSpacings -> {"Columns" -> {{1}}, "Rows" -> {{0}}}], "Grid"], 
+        Alignment -> Left, AppearanceElements -> None, 
+        ImageMargins -> {{5, 5}, {5, 5}}, ImageSizeAction -> "ResizeToFit"], 
+       LineIndent -> 0, StripOnInput -> False], {FontFamily -> "Times"}, 
+      Background -> Automatic, StripOnInput -> False]& ), Editable -> True, 
+    InterpretationFunction :> (RowBox[{"LineLegend", "[", 
+       RowBox[{
+         RowBox[{"{", 
+           RowBox[{
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24720000000000014`", ",", "0.24`", ",", "0.6`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.24`", ",", "0.4428931686004542`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.5470136627990908`", ",", "0.24`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.6`", ",", "0.33692049419863584`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.3531726744018182`", ",", "0.6`"}], 
+                 "]"}], "]"}]}], "}"}], ",", 
+         RowBox[{"{", 
+           RowBox[{#, ",", #2, ",", #3, ",", #4, ",", #5}], "}"}], ",", 
+         RowBox[{"LegendLayout", "\[Rule]", "\"Column\""}], ",", 
+         RowBox[{"LegendMarkers", "\[Rule]", "Automatic"}]}], "]"}]& )]},
+  "Legended",
+  DisplayFunction->(GridBox[{{
+      TagBox[
+       ItemBox[
+        PaneBox[
+         TagBox[#, "SkipImageSizeLevel"], Alignment -> {Center, Baseline}, 
+         BaselinePosition -> Baseline], DefaultBaseStyle -> "Labeled"], 
+       "SkipImageSizeLevel"], 
+      ItemBox[#2, DefaultBaseStyle -> "LabeledLabel"]}}, 
+    GridBoxAlignment -> {"Columns" -> {{Center}}, "Rows" -> {{Center}}}, 
+    AutoDelete -> False, GridBoxItemSize -> Automatic, 
+    BaselinePosition -> {1, 1}]& ),
+  Editable->True,
+  InterpretationFunction->(RowBox[{"Legended", "[", 
+     RowBox[{#, ",", 
+       RowBox[{"Placed", "[", 
+         RowBox[{#2, ",", "After"}], "]"}]}], "]"}]& )]], "Output",
+ CellChangeTimes->{{3.602096240988364*^9, 3.602096279023662*^9}, {
+  3.602096331851797*^9, 3.6020963563070393`*^9}, {3.6020963955325317`*^9, 
+  3.602096405025446*^9}}],
+
+Cell["New", "Text",
+ CellChangeTimes->{{3.602260202645702*^9, 3.60226020295772*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{GraphicsBox[{{{}, 
+      GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGDQBWIQDQEf7EN3FswQff7bHirgwHqKRYYl7ReUz+GwU1D2
+5L3kn1C+gIPDi/0nS5f+gPJFHGbmKMb9FYPxJRyubW9V/7jqO5Qv46AoJLKs
+ORLGV3BoDyy4wSMH4ys58G77PJv98zd7mHucheM1A2YxO8Dcs1sg+FfVNiYH
+mHsmL/Pct3oLowPMPTU8zYH5DxkcYO5h//hVV88Mxpdw2DWxcJ9f7H+4ex58
+T3za3vIP7h611MvvJ137C3fPQf2/Ips9/sLdc/+00G2GfQj35HQK1Yn3Idzj
++3xq5swAhHvcQtZvK3NDuOesu9Pn8rv/4OFTzhyY9KT5L9w9+gcc913M+wN3
+j8LkybcW9v+Guyd7T3j4qju/4O4RcL0+T6mWA+6euRfUFVXy2eHucWryLXMu
+ZIO7R5OBoTRXlxXuHkHXNc5vRVng4aPstGpilB7MfzIObG+kVz0ugPlPweGC
+8913p67A/KfksFI2TpAvEMb/YM/+7IGlaTsX3D1CAa1P2eI44e65Weo0Z/oO
+mHsFHPr+M1wsioC5V8Th7tlsYx0+mHslHOZfam0xY4W5V8bB2WuizFUDmHsV
+HMyU+paJt8Dcq+QQmvTtf9FXJgcAOD+xNw==
+       "], {{{}, {}, {
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          LineBox[{1, 2, 3, 4, 5, 6, 7, 8, 9}]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          LineBox[{10, 11, 12, 13, 14, 15, 16, 17, 18}]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          LineBox[{19, 20, 21, 22, 23, 24, 25, 26, 27}]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          LineBox[{28, 29, 30, 31, 32, 33, 34, 35, 36}]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          LineBox[{37, 38, 39, 40, 41, 42, 43, 44, 45}]}}, {{
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           1], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           2], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           3], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           4], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           5], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           7], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           8], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           9]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           10], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           11], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           12], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           13], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           14], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           15], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           16], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           17], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           18]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           19], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           20], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           21], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           22], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           23], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           25], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           26], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           27]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 28], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 29], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 30], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 31], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 32], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 33], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 34], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 35], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 36]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 37], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 38], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 39], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 40], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 41], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 42], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 43], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 44], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 45]}, {}}}], {}}, {}}, AspectRatio -> 
+    NCache[GoldenRatio^(-1), 0.6180339887498948], Axes -> True, 
+    AxesLabel -> {
+      FormBox["\"Nd/10\"", TraditionalForm], 
+      FormBox["\"#SD\"", TraditionalForm]}, 
+    AxesOrigin -> {1., 1.434333428561675}, Method -> {}, PlotLabel -> 
+    FormBox["\"relative L2 error in the\\n number of siginificant digits\"", 
+      TraditionalForm], 
+    PlotRange -> {{1., 9.}, {1.434333428561675, 3.316019489456042}}, 
+    PlotRangeClipping -> True, 
+    PlotRangePadding -> {{0.16, 0.16}, {0.03763372121788735, 
+     0.03763372121788735}}],TemplateBox[{
+     TagBox[
+      FrameBox[
+       StyleBox["1", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["2", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["3", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["4", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["5", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"]}, "LineLegend", DisplayFunction -> (StyleBox[
+      StyleBox[
+       PaneBox[
+        TagBox[
+         GridBox[{{
+            TagBox[
+             GridBox[{{
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledCircle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledSquare]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #2}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    LineBox[{{0, 10.88}, {20, 10.88}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDiamond]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], FontSize -> 
+                    10.88, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.88}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.13235294117647062`] -> 
+                  Baseline)], #3}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledUpTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #4}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDownTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #5}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {Center, Left}, "Rows" -> {{Baseline}}}, 
+              AutoDelete -> False, 
+              GridBoxDividers -> {
+               "Columns" -> {{False}}, "Rows" -> {{False}}}, 
+              GridBoxItemSize -> {"Columns" -> {{All}}, "Rows" -> {{All}}}, 
+              GridBoxSpacings -> {"Columns" -> {{0.5}}, "Rows" -> {{0.8}}}], 
+             "Grid"]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          GridBoxSpacings -> {"Columns" -> {{1}}, "Rows" -> {{0}}}], "Grid"], 
+        Alignment -> Left, AppearanceElements -> None, 
+        ImageMargins -> {{5, 5}, {5, 5}}, ImageSizeAction -> "ResizeToFit"], 
+       LineIndent -> 0, StripOnInput -> False], {FontFamily -> "Times"}, 
+      Background -> Automatic, StripOnInput -> False]& ), Editable -> True, 
+    InterpretationFunction :> (RowBox[{"LineLegend", "[", 
+       RowBox[{
+         RowBox[{"{", 
+           RowBox[{
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24720000000000014`", ",", "0.24`", ",", "0.6`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.24`", ",", "0.4428931686004542`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.5470136627990908`", ",", "0.24`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.6`", ",", "0.33692049419863584`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.3531726744018182`", ",", "0.6`"}], 
+                 "]"}], "]"}]}], "}"}], ",", 
+         RowBox[{"{", 
+           RowBox[{#, ",", #2, ",", #3, ",", #4, ",", #5}], "}"}], ",", 
+         RowBox[{"LegendLayout", "\[Rule]", "\"Column\""}], ",", 
+         RowBox[{"LegendMarkers", "\[Rule]", "Automatic"}]}], "]"}]& )]},
+  "Legended",
+  DisplayFunction->(GridBox[{{
+      TagBox[
+       ItemBox[
+        PaneBox[
+         TagBox[#, "SkipImageSizeLevel"], Alignment -> {Center, Baseline}, 
+         BaselinePosition -> Baseline], DefaultBaseStyle -> "Labeled"], 
+       "SkipImageSizeLevel"], 
+      ItemBox[#2, DefaultBaseStyle -> "LabeledLabel"]}}, 
+    GridBoxAlignment -> {"Columns" -> {{Center}}, "Rows" -> {{Center}}}, 
+    AutoDelete -> False, GridBoxItemSize -> Automatic, 
+    BaselinePosition -> {1, 1}]& ),
+  Editable->True,
+  InterpretationFunction->(RowBox[{"Legended", "[", 
+     RowBox[{#, ",", 
+       RowBox[{"Placed", "[", 
+         RowBox[{#2, ",", "After"}], "]"}]}], "]"}]& )]], "Output",
+ CellChangeTimes->{{3.602260174570532*^9, 3.602260187539222*^9}}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Plotting Codes", "Section",
+ CellChangeTimes->{{3.601581880940021*^9, 3.6015818832433968`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Single plot", "Subsubsection",
+ CellChangeTimes->{{3.6020968724970617`*^9, 3.6020968744009867`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"ndlist", ",", "raw1", ",", "data", ",", "RULE1"}], "]"}], "\n", 
+ RowBox[{
+  RowBox[{"RULE1", "=", "6"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ndlist", "=", 
+   RowBox[{"Range", "[", 
+    RowBox[{"10", ",", "90", ",", "10"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"raw1", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Partition", "[", 
+      RowBox[{
+       RowBox[{"Import", "[", 
+        RowBox[{
+         RowBox[{"\"\<solx2/sol\>\"", "<>", 
+          RowBox[{"ToString", "[", "RULE1", "]"}], "<>", "\"\</162_\>\"", "<>", 
+          RowBox[{"ToString", "[", "nd", "]"}]}], ",", "\"\<Complex128\>\""}],
+         "]"}], ",", 
+       RowBox[{
+        RowBox[{"2", " ", "nd"}], "+", "1"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"nd", ",", "ndlist"}], "}"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ResetDirectory", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ClearAll", "[", "n", "]"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"n", "=", "121"}], ";"}], "\n", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<RULE1=\>\"", ",", "RULE1"}], "]"}], ";"}], "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<n=\>\"", ",", "n"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"data", "=", 
+     RowBox[{
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"m", ",", 
+            RowBox[{"raw1", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", ",", "n", ",", 
+               RowBox[{"m", "+", 
+                RowBox[{"ndlist", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], "+", "1"}]}], "]"}], "]"}]}],
+            "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"m", ",", "0", ",", 
+            RowBox[{"ndlist", "[", 
+             RowBox[{"[", "i", "]"}], "]"}]}], "}"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", 
+          RowBox[{"Length", "[", "ndlist", "]"}]}], "}"}]}], "]"}], "//", 
+      "Re"}]}], ")"}], "//", 
+   RowBox[{
+    RowBox[{"ListLinePlot", "[", 
+     RowBox[{"#", ",", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"10", ",", "20"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"0.01", ",", "0.04"}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"PlotMarkers", "\[Rule]", "Automatic"}], ",", 
+      RowBox[{"PlotLegends", "\[Rule]", "ndlist"}]}], "]"}], "&"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"raw1", "[", 
+     RowBox[{"[", 
+      RowBox[{"9", ",", "n"}], "]"}], "]"}], "//", "Re"}], "//", 
+   RowBox[{
+    RowBox[{"ListPlot", "[", 
+     RowBox[{"#", ",", 
+      RowBox[{"PlotRange", "\[Rule]", "Automatic"}]}], "]"}], "&"}]}], 
+  ";"}], "\n", 
+ RowBox[{"Show", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"i", "=", "9"}], ";", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"m", ",", 
+          RowBox[{"raw1", "[", 
+           RowBox[{"[", 
+            RowBox[{"i", ",", "n", ",", 
+             RowBox[{"m", "+", 
+              RowBox[{"ndlist", "[", 
+               RowBox[{"[", "i", "]"}], "]"}], "+", "1"}]}], "]"}], "]"}]}], 
+         "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"m", ",", "0", ",", 
+          RowBox[{"ndlist", "[", 
+           RowBox[{"[", "i", "]"}], "]"}]}], "}"}]}], "]"}], "//", "Re"}], "//", 
+     RowBox[{
+      RowBox[{"ListPlot", "[", 
+       RowBox[{"#", ",", 
+        RowBox[{"PlotRange", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"0", ",", "40"}], "}"}], ",", "All"}], "}"}]}], ",", 
+        RowBox[{"PlotMarkers", "\[Rule]", "Automatic"}]}], "]"}], "&"}]}]}], 
+   ",", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"raw1", "[", 
+       RowBox[{"[", 
+        RowBox[{"i", ",", "n", ",", 
+         RowBox[{
+          RowBox[{"ndlist", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], "+", "1"}]}], "]"}], "]"}], " ", 
+      RowBox[{"0.9", "^", 
+       RowBox[{"(", " ", "m", ")"}]}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"m", ",", "0", ",", "90"}], "}"}], ",", 
+     RowBox[{"PlotRange", "\[Rule]", "All"}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Dashed", ",", "Thick", ",", "Red"}], "}"}]}]}], "]"}]}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.601572485250051*^9, 3.601572485251136*^9}, {
+   3.601572520726122*^9, 3.601572549625145*^9}, {3.60157530069582*^9, 
+   3.601575350730299*^9}, {3.6015753821198683`*^9, 3.601575448617*^9}, {
+   3.601575483055118*^9, 3.601575506725708*^9}, {3.601575542796421*^9, 
+   3.60157555310347*^9}, {3.6015756049199944`*^9, 3.60157564951665*^9}, {
+   3.601575686013712*^9, 3.601575765718894*^9}, {3.6015758470878143`*^9, 
+   3.601575851535619*^9}, {3.6015759458528214`*^9, 3.6015759758951*^9}, {
+   3.601578447727421*^9, 3.6015785037548523`*^9}, {3.601578743556959*^9, 
+   3.6015788695903788`*^9}, {3.601578906466905*^9, 3.601579007233202*^9}, {
+   3.6015815868577127`*^9, 3.601581735465312*^9}, {3.601581779100111*^9, 
+   3.601581803109415*^9}, {3.602082572589014*^9, 3.602082581963909*^9}, {
+   3.6020838556950502`*^9, 3.602083895011763*^9}, 3.602084331154315*^9, {
+   3.6020844121883717`*^9, 3.602084598384602*^9}, {3.6020846323165197`*^9, 
+   3.6020848884333267`*^9}, {3.602084919525052*^9, 3.6020849453668203`*^9}, {
+   3.602084986203704*^9, 3.602085002077128*^9}, {3.60208503617162*^9, 
+   3.6020850959304953`*^9}, {3.6020851325702887`*^9, 3.602085274769199*^9}, {
+   3.6020853187743187`*^9, 3.6020853250065393`*^9}, {3.60208537379821*^9, 
+   3.6020853869225903`*^9}, {3.602085430692863*^9, 3.602085525021392*^9}, {
+   3.602085742231558*^9, 3.602085755735002*^9}, {3.6020944195615683`*^9, 
+   3.602094421038972*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"n=\"\>", "\[InvisibleSpace]", "121"}],
+  SequenceForm["n=", 121],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6020857432182903`*^9, 3.602085756584231*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{{}, GraphicsComplexBox[CompressedData["
+1:eJzt1Ps323ccx/HQ1tKOtaPCcSkxJmwuJSqxiheCxDWS0HPqrDqH6DnqBKPr
+2o4Em5ljh9F2GqVoe9apDj1MZsVhParWmk11uuwcnUtrZTZnzla0tp288z/s
+h+ScnJzHeX5e35zz/eHDTlNKM0wZDEb3v9//fg2f68JeTeHHN0P0+j2ksT6o
+oyhliMzAhZjtNqKJPjITxdXfOLszteRdqJAJU8/92EXejR/Sm381C7xOtsWb
+c09uhL/TTnaAOkJqK6i5SnbGldR6oWPRFbIL9mSeLXBTXya7YnbcqS4nt4X8
+Ku6tqb+UvNhE5iBuqtMiu6aB7InS4baFq44a8utQvZ3S2t90luyNry3H7HoW
+asm+KJwqqe65/wl5L6a2TVS5d1SR/TAsmDzj+kIl2R+laSsd8rZyMhdHvvuN
++5ldGTkAXK35ik9qKXkfHE9ltc1cUJMD0XvgkvUqu4jMg4BpWbH08CSZDydd
+iUUG/zg5CDPLlYHmtfnkN3Bk5s7s3bVc8n7MK/tXyxaU5GDoLmvtD9lnkQVY
+yszv8BQryCFwTdn8+4/1NDIw2eE3app3WG8VUHfxbjXr3EHqoVjJaRpMV8ip
+h2K5wvvigFJCPQyPbOYKlzTR1MNg9Ze5oJgXRj0cdsvmq7J+LvVwrH3ubCJL
+8aAuhE+7Jtin1566EHH81kt518z69T0Cuk4npsm3HL1VEeCqGlhldb7UI+EV
+lb1lWuJPPRIh77oUpHXzqEehJZLfl2wWTD0K958F7p1nkhkijBwVJrhv7qcu
+wjSnNuGBNaiLMeamdB/0CaUuxpBXl+ctG0OPRjx7ybtfZHh+NPyfRmd28w3P
+j8G4wrHUV2HoMcjmPAqL0gVRj0WIs4t1841A6rEY/flM/geF+6jHoeYYMsUH
+AqjHgcPivtWd40c9Hg8LytefVfpQj8ck24FdlutNPQF1jAcWh7/yop6A88U5
+21cTPKhLcPLTwfE+pqvekGD2RFnq7Ck2nZfgdGJDM+PJHr0HJNg4reycGGHR
+PhFd4sffO3N30T4R/gdZN9fvkFWJOFq6s722z5L2iRhxyn1/c8OC9lJEmPxi
+2/jaFtpLsXWM7fHFmAntpWi8l6wZit9KeynM0oOeu9VTZ8jAb8lJNV9m0F6G
+pKdWt+fndtBeBreZRY76mOH/ZVh8rlLwzr9MeznKYxtMRFY7aS9H66GfxC91
+0nmVHB+p8vjDO2xpL0fWtdvtJ96zo30SdPzHzU5aB9onQZBRJd6UG95fErR/
+xk6n8+j9DiThw7VFU1EAmZEM5dx8++itV2ifDF5TT9HuSDfaJ6Oy5Lh624bh
+vPG+Nt7XxvvaeF8b72v9/v97X/8D5FQ6fw==
+     "], {
+      {RGBColor[0.24720000000000014`, 0.24, 0.6], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 92], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 93], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 94], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 95], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 96], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 97], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 98], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 99], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 100], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 101], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 102], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 103], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 104], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 105], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 106], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 107], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 108], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 109], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 110], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 111], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 112], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 113], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 114], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 115], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 116], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 117], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 118], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 119], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 120], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 121], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 122], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 123], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 124], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 125], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 126], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 127], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 128], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 129], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 130], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 131], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 132], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 133], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 134], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 135], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 136], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 137], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 138], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 139], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 140], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 141], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 142], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 143], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 144], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 145], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 146], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 147], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 148], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 149], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 150], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 151], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 152], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 153], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 154], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 155], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 156], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 157], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 158], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 159], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 160], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 161], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 162], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 163], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 164], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 165], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 166], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 167], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 168], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 169], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 170], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 171], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 172], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 173], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 174], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 175], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 176], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 177], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 178], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 179], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 180], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 181], InsetBox[
+        StyleBox["\<\"\[FilledCircle]\"\>",
+         StripOnInput->False,
+         FontSize->8.96], 182]}, {}}], {}}, {{}, {}, 
+    {RGBColor[1, 0, 0], Thickness[Large], Dashing[{Small, Small}], 
+     LineBox[CompressedData["
+1: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
+od5ltvI3ioZCjfzvUr+PE/8DAocJyw==
+      "]]}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  Method->{},
+  PlotRange->{{0, 40}, All},
+  PlotRangeClipping->True,
+  PlotRangePadding->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{{3.602085743467579*^9, 3.6020857568276987`*^9}}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["L2 error", "Subsubsection",
+ CellChangeTimes->{{3.60209686552553*^9, 3.602096866812701*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"ndlist", ",", "raw2", ",", "rule1range"}], "]"}], "\n", 
+ RowBox[{
+  RowBox[{"rule1range", "=", 
+   RowBox[{"Range", "[", "6", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ndlist", "=", 
+   RowBox[{"Range", "[", 
+    RowBox[{"10", ",", "90", ",", "10"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"raw2", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"Partition", "[", 
+          RowBox[{
+           RowBox[{"Import", "[", 
+            RowBox[{
+             RowBox[{"\"\<solx2/sol\>\"", "<>", 
+              RowBox[{"ToString", "[", "RULE1", "]"}], "<>", "\"\</162_\>\"", 
+              "<>", 
+              RowBox[{"ToString", "[", "nd", "]"}]}], ",", 
+             "\"\<Complex128\>\""}], "]"}], ",", 
+           RowBox[{
+            RowBox[{"2", " ", "nd"}], "+", "1"}]}], "]"}], 
+         "\[LeftDoubleBracket]", 
+         RowBox[{"All", ",", 
+          RowBox[{
+           RowBox[{"nd", "+", "1"}], ";;", 
+           RowBox[{
+            RowBox[{"2", "nd"}], "+", "1"}]}]}], "\[RightDoubleBracket]"}], "//",
+         "Chop"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"nd", ",", "ndlist"}], "}"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"RULE1", ",", "rule1range"}], "}"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ResetDirectory", "[", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6020946856811743`*^9, 3.602094741524984*^9}, {
+  3.602094800896372*^9, 3.602094839581472*^9}, {3.602094870999796*^9, 
+  3.602094900432663*^9}, {3.602095025232287*^9, 3.602095026536281*^9}, {
+  3.602162497383151*^9, 3.602162497533345*^9}, {3.602260082956917*^9, 
+  3.602260083164119*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"raw2", "\[LeftDoubleBracket]", 
+    RowBox[{"6", ",", "9"}], "\[RightDoubleBracket]"}], "//", "Dimensions"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"i", "=", "9"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"norm2", "=", 
+   RowBox[{"ParallelSum", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Abs", "[", 
+       RowBox[{"raw2", "\[LeftDoubleBracket]", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", "i", ",", "n", ",", "m"}], 
+        "\[RightDoubleBracket]"}], "]"}], "^", "2"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"m", ",", "1", ",", 
+       RowBox[{
+        RowBox[{
+        "ndlist", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], "+",
+         "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"n", ",", "1", ",", "162"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"data2", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"-", 
+          RowBox[{"Log", "[", 
+           RowBox[{
+            RowBox[{"ParallelSum", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"Abs", "[", 
+                RowBox[{
+                 RowBox[{"raw2", "\[LeftDoubleBracket]", 
+                  RowBox[{"RULE1", ",", "i", ",", "n", ",", "m"}], 
+                  "\[RightDoubleBracket]"}], "-", 
+                 RowBox[{"raw2", "\[LeftDoubleBracket]", 
+                  RowBox[{
+                   RowBox[{"-", "1"}], ",", "i", ",", "n", ",", "m"}], 
+                  "\[RightDoubleBracket]"}]}], "]"}], "^", "2"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"m", ",", "1", ",", 
+                RowBox[{
+                 RowBox[{
+                 "ndlist", "\[LeftDoubleBracket]", "i", 
+                  "\[RightDoubleBracket]"}], "+", "1"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"n", ",", "1", ",", "162"}], "}"}]}], "]"}], "/", 
+            "norm2"}], "]"}]}], "/", 
+         RowBox[{"Log", "[", "10", "]"}]}], "/", "2"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", 
+         RowBox[{"Length", "[", "ndlist", "]"}]}], "}"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"RULE1", ",", 
+       RowBox[{"rule1range", "\[LeftDoubleBracket]", 
+        RowBox[{"1", ";;", 
+         RowBox[{"-", "2"}]}], "\[RightDoubleBracket]"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"diffnormlist", "/", "normlist"}], "//", 
+    RowBox[{
+     RowBox[{"ListLinePlot", "[", 
+      RowBox[{"#", ",", 
+       RowBox[{"PlotMarkers", "\[Rule]", "Automatic"}], ",", 
+       RowBox[{"PlotLegends", "\[Rule]", "Automatic"}]}], "]"}], "&"}]}], 
+   "*)"}]}]}], "Input",
+ CellChangeTimes->{{3.6020949050613337`*^9, 3.602094907525387*^9}, {
+   3.6020949409213552`*^9, 3.6020949863853903`*^9}, {3.602095255494076*^9, 
+   3.60209529916278*^9}, {3.6020953292363367`*^9, 3.6020955925106907`*^9}, {
+   3.602095622929389*^9, 3.602095859437505*^9}, {3.602095920087212*^9, 
+   3.602095944091024*^9}, {3.602095996708338*^9, 3.602096087463766*^9}, {
+   3.602257709741476*^9, 3.60225772557576*^9}, 3.602257764518504*^9, {
+   3.602259920523168*^9, 3.602259954464943*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ListLinePlot", "[", 
+  RowBox[{"data2", ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"rule1range", "\[LeftDoubleBracket]", 
+       RowBox[{"1", ";;", 
+        RowBox[{"-", "2"}]}], "\[RightDoubleBracket]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "All"}], "}"}]}], "}"}]}], ",", 
+   RowBox[{"PlotMarkers", "\[Rule]", "Automatic"}], ",", 
+   RowBox[{"PlotLegends", "\[Rule]", "Automatic"}], ",", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<Nd/10\>\"", ",", "\"\<#SD\>\""}], "}"}]}], ",", 
+   RowBox[{
+   "PlotLabel", "\[Rule]", 
+    "\"\<relative L2 error in the\\n number of siginificant digits\>\""}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.602096232827362*^9, 3.6020964045310297`*^9}, {
+  3.6022601846832943`*^9, 3.6022601871434383`*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{GraphicsBox[{{{}, 
+      GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGDQBWIQDQEf7EN3FswQff7bHirgwHqKRYYl7ReUz+GwU1D2
+5L3kn1C+gIPDi/0nS5f+gPJFHGbmKMb9FYPxJRyubW9V/7jqO5Qv46AoJLKs
+ORLGV3BoDyy4wSMH4ys58G77PJv98zd7mHucheM1A2YxO8Dcs1sg+FfVNiYH
+mHsmL/Pct3oLowPMPTU8zYH5DxkcYO5h//hVV88Mxpdw2DWxcJ9f7H+4ex58
+T3za3vIP7h611MvvJ137C3fPQf2/Ips9/sLdc/+00G2GfQj35HQK1Yn3Idzj
++3xq5swAhHvcQtZvK3NDuOesu9Pn8rv/4OFTzhyY9KT5L9w9+gcc913M+wN3
+j8LkybcW9v+Guyd7T3j4qju/4O4RcL0+T6mWA+6euRfUFVXy2eHucWryLXMu
+ZIO7R5OBoTRXlxXuHkHXNc5vRVng4aPstGpilB7MfzIObG+kVz0ugPlPweGC
+8913p67A/KfksFI2TpAvEMb/YM/+7IGlaTsX3D1CAa1P2eI44e65Weo0Z/oO
+mHsFHPr+M1wsioC5V8Th7tlsYx0+mHslHOZfam0xY4W5V8bB2WuizFUDmHsV
+HMyU+paJt8Dcq+QQmvTtf9FXJgcAOD+xNw==
+       "], {{{}, {}, {
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          LineBox[{1, 2, 3, 4, 5, 6, 7, 8, 9}]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          LineBox[{10, 11, 12, 13, 14, 15, 16, 17, 18}]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          LineBox[{19, 20, 21, 22, 23, 24, 25, 26, 27}]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          LineBox[{28, 29, 30, 31, 32, 33, 34, 35, 36}]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          LineBox[{37, 38, 39, 40, 41, 42, 43, 44, 45}]}}, {{
+          RGBColor[0.24720000000000014`, 0.24, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           1], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           2], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           3], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           4], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           5], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           7], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           8], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledCircle]\"", StripOnInput -> False, FontSize -> 8.96], 
+           9]}, {
+          RGBColor[0.6, 0.24, 0.4428931686004542], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           10], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           11], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           12], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           13], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           14], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           15], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           16], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           17], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledSquare]\"", StripOnInput -> False, FontSize -> 8.96], 
+           18]}, {
+          RGBColor[0.6, 0.5470136627990908, 0.24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           19], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           20], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           21], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           22], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           23], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           24], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           25], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           26], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDiamond]\"", StripOnInput -> False, FontSize -> 10.88], 
+           27]}, {
+          RGBColor[0.24, 0.6, 0.33692049419863584`], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 28], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 29], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 30], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 31], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 32], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 33], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 34], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 35], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledUpTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 36]}, {
+          RGBColor[0.24, 0.3531726744018182, 0.6], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 37], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 38], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 39], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 40], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 41], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 42], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 43], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 44], 
+          InsetBox[
+           StyleBox[
+           "\"\[FilledDownTriangle]\"", StripOnInput -> False, FontSize -> 
+            10.24], 45]}, {}}}], {}}, {}}, AspectRatio -> 
+    NCache[GoldenRatio^(-1), 0.6180339887498948], Axes -> True, 
+    AxesLabel -> {
+      FormBox["\"Nd/10\"", TraditionalForm], 
+      FormBox["\"#SD\"", TraditionalForm]}, 
+    AxesOrigin -> {1., 1.434333428561675}, Method -> {}, PlotLabel -> 
+    FormBox["\"relative L2 error in the\\n number of siginificant digits\"", 
+      TraditionalForm], 
+    PlotRange -> {{1., 9.}, {1.434333428561675, 3.316019489456042}}, 
+    PlotRangeClipping -> True, 
+    PlotRangePadding -> {{0.16, 0.16}, {0.03763372121788735, 
+     0.03763372121788735}}],TemplateBox[{
+     TagBox[
+      FrameBox[
+       StyleBox["1", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["2", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["3", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["4", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"], 
+     TagBox[
+      FrameBox[
+       StyleBox["5", StripOnInput -> False, FontSize -> Smaller]], 
+      "Placeholder"]}, "LineLegend", DisplayFunction -> (StyleBox[
+      StyleBox[
+       PaneBox[
+        TagBox[
+         GridBox[{{
+            TagBox[
+             GridBox[{{
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledCircle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24720000000000014`, 0.24, 0.6]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    LineBox[{{0, 8.96}, {20, 8.96}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledSquare]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.24, 0.4428931686004542]], FontSize -> 
+                    8.96, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 8.96}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.06401785714285718] -> 
+                  Baseline)], #2}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    LineBox[{{0, 10.88}, {20, 10.88}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDiamond]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.6, 0.5470136627990908, 0.24]], FontSize -> 
+                    10.88, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.88}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.13235294117647062`] -> 
+                  Baseline)], #3}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledUpTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.6, 0.33692049419863584`]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #4}, {
+                GraphicsBox[{{
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    LineBox[{{0, 10.24}, {20, 10.24}}]}}, {
+                   Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], {
+                    InsetBox[
+                    FormBox[
+                    StyleBox["\"\[FilledDownTriangle]\"", 
+                    Directive[
+                    EdgeForm[{
+                    Opacity[0.3], 
+                    GrayLevel[0]}], 
+                    RGBColor[0.24, 0.3531726744018182, 0.6]], FontSize -> 
+                    10.24, Plain, StripOnInput -> False], TraditionalForm], 
+                    NCache[
+                    Scaled[{
+                    Rational[1, 2], 
+                    Rational[1, 2]}], 
+                    Scaled[{0.5, 0.5}]]]}}}, AspectRatio -> Full, 
+                 ImageSize -> {20, 10.24}, PlotRangePadding -> None, 
+                 ImagePadding -> 1, 
+                 BaselinePosition -> (Scaled[0.10937500000000001`] -> 
+                  Baseline)], #5}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {Center, Left}, "Rows" -> {{Baseline}}}, 
+              AutoDelete -> False, 
+              GridBoxDividers -> {
+               "Columns" -> {{False}}, "Rows" -> {{False}}}, 
+              GridBoxItemSize -> {"Columns" -> {{All}}, "Rows" -> {{All}}}, 
+              GridBoxSpacings -> {"Columns" -> {{0.5}}, "Rows" -> {{0.8}}}], 
+             "Grid"]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          GridBoxSpacings -> {"Columns" -> {{1}}, "Rows" -> {{0}}}], "Grid"], 
+        Alignment -> Left, AppearanceElements -> None, 
+        ImageMargins -> {{5, 5}, {5, 5}}, ImageSizeAction -> "ResizeToFit"], 
+       LineIndent -> 0, StripOnInput -> False], {FontFamily -> "Times"}, 
+      Background -> Automatic, StripOnInput -> False]& ), Editable -> True, 
+    InterpretationFunction :> (RowBox[{"LineLegend", "[", 
+       RowBox[{
+         RowBox[{"{", 
+           RowBox[{
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24720000000000014`", ",", "0.24`", ",", "0.6`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.24`", ",", "0.4428931686004542`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.6`", ",", "0.5470136627990908`", ",", "0.24`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.6`", ",", "0.33692049419863584`"}], 
+                 "]"}], "]"}], ",", 
+             RowBox[{"Directive", "[", 
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"0.24`", ",", "0.3531726744018182`", ",", "0.6`"}], 
+                 "]"}], "]"}]}], "}"}], ",", 
+         RowBox[{"{", 
+           RowBox[{#, ",", #2, ",", #3, ",", #4, ",", #5}], "}"}], ",", 
+         RowBox[{"LegendLayout", "\[Rule]", "\"Column\""}], ",", 
+         RowBox[{"LegendMarkers", "\[Rule]", "Automatic"}]}], "]"}]& )]},
+  "Legended",
+  DisplayFunction->(GridBox[{{
+      TagBox[
+       ItemBox[
+        PaneBox[
+         TagBox[#, "SkipImageSizeLevel"], Alignment -> {Center, Baseline}, 
+         BaselinePosition -> Baseline], DefaultBaseStyle -> "Labeled"], 
+       "SkipImageSizeLevel"], 
+      ItemBox[#2, DefaultBaseStyle -> "LabeledLabel"]}}, 
+    GridBoxAlignment -> {"Columns" -> {{Center}}, "Rows" -> {{Center}}}, 
+    AutoDelete -> False, GridBoxItemSize -> Automatic, 
+    BaselinePosition -> {1, 1}]& ),
+  Editable->True,
+  InterpretationFunction->(RowBox[{"Legended", "[", 
+     RowBox[{#, ",", 
+       RowBox[{"Placed", "[", 
+         RowBox[{#2, ",", "After"}], "]"}]}], "]"}]& )]], "Output",
+ CellChangeTimes->{{3.602260174570532*^9, 3.602260187539222*^9}}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Right Hand Side", "Subsubsection",
+ CellChangeTimes->{{3.6020969738125277`*^9, 3.6020969767323*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"ClearAll", "[", 
+  RowBox[{"rhs", ",", "RULE1", ",", "nd"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"RULE1", ",", "nd"}], "}"}], "=", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "90"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"n", "=", "20"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rhs", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Partition", "[", 
+      RowBox[{
+       RowBox[{"Import", "[", 
+        RowBox[{
+         RowBox[{"\"\<solx1/sol\>\"", "<>", 
+          RowBox[{"ToString", "[", "RULE1", "]"}], "<>", "\"\</162_\>\"", "<>", 
+          RowBox[{"ToString", "[", "nd", "]"}], "<>", "\"\<.rhs\>\""}], ",", 
+         "\"\<Complex128\>\""}], "]"}], ",", 
+       RowBox[{
+        RowBox[{"2", " ", "nd"}], "+", "1"}]}], "]"}], "\[LeftDoubleBracket]", 
+     RowBox[{"All", ",", 
+      RowBox[{
+       RowBox[{"nd", "+", "1"}], ";;", 
+       RowBox[{
+        RowBox[{"2", "nd"}], "+", "1"}]}]}], "\[RightDoubleBracket]"}], "//", 
+    "Chop"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ResetDirectory", "[", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.602097009393797*^9, 3.6020971634073544`*^9}, {
+  3.602162466193144*^9, 3.602162466401723*^9}, {3.602162783764738*^9, 
+  3.6021627886480017`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"m", ",", 
+        RowBox[{
+         RowBox[{"rhs", "[", 
+          RowBox[{"[", 
+           RowBox[{"n", ",", 
+            RowBox[{"m", "+", "1"}]}], "]"}], "]"}], "//", "Re"}]}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{"m", ",", "0", ",", "nd"}], "}"}]}], "]"}], ",", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"m", ",", 
+        RowBox[{
+         RowBox[{"rhs", "[", 
+          RowBox[{"[", 
+           RowBox[{"n", ",", 
+            RowBox[{"m", "+", "1"}]}], "]"}], "]"}], "//", "Im"}]}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{"m", ",", "0", ",", "nd"}], "}"}]}], "]"}]}], "}"}], "//", 
+  RowBox[{
+   RowBox[{"ListLinePlot", "[", 
+    RowBox[{"#", ",", 
+     RowBox[{"PlotRange", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"0", ",", "20"}], "}"}], ",", "All"}], "}"}]}], ",", 
+     RowBox[{"PlotMarkers", "\[Rule]", "Automatic"}], ",", 
+     RowBox[{"PlotLegends", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Re\>\"", ",", "\"\<Im\>\""}], "}"}]}]}], "]"}], 
+   "&"}]}]], "Input",
+ CellChangeTimes->{{3.602097009393797*^9, 3.602097236808085*^9}, {
+  3.6020972991279097`*^9, 3.6020973690224543`*^9}, {3.6021627969772377`*^9, 
+  3.6021628115343246`*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{927, 1028},
+WindowMargins->{{Automatic, -7}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Linux x86 (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 895, 31, 183, "Section"],
+Cell[1477, 55, 485, 13, 171, "Text"],
+Cell[CellGroupData[{
+Cell[1987, 72, 97, 1, 45, "Subsection"],
+Cell[2087, 75, 132, 3, 31, "Text"],
+Cell[2222, 80, 18721, 459, 275, "Output"],
+Cell[20946, 541, 84, 1, 31, "Text"],
+Cell[21033, 544, 18723, 459, 275, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[39805, 1009, 844, 30, 183, "Section"],
+Cell[40652, 1041, 127, 3, 31, "Text"],
+Cell[CellGroupData[{
+Cell[40804, 1048, 96, 1, 45, "Subsection"],
+Cell[40903, 1051, 137, 4, 51, "Text"],
+Cell[41043, 1057, 18833, 461, 275, "Output"],
+Cell[59879, 1520, 84, 1, 31, "Text"],
+Cell[59966, 1523, 18731, 459, 275, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[78746, 1988, 101, 1, 81, "Section"],
+Cell[CellGroupData[{
+Cell[78872, 1993, 106, 1, 35, "Subsubsection"],
+Cell[CellGroupData[{
+Cell[79003, 1998, 6009, 159, 473, "Input"],
+Cell[85015, 2159, 212, 5, 23, "Print"],
+Cell[85230, 2166, 20048, 435, 230, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[105327, 2607, 98, 1, 35, "Subsubsection"],
+Cell[105428, 2610, 1844, 49, 253, "Input"],
+Cell[107275, 2661, 3287, 85, 253, "Input"],
+Cell[CellGroupData[{
+Cell[110587, 2750, 853, 21, 77, "Input"],
+Cell[111443, 2773, 18731, 459, 275, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[130223, 3238, 106, 1, 35, "Subsubsection"],
+Cell[130332, 3241, 1442, 39, 187, "Input"],
+Cell[131777, 3282, 1402, 43, 99, "Input"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
