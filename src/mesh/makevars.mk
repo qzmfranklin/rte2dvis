@@ -28,23 +28,23 @@ ${DIR002}INCS:=${INCS}
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
-${DIR002}CPPFILES:=msh_io.cpp msh_ray_tracing.cpp
+${DIR002}CPPFILES:=mshio.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
 ${DIR002}BINEXE:=dump_msh.exe
 
-${BIN}/dump_msh.exe: ${OBJ}/dump_msh.o ${OBJ}/msh_io.o
+${BIN}/dump_msh.exe: ${OBJ}/dump_msh.o
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR002}TSTEXE:= test_msh_io.exe test_msh_ray_tracing.exe
+${DIR002}TSTEXE:= test_mshio.exe
 
-${BIN}/test_msh_io.exe: ${OBJ}/test_msh_io.o ${OBJ}/msh_io.o \
+${BIN}/test_mshio.exe: ${OBJ}/test_mshio.o ${OBJ}/mshio.o \
 	${OBJ}/utils.o
 
-${BIN}/test_msh_ray_tracing.exe: ${OBJ}/test_msh_ray_tracing.o \
-	${OBJ}/msh_io.o ${OBJ}/utils.o ${OBJ}/msh_ray_tracing.o
+#${BIN}/test_msh_ray_tracing.exe: ${OBJ}/test_msh_ray_tracing.o \
+	#${OBJ}/mshio.o ${OBJ}/utils.o ${OBJ}/msh_ray_tracing.o
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

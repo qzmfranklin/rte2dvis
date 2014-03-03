@@ -66,6 +66,44 @@ static double r2rd(const double *u, const double *v)
 	return sqrt(a*a+b*b);
 }
 
+//DLLEXPORT int B1HomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
+//{
+	//// TODO
+	//int err = LIBRARY_NO_ERROR; 
+
+	//[>Receive from LibraryLink<]
+	//const MTensor Tipar=MArgument_getMTensor(Args[0]);
+	//const MTensor Tdpar=MArgument_getMTensor(Args[1]);
+	//const MTensor Tp0 = MArgument_getMTensor(Args[2]);	// Nn, 2
+	//const MTensor Tt0 = MArgument_getMTensor(Args[3]);	// Ns, 3
+	//const int      Nd = (int)MArgument_getInteger(Args[2]);
+	//const int      Nm = (int)MArgument_getInteger(Args[3]);
+	//const int   rule1 = (int)MArgument_getInteger(Args[4]);	// testing
+	//const int   rule2 = (int)MArgument_getInteger(Args[5]);	// source
+	//const int      nu = (int)MArgument_getInteger(Args[6]); // source
+	//const int      nv = (int)MArgument_getInteger(Args[7]); // source
+
+	//const double  *p0 = libData->MTensor_getRealData(Tp0);
+	//const mint    *t0 = libData->MTensor_getIntegerData(Tt0);
+	//const int      Nn = (int)((libData->MTensor_getDimensions(Tp0))[0]);
+	//const int      Ns = (int)((libData->MTensor_getDimensions(Tt0))[0]);
+	//const int      Ng = Ns*(2*Nd+1);
+
+	//[>Construct MTensor<]
+	//MTensor TRes;
+	//mint dims[]={Ns,Ns,2*Nm};
+	//libData->MTensor_new(MType_Real,3,dims,&TRes);
+	//double *B = libData->MTensor_getRealData(TRes);
+
+	//[>Send to LibraryLink<]
+	//MArgument_setMTensor(Res,TRes);
+
+	//[>Disown MTensor<]
+	//libData->MTensor_disown(TRes);
+
+	//return LIBRARY_NO_ERROR;
+//}
+
 DLLEXPORT int BHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
 	int err = LIBRARY_NO_ERROR; 

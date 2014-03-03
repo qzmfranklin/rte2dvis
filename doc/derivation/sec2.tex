@@ -1,71 +1,61 @@
 \documentclass[main]{subfiles} 
 \begin{document}
-\section{Section2}
-\label{sec:Section2}
+\section{Discretization}
+\label{sec:discretization}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Expand the specific intensity $\psi(\v{r},\phi)$:
-\begin{equation*}
-	\psi(\v{r},\phi)=\sum\limits_{n=1}^{N_s}\sum\limits_{m=-N_d}^{N_d}
-	X_{nm}\xi_{nm}(\v{r},\phi)
-\end{equation*}
+Designate the volume of interest (scatter) as $\Omega$. Mesh $\Omega$. Denote 
+the number of vertices, edges, and triangles as $N_v$, $N_e$, and $N_s$, 
+respectively. Choose the proper spatial interpolation order $M>0$ and proper 
+basis functions [Peterson]. The total number of nodes, i.e., the total number 
+of degrees of freedom, is $N_n=N_v+(M-1)N_e+\frac{1}{2}(M-1)(M-2)N_s$.
 
-In this paper, the basis function is chosen as
-\begin{align*}
-	\xi_{nm}(\v{r},\phi) =& S_n(\v{r})e^{i m \phi}		\\ 
-	S_n(\v{r},\phi) =& \begin{cases}
-		1, & \v{r}\in S_n \\
-		0, & \v{r}\notin S_n
-	\end{cases}
-\end{align*}
+Each spatial polynomial basis function associated with the $n$-th node, denoted
+as $\xi_n(\v{r})$, generally speaking, consists of contributions from possibly
+more than one triangle. Use the subscript $s$ to indicate a triangle associated 
+with the $n$-th node. We have, in short, $\xi_n(\v{r})=\sum\nolimits_s
+B_{ns}(\v{r})$. The $B_{ns}(\v{r})$ is the corresponding polynomial 
+$B_{ijk}(L_1,L_2,L_3)$ [appendix] in terms of Euclidean coordinates [FIXME]. The
+summation goes through all the triangles that share the $n$-th node.
 
-The latter sections, the following notations are used:
-\begin{center} \begin{tabular}{lll}
-	$S_n(\v{r})$	&	the pulse function		\\
-	$S_n)$		&	the n-th triangle		\\
-	$S(n)$		&	the area of the n-th triangle	\\
-	$\sum\nolimits_{n,m}$	&
-	$\sum\nolimits_{n=1}^{N_s}\sum\nolimits_{m=-N_d}^{N_d}$	\\
-\end{tabular} \end{center}
-
-Write
+Expand the specific intensity $\psi(\v{r},\phi)$ in terms of polynomial spatial 
+basis functions $\xi_n(\v{r})$ ($n=1,...,N_n$) and harmonic angular basis 
+functions $e^{i m \phi}$ ($m=-N_d,...,N_d$):
 \begin{equation} \label{expansion of psi}
-	\psi(\v{r},\phi)=\sum\limits_{n^\p,m^\p}
-	X_{n^\p m^\p}\xi_{n^\p m^\p}(\v{r},\phi)
+	\psi(\v{r},\phi)=\sum\limits_{nm}
+	X_{nm}\xi_n(\v{r})e^{i\,m\phi}
 \end{equation}
 
 Plug \eqref{expansion of psi} into \eqref{vie2d}, multiply by
-$\xi_{nm}^{*}(\v{r},\phi)$, integrate over $d\v{r}d\phi$, we get a set of linear
-equations:
+$\xi_n(\v{r},\phi)e^{-i\,m \phi}$, integrate $d\v{r}d\phi$ over the entire phase
+space, we get a system of linear equations:
 \begin{equation*}
 	\sum\limits_{n^\p,m^\p}Z_{(nm)(n^\p m^\p)}X_{n^\p m^\p}=V_{nm}
 \end{equation*}
 with
 \begin{align*}
 	\begin{split} 
-		Z_{(nm)(n^\p m^\p)} =& A_{(nm)(n^\p m^\p)}+B_{(nm)(n^\p m^\p)}
+		Z_{(nm)(n^\p m^\p)} =& I_{(nm)(n^\p m^\p)}+K_{(nm)(n^\p m^\p)}
 	\end{split}
 	\\
 	\begin{split} 
-		A_{(nm)(n^\p m^\p)} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)
-		\xi_{n^\p m^\p}(\v{r},\phi) \\ =& \int d\v{r} S_n(\v{r}) 
-		S_{n^\p}(\v{r}) \int d\phi e^{-i m \phi} e^{+i m^\p \phi} \\ =& 
-		2\pi S(n) \delta_{nn^\p}\delta_{mm^\p}
+		I_{(nm)(n^\p m^\p)} =& \int d\v{r}d\phi\xi_n(\v{r})e^{-i\,m\phi}
+		\int d\v{r}^\p d\phi^{\p}\xi_{n^\p}(\v{r}^\p)e^{i\,m^\p\phi^\p} 
 	\end{split}
-	\\
-	\begin{split} 
-		B_{(nm)(n^\p m^\p)} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)
-		\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p) \\
-		\times& \mu_t(\v{r}^\p)\xi_{n^\p m^\p}(\v{r}^\p,\phi^\p) -
-		\int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi) \\ \times&
-		\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p)
-		\mu_s(\v{r}^\p) \\ \times& \int d\phi^\pp
-		f(\phi^\p-\phi^\pp)\xi_{n^\p m^\p}(\v{r}^\p,\phi^\pp)
-	\end{split}
-	\\
-	V_{nm} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)\psi^I(\v{r},\phi)
-	\\
-	\psi^I(\v{r},\phi) \equiv& \int d\v{r}^\p d\phi^\p
-	g(\v{r},\phi;\v{r}^\p,\phi^\p)q(\v{r}^\p,\phi^\p)
+	%\\
+	%\begin{split} 
+		%K_{(nm)(n^\p m^\p)} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)
+		%\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p) \\
+		%\times& \mu_t(\v{r}^\p)\xi_{n^\p m^\p}(\v{r}^\p,\phi^\p) -
+		%\int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi) \\ \times&
+		%\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p)
+		%\mu_s(\v{r}^\p) \\ \times& \int d\phi^\pp
+		%f(\phi^\p-\phi^\pp)\xi_{n^\p m^\p}(\v{r}^\p,\phi^\pp)
+	%\end{split}
+	%\\
+	%V_{nm} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)\psi^I(\v{r},\phi)
+	%\\
+	%\psi^I(\v{r},\phi) \equiv& \int d\v{r}^\p d\phi^\p
+	%g(\v{r},\phi;\v{r}^\p,\phi^\p)q(\v{r}^\p,\phi^\p)
 \end{align*}
 
 Note that $(n,m)$ represents the filed point, whereas $(n^\p,m^\p)$ represents 

@@ -1,0 +1,31 @@
+\documentclass[main]{subfiles} 
+\begin{document}
+\section{Simplex Coordinates and Interpolation Polynomials}
+\label{Simplex Coordinates and Interpolation Polynomials}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%TODO
+Given the coefficient $e_{ijk}$ at node $(i,j,k)$, the polynomial basis 
+function $B_{ijk}(L_1,L_2,L_3)$ can be used to compute the value at any 
+position in space.
+\begin{equation*}
+	E(L_1,L_2,L_3)=\sum\limits_{i=0}^M\sum\limits_{j=0}^{M-i}
+	e_{ijk}B_{ijk}(L_1,L_2,L_3)
+\end{equation*}
+
+The simplex coordinates are related to Euclidean coordinates by
+\begin{equation*}
+	\begin{pmatrix}
+		x_1 & x_2 & x_3	\\
+		y_1 & y_2 & y_3	\\
+		1   & 1   & 1
+	\end{pmatrix}
+	\begin{pmatrix}
+		L_1 \\ L_2 \\ L_3
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		x \\ y \\ 1
+	\end{pmatrix}
+\end{equation*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
