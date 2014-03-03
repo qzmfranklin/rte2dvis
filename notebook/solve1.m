@@ -222,15 +222,15 @@ SetDirectory[FileNameJoin[{"HOME"/.GetEnvironment["HOME"],"tmp"}]];
 ResetDirectory[];
 *)
 (*ClearAll[RULE1,RULE2,NU,NV,V1]*)
-(*{RULE1,RULE2,NU,NV}={1,19,2Nd+5,3};*)
+(*[>{RULE1,RULE2,NU,NV}={1,19,2Nd+5,3};<]*)
 ClearAll[RULE2,NU,NV,V1]
 {RULE2,NU,NV}={19,2Nd+5,3};
 Print["RULE1=",RULE1];
-(*BHomo[pt,Nd,Nm,RULE,NU,NV]//Quiet;*)
-(*B=BHomoFull[pt,Nd,Nm,RULE1,RULE2,NU,NV]//Quiet//ToPackedArray;*)
-(*SetDirectory[FileNameJoin[{"HOME"/.GetEnvironment["HOME"],"tmp"}]];*)
-(*DumpSave["B.mx",B];*)
-(*ResetDirectory[];*)
+BHomo[pt,Nd,Nm,RULE,NU,NV]//Quiet;
+B=BHomoFull[pt,Nd,Nm,RULE1,RULE2,NU,NV]//Quiet//ToPackedArray;
+SetDirectory[FileNameJoin[{"HOME"/.GetEnvironment["HOME"],"tmp"}]];
+DumpSave["B.mx",B];
+ResetDirectory[];
 Print["{A,B}=",PackedArrayQ/@{A,B}]; 
 
 V1 = VHomoFull[pt, g, \[Phi]s, \[Mu]s, Nd, RULE1, RULE2, NU, NV] // 
@@ -243,14 +243,14 @@ ClearAll[RULE2,NU,NV]
 ClearAll[n,np,rc,q0,q1,rule,Nu,Nv,qu,qv]
 
 
-(*ClearAll[X1]*)
-(*X1 = LinearSolve[HomoMul[#, A, B, gTbl, \[Mu]t, \[Mu]s] &, V1,*)
-    (*Method -> {"Krylov", Tolerance -> 10^-20, Method -> Automatic,*)
-      (*"Preconditioner" -> Automatic, MaxIterations -> 60,*)
-      (*"ResidualNormFunction" -> Automatic}] // Quiet;*)
-(*Print["Z.X1-V1: max relative err=",*)
-  (*Abs[(HomoMul[X1, A, B, gTbl, \[Mu]t, \[Mu]s] - V1)/V1] // Quiet //*)
-    (*Flatten // Max];*)
+ClearAll[X1]
+X1 = LinearSolve[HomoMul[#, A, B, gTbl, \[Mu]t, \[Mu]s] &, V1,
+    Method -> {"Krylov", Tolerance -> 10^-20, Method -> Automatic,
+      "Preconditioner" -> Automatic, MaxIterations -> 100,
+      "ResidualNormFunction" -> Automatic}] // Quiet;
+Print["Z.X1-V1: max relative err=",
+  Abs[(HomoMul[X1, A, B, gTbl, \[Mu]t, \[Mu]s] - V1)/V1] // Quiet //
+    Flatten // Max];
 
 
 
@@ -259,7 +259,7 @@ ClearAll[dir]
 dir=FileNameJoin[{Directory[],"sol"<>ToString[RULE1]}];
 CreateDirectory[dir]//Quiet;
 SetDirectory[dir];
-(*Export[ToString[Ns] <> "_" <> ToString[Nd], X1, "Complex128"];*)
-Export[ToString[Ns] <> "_" <> ToString[Nd] <> ".rhs", V1, "Complex128"];
+Export[ToString[Ns] <> "_" <> ToString[Nd], X1, "Complex128"];
+(*Export[ToString[Ns] <> "_" <> ToString[Nd] <> ".rhs", V1, "Complex128"];*)
 
 ResetDirectory[];
