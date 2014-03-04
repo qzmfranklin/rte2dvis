@@ -1,28 +1,34 @@
 \documentclass[main]{subfiles} 
 \begin{document}
-\section{Section3}
-\label{sec:Section3}
+\section{Angular Acceleration}
+\label{sec:angular acceleration}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The interaction matrix can be show to be blockwise Toeplitz.
 Using proper quadrature rules $\left\{\v{r}_{j_n},w_{j_n}\right\}_{j_n=1}^{M_n}$ 
-to compute each elements, we get:
+[appdendix] to compute each elements, we get:
+\begin{equation*}
+	K_{(nm)(n^\p m^\p)} = C_t(n,n^\p,m-m^\p) + 
+	C_s(n,n^\p,m-m^\p)g^{\abs{m^\p}} 
+\end{equation*}
 \begin{align*}
-B_{(nm)(n^\p m^\p)} =& C_t(n,n^\p,m-m^\p) \\
-		    +&C_s(n,n^\p,m-m^\p)g^{\abs{m^\p}} \\
-C_t(n,n^\p,\Delta m)=&+\sum\limits_{j_n=1}^{M_n}
-\sum\limits_{j_{n^\p}=1}^{M_n^\p} w_{j_n}w_{j_{n^\p}}\mu_t(\v{r}_{j_{n^\p}}) \\
-\times& \frac{e^{-i \Delta m \phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}}} 
-{\abs{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}} \\
-C_s(n,n^\p,\Delta m)=&-\sum\limits_{j_n=1}^{M_n}
-\sum\limits_{j_{n^\p}=1}^{M_n^\p} w_{j_n}w_{j_{n^\p}}\mu_s(\v{r}_{j_{n^\p}}) \\
-\times& \frac{e^{-i \Delta m \phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}}} 
-{\abs{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}} \\
+C_t(n,n^\p,\Delta m)=&+\sum\limits_{s,s^\p}\sum\limits_{j_n=1}^{M_n}
+\sum\limits_{j_{n^\p}=1}^{M_n^\p} w_{j_n}w_{j_{n^\p}}
+B_{ns}(\v{r}_{j_{n^\p}})B_{n^\p s^\p}(\v{r}_{j_n})
+\frac{e^{-i \Delta m \phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}}} 
+{\abs{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}} \mu_t(\v{r}_{j_{n^\p}})
+\\
+C_s(n,n^\p,\Delta m)=&-\sum\limits_{s,s^\p}\sum\limits_{j_n=1}^{M_n}
+\sum\limits_{j_{n^\p}=1}^{M_n^\p} w_{j_n}w_{j_{n^\p}}
+B_{ns}(\v{r}_{j_{n^\p}})B_{n^\p s^\p}(\v{r}_{j_n})
+\frac{e^{-i \Delta m \phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}}} 
+{\abs{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}} \mu_s(\v{r}_{j_{n^\p}})
 \end{align*}
-
-We prove the Toeplitzness of each block of $B$ with given $(n,n^\p)$ in two
-steps. [TODO]
 
 A $2N_d+1$ by $2N_d+1$ Toeplitz matrix can be stored in $O(N_d)$ memory and
 multiplied by a vector in $O(N_d \log{N_d})$ time.
+
+Compressed storage [TODO]
+
+Simplification for homogeneous material [TODO]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

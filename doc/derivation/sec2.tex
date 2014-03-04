@@ -25,40 +25,51 @@ functions $e^{i m \phi}$ ($m=-N_d,...,N_d$):
 	X_{nm}\xi_n(\v{r})e^{i\,m\phi}
 \end{equation}
 
-Plug \eqref{expansion of psi} into \eqref{vie2d}, multiply by
+Plug \eqref{expansion of psi} into \eqref{2dvie}, multiply by
 $\xi_n(\v{r},\phi)e^{-i\,m \phi}$, integrate $d\v{r}d\phi$ over the entire phase
 space, we get a system of linear equations:
 \begin{equation*}
 	\sum\limits_{n^\p,m^\p}Z_{(nm)(n^\p m^\p)}X_{n^\p m^\p}=V_{nm}
 \end{equation*}
-with
-\begin{align*}
-	\begin{split} 
-		Z_{(nm)(n^\p m^\p)} =& I_{(nm)(n^\p m^\p)}+K_{(nm)(n^\p m^\p)}
-	\end{split}
-	\\
-	\begin{split} 
-		I_{(nm)(n^\p m^\p)} =& \int d\v{r}d\phi\xi_n(\v{r})e^{-i\,m\phi}
-		\int d\v{r}^\p d\phi^{\p}\xi_{n^\p}(\v{r}^\p)e^{i\,m^\p\phi^\p} 
-	\end{split}
-	%\\
-	%\begin{split} 
-		%K_{(nm)(n^\p m^\p)} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)
-		%\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p) \\
-		%\times& \mu_t(\v{r}^\p)\xi_{n^\p m^\p}(\v{r}^\p,\phi^\p) -
-		%\int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi) \\ \times&
-		%\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p)
-		%\mu_s(\v{r}^\p) \\ \times& \int d\phi^\pp
-		%f(\phi^\p-\phi^\pp)\xi_{n^\p m^\p}(\v{r}^\p,\phi^\pp)
-	%\end{split}
-	%\\
-	%V_{nm} =& \int d\v{r}d\phi\xi_{nm}^{*}(\v{r},\phi)\psi^I(\v{r},\phi)
-	%\\
-	%\psi^I(\v{r},\phi) \equiv& \int d\v{r}^\p d\phi^\p
-	%g(\v{r},\phi;\v{r}^\p,\phi^\p)q(\v{r}^\p,\phi^\p)
-\end{align*}
 
-Note that $(n,m)$ represents the filed point, whereas $(n^\p,m^\p)$ represents 
-the source point.
+The impedance matrix $Z=I+K$ consists of an identity term $I$ and an interaction
+term $K$. The identity term $I$
+\begin{equation*}
+	\begin{split} 
+		I_{(nm)(n^\p m^\p)} =& \int d\v{r}\,d\phi \,\xi_n(\v{r})
+		e^{-i\,m\,\phi}\xi_{n^\p}(\v{r})e^{i\,m^\p\phi} \\
+		=& 2\pi\,\delta_{mm^\p}\int d\v{r}\,\xi_n(\v{r})\xi_{n^\p}(\v{r})
+		\\ =& 2\pi\,\delta_{mm^\p}\sum\limits_{s,s^\p} 
+		\int d\v{r}\,B_{ns}(\v{r})B_{n^\p s^\p}(\v{r})
+	\end{split}
+\end{equation*}
+The interaction term $K$
+\begin{equation*}
+	\begin{split}
+		K_{(nm)(n^\p m^\p)} =& \int d\v{r}\,d\phi\,\xi_n(\v{r})
+		e^{-i\,m\,\phi} \int d\v{r}^\p d\phi^\p
+		g_0(\v{r},\phi;\v{r}^\p,\phi^\p) \mu_t(\v{r}^\p) 
+		\xi_{n^\p}(\v{r}^\p) e^{i\,m^\p\phi^\p} \\
+		-& \int d\v{r}\,d\phi\,\xi_n(\v{r}) e^{-i\,m\,\phi} 
+		\int d\v{r}^\p d\phi^\p g_0(\v{r},\phi;\v{r}^\p,\phi^\p) 
+		\mu_s(\v{r}^\p) \int d\phi^\pp f(\phi^\p-\phi^\pp)
+		\xi_{n^\p}(\v{r^\p}) e^{i\,m^\p \phi^\pp} \\
+		=& \int d\v{r}\,d\v{r}^\p \xi_n(\v{r}) \xi_{n^\p}(\v{r}^\p)
+		\frac{e^{-i(m-m^\p)\phi_{\v{r}-\v{r}^\p}}}
+		{\left\vert \v{r}-\v{r}^\p \right\vert}
+		\left[ \mu_t(\v{r}^\p)-g^{|m^\p|}\mu_s(\v{r}^\p)\right] \\
+		=& \sum\limits_{s,s^\p} 
+		\int d\v{r}\,d\v{r}^\p B_{ns}(\v{r}) B_{n^\p s^\p}(\v{r}^\p)
+		\frac{e^{-i(m-m^\p)\phi_{\v{r}-\v{r}^\p}}}
+		{\left\vert \v{r}-\v{r}^\p \right\vert}
+		\left[ \mu_t(\v{r}^\p)-g^{|m^\p|}\mu_s(\v{r}^\p)\right]
+	\end{split}
+\end{equation*}
+
+The integral $\int d\v{r}\,B_{ns}(\v{r})B_{n^\p s^\p}(\v{r})$ can be evaluated
+either analytically or numerically. We emphasis on the fact that the $I$ is a
+nearly diagonal sparse matrix.
+
+The integral in the interaction term can only be computed numerically [appendix].  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \end{document}
