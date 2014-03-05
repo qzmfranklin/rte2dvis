@@ -118,7 +118,7 @@ DLLEXPORT int BHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *A
 	const int      nv = (int)MArgument_getInteger(Args[6]); // source
 
 	double         *p = libData->MTensor_getRealData(Tp);
-	mint const  *dimp = libData->MTensor_getDimensions(Tp);
+	const mint  *dimp = libData->MTensor_getDimensions(Tp);
 	const int      Ns = (int)(dimp[0]);
 	const int      Ng = Ns*(2*Nd+1);
 

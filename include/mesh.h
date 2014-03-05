@@ -3,8 +3,8 @@
 /******************************************************************************/
 #include <unistd.h>
 /******************************************************************************/
-struct st_mesh {
-	int    status;	// st_mesh internal status
+struct st_mesh{
+	int    status;	// internal status
 
 	int    format;	// 1=ASCII, 2=BINARY
 	int num_nodes;	// number of nodes
@@ -12,6 +12,7 @@ struct st_mesh {
 	double     *p;	// nodes' coord
 	int        *t;	// trigs' num
 	double    *pt;	// trigs' coord
+	double     *a;	// trigs' area
 	char   fbase[FILENAME_MAX];	// file base name
 };
 /******************************************************************************/ 

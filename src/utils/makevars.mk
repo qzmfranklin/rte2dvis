@@ -17,7 +17,7 @@
 ################################################################################
 #				STEP 1
 #	DIRECTORY NAME FROM THE ROOT DIRECTORY
-DIR001:=src/utils# Please, NO SPACE 
+DIR001:=${SRC}/utils# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following line to be verbose.
 ${DIR001}QUIET:=@
 ###############################################################################

@@ -17,34 +17,29 @@
 ################################################################################
 #				STEP 1
 #	DIRECTORY NAME FROM THE ROOT DIRECTORY
-DIR002:=${SRC}/mesh# Please, NO SPACE 
+DIR005:=${SRC}/solver# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following line to be verbose.
-${DIR002}QUIET:=@
+${DIR005}QUIET:=@
 ###############################################################################
 #				STEP 2
 #	DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-${DIR002}CXXFLAGS:=${CXXFLAGS}
-${DIR002}INCS:=${INCS}
+${DIR005}CXXFLAGS:=${CXXFLAGS}
+${DIR005}INCS:=${INCS}
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
-${DIR002}CPPFILES:=mshio.cpp
+${DIR005}CPPFILES:=solver_v1.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
-${DIR002}BINEXE:=dump_msh.exe
-
-${BIN}/dump_msh.exe: ${OBJ}/dump_msh.o
+${DIR005}BINEXE:=
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR002}TSTEXE:= test_mshio.exe
+${DIR005}TSTEXE:= test_solver_v1.exe
 
-${BIN}/test_mshio.exe: ${OBJ}/test_mshio.o ${OBJ}/mshio.o \
+${BIN}/test_solver_v1.exe: ${OBJ}/test_solver_v1.o ${OBJ}/solver_v1.o \
 	${OBJ}/utils.o
-
-#${BIN}/test_msh_ray_tracing.exe: ${OBJ}/test_msh_ray_tracing.o \
-	#${OBJ}/mshio.o ${OBJ}/utils.o ${OBJ}/msh_ray_tracing.o
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or
@@ -93,28 +88,28 @@ ${BIN}/test_mshio.exe: ${OBJ}/test_mshio.o ${OBJ}/mshio.o \
 #  variables and add proper files to the top level variables. Please anyway do
 #  NOT modify them.
 ################## DO NOT MODIFY ################
-${DIR002}CPPFILES:=${${DIR002}CPPFILES:%=${DIR002}/%}
-${DIR002}OBJFILES:=${${DIR002}CPPFILES:${DIR002}%.cpp=${OBJ}%.o}
-${DIR002}DEPFILES:=${${DIR002}OBJFILES:%.o=%.d}
-${DIR002}ASMFILES:=${${DIR002}OBJFILES:${OBJ}%.o=${ASM}%.s}
+${DIR005}CPPFILES:=${${DIR005}CPPFILES:%=${DIR005}/%}
+${DIR005}OBJFILES:=${${DIR005}CPPFILES:${DIR005}%.cpp=${OBJ}%.o}
+${DIR005}DEPFILES:=${${DIR005}OBJFILES:%.o=%.d}
+${DIR005}ASMFILES:=${${DIR005}OBJFILES:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
-${DIR002}BINEXE:=${${DIR002}BINEXE:%=${BIN}/%}
-${DIR002}BINCPP:=${${DIR002}BINEXE:${BIN}/%.exe=${DIR002}/%.cpp}
-${DIR002}BINOBJ:=${${DIR002}BINCPP:${DIR002}%.cpp=${OBJ}%.o}
-${DIR002}BINDEP:=${${DIR002}BINOBJ:%.o=%.d}
-${DIR002}BINASM:=${${DIR002}BINOBJ:${OBJ}%.o=${ASM}%.s}
+${DIR005}BINEXE:=${${DIR005}BINEXE:%=${BIN}/%}
+${DIR005}BINCPP:=${${DIR005}BINEXE:${BIN}/%.exe=${DIR005}/%.cpp}
+${DIR005}BINOBJ:=${${DIR005}BINCPP:${DIR005}%.cpp=${OBJ}%.o}
+${DIR005}BINDEP:=${${DIR005}BINOBJ:%.o=%.d}
+${DIR005}BINASM:=${${DIR005}BINOBJ:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
-${DIR002}TSTEXE:=${${DIR002}TSTEXE:%=${BIN}/%}
-${DIR002}TSTCPP:=${${DIR002}TSTEXE:${BIN}/%.exe=${DIR002}/%.cpp}
-${DIR002}TSTOBJ:=${${DIR002}TSTCPP:${DIR002}%.cpp=${OBJ}%.o}
-${DIR002}TSTDEP:=${${DIR002}TSTOBJ:%.o=%.d}
-${DIR002}TSTASM:=${${DIR002}TSTOBJ:${OBJ}%.o=${ASM}%.s}
+${DIR005}TSTEXE:=${${DIR005}TSTEXE:%=${BIN}/%}
+${DIR005}TSTCPP:=${${DIR005}TSTEXE:${BIN}/%.exe=${DIR005}/%.cpp}
+${DIR005}TSTOBJ:=${${DIR005}TSTCPP:${DIR005}%.cpp=${OBJ}%.o}
+${DIR005}TSTDEP:=${${DIR005}TSTOBJ:%.o=%.d}
+${DIR005}TSTASM:=${${DIR005}TSTOBJ:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
-SRCFILES:=${SRCFILES} ${${DIR002}CFILES} \
-	${${DIR002}CPPFILES} ${${DIR002}TSTCPP} \
-	${${DIR002}BINCPP}
-DEPFILES:=${DEPFILES} ${${DIR002}DEPFILES} \
-	${${DIR002}TSTDEP} ${${DIR002}BINDEP}
+SRCFILES:=${SRCFILES} ${${DIR005}CFILES} \
+	${${DIR005}CPPFILES} ${${DIR005}TSTCPP} \
+	${${DIR005}BINCPP}
+DEPFILES:=${DEPFILES} ${${DIR005}DEPFILES} \
+	${${DIR005}TSTDEP} ${${DIR005}BINDEP}
 ################## DO NOT MODIFY ################
 ###############################################################################
 #				WANRING
@@ -134,40 +129,40 @@ DEPFILES:=${DEPFILES} ${${DIR002}DEPFILES} \
 #  mode output aestetics. The new colorful version of "make list" is ready now!
 
 #DIRECTORY-SPECIFIC PHONY TARGETS
-.PHONY: ${DIR002}-all ${DIR002}-test \
-	${DIR002}-asm ${DIR002}-check \
-	${DIR002}-list
+.PHONY: ${DIR005}-all ${DIR005}-test \
+	${DIR005}-asm ${DIR005}-check \
+	${DIR005}-list
 
 #  C++ sources
-${OBJ}/%.o: ${DIR002}/%.cpp
+${OBJ}/%.o: ${DIR005}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
-	${${DIR002}QUIET}${CXX} -o $@ -c $< ${${DIR002}CXXFLAGS} ${${DIR002}INCS}
-${ASM}/%.s: ${DIR002}/%.cpp
+	${${DIR005}QUIET}${CXX} -o $@ -c $< ${${DIR005}CXXFLAGS} ${${DIR005}INCS}
+${ASM}/%.s: ${DIR005}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
-	${${DIR002}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR002}CXXFLAGS} ${${DIR002}INCS} 
+	${${DIR005}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR005}CXXFLAGS} ${${DIR005}INCS} 
 
 	
-TARGET_ALL	:=${TARGET_ALL} ${DIR002}-all
-TARGET_TEST	:=${TARGET_TEST} ${DIR002}-test
-TARGET_ASM	:=${TARGET_ASM} ${DIR002}-asm
-TARGET_CHECK	:=${TARGET_CHECK} ${DIR002}-check
-TARGET_LIST	:=${TARGET_LIST} ${DIR002}-list
-${DIR002}-all: ${${DIR002}OBJFILES} ${${DIR002}BINEXE}
+TARGET_ALL	:=${TARGET_ALL} ${DIR005}-all
+TARGET_TEST	:=${TARGET_TEST} ${DIR005}-test
+TARGET_ASM	:=${TARGET_ASM} ${DIR005}-asm
+TARGET_CHECK	:=${TARGET_CHECK} ${DIR005}-check
+TARGET_LIST	:=${TARGET_LIST} ${DIR005}-list
+${DIR005}-all: ${${DIR005}OBJFILES} ${${DIR005}BINEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".
-${DIR002}-test: ${${DIR002}TSTEXE}
+${DIR005}-test: ${${DIR005}TSTEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".  
-${DIR002}-asm: ${${DIR002}ASMFILES} ${${DIR002}TSTASM} \
-	${${DIR002}BINASM}
+${DIR005}-asm: ${${DIR005}ASMFILES} ${${DIR005}TSTASM} \
+	${${DIR005}BINASM}
 	@echo Finished generating "${B_BLUE}$@${NONE}".  
-${DIR002}-check: ${${DIR002}TSTEXE:${BIN}/%.exe=${OUTPUT}/%.txt}
-${DIR002}-list:
+${DIR005}-check: ${${DIR005}TSTEXE:${BIN}/%.exe=${OUTPUT}/%.txt}
+${DIR005}-list:
 	@echo \#\#\#\#\#\#\#\#"${B_BROWN}$@${NONE}"\#\#\#\#\#\#\#\#
 	@$(foreach dir, 						\
 		CFILES CPPFILES TSTCPP BINCPP				\
 		,							\
-		if [ ! -z "${${DIR002}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR005}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR002}${dir}},		\
+			$(foreach file,${${DIR005}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${BLACK}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
@@ -177,9 +172,9 @@ ${DIR002}-list:
 	@$(foreach dir, 						\
 		TSTEXE BINEXE						\
 		,							\
-		if [ ! -z "${${DIR002}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR005}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR002}${dir}},		\
+			$(foreach file,${${DIR005}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${RED}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
@@ -189,9 +184,9 @@ ${DIR002}-list:
 	@$(foreach dir, 						\
 		OBJFILES TSTOBJ BINOBJ					\
 		,							\
-		if [ ! -z "${${DIR002}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR005}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR002}${dir}},		\
+			$(foreach file,${${DIR005}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${GREEN}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\

@@ -17,7 +17,7 @@
 ################################################################################
 #				STEP 1
 #	DIRECTORY NAME FROM THE ROOT DIRECTORY
-DIR005:=src/itrsol# Please, NO SPACE 
+DIR005:=${SRC}/itrsol# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following line to be verbose.
 ${DIR005}QUIET:=@
 ###############################################################################

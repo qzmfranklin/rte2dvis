@@ -15,29 +15,33 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.  
 ################################################################################
+#				STEP 1
 #	DIRECTORY NAME FROM THE ROOT DIRECTORY
-DIR004:=src/pyplot# Please, NO SPACE 
+DIR006:=${SRC}/quadrules# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following line to be verbose.
-${DIR004}QUIET:=@
+${DIR006}QUIET:=@
 ###############################################################################
+#				STEP 2
 #	DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
-${DIR004}CXXFLAGS:=${CXXFLAGS}
-${DIR004}INCS:=${INCS}
+${DIR006}CXXFLAGS:=${CXXFLAGS}
+${DIR006}INCS:=${INCS}
 ###############################################################################
+#				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
-${DIR004}CPPFILES:=pyplot.cpp pyhist.cpp
+${DIR006}CPPFILES:=arcsinh.cpp dunavant.cpp gauss.cpp wandzura.cpp
 ###############################################################################
+#				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
+${DIR006}BINEXE:=
 ###############################################################################
+#				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR004}TSTEXE:= test_pyplot.exe test_pyhist.exe
-
-${BIN}/test_pyplot.exe: ${OBJ}/test_pyplot.o ${OBJ}/pyplot.o \
-	${OBJ}/utils.o
-${BIN}/test_pyhist.exe: ${OBJ}/test_pyhist.o ${OBJ}/pyhist.o \
-	${OBJ}/utils.o
+${DIR006}TSTEXE:=
 ###############################################################################
-#	END
+#	Congratulations! You have completed everything you need to do to build
+#  this directory. You do not need to modify this file unless some C and/or
+#  CPP source files are added, removed, or renamed. In that case, just go over
+#  STEP 1-5 again and it is done!
 ###############################################################################
 
 
@@ -81,28 +85,28 @@ ${BIN}/test_pyhist.exe: ${OBJ}/test_pyhist.o ${OBJ}/pyhist.o \
 #  variables and add proper files to the top level variables. Please anyway do
 #  NOT modify them.
 ################## DO NOT MODIFY ################
-${DIR004}CPPFILES:=${${DIR004}CPPFILES:%=${DIR004}/%}
-${DIR004}OBJFILES:=${${DIR004}CPPFILES:${DIR004}%.cpp=${OBJ}%.o}
-${DIR004}DEPFILES:=${${DIR004}OBJFILES:%.o=%.d}
-${DIR004}ASMFILES:=${${DIR004}OBJFILES:${OBJ}%.o=${ASM}%.s}
+${DIR006}CPPFILES:=${${DIR006}CPPFILES:%=${DIR006}/%}
+${DIR006}OBJFILES:=${${DIR006}CPPFILES:${DIR006}%.cpp=${OBJ}%.o}
+${DIR006}DEPFILES:=${${DIR006}OBJFILES:%.o=%.d}
+${DIR006}ASMFILES:=${${DIR006}OBJFILES:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
-${DIR004}BINEXE:=${${DIR004}BINEXE:%=${BIN}/%}
-${DIR004}BINCPP:=${${DIR004}BINEXE:${BIN}/%.exe=${DIR004}/%.cpp}
-${DIR004}BINOBJ:=${${DIR004}BINCPP:${DIR004}%.cpp=${OBJ}%.o}
-${DIR004}BINDEP:=${${DIR004}BINOBJ:%.o=%.d}
-${DIR004}BINASM:=${${DIR004}BINOBJ:${OBJ}%.o=${ASM}%.s}
+${DIR006}BINEXE:=${${DIR006}BINEXE:%=${BIN}/%}
+${DIR006}BINCPP:=${${DIR006}BINEXE:${BIN}/%.exe=${DIR006}/%.cpp}
+${DIR006}BINOBJ:=${${DIR006}BINCPP:${DIR006}%.cpp=${OBJ}%.o}
+${DIR006}BINDEP:=${${DIR006}BINOBJ:%.o=%.d}
+${DIR006}BINASM:=${${DIR006}BINOBJ:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
-${DIR004}TSTEXE:=${${DIR004}TSTEXE:%=${BIN}/%}
-${DIR004}TSTCPP:=${${DIR004}TSTEXE:${BIN}/%.exe=${DIR004}/%.cpp}
-${DIR004}TSTOBJ:=${${DIR004}TSTCPP:${DIR004}%.cpp=${OBJ}%.o}
-${DIR004}TSTDEP:=${${DIR004}TSTOBJ:%.o=%.d}
-${DIR004}TSTASM:=${${DIR004}TSTOBJ:${OBJ}%.o=${ASM}%.s}
+${DIR006}TSTEXE:=${${DIR006}TSTEXE:%=${BIN}/%}
+${DIR006}TSTCPP:=${${DIR006}TSTEXE:${BIN}/%.exe=${DIR006}/%.cpp}
+${DIR006}TSTOBJ:=${${DIR006}TSTCPP:${DIR006}%.cpp=${OBJ}%.o}
+${DIR006}TSTDEP:=${${DIR006}TSTOBJ:%.o=%.d}
+${DIR006}TSTASM:=${${DIR006}TSTOBJ:${OBJ}%.o=${ASM}%.s}
 ################## DO NOT MODIFY ################
-SRCFILES:=${SRCFILES} ${${DIR004}CFILES} \
-	${${DIR004}CPPFILES} ${${DIR004}TSTCPP} \
-	${${DIR004}BINCPP}
-DEPFILES:=${DEPFILES} ${${DIR004}DEPFILES} \
-	${${DIR004}TSTDEP} ${${DIR004}BINDEP}
+SRCFILES:=${SRCFILES} ${${DIR006}CFILES} \
+	${${DIR006}CPPFILES} ${${DIR006}TSTCPP} \
+	${${DIR006}BINCPP}
+DEPFILES:=${DEPFILES} ${${DIR006}DEPFILES} \
+	${${DIR006}TSTDEP} ${${DIR006}BINDEP}
 ################## DO NOT MODIFY ################
 ###############################################################################
 #				WANRING
@@ -122,40 +126,40 @@ DEPFILES:=${DEPFILES} ${${DIR004}DEPFILES} \
 #  mode output aestetics. The new colorful version of "make list" is ready now!
 
 #DIRECTORY-SPECIFIC PHONY TARGETS
-.PHONY: ${DIR004}-all ${DIR004}-test \
-	${DIR004}-asm ${DIR004}-check \
-	${DIR004}-list
+.PHONY: ${DIR006}-all ${DIR006}-test \
+	${DIR006}-asm ${DIR006}-check \
+	${DIR006}-list
 
 #  C++ sources
-${OBJ}/%.o: ${DIR004}/%.cpp
+${OBJ}/%.o: ${DIR006}/%.cpp
 	@echo Compiling "${GREEN}$@${NONE}"...
-	${${DIR004}QUIET}${CXX} -o $@ -c $< ${${DIR004}CXXFLAGS} ${${DIR004}INCS}
-${ASM}/%.s: ${DIR004}/%.cpp
+	${${DIR006}QUIET}${CXX} -o $@ -c $< ${${DIR006}CXXFLAGS} ${${DIR006}INCS}
+${ASM}/%.s: ${DIR006}/%.cpp
 	@echo Generating "${CYAN}$@${NONE}"...
-	${${DIR004}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR004}CXXFLAGS} ${${DIR004}INCS} 
+	${${DIR006}QUIET}${CXX} -o $@ $< ${ASMFLAGS} ${${DIR006}CXXFLAGS} ${${DIR006}INCS} 
 
 	
-TARGET_ALL	:=${TARGET_ALL} ${DIR004}-all
-TARGET_TEST	:=${TARGET_TEST} ${DIR004}-test
-TARGET_ASM	:=${TARGET_ASM} ${DIR004}-asm
-TARGET_CHECK	:=${TARGET_CHECK} ${DIR004}-check
-TARGET_LIST	:=${TARGET_LIST} ${DIR004}-list
-${DIR004}-all: ${${DIR004}OBJFILES} ${${DIR004}BINEXE}
+TARGET_ALL	:=${TARGET_ALL} ${DIR006}-all
+TARGET_TEST	:=${TARGET_TEST} ${DIR006}-test
+TARGET_ASM	:=${TARGET_ASM} ${DIR006}-asm
+TARGET_CHECK	:=${TARGET_CHECK} ${DIR006}-check
+TARGET_LIST	:=${TARGET_LIST} ${DIR006}-list
+${DIR006}-all: ${${DIR006}OBJFILES} ${${DIR006}BINEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".
-${DIR004}-test: ${${DIR004}TSTEXE}
+${DIR006}-test: ${${DIR006}TSTEXE}
 	@echo Finished building "${B_BLUE}$@${NONE}".  
-${DIR004}-asm: ${${DIR004}ASMFILES} ${${DIR004}TSTASM} \
-	${${DIR004}BINASM}
+${DIR006}-asm: ${${DIR006}ASMFILES} ${${DIR006}TSTASM} \
+	${${DIR006}BINASM}
 	@echo Finished generating "${B_BLUE}$@${NONE}".  
-${DIR004}-check: ${${DIR004}TSTEXE:${BIN}/%.exe=${OUTPUT}/%.txt}
-${DIR004}-list:
+${DIR006}-check: ${${DIR006}TSTEXE:${BIN}/%.exe=${OUTPUT}/%.txt}
+${DIR006}-list:
 	@echo \#\#\#\#\#\#\#\#"${B_BROWN}$@${NONE}"\#\#\#\#\#\#\#\#
 	@$(foreach dir, 						\
 		CFILES CPPFILES TSTCPP BINCPP				\
 		,							\
-		if [ ! -z "${${DIR004}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR006}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR004}${dir}},		\
+			$(foreach file,${${DIR006}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${BLACK}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
@@ -165,9 +169,9 @@ ${DIR004}-list:
 	@$(foreach dir, 						\
 		TSTEXE BINEXE						\
 		,							\
-		if [ ! -z "${${DIR004}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR006}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR004}${dir}},		\
+			$(foreach file,${${DIR006}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${RED}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
@@ -177,9 +181,9 @@ ${DIR004}-list:
 	@$(foreach dir, 						\
 		OBJFILES TSTOBJ BINOBJ					\
 		,							\
-		if [ ! -z "${${DIR004}${dir}}" ]; then 		\
+		if [ ! -z "${${DIR006}${dir}}" ]; then 		\
 			echo "${BROWN}${dir}${NONE}\t\c";		\
-			$(foreach file,${${DIR004}${dir}},		\
+			$(foreach file,${${DIR006}${dir}},		\
 			    if [ -f ${file} ]; then echo		\
 				"${GREEN}${file}${NONE}\c";		\
 			    else echo "${GREY}${file}${NONE}\c";	\
