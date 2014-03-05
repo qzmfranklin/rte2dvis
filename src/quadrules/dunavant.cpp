@@ -10,7 +10,44 @@ using namespace std;
 
 # include "dunavant.h"
 
+/******************************************************************************/
+static void file_name_inc ( char *file_name );
+static int i4_max ( int i1, int i2 );
+static int i4_min ( int i1, int i2 );
+static int i4_modp ( int i, int j );
+static int i4_wrap ( int ival, int ilo, int ihi );
+static double r8_huge ( void );
+static int r8_nint ( double x );
+static void reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] );
+static int s_len_trim ( char *s );
+static void timestamp ( );
+static double triangle_area ( double t[2*3] );
+static void triangle_points_plot ( char *file_name, double node_xy[], int node_show, int point_num, double point_xy[], int point_show );
 //****************************************************************************80
+static int *dunavant_suborder ( int rule, int suborder_num );
+static int dunavant_suborder_num ( int rule );
+static void dunavant_subrule ( int rule, int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_01 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_02 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_03 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_04 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_05 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_06 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_07 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_08 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_09 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_10 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_11 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_12 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_13 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_14 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_15 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_16 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_17 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_18 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_19 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void dunavant_subrule_20 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+/******************************************************************************/
 
 int dunavant_degree ( int rule )
 

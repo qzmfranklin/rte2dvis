@@ -36,8 +36,8 @@ static void read_info(struct st_mesh *q)
 	// Scan fin_info
 	fscanf(fin_info,"%d\t\t# 1=ASCII 2=BINARY",&q->format);
 	fscanf(fin_info,"%d\t\t# number of verts" ,&q->num_verts);
-	fscanf(fin_info,"%d\t\t# number of trigs" ,&q->num_trigs);
 	fscanf(fin_info,"%d\t\t# number of edges" ,&q->num_edges);
+	fscanf(fin_info,"%d\t\t# number of trigs" ,&q->num_trigs);
 	fclose(fin_info);
 
 	q->status=1; 
@@ -49,11 +49,12 @@ static void alloc_mesh(struct st_mesh *q)
 	assert(q->status==1);
 
 	q->v =(double*)mkl_malloc(sizeof(double)*2*(q->num_verts),64);
-	q->t =(int*)   mkl_malloc(sizeof(int)   *3*(q->num_trigs),64);
 	q->e =(int*)   mkl_malloc(sizeof(int)   *2*(q->num_edges),64);
+	q->t =(int*)   mkl_malloc(sizeof(int)   *3*(q->num_trigs),64);
 	q->p =(double*)mkl_malloc(sizeof(double)*6*(q->num_trigs),64);
 	q->a =(double*)mkl_malloc(sizeof(double)*1*(q->num_trigs),64);
 	assert(q->v);
+	assert(q->e);
 	assert(q->t);
 	assert(q->p);
 	assert(q->a);
@@ -120,7 +121,7 @@ static void read_mesh(struct st_mesh *q)
 		for (int i = 0; i < q->num_trigs; i++)
 			fscanf(fin_trigs,"%d %d %d\n",
 					q->t+3*i,q->t+3*i+1,q->t+3*i+2);
-		for (int i = 0; i < q->num_trigs; i++)
+		for (int i = 0; i < q->num_edges; i++)
 			fscanf(fin_edges,"%d %d\n",
 					q->e+2*i,q->e+2*i+1);
 		break;
@@ -154,11 +155,15 @@ static void read_mesh(struct st_mesh *q)
 		}
 	}
 
-	//TODO: ensure q->e is right-handed too
-
 	q->status=3;
 }
 
+static void assemble_trig_edge(struct st_mesh *q)
+{
+	//TODO
+}
+
+/******************************************************************************/ 
 struct st_mesh *mshio_create_mesh(const char *fbase)
 {
 	struct st_mesh *q;
@@ -167,16 +172,18 @@ struct st_mesh *mshio_create_mesh(const char *fbase)
 	read_info(q);
 	alloc_mesh(q);
 	read_mesh(q);
+	assemble_trig_edge(q);
 
 	return q;
 }
 
 void mshio_destroy_mesh(struct st_mesh *q)
 {
-	//fprintf(stderr,"release_mesh(struct st_mesh &q)\n");
+	//fprintf(stderr,"release_mesh()\n");
 	assert(q->status>=2);
 
 	mkl_free(q->v);
+	mkl_free(q->e);
 	mkl_free(q->t);
 	mkl_free(q->p);
 	mkl_free(q->a);
@@ -186,6 +193,9 @@ void mshio_destroy_mesh(struct st_mesh *q)
 
 void mshio_print_mesh(struct st_mesh *q, int flag)
 {
+	fprintf(stderr,"mshio_print_mesh()\n");
+
+
 	printf("FORMAT     = %d (1=ASCII 2=BINARY)\n", q->format);
 	printf("STATUS     = %d\n", q->status);
 	printf("NUM_NODES  = %d\n", q->num_verts);
@@ -194,31 +204,35 @@ void mshio_print_mesh(struct st_mesh *q, int flag)
 	printf("NODES v    = %p\n", q->v);
 	printf("TRIGS t    = %p\n", q->t);
 	printf("TRIGS p    = %p\n", q->p);
-	printf("TRIGS a    = %p\n", q->a);
+	printf("AREAS a    = %p\n", q->a);
 
 	if (!flag) { printf("\n"); return; }
 
 	assert(q->status==3); // after calling mshio_create_mesh()
-	printf("verts:\n");
-	for (int i = 0; i < MIN(20,q->num_verts); i++)
-		printf("[%7d] (%8.3lf,%8.3lf)\n",
-				i,
-				q->v[2*i  ],q->v[2*i+1]);
-	printf("trigs:\n");
-	for (int i = 0; i < MIN(20,q->num_trigs); i++)
-		printf("[%6d] %7.2E (%6d,%6d,%6d) (%7.2E,%7.2E) (%7.2E,%7.2E) (%7.2E,%7.2E)\n",
-				i,
-				q->a[i    ],
-				q->t[3*i  ],q->t[3*i+1],q->t[3*i+2],
-				q->p[6*i  ],q->p[6*i+1],
-				q->p[6*i+2],q->p[6*i+3],
-				q->p[6*i+4],q->p[6*i+5]);
-
-	printf("edges:\n");
-	for (int i = 0; i < MIN(20,q->num_edges); i++)
+	/*
+	 *printf("verts:\n");
+	 *for (int i = 0; i < MIN(20,q->num_verts); i++)
+	 *        printf("[%7d] (%8.3lf,%8.3lf)\n",
+	 *                        i,
+	 *                        q->v[2*i  ],q->v[2*i+1]);
+	 *printf("edges:\n");
+	 */
+	//for (int i = 0; i < MIN(20,q->num_edges); i++)
+	for (int i = 0; i < q->num_edges; i++)
 		printf("[%6d] (%6d,%6d)\n",
 				i,
 				q->e[2*i  ],q->e[2*i+1]);
+	/*
+	 *printf("trigs:\n");
+	 *for (int i = 0; i < MIN(20,q->num_trigs); i++)
+	 *        printf("[%6d] %7.2E (%6d,%6d,%6d) (%7.2E,%7.2E) (%7.2E,%7.2E) (%7.2E,%7.2E)\n",
+	 *                        i,
+	 *                        q->a[i    ],
+	 *                        q->t[3*i  ],q->t[3*i+1],q->t[3*i+2],
+	 *                        q->p[6*i  ],q->p[6*i+1],
+	 *                        q->p[6*i+2],q->p[6*i+3],
+	 *                        q->p[6*i+4],q->p[6*i+5]);
+	 */
 
 	printf("\n");
 }

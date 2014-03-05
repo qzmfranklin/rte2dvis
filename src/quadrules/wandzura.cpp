@@ -6,13 +6,45 @@
 # include <ctime>
 # include <cstring>
 
+# include "wandzura.h" 
+/******************************************************************************/
 using namespace std;
-
-# include "wandzura.h"
-
+/******************************************************************************/
+static void file_name_inc ( char *file_name );
+static int i4_max ( int i1, int i2 );
+static int i4_min ( int i1, int i2 );
+static int i4_modp ( int i, int j );
+static int i4_wrap ( int ival, int ilo, int ihi );
+static double r8_huge ( void );
+static int r8_nint ( double x );
+static void reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] );
+static int s_len_trim ( char *s );
+static void timestamp ( );
+static double triangle_area ( double t[2*3] );
+static void triangle_points_plot ( char *file_name, double node_xy[], int node_show, int point_num, double point_xy[], int point_show );
+/**************************************/
+static int *wandzura_suborder ( int rule, int suborder_num );
+static int wandzura_suborder_num ( int rule );
+static void wandzura_subrule ( int rule, int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void wandzura_subrule_1 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void wandzura_subrule_2 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void wandzura_subrule_3 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void wandzura_subrule_4 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void wandzura_subrule_5 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+static void wandzura_subrule_6 ( int suborder_num, double suborder_xyz[], double suborder_w[] );
+//
+//  Versions of the rule using the nonstandard reference triangle:
+//
+static void wandzura_subrule2_1 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+static void wandzura_subrule2_2 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+static void wandzura_subrule2_3 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+static void wandzura_subrule2_4 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+static void wandzura_subrule2_5 ( int suborder_num, double suborder_xy[], double suborder_w[] );
+static void wandzura_subrule2_6 ( int suborder_num, double suborder_xy[], double suborder_w[] );	
+/******************************************************************************/
 //****************************************************************************80
 
-void file_name_inc ( char *file_name )
+ void file_name_inc ( char *file_name )
 
 //****************************************************************************80
 //
@@ -106,7 +138,7 @@ void file_name_inc ( char *file_name )
 }
 //****************************************************************************80
 
-int i4_max ( int i1, int i2 )
+ int i4_max ( int i1, int i2 )
 
 //****************************************************************************80
 //
@@ -147,7 +179,7 @@ int i4_max ( int i1, int i2 )
 }
 //****************************************************************************80
 
-int i4_min ( int i1, int i2 )
+ int i4_min ( int i1, int i2 )
 
 //****************************************************************************80
 //
@@ -188,7 +220,7 @@ int i4_min ( int i1, int i2 )
 }
 //****************************************************************************80
 
-int i4_modp ( int i, int j )
+ int i4_modp ( int i, int j )
 
 //****************************************************************************80
 //
@@ -265,7 +297,7 @@ int i4_modp ( int i, int j )
 }
 //****************************************************************************80*
 
-int i4_wrap ( int ival, int ilo, int ihi )
+ int i4_wrap ( int ival, int ilo, int ihi )
 
 //****************************************************************************80*
 //
@@ -341,7 +373,7 @@ int i4_wrap ( int ival, int ilo, int ihi )
 }
 //****************************************************************************80
 
-double r8_huge ( )
+ double r8_huge ( )
 
 //****************************************************************************80
 //
@@ -375,7 +407,7 @@ double r8_huge ( )
 }
 //****************************************************************************80
 
-int r8_nint ( double x )
+ int r8_nint ( double x )
 
 //****************************************************************************80
 //
@@ -432,7 +464,7 @@ int r8_nint ( double x )
 }
 //****************************************************************************80
 
-void reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] )
+ void reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] )
 
 //****************************************************************************80
 //
@@ -509,7 +541,7 @@ void reference_to_physical_t3 ( double t[], int n, double ref[], double phy[] )
 }
 //****************************************************************************80
 
-int s_len_trim ( char *s )
+ int s_len_trim ( char *s )
 
 //****************************************************************************80
 //
@@ -557,7 +589,7 @@ int s_len_trim ( char *s )
 }
 //****************************************************************************80
 
-void timestamp ( )
+ void timestamp ( )
 
 //****************************************************************************80
 //
@@ -605,7 +637,7 @@ void timestamp ( )
 }
 //****************************************************************************80
 
-double triangle_area ( double t[2*3] )
+ double triangle_area ( double t[2*3] )
 
 //****************************************************************************80
 //
@@ -656,7 +688,7 @@ double triangle_area ( double t[2*3] )
 }
 //****************************************************************************80
 
-void triangle_points_plot ( char *file_name, double node_xy[], int node_show,
+ void triangle_points_plot ( char *file_name, double node_xy[], int node_show,
   int point_num, double point_xy[], int point_show )
 
 //****************************************************************************80
@@ -1398,7 +1430,7 @@ int wandzura_rule_num ( void )
 }
 //****************************************************************************80
 
-int *wandzura_suborder ( int rule, int suborder_num )
+ int *wandzura_suborder ( int rule, int suborder_num )
 
 //****************************************************************************80
 //
@@ -1571,7 +1603,7 @@ int *wandzura_suborder ( int rule, int suborder_num )
 }
 //****************************************************************************80
 
-int wandzura_suborder_num ( int rule )
+ int wandzura_suborder_num ( int rule )
 
 //****************************************************************************80
 //
@@ -1644,7 +1676,7 @@ int wandzura_suborder_num ( int rule )
 }
 //****************************************************************************80
 
-void wandzura_subrule ( int rule, int suborder_num, double suborder_xyz[],
+ void wandzura_subrule ( int rule, int suborder_num, double suborder_xyz[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -1720,7 +1752,7 @@ void wandzura_subrule ( int rule, int suborder_num, double suborder_xyz[],
 }
 //****************************************************************************80
 
-void wandzura_subrule_1 ( int suborder_num, double suborder_xyz[],
+ void wandzura_subrule_1 ( int suborder_num, double suborder_xyz[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -1785,7 +1817,7 @@ void wandzura_subrule_1 ( int suborder_num, double suborder_xyz[],
 }
 //****************************************************************************80
 
-void wandzura_subrule_2 ( int suborder_num, double suborder_xyz[],
+ void wandzura_subrule_2 ( int suborder_num, double suborder_xyz[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -1858,7 +1890,7 @@ void wandzura_subrule_2 ( int suborder_num, double suborder_xyz[],
 }
 //****************************************************************************80
 
-void wandzura_subrule_3 ( int suborder_num, double suborder_xyz[],
+ void wandzura_subrule_3 ( int suborder_num, double suborder_xyz[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -1941,7 +1973,7 @@ void wandzura_subrule_3 ( int suborder_num, double suborder_xyz[],
 }
 //****************************************************************************80
 
-void wandzura_subrule_4 ( int suborder_num, double suborder_xyz[],
+ void wandzura_subrule_4 ( int suborder_num, double suborder_xyz[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -2038,7 +2070,7 @@ void wandzura_subrule_4 ( int suborder_num, double suborder_xyz[],
 }
 //****************************************************************************80
 
-void wandzura_subrule_5 ( int suborder_num, double suborder_xyz[],
+ void wandzura_subrule_5 ( int suborder_num, double suborder_xyz[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -2149,7 +2181,7 @@ void wandzura_subrule_5 ( int suborder_num, double suborder_xyz[],
 }
 //****************************************************************************80
 
-void wandzura_subrule_6 ( int suborder_num, double suborder_xyz[],
+ void wandzura_subrule_6 ( int suborder_num, double suborder_xyz[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -2280,7 +2312,7 @@ void wandzura_subrule_6 ( int suborder_num, double suborder_xyz[],
 }
 //****************************************************************************80
 
-void wandzura_subrule2_1 ( int suborder_num, double suborder_xy[],
+ void wandzura_subrule2_1 ( int suborder_num, double suborder_xy[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -2358,7 +2390,7 @@ void wandzura_subrule2_1 ( int suborder_num, double suborder_xy[],
 }
 //****************************************************************************80
 
-void wandzura_subrule2_2 ( int suborder_num, double suborder_xy[],
+ void wandzura_subrule2_2 ( int suborder_num, double suborder_xy[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -2444,7 +2476,7 @@ void wandzura_subrule2_2 ( int suborder_num, double suborder_xy[],
 }
 //****************************************************************************80
 
-void wandzura_subrule2_3 ( int suborder_num, double suborder_xy[],
+ void wandzura_subrule2_3 ( int suborder_num, double suborder_xy[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -2540,7 +2572,7 @@ void wandzura_subrule2_3 ( int suborder_num, double suborder_xy[],
 }
 //****************************************************************************80
 
-void wandzura_subrule2_4 ( int suborder_num, double suborder_xy[],
+ void wandzura_subrule2_4 ( int suborder_num, double suborder_xy[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -2650,7 +2682,7 @@ void wandzura_subrule2_4 ( int suborder_num, double suborder_xy[],
 }
 //****************************************************************************80
 
-void wandzura_subrule2_5 ( int suborder_num, double suborder_xy[],
+ void wandzura_subrule2_5 ( int suborder_num, double suborder_xy[],
   double suborder_w[] )
 
 //****************************************************************************80
@@ -2774,7 +2806,7 @@ void wandzura_subrule2_5 ( int suborder_num, double suborder_xy[],
 }
 //****************************************************************************80
 
-void wandzura_subrule2_6 ( int suborder_num, double suborder_xy[],
+ void wandzura_subrule2_6 ( int suborder_num, double suborder_xy[],
   double suborder_w[] )
 
 //****************************************************************************80

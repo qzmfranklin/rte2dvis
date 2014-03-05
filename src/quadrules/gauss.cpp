@@ -1,12 +1,25 @@
-# include <cstdlib>
-# include <cmath>
-# include <iostream>
-# include <fstream>
-# include <iomanip>
-# include <ctime>
-# include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <ctime>
+#include <cstring>
 
 #include "gauss.h"
+/******************************************************************************/
+static void cdgqf ( int nt, int kind, double alpha, double beta, double t[], double wts[] );
+static double class_matrix ( int kind, int m, double alpha, double beta, double aj[], double bj[] );
+static void imtqlx ( int n, double d[], double e[], double z[] );
+static void parchk ( int kind, int m, double alpha, double beta );
+static double r8_abs ( double x );
+static double r8_epsilon ( );
+static double r8_sign ( double x );
+//void r8mat_write ( string output_filename, int m, int n, double table[] );
+//void rule_write ( int order, string filename, double x[], double w[], double r[] );
+static void scqf ( int nt, double t[], int mlt[], double wts[], int nwts, int ndx[], double swts[], double st[], int kind, double alpha, double beta, double a, double b );
+static void sgqf ( int nt, double aj[], double bj[], double zemu, double t[], double wts[] );
+/******************************************************************************/
 using namespace std;
 
 //int main ( int argc, char *argv[] );

@@ -32,9 +32,9 @@ ${DIR002}CPPFILES:=mshio.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
-${DIR002}BINEXE:=dump_msh.exe
+${DIR002}BINEXE:=dumpmsh.exe
 
-${BIN}/dump_msh.exe: ${OBJ}/dump_msh.o
+${BIN}/dumpmsh.exe: ${OBJ}/dumpmsh.o
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
