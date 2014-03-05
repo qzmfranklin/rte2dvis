@@ -137,8 +137,6 @@ void opt_proc(int argc, char *argv[])
 		else if (format==2) 
 			printf("Format : BINARY\n");
 	}
-
-	printf("\n"); 
 }
 
 void test_limits()
@@ -168,9 +166,9 @@ void test_limits()
 }
 
 /*
- * Read MSH file, dump the nodes and trigs into ASCII/BINARY files.
+ * Read MSH file, dump the verts and trigs into ASCII/BINARY files.
  *   |output fnames are:
- *   |	fname_in.nodes
+ *   |	fname_in.verts
  *   |	fname_in.trigs
  *   |	fname_in.info
  *   |Inputs:
@@ -179,9 +177,9 @@ void test_limits()
  *   |					NULL to enable default behavior
  *   |	int format:			1=ASCII 2=BINARY
  *   |Outputs: 
- *   |	fname_out.nodes:		nodes coordinates
+ *   |	fname_out.verts:		verts coordinates
  *   |	fname_out.trigs:		triangles integer pairs
- *   |	fname_out.info:			the number of nodes and triangles
+ *   |	fname_out.info:			the number of verts and triangles
  *   ------------------------------
  */ 
 int dump_msh(const char * fname_in, const char * fname_out, int format)
@@ -195,83 +193,60 @@ int dump_msh(const char * fname_in, const char * fname_out, int format)
 	}
 	assert( fname_out);
 	// Construct ouuput file names
-	char *fname_out_nodes;
-	char *fname_out_trigs;
 	char *fname_out_info;
-	fname_out_nodes 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
-	fname_out_trigs 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
 	fname_out_info 	= (char*) malloc( FILENAME_MAX * sizeof(char) );
-	assert(fname_out_nodes);
-	assert(fname_out_trigs);
 	assert(fname_out_info );
-	strcpy(fname_out_nodes,fname_out);
-	strcpy(fname_out_trigs,fname_out);
 	strcpy(fname_out_info, fname_out);
-	strcat(fname_out_nodes,".nodes");
-	strcat(fname_out_trigs,".trigs");
 	strcat(fname_out_info, ".info" );
+
+	char *fname_out_verts;
+	fname_out_verts = (char*) malloc( FILENAME_MAX * sizeof(char) );
+	assert(fname_out_verts);
+	strcpy(fname_out_verts,fname_out);
+	strcat(fname_out_verts,".verts");
+
+	char *fname_out_trigs;
+	fname_out_trigs = (char*) malloc( FILENAME_MAX * sizeof(char) );
+	assert(fname_out_trigs);
+	strcpy(fname_out_trigs,fname_out);
+	strcat(fname_out_trigs,".trigs");
+
+	char *fname_out_edges;
+	fname_out_edges = (char*) malloc( FILENAME_MAX * sizeof(char) );
+	assert(fname_out_edges);
+	strcpy(fname_out_edges,fname_out);
+	strcat(fname_out_edges,".edges");
 
 	// Open 4 files:
 	// 	fin:		input MSH file
-	// 	fout_nodes:	output ASCII nodes file
-	// 	fout_trigs:	output ASCII trigs file
 	// 	fout_info:	output ASCII info file
+	// 	fout_verts:	output ASCII verts file
+	// 	fout_trigs:	output ASCII trigs file
+	// 	fout_edges:	output ASCII edges file
 	/*printf("	------------------------------\n");*/
-	FILE *fin;
-	FILE *fout_nodes;
-	FILE *fout_trigs;
-	FILE *fout_info;
-	// open fin for read
-	//printf("	Opening file for read:\n");
-	//printf("		%s\n",fname_in);
-	if (  !(fin=fopen(fname_in,"r"))  ) {
-		//printf("	Cannot open file for read:\n");
-		//printf("	err = err + 1\n");
-		err += 1;
-	}	
-	// open fout_nodes for write
-	//printf("	Opening file for write:\n");
-	//printf("		%s\n",fname_out_nodes);
-	if (  !(fout_nodes=fopen(fname_out_nodes,"w"))  ) {
-		//printf("	Cannot open file for write:\n");
-		//printf("	err = err + 2\n");
-		err += 2;
-	}	
-	// open fout_trigs for write
-	//printf("	Opening file for write:\n");
-	//printf("		%s\n",fname_out_trigs);
-	if (  !(fout_trigs=fopen(fname_out_trigs,"w"))  ) {
-		//printf("	Cannot open file for write:\n");
-		//printf("	err = err + 4\n");
-		err += 4;
-	}	
-	// open fout_info for write
-	//printf("	Opening file for write:\n");
-	//printf("		%s\n",fname_out_info);
-	if (  !(fout_info=fopen(fname_out_info,"w"))  ) {
-		//printf("	Cannot open file for write:\n");
-		//printf("	err = err + 8\n");
-		err += 8;
-	}	
-	// Abort if either occured
-	if (  err  ) {
-		//printf("	Abort with err = %2d\n",err);
-		return err;
-	} else {
-		//printf("	Successfully opened all 4 files!\n");
-	}
+	FILE *fin       =fopen(fname_in       ,"r");
+	FILE *fout_info =fopen(fname_out_info ,"w");
+	FILE *fout_verts=fopen(fname_out_verts,"w");
+	FILE *fout_trigs=fopen(fname_out_trigs,"w");
+	FILE *fout_edges=fopen(fname_out_edges,"w");
+	assert(fin);
+	assert(fout_info);
+	assert(fout_verts);
+	assert(fout_trigs);
+	assert(fout_edges);
 	//printf("	------------------------------\n");
 
-	int nodes_num;
+	int verts_num;
 	int num_elements;
 	int trigs_num;
+	int edges_num;
 	char str_Nodes[]="Nodes";
 	char str_EndNodes[]="EndNodes";
 	char str_Elements[]="Elements";
 	char str_EndElements[]="EndElements";
 	char buff[BUFSIZ];
 	int i=0;
-	// Find nodes
+	// Find verts
 	//printf("	Search for \"%s\"...\n",str_Nodes);
 	while (  (fgets(buff,BUFSIZ,fin))  ) {
 		i++;
@@ -280,27 +255,27 @@ int dump_msh(const char * fname_in, const char * fname_out, int format)
 			break;
 		}
 	}
-	// Scan nodes and write to fout_nodes
-	fscanf(fin,"%d",&nodes_num);
-	//printf("	Number of nodes is\n");
-	//printf("		%d\n",nodes_num);
-	//printf("	Start scanning nodes and writing to fname_out_nodes...\n");
-	for (i = 0; i < nodes_num; i++) {
+	// Scan verts and write to fout_verts
+	fscanf(fin,"%d",&verts_num);
+	//printf("	Number of verts is\n");
+	//printf("		%d\n",verts_num);
+	//printf("	Start scanning verts and writing to fname_out_verts...\n");
+	for (i = 0; i < verts_num; i++) {
 		int ip,z_zero;
 		double x,y;
 		fscanf(fin,"%d %lf %lf %d\n",&ip,&x,&y,&z_zero);
 		//printf("\t\t\t%3d\t%12.8E\t%12.8E\n",ip,x,y);
 		switch (format) {
 		case 1:  // ASCII
-			fprintf(fout_nodes,"%+25.19E %+25.19E\n",x,y);
+			fprintf(fout_verts,"%+25.19E %+25.19E\n",x,y);
 			break;
 		case 2:  // BINARY
-			fwrite(&x,sizeof(double),1,fout_nodes);
-			fwrite(&y,sizeof(double),1,fout_nodes);
+			fwrite(&x,sizeof(double),1,fout_verts);
+			fwrite(&y,sizeof(double),1,fout_verts);
 			break;
 		}
 	}
-	//printf("	Finished scanning nodes and writing.\n");
+	//printf("	Finished scanning verts and writing.\n");
 	//printf("	------------------------------\n");
 	// Find trigs
 	rewind(fin);
@@ -319,6 +294,7 @@ int dump_msh(const char * fname_in, const char * fname_out, int format)
 	//printf("	Number of elements is\n");
 	//printf("		%d\n",num_elements);
 	trigs_num=0;
+	edges_num=0;
 	//printf("	Start Scanning elements and writing trigs to fname_out_trigs...\n");
 	int j;
 	for ( j = 0; j < num_elements; j++) {
@@ -326,18 +302,24 @@ int dump_msh(const char * fname_in, const char * fname_out, int format)
 		fscanf(fin,"%d %d %d %d %d",&tri[0],&tri[1],&tri[2],&tri[3],&tri[4]);
 		fgets(buff,BUFSIZ,fin);
 		i++;
-		if (  (tri[1]==2) && (tri[4]==6)  ) {
-			trigs_num++;
-			if (  trigs_num == 1  ) {
-				//printf("		Found first triangle\n");
-				//printf("			at line %d\n",i);
-				//printf("			as element #%d\n",j+1);
-			}
-			sscanf(buff," %d %d %d\n",&n1,&n2,&n3);
-			/*printf("\t\t\t%3d\t%d\t%d\t%d\n",i+1,n1,n2,n3);*/
+		if ( tri[1]==1 ) {
+			edges_num++;
+			sscanf(buff," %d %d\n",&n1,&n2);
 			switch (format) {
 			case 1:  // ASCII
-				//fprintf(fout_trigs,"%12d %12d %12d\n",n1,n2,n3);
+				fprintf(fout_edges,"%12d %12d\n",n1,n2);
+				break;
+			case 2:  // BINARY
+				fwrite(&n1,sizeof(int),1,fout_edges);
+				fwrite(&n2,sizeof(int),1,fout_edges);
+				break;
+			}
+		} else if ( tri[1]==2 ) {
+			trigs_num++;
+			sscanf(buff," %d %d %d\n",&n1,&n2,&n3);
+			switch (format) {
+			case 1:  // ASCII
+				fprintf(fout_trigs,"%12d %12d %12d\n",n1,n2,n3);
 				break;
 			case 2:  // BINARY
 				fwrite(&n1,sizeof(int),1,fout_trigs);
@@ -353,18 +335,19 @@ int dump_msh(const char * fname_in, const char * fname_out, int format)
 	//printf("	------------------------------\n"); 
 	//printf("	Start writing into fname_out_info...\n");
 	fprintf(fout_info,"%d\t\t# 1=ASCII 2=BINARY\n",format);
-	fprintf(fout_info,"%d\t\t# number of nodes\n",nodes_num);
+	fprintf(fout_info,"%d\t\t# number of verts\n",verts_num);
 	fprintf(fout_info,"%d\t\t# number of trigs\n",trigs_num);
+	fprintf(fout_info,"%d\t\t# number of edges\n",edges_num);
 	//printf("	Finished writing into fname_out_info.\n");
 
 	// Free memory
 	//printf("	------------------------------\n");
 	//printf("	Freeing memory...\n");
 	fclose(fin);
-	fclose(fout_nodes);
+	fclose(fout_verts);
 	fclose(fout_trigs);
 	fclose(fout_info);
-	free(fname_out_nodes);
+	free(fname_out_verts);
 	free(fname_out_trigs);
 	free(fname_out_info);
 	//printf("	------------------------------\n");

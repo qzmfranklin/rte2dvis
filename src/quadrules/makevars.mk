@@ -24,7 +24,7 @@ ${DIR006}QUIET:=@
 #				STEP 2
 #	DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS
 ${DIR006}CXXFLAGS:=${CXXFLAGS}
-${DIR006}INCS:=${INCS}
+${DIR006}INCS:=${INCS} -iquote include/quadrules
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
