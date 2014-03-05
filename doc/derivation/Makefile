@@ -8,19 +8,19 @@ PDF:=out.pdf
 all: ${PDF}
 
 clean:
-	rm -f *.aux *.dvi *.log *.out log
+	rm -f *.aux *.dvi *.log *.toc *.out log
 cleanxx: clean
 	rm -f ${PDF}
 
 ${PDF}: main.dvi ${DVI}
-	dvipdf $< $@
+	@dvipdf $< $@ >log
 
 main.dvi: main.tex ${SRC}
-	latex $< $@
-	latex $< $@
-	latex $< $@
+	@latex $< $@ >log
+	@latex $< $@ >log
+	@latex $< $@ >log
 
 %.dvi: %.tex
-	latex $< $@
-	latex $< $@
-	latex $< $@
+	@latex $< $@ >log
+	@latex $< $@ >log
+	@latex $< $@ >log
