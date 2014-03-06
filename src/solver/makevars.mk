@@ -39,7 +39,8 @@ ${DIR005}BINEXE:=
 ${DIR005}TSTEXE:= test_solver_v1.exe
 
 ${BIN}/test_solver_v1.exe: ${OBJ}/test_solver_v1.o ${OBJ}/solver_v1.o \
-	${OBJ}/utils.o
+	${OBJ}/utils.o ${OBJ}/mshio.o ${OBJ}/dunavant.o ${OBJ}/wandzura.o \
+	${OBJ}/gauss.o ${OBJ}/arcsinh.o
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

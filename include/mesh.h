@@ -16,6 +16,7 @@ struct st_mesh{
 	int       *te;	// trigs -> edges
 	double     *p;	// trigs -> coord
 	double     *a;	// trigs -> areas
+	double     *c;	// cntrs -> coord
 	char   fbase[FILENAME_MAX];	// file base name
 };
 /******************************************************************************/ 
