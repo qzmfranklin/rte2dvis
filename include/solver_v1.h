@@ -8,6 +8,9 @@
  * 	K = blockwise Toeplitz, store the DFT of the first col+row
  */
 /******************************************************************************/
+#include <fftw3.h>
+#include <unistd.h>
+#include <stdio.h>
 #include <complex.h>
 #include "mesh.h"
 /******************************************************************************/
@@ -17,20 +20,63 @@ extern "C" {
 struct st_solver_v1 {
 	int status; // internal status
 
-	struct st_mesh *mesh; // raw mesh
+	int M; // spatial interpolation order
+	int pad; // padding for Nd Nm
 
 	int Ns; // #triangles
-	int Nd; // #highest angular harmonic
 	int Nv; // #vertices
 	int Ne; // #edeges
-	int Nt; // #total d.o.f.
+	int Nt; // #total spatial d.o.f.
 
-	int M; // spatial interpolation order
+	int Nd; // #highest angular harmonic
+	int Nm;	// #padded angular number >=2*Nd+1
 
+	int Ng; // #total d.o.f.
 
-	double _Complex *work; // complex workspace
-	double *tmp; // real workspace
+	int num_threads; // total number of threads
+
+	struct st_mesh *mesh; // raw mesh
+
+	double *E; // I, avoid _Complex_I
+	double *K; // K, DFT, col-major, [Ns,Ns,2*Nm]
+	
+	double g_factor; // g factor in HG phase function
+	double *g; // g^|m|
+
+	double _Complex *work[8]; // complex workspaces
+	double *tmp[8]; // real workspace
+
+	fftw_plan plans[8]; // fftw_plan
+
+	int ipar[128]; // integer parameters
+	double dpar[128]; // double precision parameters 
 };
+
+/*
+ * plans[0]: work[0]
+ * plans[1]: work[1]
+ */
+/*
+ * ipar[0] = M
+ * ipar[1] = Nd
+ * ipar[2] = pad
+ * ipar[3] = rule1
+ * ipar[4] = rule2
+ * ipar[5] = nu
+ * ipar[6] = nv
+ * ipar[7] = num_threads in omp
+ */
+/*
+ * dpar[0] = g factor
+ * dpar[1] = mua (absorption coefficient)
+ * dpar[2] = mus (scattering coefficient)
+ * dpar[3] = phis (planewave incident)
+ */
+struct st_solver_v1 *sv1_create_solver(struct st_mesh *q, const int *ipar, const double *dpar);
+void sv1_solve(double _Complex *solution);
+void sv1_mul(struct st_solver_v1 *s, const double _Complex *in, double _Complex *out);
+void sv1_print_solver(struct st_solver_v1 *s);
+void sv1_destroy_solver(struct st_solver_v1 *s);
 #ifdef __cplusplus
 }
 #endif

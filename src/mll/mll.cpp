@@ -863,9 +863,10 @@ DLLEXPORT int HomoMul_MLL( WolframLibraryData libData, mint Argc, MArgument *Arg
 	for (int n = 0; n < Ns; n++)
 		for (int i = 0; i < 2*Nd+1; i++)
 			Y[i+n*(2*Nd+1)] = A[n] * X[i+n*(2*Nd+1)];
+	//memset(Y,0,sizeof(double _Complex)*Ng);
 	// B[Ns,Ns,2*Nm] is row-major
-	for (int n = 0; n < Ns; n++) {
-		for (int np = 0; np < Ns; np++) {
+	for (int np = 0; np < Ns; np++) {
+		for (int n = 0; n < Ns; n++) {
 			for (int i = 0; i < 2*Nd+1; i++)
 				work[i]  = (mut-mus*g[i]) * X[i+(2*Nd+1)*np];
 			memset(work+2*Nd+1,0,sizeof(double)*2*(2*Nm-2*Nd-1));

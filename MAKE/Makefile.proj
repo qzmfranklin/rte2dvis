@@ -59,8 +59,11 @@ ASMFLAGS	:=-S -fsource-asm# Source code commeNted assembly code.
 #PROJECT-WIDE INCLUDE AND LINKAGE OPTIONS
 ifeq (${PLATFORM},Linux)
 	#	FFTW3 Library for Linux
-	FFTW_INCS	:=-I/opt/intel/mkl/include/fftw
-	FFTW_LIBS	:=-lfftw3
+	#FFTW_INCS	:=-I/opt/intel/mkl/include/fftw
+	#FFTW_LIBS	:=-lfftw3
+	FFTW_DIR	:=/opt/fftw/3.3.3
+	FFTW_INCS	:=-I${FFTW_DIR}/include
+	FFTW_LIBS	:=-L${FFTW_DIR}/lib -lfftw3 -lfftw3_omp
 	#	Intel Math Kernel Library for Linux
 	MKL_INCS	:=
 	MKL_LIBS	:=-mkl

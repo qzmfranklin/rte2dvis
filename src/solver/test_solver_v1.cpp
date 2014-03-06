@@ -19,8 +19,8 @@ int test01(void)
         printf("TEST01\n");
         printf("	|Test solver_v1 workflow\n");
 
-	struct st_mesh *q=mshio_create_mesh("msh/square162");
-	mshio_print_mesh(q,PRINT_INFO_VERBOSE);
+	struct st_mesh *q=mshio_create_mesh("msh/square518");
+	//mshio_print_mesh(q,PRINT_INFO_VERBOSE);
 
 	/*
 	 * ipar[0] = M
@@ -32,23 +32,31 @@ int test01(void)
 	 * ipar[6] = nv
 	 * ipar[7] = num_threads in omp
 	 */
-	//const int ipar[128]={1,3,1, 1,1,5,3,1};
-	const int ipar[128]={1,50,32, 4,9,70,3,6};
+	//const int ipar[128]={1,3,1, 1,1,5,3, 1};
+	const int ipar[128]={1,20,1, 1,1,5,3, 8};
 	/*
-	 * dpar[0] = g
-	 * dpar[1] = phis (planewave incident)
-	 * dpar[2] = mua (absorption coefficient)
-	 * dpar[3] = mus (scattering coefficient)
+	 * dpar[0] = g factor
+	 * dpar[1] = mua (absorption coefficient)
+	 * dpar[2] = mus (scattering coefficient)
+	 * dpar[3] = phis (planewave incident)
 	 */
-	const double dpar[128]={0.8,0.0,1.0,2.0};
+	const double dpar[128]={0.7,1.0,2.0,0.0};
 
 	struct st_solver_v1 *s=sv1_create_solver(q,ipar,dpar);
 	sv1_print_solver(s);
 
-	//for (int i = 0; i < s->Ns; i++)
-		//printf("[%5d] %.3E\n",i,s->E[i]);
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %.5E\n",i,s->K[i]); 
 
+	// test sv1_mul
+	double _Complex v1[50000],v2[50000];
+	for (int i = 0; i < s->Ng; i++)
+		v1[i] = 1;
+	sv1_mul(s,v1,v2);
+	//for (int i = 0; i < 20; i++)
+		//printf("[%5d] %.10f + %.10f*I\n",i,creal(v2[i]),cimag(v2[i])); 
 
+	// destroy
 	sv1_destroy_solver(s); 
 	mshio_destroy_mesh(q);
 

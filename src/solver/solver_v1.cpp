@@ -26,6 +26,7 @@ static void init(struct st_solver_v1 *s, const int *ipar, const double *dpar)
 	s->M      = s->ipar[0]; // unused in v1
 	s->Nd     = s->ipar[1];
 	s->pad    = s->ipar[2];
+	s->num_threads = s->ipar[7];
 
 	struct st_mesh *q=s->mesh;
 
@@ -44,21 +45,57 @@ static void init(struct st_solver_v1 *s, const int *ipar, const double *dpar)
 	s->Ng     = s->Ns * (2*s->Nd+1);
 	//s->Ng     = s->Nt * (2*Nd+1); // unused in v1
 
+
+	s->g_factor = dpar[0]; 
+
 	s->status = 1;
 }
 static void alloc(struct st_solver_v1 *s)
 {
 	assert(s->status==1);
 
-	s->E    = (double*)mkl_malloc(sizeof(double)*(s->Ns),64);
-	s->K    = (double*)mkl_malloc(sizeof(double)*(s->Ns*s->Ns*s->Nm*2),64);
-	//s->tmp  = (double*)mkl_malloc(sizeof(double)*(3*s->ipar[5]*s->ipar[6]),64); //TODO
-	//s->work = (double _Complex*)mkl_malloc(
-			//sizeof(double _Complex)*(s->Ns*s->Ns*s->Nm*2),64);
+	s->E    =(double*)mkl_malloc(sizeof(double)*(s->Ns),64);
+	s->K    =(double*)mkl_malloc(sizeof(double)*(s->Ns*s->Ns*s->Nm*2),64);
 	assert(s->E);
 	assert(s->K);
-	//assert(s->tmp);
-	//assert(s->work);
+
+	// g table [2*Nd+1]
+	s->g=(double*)mkl_malloc(sizeof(double)*(2*s->Nd+1),64);
+	assert(s->g);
+	s->g[s->Nd] = 1.0;
+	for (int i = s->Nd+1; i < 2*s->Nd+1; i++) {
+		s->g[i] = s->g[i-1] * s->g_factor;
+		s->g[2*s->Nd-i] = s->g[i];
+	}
+
+	// for matrix-vector multiplication
+	s->work[0]=(double _Complex*)mkl_malloc(sizeof(double _Complex)*(s->Ns*s->Nm*2),64);
+	s->work[1]=(double _Complex*)mkl_malloc(sizeof(double _Complex)*(s->Ns*s->Nm*2),64);
+	//s->work[0]=(double _Complex*)mkl_malloc(sizeof(double _Complex)*(s->Nm*2),64);
+	//s->work[1]=(double _Complex*)mkl_malloc(sizeof(double _Complex)*(s->Nm*2),64);
+	assert(s->work[0]);
+	assert(s->work[1]);
+	const int Nm_times_2 = 2*s->Nm;
+	fftw_init_threads();
+	fftw_plan_with_nthreads(s->num_threads);
+	s->plans[0] = fftw_plan_many_dft(1,&Nm_times_2,s->Ns,
+			(fftw_complex*)(s->work[0]),NULL,1,Nm_times_2,
+			(fftw_complex*)(s->work[0]),NULL,1,Nm_times_2,
+			FFTW_FORWARD ,FFTW_MEASURE|FFTW_PATIENT);
+	s->plans[1] = fftw_plan_many_dft(1,&Nm_times_2,s->Ns,
+			(fftw_complex*)(s->work[1]),NULL,1,Nm_times_2,
+			(fftw_complex*)(s->work[1]),NULL,1,Nm_times_2,
+			FFTW_BACKWARD,FFTW_MEASURE|FFTW_PATIENT);
+	//s->plans[0]=fftw_plan_dft_1d(2*s->Nm,
+			//(fftw_complex*)(s->work[0]),
+			//(fftw_complex*)(s->work[0]),
+			//FFTW_FORWARD ,
+			//FFTW_MEASURE|FFTW_PATIENT|FFTW_EXHAUSTIVE);
+	//s->plans[1]=fftw_plan_dft_1d(2*s->Nm,
+			//(fftw_complex*)(s->work[1]),
+			//(fftw_complex*)(s->work[1]),
+			//FFTW_BACKWARD,
+			//FFTW_MEASURE|FFTW_PATIENT|FFTW_EXHAUSTIVE);
 
 	s->status=2;
 }
@@ -82,7 +119,6 @@ static double r2rd(const double *p1, const double *p2)
 static void fillK(struct st_solver_v1 *s)
 {
 	assert(s->status==3);
-
 /*
  * ipar[0] = M
  * ipar[1] = Nd
@@ -168,11 +204,15 @@ static void fillK(struct st_solver_v1 *s)
 	// Note: s->K [Ns,Ns,2Nm] is real row-major rank-3 tensor
 	memset(Kwork,0,sizeof(double _Complex)*Ns*Ns*2*Nm);
 
-	#pragma omp parallel	\
-	num_threads(s->ipar[7])	\
-	default(none)		\
-	shared(nu,nv,Nd,Ns,Ng,Nm,rule1,rule2,nn1,nn2,p,ns,area,cntr, \
-			xy01,wn1,xy02,wn2,xu,wu,xv,wv,Kwork, \
+	#pragma omp parallel		\
+	num_threads(s->num_threads)	\
+	default(none)			\
+	shared(nu,nv,Nd,Ns,Ng,Nm,rule1, \
+			rule2,nn1,nn2,	\
+			p,ns,area,cntr, \
+			xy01,wn1,xy02,	\
+			wn2,xu,wu,xv,wv,\
+			Kwork,		\
 			stdout,stdin,stderr)
 	{
 	// testing
@@ -199,7 +239,7 @@ static void fillK(struct st_solver_v1 *s)
 
 	const int num_threads=omp_get_num_threads();
 	const int tid=omp_get_thread_num();
-	fprintf(stderr,"thread_id = %-5d\n",tid);
+	//fprintf(stderr,"[tid %-5d] starts...\n",tid);
 	int blk=Ns/num_threads;
 	int res=Ns%num_threads;
 	int start, end;
@@ -351,22 +391,67 @@ struct st_solver_v1 *sv1_create_solver(struct st_mesh *q, const int *ipar, const
 
 	return s;
 }
+
 void sv1_destroy_solver(struct st_solver_v1 *s)
 {
 	assert(s->status>=2); // check alloc'd
 
 	mkl_free(s->E);
 	mkl_free(s->K);
-	//mkl_free(s->work);
-	//mkl_free(s->tmp); 
 
-	// fftw_destroy_plan();
+	mkl_free(s->g);
+
+	mkl_free(s->work[0]);
+	mkl_free(s->work[1]);
+	fftw_destroy_plan(s->plans[0]);
+	fftw_destroy_plan(s->plans[1]);
 	
 	mkl_free(s);
 }
-void sv1_mul(struct st_solver_v1 *s, const double _Complex *in, double _Complex *out)
+
+void sv1_mul(struct st_solver_v1 *s, const double _Complex *restrict in, double _Complex *restrict out)
 {
+	//fprintf(stderr,"sv1_mul()\n");
+	/*
+	 * dpar[0] = g factor
+	 * dpar[1] = mua (absorption coefficient)
+	 * dpar[2] = mus (scattering coefficient)
+	 * dpar[3] = phis (planewave incident)
+	 */
+	// convenience variables
+	const double mua = s->dpar[1];
+	const double mus = s->dpar[2];
+	const double mut = mua + mus;
+	const int     Ns = s->Ns;
+	const int     Nm = s->Nm;
+	const int     Nd = s->Nd;
+	const int     Ng = s->Ng;
+
+	double _Complex **work = s->work;
+	for (int n = 0; n < Ns; n++) {
+		for (int i = 0; i < 2*Nd+1; i++)
+			work[0][i+n*2*Nm] = mut*in[i+n*(2*Nd+1)] - mus*s->g[i]*in[i+n*(2*Nd+1)];
+		memset(work[0]+n*2*Nm+2*Nd+1,0,sizeof(double _Complex)*(2*Nm-2*Nd-1));
+	}
+	fftw_execute(s->plans[0]); // in-place FWD FFTW work[0]
+	memset(work[1],0,sizeof(double _Complex)*(Ns*2*Nm));
+	for (int n = 0; n < Ns; n++)
+		for (int np = 0; np < Ns; np++)
+			for (int i = 0; i < 2*Nm; i++)
+				work[1][i+n*2*Nm] += s->K[i+(np+n*Ns)*2*Nm] * work[0][i+np*2*Nm];
+	fftw_execute(s->plans[1]); // in-place BWD FFTW work[1]
+	memset(out,0,sizeof(double _Complex)*Ng);
+	for (int n = 0; n < Ns; n++)
+		for (int i = 0; i < 2*Nd+1; i++)
+			out[i+n*(2*Nd+1)] = work[1][i+n*2*Nm];
+
+	// contribution from identity term I
+	for (int n = 0; n < Ns; n++)
+		for (int i = 0; i < 2*Nd+1; i++)
+			out[i+n*(2*Nd+1)] += s->E[n] * in[i+n*(2*Nd+1)]; 
+
 }
+
 //void sv1_solve(double _Complex *solution)
 //{
 	//const int N=100;
@@ -484,11 +569,14 @@ void sv1_print_solver(struct st_solver_v1 *s)
 	printf("HARM    Nd = %d\n", s->Nd);
 	printf("ANG     Nm = %d\n", s->Nm);
 	printf("TOTAL   Ng = %d\n", s->Ng);
+	printf("num_threads= %d\n", s->num_threads);
+
+	printf("  g_factor = %.3f\n",s->g_factor);
 
 	printf("RAW   mesh = %p\n", s->mesh);
 
 	printf("IDENTITY E = %p\n", s->E);
 	printf("INTERACT K = %p\n", s->K);
-	printf("CPLX  work = %p\n", s->work);
-	printf("REAL   tmp = %p\n", s->tmp);
+	//printf("CPLX  work = %p\n", s->work);
+	//printf("REAL   tmp = %p\n", s->tmp);
 }
