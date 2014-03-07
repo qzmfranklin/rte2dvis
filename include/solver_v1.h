@@ -51,7 +51,7 @@ struct st_solver_v1 {
 	int ipar[128]; // integer parameters
 	double dpar[128]; // double precision parameters 
 };
-
+/**************************************/
 /*
  * plans[0]: work[0]
  * plans[1]: work[1]
@@ -70,11 +70,13 @@ struct st_solver_v1 {
  * dpar[0] = g factor
  * dpar[1] = mua (absorption coefficient)
  * dpar[2] = mus (scattering coefficient)
- * dpar[3] = phis (planewave incident)
  */
 struct st_solver_v1 *sv1_create_solver(struct st_mesh *q, const int *ipar, const double *dpar);
-void sv1_solve(double _Complex *solution);
-void sv1_mul(struct st_solver_v1 *s, const double _Complex *in, double _Complex *out);
+double _Complex *sv1_gen_rhs0(struct st_solver_v1 *s, const double phis);
+//double _Complex *sv1_gen_rhs1(struct st_solver_v1 *s, const double phis);
+void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *sol, 
+		const int max_nitr, const double retol, int *restrict nitr, double *restrict eps);
+void sv1_mul(struct st_solver_v1 *s, double _Complex *in, double _Complex *out);
 void sv1_print_solver(struct st_solver_v1 *s);
 void sv1_destroy_solver(struct st_solver_v1 *s);
 #ifdef __cplusplus

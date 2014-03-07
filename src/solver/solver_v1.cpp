@@ -15,7 +15,6 @@
 /******************************************************************************/
 static void init(struct st_solver_v1 *s, const int *ipar, const double *dpar)
 {
-
 	assert(s->status==0);
 
 	for (int i = 0; i < 128; i++) {
@@ -43,8 +42,7 @@ static void init(struct st_solver_v1 *s, const int *ipar, const double *dpar)
 	}
 
 	s->Ng     = s->Ns * (2*s->Nd+1);
-	//s->Ng     = s->Nt * (2*Nd+1); // unused in v1
-
+	//s->Ng     = s->Nt * (2*Nd+1); // unused in v1 
 
 	s->g_factor = dpar[0]; 
 
@@ -71,8 +69,6 @@ static void alloc(struct st_solver_v1 *s)
 	// for matrix-vector multiplication
 	s->work[0]=(double _Complex*)mkl_malloc(sizeof(double _Complex)*(s->Ns*s->Nm*2),64);
 	s->work[1]=(double _Complex*)mkl_malloc(sizeof(double _Complex)*(s->Ns*s->Nm*2),64);
-	//s->work[0]=(double _Complex*)mkl_malloc(sizeof(double _Complex)*(s->Nm*2),64);
-	//s->work[1]=(double _Complex*)mkl_malloc(sizeof(double _Complex)*(s->Nm*2),64);
 	assert(s->work[0]);
 	assert(s->work[1]);
 	const int Nm_times_2 = 2*s->Nm;
@@ -86,16 +82,6 @@ static void alloc(struct st_solver_v1 *s)
 			(fftw_complex*)(s->work[1]),NULL,1,Nm_times_2,
 			(fftw_complex*)(s->work[1]),NULL,1,Nm_times_2,
 			FFTW_BACKWARD,FFTW_MEASURE|FFTW_PATIENT);
-	//s->plans[0]=fftw_plan_dft_1d(2*s->Nm,
-			//(fftw_complex*)(s->work[0]),
-			//(fftw_complex*)(s->work[0]),
-			//FFTW_FORWARD ,
-			//FFTW_MEASURE|FFTW_PATIENT|FFTW_EXHAUSTIVE);
-	//s->plans[1]=fftw_plan_dft_1d(2*s->Nm,
-			//(fftw_complex*)(s->work[1]),
-			//(fftw_complex*)(s->work[1]),
-			//FFTW_BACKWARD,
-			//FFTW_MEASURE|FFTW_PATIENT|FFTW_EXHAUSTIVE);
 
 	s->status=2;
 }
@@ -119,67 +105,28 @@ static double r2rd(const double *p1, const double *p2)
 static void fillK(struct st_solver_v1 *s)
 {
 	assert(s->status==3);
-/*
- * ipar[0] = M
- * ipar[1] = Nd
- * ipar[2] = pad
- * ipar[3] = rule1
- * ipar[4] = rule2
- * ipar[5] = nu
- * ipar[6] = nv
- */
-/*
- * dpar[0] = g
- * dpar[1] = phis (planewave incident)
- * dpar[2] = mua (absorption coefficient)
- * dpar[3] = mus (scattering coefficient)
- */
-	//const int      nu = (int)MArgument_getInteger(Args[5]); // source
-	//const int      nv = (int)MArgument_getInteger(Args[6]); // source
 	const int nu = s->ipar[5]; // source
 	const int nv = s->ipar[6]; // source
-
-	//double         *p = libData->MTensor_getRealData(Tp);
-	//const mint  *dimp = libData->MTensor_getDimensions(Tp);
-	//const int      Ns = (int)(dimp[0]);
-	//const int      Ng = Ns*(2*Nd+1);
 	const int Ns = s->Ns;
 	const int Ng = s->Ng;
 	const int Nd = s->Nd;
 	const int Nm = s->Nm;
 	const double *p = s->mesh->p;
-
-	//const int     nn1 = wandzura_order_num(rule1);
-	//const int     nn2 = dunavant_order_num(rule2);
-	//const int      ns = 3*nu*nv;
 	const int rule1 = s->ipar[3];
 	const int rule2 = s->ipar[4];
 	const int nn1 = wandzura_order_num(rule1);
 	const int nn2 = dunavant_order_num(rule2);
 	const int  ns = 3*nu*nv;
-
-	//MTensor TRes;
-	//mint dims[]={Ns,Ns,2*Nm};
-	//libData->MTensor_new(MType_Real,3,dims,&TRes);
-	//double *B = libData->MTensor_getRealData(TRes);
-	// s->K = B
-
-	//double *area=(double*)mkl_malloc(sizeof(double)*Ns,64);
-	//double *cntr=(double*)mkl_malloc(sizeof(double)*2*Ns,64);
-	// s->a = area, s->c = cntr
 	const double *area = s->mesh->a;
 	const double *cntr = s->mesh->c; 
-
 	double *xy01=(double*)mkl_malloc(sizeof(double)*2*nn1,64);
 	double  *wn1=(double*)mkl_malloc(sizeof(double)*nn1,64);
 	double *xy02=(double*)mkl_malloc(sizeof(double)*2*nn2,64);
 	double  *wn2=(double*)mkl_malloc(sizeof(double)*nn2,64);
-
 	double *xu =(double*)mkl_malloc(sizeof(double)*nu,64);
 	double *wu =(double*)mkl_malloc(sizeof(double)*nu,64);
 	double *xv =(double*)mkl_malloc(sizeof(double)*nv,64);
 	double *wv =(double*)mkl_malloc(sizeof(double)*nv,64);
-
 	double _Complex *Kwork=(double _Complex*)mkl_malloc(sizeof(double _Complex)*Ns*Ns*2*Nm,64);
 
 	// init non-sigular quad rules
@@ -190,11 +137,6 @@ static void fillK(struct st_solver_v1 *s)
 	cgqf(nu,1.0,0.0,0.0,    0.0,  1.0,   xu,wu);
 	cgqf(nv,1.0,0.0,0.0,    0.0,  1.0,   xv,wv);
 
-	// create FFTW plan
-	//fftw_plan plan= fftw_plan_dft_1d(2*Nm,
-			//(fftw_complex*)Kwork,
-			//(fftw_complex*)Kwork,
-			//FFTW_FORWARD, FFTW_ESTIMATE);
 	const int Nm_times_2 = 2*Nm;
 	fftw_plan plan = fftw_plan_many_dft(1,&Nm_times_2,Ns*Ns,
 			(fftw_complex*)Kwork,NULL,1,Nm_times_2,
@@ -202,7 +144,7 @@ static void fillK(struct st_solver_v1 *s)
 			FFTW_FORWARD, FFTW_ESTIMATE);
 
 	// Note: s->K [Ns,Ns,2Nm] is real row-major rank-3 tensor
-	memset(Kwork,0,sizeof(double _Complex)*Ns*Ns*2*Nm);
+	memset(Kwork,0,sizeof(double)*Ns*Ns*2*Nm);
 
 	#pragma omp parallel		\
 	num_threads(s->num_threads)	\
@@ -216,26 +158,20 @@ static void fillK(struct st_solver_v1 *s)
 			stdout,stdin,stderr)
 	{
 	// testing
-	//double *xy01=(double*)mkl_malloc(sizeof(double)*2*nn1,64);
 	double *xyn1=(double*)mkl_malloc(sizeof(double)*2*nn1,64);
-	//double  *wn1=(double*)mkl_malloc(sizeof(double)*nn1,64);
 
 	// source
-	//double *xy02=(double*)mkl_malloc(sizeof(double)*2*nn2,64);
 	double *xyn2=(double*)mkl_malloc(sizeof(double)*2*nn2,64);
-	//double  *wn2=(double*)mkl_malloc(sizeof(double)*nn2,64);
 
 	double *xys=(double*)mkl_malloc(sizeof(double)*2*ns,64);
 	double *ws =(double*)mkl_malloc(sizeof(double)*ns,64); 
 
 	double _Complex *b  =(double _Complex*)mkl_malloc(sizeof(double)*2*2*Nm,64);
-	//double _Complex *bb =(double _Complex*)mkl_malloc(sizeof(double)*2*2*Nm,64);
 
 	double _Complex *e  =(double _Complex*)mkl_malloc(sizeof(double)*2*MAX(nn1,MAX(nn2,ns)),64);
 	double _Complex *wer=(double _Complex*)mkl_malloc(sizeof(double)*2*MAX(nn1,MAX(nn2,ns)),64); 
 
 	double *work=(double*)mkl_malloc(sizeof(double)*3*nu*nv,64);
-	//double *work = s->tmp;
 
 	const int num_threads=omp_get_num_threads();
 	const int tid=omp_get_thread_num();
@@ -249,7 +185,6 @@ static void fillK(struct st_solver_v1 *s)
 		end = Ns;
 	else
 		end = blk * (tid+1);
-	//for (int n = 0; n < Ns; n++) {
 	for (int n = start; n < end; n++) {
 		reference_to_physical_t3(nn1,p+6*n,xy01,xyn1);
 		for (int np = 0; np < Ns; np++) {
@@ -305,33 +240,14 @@ static void fillK(struct st_solver_v1 *s)
 				for (int i = 0; i < 2*Nm; i++)
 					Kwork[i+(np+n*Ns)*2*Nm] += b[i] * wn1[j];
 			}
-			//[>FFTW bb to B<]
-			//fftw_execute(plan);	// in-place bb
-			//{
-				//const double xx=area[n]*0.5/Nm;
-				//for (int i = 0; i < 2*Nm; i++)
-					//B[i+(np+n*Ns)*2*Nm] += xx * creal(bb[i]);
-			//}
 		}
 	}
 	// Free thread-specific memories
-	//mkl_free(xy01);
 	mkl_free(xyn1);
-	//mkl_free(wn1 );
-
-	//mkl_free(xy02);
 	mkl_free(xyn2);
-	//mkl_free(wn2 );
-
-	//mkl_free(xu );
-	//mkl_free(wu );
-	//mkl_free(xv );
-	//mkl_free(wv );
 	mkl_free(xys);
 	mkl_free(ws );
-
 	mkl_free(b  );
-	//mkl_free(bb );
 	mkl_free(e  );
 	mkl_free(wer);
 
@@ -362,11 +278,6 @@ static void fillK(struct st_solver_v1 *s)
 
 	/*Destroy FFTW plan*/
 	fftw_destroy_plan(plan);
-
-	//{ const int n=1, np=3;
-	//for (int i = 0; i < 2*Nm; i++)
-		//printf("[%d] %.4E\n",i,s->K[i+(np+n*Ns)*2*Nm]);
-	//}
 
 	s->status=4;
 }
@@ -409,7 +320,7 @@ void sv1_destroy_solver(struct st_solver_v1 *s)
 	mkl_free(s);
 }
 
-void sv1_mul(struct st_solver_v1 *s, const double _Complex *restrict in, double _Complex *restrict out)
+void sv1_mul(struct st_solver_v1 *s, double _Complex *in, double _Complex *out)
 {
 	//fprintf(stderr,"sv1_mul()\n");
 	/*
@@ -428,131 +339,147 @@ void sv1_mul(struct st_solver_v1 *s, const double _Complex *restrict in, double 
 	const int     Ng = s->Ng;
 
 	double _Complex **work = s->work;
+	#pragma omp parallel for 	\
+	num_threads(s->num_threads)	\
+	default(none)			\
+	shared(work,Nm,Ns,Nd,mut,mus,in,s)
 	for (int n = 0; n < Ns; n++) {
 		for (int i = 0; i < 2*Nd+1; i++)
 			work[0][i+n*2*Nm] = mut*in[i+n*(2*Nd+1)] - mus*s->g[i]*in[i+n*(2*Nd+1)];
 		memset(work[0]+n*2*Nm+2*Nd+1,0,sizeof(double _Complex)*(2*Nm-2*Nd-1));
 	}
-	fftw_execute(s->plans[0]); // in-place FWD FFTW work[0]
+	fftw_execute(s->plans[0]); // in-place omp FWD FFTW work[0]
 	memset(work[1],0,sizeof(double _Complex)*(Ns*2*Nm));
+	#pragma omp parallel for 	\
+	num_threads(s->num_threads)	\
+	default(none)			\
+	shared(work,s,Nm,Ns)
 	for (int n = 0; n < Ns; n++)
 		for (int np = 0; np < Ns; np++)
 			for (int i = 0; i < 2*Nm; i++)
 				work[1][i+n*2*Nm] += s->K[i+(np+n*Ns)*2*Nm] * work[0][i+np*2*Nm];
-	fftw_execute(s->plans[1]); // in-place BWD FFTW work[1]
+	fftw_execute(s->plans[1]); // in-place omp BWD FFTW work[1]
 	memset(out,0,sizeof(double _Complex)*Ng);
+	#pragma omp parallel for 	\
+	num_threads(s->num_threads)	\
+	default(none)			\
+	shared(out,work,Nm,Ns,Nd)
 	for (int n = 0; n < Ns; n++)
 		for (int i = 0; i < 2*Nd+1; i++)
 			out[i+n*(2*Nd+1)] = work[1][i+n*2*Nm];
 
-	// contribution from identity term I
+	//contribution from identity term I
+	#pragma omp parallel for 	\
+	num_threads(s->num_threads)	\
+	default(none)			\
+	shared(out,in,s,Nd,Ns)
 	for (int n = 0; n < Ns; n++)
 		for (int i = 0; i < 2*Nd+1; i++)
 			out[i+n*(2*Nd+1)] += s->E[n] * in[i+n*(2*Nd+1)]; 
-
 }
 
-//void sv1_solve(double _Complex *solution)
-//{
-	//const int N=100;
-	//int err=0; 
+static size_t tmp_size(const size_t size, const size_t n)
+{
+	return (2*n+1)*size+n*(n+9)/2+1;
+}
 
-	//// Prepare the inputs.
-	//double A[N*N],expected_sol[N],rhs[N];
-	//init_matrix(N,N,A);
-	//for (int i = 0; i < N; i++)
-		//expected_sol[i] = i;
-	//m_mul_v(N,A,expected_sol,rhs);
-
-	//printf("N=%d\n",N);
-	//print_vector("expected_sol",20,expected_sol);
+void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *sol, 
+		const int max_nitr, const double retol, int *restrict nitr, double *restrict eps)
+{
+	//fprintf(stderr,"sv1_solve()\n");
+	double *b=(double*)rhs;
+	double *x=(double*)sol;
 	
-	//// Allocate storage for the iterative solver.
-	//double sol[N];
-	//init_vector(N,sol); 
-	//print_vector("initial guess",20,sol); 
+	int size=2*s->Ng;
+	const int max_non_restart_num=50;
+	double *tmp=(double*)mkl_malloc(sizeof(double)*tmp_size(size,max_non_restart_num),64);
+	int ipar[128],RCI_request;
+	double dpar[128];
+	assert(tmp); 
 
-	//int ipar[128],RCI_request,ivar,itercount;
-	//double dpar[128],tmp[N*(5*N+11)/2+1];
-	//ivar    = N;
+	fprintf(stderr,"rhs b=\n");
+	for (int i = 0; i < 20; i++)
+		printf("[%5d] %.9f + %.9f *I\n",i,b[2*i],b[2*i+1]);
 
-	//print_mkl_dfgmres_pars(ipar,dpar);
-	//dfgmres_init(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp);
-	//assert(!RCI_request);
+	for (int i = 0; i < 2*s->Ng; i++)
+		x[i] = 10.0 * rand()/RAND_MAX;
+	fprintf(stderr,"initial guess x=\n");
+	for (int i = 0; i < 20; i++)
+		printf("[%5d] %.9f + %.9f *I\n",i,x[2*i],x[2*i+1]);
+
+	//fprintf(stderr,"solve!\n");
+	dfgmres_init(&size,x,b,&RCI_request,ipar,dpar,tmp);
+	assert(!RCI_request);
 
 	/*
 	 * LOGICAL parameters:
-	 *   ipar[3]:  current iteration count
-	 *   ipar[4]:  max numbuer of iterations
-	 *   ipar[7]:  !0 = max iteration check [1]
-	 *   ipar[8]:  !0 = residual stopping check dpar[3]<dpar[4] [0]
-	 *   ipar[9]:  !0 = user-defined stopping check by setting RCI_request=2 [1]
-	 *   ipar[10]: !0 = requests precondition by setting RCI_request=3 [0]
-	 *   ipar[11]: !0 = check zero norm of current vector dpar[6]<=dpar[7] [0]
-	 *              0 = requests user-defined check by setting RCI_request=4
-	 *              (must set to 1 for some unknown reasons)
-	 *   ipar[12]: solution vector storage flag [0]
-	 *   ipar[13]: internal iteration counts before restart
-	 *   ipar[14]: max number of non-restarted version
+	 * ipar[3]:  current iteration count
+	 * ipar[4]:  max numbuer of iterations
+	 * ipar[7]:  !0 = max iteration check [1]
+	 * ipar[8]:  !0 = residual stopping check dpar[3]<dpar[4] [0]
+	 * ipar[9]:  !0 = user-defined stopping check by setting RCI_request=2 [1]
+	 * ipar[10]: !0 = requests precondition by setting RCI_request=3 [0]
+	 * ipar[11]: !0 = check zero norm of current vector dpar[6]<=dpar[7] [0]
+	 *                 0 = requests user-defined check by setting RCI_request=4
+	 *                 (must set to 1 for some unknown reasons)
+	 * ipar[12]: xution vector storage flag [0]
+	 * ipar[13]: internal iteration counts before restart
+	 * ipar[14]: max number of non-restarted version
 	 */
-	//ipar[4]  = 100;
-	//ipar[7]  = 1;
-	//ipar[8]	 = 1;
-	//ipar[9]	 = 0;
-	//ipar[11] = 1;
-
+	ipar[4]  = max_nitr;
+	ipar[7]  = 1;
+	ipar[8]	 = 1;
+	ipar[9]	 = 0;
+	ipar[11] = 1;
+	ipar[14] = max_non_restart_num;
 	/*
 	 * DOUBLE parameters:
-	 *   dpar[0]:  relative tolerance [1.0D-6]
-	 *   dpar[1]:  absolute tolerance [0.0D-0]
-	 *   dpar[2]:  L2 norm of initial residual
-	 *   dpar[3]:  service variable, dpar[0]*dpar[2]+dpar[1]
-	 *   dpar[4]:  L2 norm of current residual
-	 *   dpar[5]:  L2 norm of previous residual, if available
-	 *   dpar[6]:  norm of generated vector
-	 *   dpar[7]:  tolerance for zero norm of current vector [1.0D-12]
+	 * dpar[0]:  relative tolerance [1.0D-6]
+	 * dpar[1]:  abxute tolerance [0.0D-0]
+	 * dpar[2]:  L2 norm of initial residual
+	 * dpar[3]:  service variable, dpar[0]*dpar[2]+dpar[1]
+	 * dpar[4]:  L2 norm of current residual
+	 * dpar[5]:  L2 norm of previous residual, if available
+	 * dpar[6]:  norm of generated vector
+	 * dpar[7]:  tolerance for zero norm of current vector [1.0D-12]
 	 */
-	//dpar[0]	 = 1.0E-5;
-	//// Check consistency of parameters
-	//dfgmres_check(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp);
-	//assert(!RCI_request);
+	dpar[0]	 = retol;
 
-	/*
-	 * RCI_request:
-	 * 	0	completed
-	 * 	1	go on iterating
-	 * 	2	requests user-defined stopping check, ipar[9]
-	 * 	3	requests preconditoning, ipar[10]
-	 * 	4	requests zero norm check, ipar[11]
-	 */
-	//double bnorm=0.0;
-	//for (int i = 0; i < N; i++)
-		//bnorm += rhs[i] * rhs[i];
-	//bnorm = sqrt(bnorm);
-	//do {
-		//dfgmres(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp); 
-		//switch (RCI_request) {
-		//case 1: // user-defined matrix-vector multiplication comes here...
-			//m_mul_v(N,A,tmp+ipar[21]-1,tmp+ipar[22]-1); 
-		//case 2: // requests user-defined stopping check
-			//break;
-		//case 3: // requests preconditioning
-			//break;
-		//case 4: // requests zero norm check
-			//break;
-		//default:// no idea how to get here...
-			//break;
-		//}
-		//printf("[  %5d,  %5d,  %.2E,  %-.2E]\n",ipar[3],ipar[13],dpar[4],dpar[4]/bnorm); 
-	//} while(RCI_request>0);
+	// Check consistency of parameters
+	dfgmres_check(&size,x,b,&RCI_request,ipar,dpar,tmp);
+	assert(!RCI_request);
 
-	//// Extract solution, print, clear buffers.
-	//dfgmres_get(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp,&itercount);
-	//printf("\n");
-	//printf("Solver finished after %d iterations.\n",itercount);
-	//print_vector("sol",20,sol);
-	//MKL_Free_Buffers(); 
-//}
+	printf("solve!\n");
+	do {
+		dfgmres(&size,x,b,&RCI_request,ipar,dpar,tmp); 
+		switch (RCI_request) {
+		case 1: // *tmp+ipar[22]-1  <=  A.*(tmp+ipar[21]-1)
+			sv1_mul(s,(double _Complex*)(tmp+ipar[21]-1),
+					(double _Complex*)(tmp+ipar[22]-1));
+			break;
+		case 2: // ipar[9]  requests user-defined stopping check
+			break;
+		case 3: // ipar[10] requests preconditioning
+			break;
+		case 4: // ipar[11] requests zero norm check
+			break;
+		default:// no idea how to get here...
+			break;
+		}
+		//if (ipar[3]%5==0)
+			printf("[  %5d,  %5d,  %.2E]\n",
+					ipar[3],ipar[13],dpar[4]);
+	} while(RCI_request>0);
+
+	// Extract xution, print, clear buffers.
+	dfgmres_get(&size,x,b,&RCI_request,ipar,dpar,tmp,nitr);
+	*eps = dpar[4];
+	printf("\n");
+	printf("solver exits after %d iterations\nrelativ err = %.3E\n",*nitr,*eps);
+
+	MKL_Free_Buffers(); 
+	mkl_free(tmp);
+}
 void sv1_print_solver(struct st_solver_v1 *s)
 {
 	//fprintf(stderr,"mshio_print_mesh()\n"); 

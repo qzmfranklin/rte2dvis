@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include "mshio.h"
 #include "solver_v1.h"
 #include "utils.h"
@@ -19,7 +20,7 @@ int test01(void)
         printf("TEST01\n");
         printf("	|Test solver_v1 workflow\n");
 
-	struct st_mesh *q=mshio_create_mesh("msh/square518");
+	struct st_mesh *q=mshio_create_mesh("msh/square162");
 	//mshio_print_mesh(q,PRINT_INFO_VERBOSE);
 
 	/*
@@ -33,30 +34,34 @@ int test01(void)
 	 * ipar[7] = num_threads in omp
 	 */
 	//const int ipar[128]={1,3,1, 1,1,5,3, 1};
-	const int ipar[128]={1,20,1, 1,1,5,3, 8};
+	const int ipar[128]={1,30,1, 2,5,5,3, 8};
 	/*
 	 * dpar[0] = g factor
 	 * dpar[1] = mua (absorption coefficient)
 	 * dpar[2] = mus (scattering coefficient)
-	 * dpar[3] = phis (planewave incident)
 	 */
 	const double dpar[128]={0.7,1.0,2.0,0.0};
 
 	struct st_solver_v1 *s=sv1_create_solver(q,ipar,dpar);
 	sv1_print_solver(s);
+	//for (int i = 0; i < s->Ns; i++)
+		//printf("[%5d] %.5E\n",i,s->E[i]);
 
-	for (int i = 0; i < 10; i++)
-		printf("[%5d] %.5E\n",i,s->K[i]); 
-
-	// test sv1_mul
-	double _Complex v1[50000],v2[50000];
+	double _Complex *rhs= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	double _Complex *sol= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	assert(rhs);
+	assert(sol);
+	int nitr;
+	double eps;
 	for (int i = 0; i < s->Ng; i++)
-		v1[i] = 1;
-	sv1_mul(s,v1,v2);
-	//for (int i = 0; i < 20; i++)
-		//printf("[%5d] %.10f + %.10f*I\n",i,creal(v2[i]),cimag(v2[i])); 
+		sol[i] = 1.0;
+	sv1_mul(s,sol,rhs);
+	sv1_solve(s,rhs,sol,200,1.0E-13,&nitr,&eps); 
+	printf("approximate sol=\n");
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %.9f + %.9f *I\n",i,creal(sol[i]),cimag(sol[i])); 
 
-	// destroy
+
 	sv1_destroy_solver(s); 
 	mshio_destroy_mesh(q);
 
