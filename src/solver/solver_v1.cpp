@@ -105,8 +105,6 @@ static double r2rd(const double *p1, const double *p2)
 static void fillK(struct st_solver_v1 *s)
 {
 	assert(s->status==3);
-	const int nu = s->ipar[5]; // source
-	const int nv = s->ipar[6]; // source
 	const int Ns = s->Ns;
 	const int Ng = s->Ng;
 	const int Nd = s->Nd;
@@ -114,6 +112,8 @@ static void fillK(struct st_solver_v1 *s)
 	const double *p = s->mesh->p;
 	const int rule1 = s->ipar[3];
 	const int rule2 = s->ipar[4];
+	const int nu = s->ipar[5]; // source
+	const int nv = s->ipar[6]; // source
 	const int nn1 = wandzura_order_num(rule1);
 	const int nn2 = dunavant_order_num(rule2);
 	const int  ns = 3*nu*nv;
@@ -223,7 +223,7 @@ static void fillK(struct st_solver_v1 *s)
 				for (int i = 0; i < MM; i++)
 					b[0] += wer[i];
 				// Fill b[1] -> b[2Nd]
-				for (int dm = 1; dm < 2*Nd; dm++) {
+				for (int dm = 1; dm <= 2*Nd; dm++) {
 					for (int i = 0; i < MM; i++)
 						wer[i] *= e[i];
 					for (int i = 0; i < MM; i++)
@@ -233,10 +233,7 @@ static void fillK(struct st_solver_v1 *s)
 				// Fill b[2(Nm-Nd)] -> b[2Nm-1] with complex conjugates
 				for (int i = 2*(Nm-Nd); i <= 2*Nm-1; i++)
 					b[i] = conj(b[2*Nm-i]);
-
 				//// copy b to bb
-				//for (int i = 0; i < 2*Nm; i++)
-					//bb[i] += b[i]*wn1[j]; // testing weights
 				for (int i = 0; i < 2*Nm; i++)
 					Kwork[i+(np+n*Ns)*2*Nm] += b[i] * wn1[j];
 			}
@@ -263,7 +260,7 @@ static void fillK(struct st_solver_v1 *s)
 				s->K[i+(np+n*Ns)*2*Nm] += xx * creal(Kwork[i+(np+n*Ns)*2*Nm]);
 	}
 
-	/*Release Memory*/
+	// Release Memory
 	mkl_free(xy01);
 	mkl_free(wn1 );
 	mkl_free(xy02);
@@ -320,7 +317,8 @@ void sv1_destroy_solver(struct st_solver_v1 *s)
 	mkl_free(s);
 }
 
-void sv1_mul(struct st_solver_v1 *s, double _Complex *in, double _Complex *out)
+//void sv1_mul(struct st_solver_v1 *s, double _Complex *in, double _Complex *out)
+void sv1_mul(struct st_solver_v1 *s, const double _Complex *restrict in, double _Complex *restrict out)
 {
 	//fprintf(stderr,"sv1_mul()\n");
 	/*
@@ -380,32 +378,316 @@ void sv1_mul(struct st_solver_v1 *s, double _Complex *in, double _Complex *out)
 
 static size_t tmp_size(const size_t size, const size_t n)
 {
-	return (2*n+1)*size+n*(n+9)/2+1;
+	size_t temp = (2*n+1)*size+n*(n+9)/2+1;
+	printf("allocate %lu bytes for mkl_fgmres solver\n",sizeof(double)*temp);
+	return temp;
+}
+
+static void print_par_info(const int *ipar, const double *dpar)
+{
+	printf("mkl fgmres solver parameters list (C indexing)\n");
+	/*
+	 * LOGICAL parameters:
+	 * ipar[3]:  current iteration count
+	 * ipar[4]:  max numbuer of iterations
+	 * ipar[7]:  !0 = max iteration check [1]
+	 * ipar[8]:  !0 = residual stopping check dpar[3]<dpar[4] [0]
+	 * ipar[9]:  !0 = user-defined stopping check by setting RCI_request=2 [1]
+	 * ipar[10]: !0 = requests precondition by setting RCI_request=3 [0]
+	 * ipar[11]: !0 = check zero norm of current vector dpar[6]<=dpar[7] [0]
+	 *                 0 = requests user-defined check by setting RCI_request=4
+	 *                 (must set to 1 for some unknown reasons)
+	 * ipar[12]: xution vector storage flag [0]
+	 * ipar[13]: internal iteration counts before restart
+	 * ipar[14]: max number of non-restarted version
+	 */
+	printf("ipar[4]   = %-8d  ",ipar[4]);
+	printf("maximal number of iterations\n");
+	printf("ipar[7]   = %-8d  ",ipar[7]);
+	printf("!0 = automatic stopping check on max iteration [1]\n");
+	printf("ipar[8]   = %-8d  ",ipar[8]);
+	printf("!0 = automatic stopping check on dpar[3]<dpar[4] [0]\n");
+	printf("ipar[9]   = %-8d  ",ipar[9]);
+	printf("!0 = request user-defined stopping check by setting RCI_request=2 [1]\n");
+	printf("ipar[10]  = %-8d  ",ipar[10]);
+	printf("!0 = request precondition by setting RCI_request=3 [0]\n");
+	printf("ipar[11]  = %-8d  ",ipar[11]);
+	printf("!0 = automatic check on zero norm of current vector dpar[6]<=dpar[7] [0]\n");
+	printf("ipar[12]  = %-8d  ",ipar[12]);
+	printf("vector storage flag [0]\n");
+	//printf("ipar[13]  = %-8d  ",ipar[13]);
+	//printf("internal iteratoin count before restart\n");
+	printf("ipar[14]  = %-8d  ",ipar[14]);
+	printf("maximal number of non-restarted iterations\n");
+	/*
+	 * DOUBLE parameters:
+	 * dpar[0]:  relative tolerance [1.0D-6]
+	 * dpar[1]:  abxute tolerance [0.0D-0]
+	 * dpar[2]:  L2 norm of initial residual
+	 * dpar[3]:  service variable, dpar[0]*dpar[2]+dpar[1]
+	 * dpar[4]:  L2 norm of current residual
+	 * dpar[5]:  L2 norm of previous residual, if available
+	 * dpar[6]:  norm of generated vector
+	 * dpar[7]:  tolerance for zero norm of current vector [1.0D-12]
+	 */
+	printf("dpar[0]   = %.2E  ",dpar[0]);
+	printf("relative tolerance [1.0D-6]\n");
+	printf("dpar[1]   = %.2E  ",dpar[1]);
+	printf("absolute tolerance [0.0D-0]\n");
+	printf("dpar[2]   = %.2E  ",dpar[2]);
+	printf("L2 norm of initial residual\n");
+	printf("dpar[3]   = %.2E  ",dpar[3]);
+	printf("service variable, dpar[0]*dpar[2]+dpar[1]\n");
+	printf("dpar[4]   = %.2E  ",dpar[4]);
+	printf("L2 norm of current residual\n");
+	printf("dpar[5]   = %.2E  ",dpar[5]);
+	printf("L2 norm of previous residual, if applicable\n");
+	printf("dpar[6]   = %.2E  ",dpar[6]);
+	printf("norm of generated vector\n");
+	printf("dpar[7]   = %.2E  ",dpar[7]);
+	printf("tolerance for zero norm of current vector [1.0D-12]\n");
+}
+
+// Vnm = S(n) exp(-i m phis)
+void sv1_gen_b0(struct st_solver_v1 *s, const double phis, double _Complex *restrict rhs)
+{
+	assert(s->status==4);
+
+	double cs,sn;
+	sincos(phis,&sn,&cs);
+	const double _Complex e = cs - sn*_Complex_I;
+	rhs[s->Nd] = 1.0;
+	for (int i = s->Nd+1; i < 2*s->Nd+1; i++) {
+		rhs[i] = rhs[i-1] * e;
+		rhs[2*s->Nd-i] = conj(rhs[i]);
+	}
+	#pragma omp parallel for 	\
+	num_threads(s->num_threads)	\
+	default(none)			\
+	shared(s,rhs)
+	for (int n = 1; n < s->Ns; n++) 
+		for (int i = 0; i < 2*s->Nd+1; i++)
+			rhs[i+n*(2*s->Nd+1)] = s->mesh->a[n] * rhs[i];
+	for (int i = 0; i < 2*s->Nd+1; i++)
+		rhs[i] *= s->mesh->a[0];
+}
+
+// A.x1=b1, x=x0+x1
+void sv1_gen_b1x0(struct st_solver_v1 *s, const double phis, 
+		double _Complex *restrict b1, double _Complex *restrict x0)
+{
+	fprintf(stderr,"sv1_gen_b1x0\n");
+	assert(s->status==4);
+
+	const int Ns = s->Ns;
+	const int Ng = s->Ng;
+	const int Nd = s->Nd;
+	const int Nm = s->Nm;
+	const int rule1 = s->ipar[3];
+	const int rule2 = s->ipar[4];
+	const int nu = s->ipar[5]; // source
+	const int nv = s->ipar[6]; // source
+	const int nn1 = wandzura_order_num(rule1);
+	const int nn2 = dunavant_order_num(rule2);
+	const int  ns = 3*nu*nv;
+	const double mua = s->dpar[1];
+	const double mus = s->dpar[2];
+	const double *p = s->mesh->p;
+	const double *area = s->mesh->a;
+	const double *cntr = s->mesh->c; 
+
+	double *xy01=(double*)mkl_malloc(sizeof(double)*2*nn1,64);
+	double  *wn1=(double*)mkl_malloc(sizeof(double)*nn1,64);
+	double *xy02=(double*)mkl_malloc(sizeof(double)*2*nn2,64);
+	double  *wn2=(double*)mkl_malloc(sizeof(double)*nn2,64);
+	double *xu =(double*)mkl_malloc(sizeof(double)*nu,64);
+	double *wu =(double*)mkl_malloc(sizeof(double)*nu,64);
+	double *xv =(double*)mkl_malloc(sizeof(double)*nv,64);
+	double *wv =(double*)mkl_malloc(sizeof(double)*nv,64);
+
+	// init non-sigular quad rules
+	wandzura_rule(rule1,nn1,xy01,wn1);
+	dunavant_rule(rule2,nn2,xy02,wn2);
+	// init 1D quad rules
+	//                     xmin,  xmax
+	cgqf(nu,1.0,0.0,0.0,    0.0,  1.0,   xu,wu);
+	cgqf(nv,1.0,0.0,0.0,    0.0,  1.0,   xv,wv);
+
+	// HG phase function at phi is evaluated as a/(b-(cosphi*ci+sinphi*si))
+	const double   ci = cos(phis);
+	const double   si = sin(phis);
+	const double   ga = 0.25*(1.0/s->g_factor-s->g_factor)/M_PI;
+	const double   gb = 0.50*(1.0/s->g_factor+s->g_factor);
+
+	//#pragma omp parallel		\
+	//num_threads(s->num_threads)	\
+	//default(none)			\
+	//shared(nu,nv,Nd,Ns,Ng,Nm,rule1, \
+			//rule2,nn1,nn2,	\
+			//p,ns,area,cntr, \
+			//xy01,wn1,xy02,	\
+			//wn2,xu,wu,xv,wv,\
+			//ci,si,ga,gb,b1,	\
+			//stdout,stdin,stderr)
+	//{
+	// testing
+	double *xyn1=(double*)mkl_malloc(sizeof(double)*2*nn1,64);
+
+	// source
+	double *xyn2=(double*)mkl_malloc(sizeof(double)*2*nn2,64);
+	double *xys=(double*)mkl_malloc(sizeof(double)*2*ns,64);
+	double *ws =(double*)mkl_malloc(sizeof(double)*ns,64); 
+
+	double _Complex *b  =(double _Complex*)mkl_malloc(sizeof(double _Complex)*(Nd+1),64);
+	double _Complex *bb =(double _Complex*)mkl_malloc(sizeof(double _Complex)*(Nd+1),64);
+	double _Complex *e  =(double _Complex*)mkl_malloc(sizeof(double _Complex)*MAX(nn1,MAX(nn2,ns)),64);
+	double _Complex *wer=(double _Complex*)mkl_malloc(sizeof(double _Complex)*MAX(nn1,MAX(nn2,ns)),64); 
+
+	double *work=(double*)mkl_malloc(sizeof(double)*3*nu*nv,64);
+
+	assert(xyn1);
+	assert(xyn2);
+	assert(xys);
+	assert(ws);
+	assert(b);
+	assert(bb);
+	assert(e);
+	assert(wer);
+	assert(work);
+	fprintf(stderr,"xyn1 = %p\n",xyn1);
+	fprintf(stderr,"xyn2 = %p\n",xyn2);
+	fprintf(stderr,"xys  = %p\n",xys);
+	fprintf(stderr,"ws   = %p\n",ws);
+	fprintf(stderr,"b    = %p\n",b);
+	fprintf(stderr,"bb   = %p\n",bb);
+	fprintf(stderr,"e    = %p\n",e);
+	fprintf(stderr,"wer  = %p\n",wer);
+	fprintf(stderr,"work = %p\n",work);
+
+	//const int num_threads=omp_get_num_threads();
+	//const int tid=omp_get_thread_num();
+	//fprintf(stderr,"[tid %-5d] starts...\n",tid);
+	//const int res=Ns%num_threads;
+	//const int blk=(res==0)?(Ns/num_threads):(Ns/num_threads+1);
+	//const int start=tid*blk;
+	//const int end=(tid!=num_threads-1)?((tid+1)*blk):(Ns);
+	//for (int n = start; n < end; n++) {
+	for (int n = 0; n < Ns; n++) {
+		reference_to_physical_t3(nn1,p+6*n,xy01,xyn1);
+		memset(bb,0,sizeof(double _Complex)*(Nd+1));
+		for (int np = 0; np < Ns; np++) {
+			reference_to_physical_t3(nn2,p+6*np,xy02,xyn2);
+			// compute bb
+			for (int j = 0; j < nn1; j++) {
+				const double *p0=xyn1+2*j;
+				int MM;
+				memset(b,0,sizeof(double _Complex)*(Nd+1));
+				if (r2rd(p0,cntr+2*np)>6*0.8774*sqrt(area[np])) {
+					// Non-singular
+					MM = nn2;
+					const double *xy=xyn2;
+					const double *w =wn2;
+					for (int i = 0; i < MM; i++) {
+						const double dx = p0[0] - xyn2[2*i  ];
+						const double dy = p0[1] - xyn2[2*i+1];
+						const double inv= 1.0/sqrt(dx*dx+dy*dy);
+						e[i]   = inv*(dx-dy*I);
+						wer[i] = inv*w[i]*area[np]
+							*ga/(gb-dx*ci-dy*si)
+							*exp(-xy[2*i]) // tau
+							*mus;
+					}
+				} else {
+					// Singular, near-singular
+					MM = 3*nu*nv;
+					const double *xy=xys;
+					const double *w =ws;
+					arcsinh_rule_xy(xys,ws, p0,p+6*np,
+							nu,xu,wu, nv,xv,wv,
+							work);
+					for (int i = 0; i < MM; i++) {
+						const double dx = p0[0] - xys[2*i  ];
+						const double dy = p0[1] - xys[2*i+1];
+						const double inv= 1.0/sqrt(dx*dx+dy*dy);
+						e[i]   = inv*(dx-dy*I);
+						wer[i] = w[i]
+							*ga/(gb-dx*ci-dy*si)
+							*exp(-xy[2*i]) // tau
+							*mus;
+					}
+				}
+				// Fill b[0]
+				for (int i = 0; i < MM; i++)
+					b[0] += wer[i];
+				// Fill b[1] -> b[Nd]
+				for (int m = 1; m <= Nd; m++) {
+					for (int i = 0; i < MM; i++)
+						wer[i] *= e[i];
+					for (int i = 0; i < MM; i++)
+						b[m]  += wer[i];
+				}
+				// Add b to bb, only the first half
+				for (int i = 0; i < Nd+1; i++)
+					bb[i] += b[i]*wn1[j]; // testing weights
+			}
+		}
+		// copy from bb to b1, only half
+		for (int i = 0; i < Nd+1; i++)
+			b1[n*(2*Nd+1)+Nd+i] = bb[i]*area[n];
+	}
+	// Take complex conjugates to get the other half
+	for (int n = 0; n < Ns; n++)
+		for (int m = 0; m < Nd; m++)
+			b1[n*(2*Nd+1)+m] = conj(b1[n*(2*Nd+1)+2*Nd-m]);
+	// Free thread-specific memories
+	mkl_free(xyn1);
+	mkl_free(xyn2);
+	mkl_free(xys);
+	mkl_free(ws );
+	mkl_free(b  );
+	mkl_free(bb );
+	mkl_free(e  );
+	mkl_free(wer);
+
+	mkl_free(work);
+	//}
+
+	//fprintf(stderr,"hello1\n");
+	// compute x0_nm = b0_nm * exp(-tau(n))
+	sv1_gen_b0(s,phis,x0);
+	for (int n = 0; n < Ns; n++) {
+		const double xx = exp(-s->mesh->c[2*n]);
+		for (int i = 0; i < 2*Nd+1; i++)
+			x0[i+n*(2*Nd+1)] *= xx;
+	}
+
+	//fprintf(stderr,"hello2\n");
+
+	// Release Memory
+	mkl_free(xy01);
+	mkl_free(wn1 );
+	mkl_free(xy02);
+	mkl_free(wn2 );
+
+	mkl_free(xu );
+	mkl_free(wu );
+	mkl_free(xv );
+	mkl_free(wv );
 }
 
 void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *sol, 
-		const int max_nitr, const double retol, int *restrict nitr, double *restrict eps)
+		const int max_nitr, const int max_nonrestart_nitr, const double retol, 
+		int *restrict nitr, double *restrict eps)
 {
 	//fprintf(stderr,"sv1_solve()\n");
 	double *b=(double*)rhs;
 	double *x=(double*)sol;
 	
 	int size=2*s->Ng;
-	const int max_non_restart_num=50;
-	double *tmp=(double*)mkl_malloc(sizeof(double)*tmp_size(size,max_non_restart_num),64);
+	double *tmp=(double*)mkl_malloc(sizeof(double)*tmp_size(size,max_nonrestart_nitr),64);
 	int ipar[128],RCI_request;
 	double dpar[128];
 	assert(tmp); 
-
-	fprintf(stderr,"rhs b=\n");
-	for (int i = 0; i < 20; i++)
-		printf("[%5d] %.9f + %.9f *I\n",i,b[2*i],b[2*i+1]);
-
-	for (int i = 0; i < 2*s->Ng; i++)
-		x[i] = 10.0 * rand()/RAND_MAX;
-	fprintf(stderr,"initial guess x=\n");
-	for (int i = 0; i < 20; i++)
-		printf("[%5d] %.9f + %.9f *I\n",i,x[2*i],x[2*i+1]);
 
 	//fprintf(stderr,"solve!\n");
 	dfgmres_init(&size,x,b,&RCI_request,ipar,dpar,tmp);
@@ -431,7 +713,7 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 	ipar[8]	 = 1;
 	ipar[9]	 = 0;
 	ipar[11] = 1;
-	ipar[14] = max_non_restart_num;
+	ipar[14] = max_nonrestart_nitr;
 	/*
 	 * DOUBLE parameters:
 	 * dpar[0]:  relative tolerance [1.0D-6]
@@ -449,11 +731,26 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 	dfgmres_check(&size,x,b,&RCI_request,ipar,dpar,tmp);
 	assert(!RCI_request);
 
-	printf("solve!\n");
+	print_par_info(ipar,dpar);
+
+	fprintf(stderr,"right hand side b=\n");
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %.9f + %.9f *I\n",i,b[2*i],b[2*i+1]);
+	printf("...\n");
+
+	for (int i = 0; i < 2*s->Ng; i++)
+		x[i] = 10.0 * rand()/RAND_MAX;
+	fprintf(stderr,"initial guess x=\n");
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %.9f + %.9f *I\n",i,x[2*i],x[2*i+1]);
+	printf("...\n");
+
+	printf("start iterating!\n");
+	//printf("[nitr,nitr_nonrestart,relative residual]\n");
 	do {
 		dfgmres(&size,x,b,&RCI_request,ipar,dpar,tmp); 
 		switch (RCI_request) {
-		case 1: // *tmp+ipar[22]-1  <=  A.*(tmp+ipar[21]-1)
+		case 1: // *(tmp+ipar[22]-1) <= mul(A,*(tmp+ipar[21]-1))
 			sv1_mul(s,(double _Complex*)(tmp+ipar[21]-1),
 					(double _Complex*)(tmp+ipar[22]-1));
 			break;
@@ -467,18 +764,23 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 			break;
 		}
 		//if (ipar[3]%5==0)
-			printf("[  %5d,  %5d,  %.2E]\n",
-					ipar[3],ipar[13],dpar[4]);
+			//printf("[  %5d,  %5d,  %.2E]\n",
+					//ipar[3],ipar[13],dpar[4]);
 	} while(RCI_request>0);
 
 	// Extract xution, print, clear buffers.
 	dfgmres_get(&size,x,b,&RCI_request,ipar,dpar,tmp,nitr);
 	*eps = dpar[4];
-	printf("\n");
-	printf("solver exits after %d iterations\nrelativ err = %.3E\n",*nitr,*eps);
+	printf("solver exits after %d iterations!\n",*nitr);
+	printf("relative residual = %.3E\n",*eps);
 
 	MKL_Free_Buffers(); 
 	mkl_free(tmp);
+
+	printf("approximate solution x=\n");
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %.9f + %.9f *I\n",i,x[2*i],x[2*i+1]); 
+	printf("...\n");
 }
 void sv1_print_solver(struct st_solver_v1 *s)
 {

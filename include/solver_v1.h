@@ -72,11 +72,14 @@ struct st_solver_v1 {
  * dpar[2] = mus (scattering coefficient)
  */
 struct st_solver_v1 *sv1_create_solver(struct st_mesh *q, const int *ipar, const double *dpar);
-double _Complex *sv1_gen_rhs0(struct st_solver_v1 *s, const double phis);
-//double _Complex *sv1_gen_rhs1(struct st_solver_v1 *s, const double phis);
+void sv1_gen_b0(struct st_solver_v1 *s, const double phis, double _Complex *restrict rhs);
+// A.x1=b1, x=x0+x1
+void sv1_gen_b1x0(struct st_solver_v1 *s, const double phis, 
+		double _Complex *restrict b1, double _Complex *restrict x0);
 void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *sol, 
-		const int max_nitr, const double retol, int *restrict nitr, double *restrict eps);
-void sv1_mul(struct st_solver_v1 *s, double _Complex *in, double _Complex *out);
+		const int max_nitr, const int max_nonrestart_nitr, const double retol, 
+		int *restrict nitr, double *restrict eps);
+void sv1_mul(struct st_solver_v1 *s, const double _Complex *restrict in, double _Complex *restrict out);
 void sv1_print_solver(struct st_solver_v1 *s);
 void sv1_destroy_solver(struct st_solver_v1 *s);
 #ifdef __cplusplus

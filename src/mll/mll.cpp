@@ -230,7 +230,7 @@ DLLEXPORT int BHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *A
 				for (int i = 0; i < M; i++)
 					b[0] += wer[i];
 				// Fill b[1] -> b[2Nd]
-				for (int dm = 1; dm < 2*Nd; dm++) {
+				for (int dm = 1; dm <= 2*Nd; dm++) {
 					for (int i = 0; i < M; i++)
 						wer[i] *= e[i];
 					for (int i = 0; i < M; i++)
@@ -599,7 +599,7 @@ DLLEXPORT int VHomoFull_MLL( WolframLibraryData libData, mint Argc, MArgument *A
 				// Fill b[0]
 				for (int i = 0; i < M; i++)
 					b[0] += wer[i];
-				// Fill b[1] -> b[2Nd]
+				// Fill b[1] -> b[Nd]
 				for (int m = 1; m < Nd+1; m++) {
 					for (int i = 0; i < M; i++)
 						wer[i] *= e[i];

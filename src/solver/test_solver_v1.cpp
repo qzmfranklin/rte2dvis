@@ -34,33 +34,38 @@ int test01(void)
 	 * ipar[7] = num_threads in omp
 	 */
 	//const int ipar[128]={1,3,1, 1,1,5,3, 1};
-	const int ipar[128]={1,30,1, 2,5,5,3, 8};
+	const int ipar[128]={1,3,1, 1,1,5,3, 8};
+	//const int ipar[128]={1,30,1, 2,5,5,3, 8};
 	/*
 	 * dpar[0] = g factor
 	 * dpar[1] = mua (absorption coefficient)
 	 * dpar[2] = mus (scattering coefficient)
 	 */
-	const double dpar[128]={0.7,1.0,2.0,0.0};
+	const double dpar[128]={0.7,1.0,2.0};
 
 	struct st_solver_v1 *s=sv1_create_solver(q,ipar,dpar);
 	sv1_print_solver(s);
 	//for (int i = 0; i < s->Ns; i++)
 		//printf("[%5d] %.5E\n",i,s->E[i]);
 
-	double _Complex *rhs= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
-	double _Complex *sol= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
-	assert(rhs);
-	assert(sol);
+	double _Complex *b0= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	double _Complex *x0= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	double _Complex *b1= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	double _Complex *x1= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	assert(b0);
+	assert(x0);
+	assert(b1);
+	assert(x1);
 	int nitr;
 	double eps;
-	for (int i = 0; i < s->Ng; i++)
-		sol[i] = 1.0;
-	sv1_mul(s,sol,rhs);
-	sv1_solve(s,rhs,sol,200,1.0E-13,&nitr,&eps); 
-	printf("approximate sol=\n");
-	for (int i = 0; i < 10; i++)
-		printf("[%5d] %.9f + %.9f *I\n",i,creal(sol[i]),cimag(sol[i])); 
 
+	//sv1_gen_b0(s,0.0,b0);
+	//sv1_solve(s,b0,x0,200,12,1.0E-13,&nitr,&eps); 
+
+	sv1_gen_b1x0(s,0.0,b1,x0);
+	sv1_solve(s,b1,x1,200,12,1.0E-13,&nitr,&eps); 
+
+	fprintf(stderr,"destroying...\n");
 
 	sv1_destroy_solver(s); 
 	mshio_destroy_mesh(q);
