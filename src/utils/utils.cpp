@@ -51,7 +51,7 @@ double ddotd(const int n, const double *restrict w, const double *restrict f)
 double _Complex ddotz(const int n, const double *restrict w, 
 		const double _Complex *restrict f)
 {
-	double _Complex val=0.0;
+	double _Complex val=0.0 + 0.0*I;
 	for (int i = 0; i < n; i++)
 		val += f[i]*w[i];
 	return val;

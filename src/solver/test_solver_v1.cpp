@@ -10,8 +10,8 @@ int test01(void);
 int main(int argc, char const* argv[])
 { 
 	if (argc>1) link_stdout(argv[1]); 
-	if (argc>1) unlink_stdout(); 
 	test01(); 
+	if (argc>1) unlink_stdout(); 
 	return 0;
 }
 int test01(void)
@@ -65,7 +65,11 @@ int test01(void)
 	sv1_gen_b1x0(s,0.0,b1,x0);
 	sv1_solve(s,b1,x1,200,12,1.0E-13,&nitr,&eps); 
 
-	fprintf(stderr,"destroying...\n");
+	char *sol_fname=(char*)mkl_malloc(sizeof(char)*FILENAME_MAX,64);
+	sprintf(sol_fname,"SOL");
+	sv1_save_solution(s,x1,sol_fname);
+
+	//fprintf(stderr,"destroying...\n");
 
 	sv1_destroy_solver(s); 
 	mshio_destroy_mesh(q);

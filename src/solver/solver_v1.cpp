@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <omp.h>
 #include <mkl.h>
-#include <complex.h>
+#include "complex.h"
 #include <math.h>
 #include <assert.h>
 #include "solver_v1.h"
@@ -12,6 +12,19 @@
 /******************************************************************************/
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
+/******************************************************************************/
+static void print_vector(const char* title, const int n, const double _Complex *a)
+{
+	printf("%s\n",title);
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %+.16E %+.16E*I\n",i,creal(a[i]),cimag(a[i]));
+}
+static void print_vector(const char* title, const int n, const double *a)
+{
+	printf("%s\n",title);
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %+.16E\n",i,a[i]);
+}
 /******************************************************************************/
 static void init(struct st_solver_v1 *s, const int *ipar, const double *dpar)
 {
@@ -203,7 +216,7 @@ static void fillK(struct st_solver_v1 *s)
 						const double dy = p0[1] - xyn2[2*i+1];
 						const double inv= 1.0/sqrt(dx*dx+dy*dy);
 						e[i]   = inv*(dx-dy*I);
-						wer[i] = inv*wn2[i]*area[np];
+						wer[i] = inv*wn2[i]*area[np] + 0.0*I;
 					}
 				} else {
 					// Singular, near-singular
@@ -216,7 +229,7 @@ static void fillK(struct st_solver_v1 *s)
 						const double dy = p0[1] - xys[2*i+1];
 						const double inv= 1.0/sqrt(dx*dx+dy*dy);
 						e[i]   = inv*(dx-dy*I);
-						wer[i] = ws[i];
+						wer[i] = ws[i] + 0.0*I;
 					}
 				}
 				// Fill b[0]
@@ -383,7 +396,7 @@ static size_t tmp_size(const size_t size, const size_t n)
 	return temp;
 }
 
-static void print_par_info(const int *ipar, const double *dpar)
+static void print_mkl_fgmres_par_info(const int *ipar, const double *dpar)
 {
 	printf("mkl fgmres solver parameters list (C indexing)\n");
 	/*
@@ -401,23 +414,26 @@ static void print_par_info(const int *ipar, const double *dpar)
 	 * ipar[13]: internal iteration counts before restart
 	 * ipar[14]: max number of non-restarted version
 	 */
-	printf("ipar[4]   = %-8d  ",ipar[4]);
+	printf("ipar[  4] = %-8d  ",ipar[4]);
 	printf("maximal number of iterations\n");
-	printf("ipar[7]   = %-8d  ",ipar[7]);
+	printf("ipar[  7] = %-8d  ",ipar[7]);
 	printf("!0 = automatic stopping check on max iteration [1]\n");
-	printf("ipar[8]   = %-8d  ",ipar[8]);
+	printf("ipar[  8] = %-8d  ",ipar[8]);
 	printf("!0 = automatic stopping check on dpar[3]<dpar[4] [0]\n");
-	printf("ipar[9]   = %-8d  ",ipar[9]);
-	printf("!0 = request user-defined stopping check by setting RCI_request=2 [1]\n");
-	printf("ipar[10]  = %-8d  ",ipar[10]);
+	printf("ipar[  9] = %-8d  ",ipar[9]);
+	printf("!0 = request user-defined stopping check by setting\n");
+	printf("\t\t\t   RCI_request=2 [1]\n");
+	printf("ipar[ 10] = %-8d  ",ipar[10]);
 	printf("!0 = request precondition by setting RCI_request=3 [0]\n");
-	printf("ipar[11]  = %-8d  ",ipar[11]);
-	printf("!0 = automatic check on zero norm of current vector dpar[6]<=dpar[7] [0]\n");
-	printf("ipar[12]  = %-8d  ",ipar[12]);
+	printf("ipar[ 11] = %-8d  ",ipar[11]);
+	printf("!0 = automatic check on zero norm of current vector \n");
+	printf("\t\t\t   dpar[6]<=dpar[7]; if 0, request for user-defined\n");
+	printf("\t\t\t   zero-norm check by setting RCI_request=4 [0]\n");
+	printf("ipar[ 12] = %-8d  ",ipar[12]);
 	printf("vector storage flag [0]\n");
-	//printf("ipar[13]  = %-8d  ",ipar[13]);
+	//printf("ipar[ 13] = %-8d  ",ipar[13]);
 	//printf("internal iteratoin count before restart\n");
-	printf("ipar[14]  = %-8d  ",ipar[14]);
+	printf("ipar[ 14] = %-8d  ",ipar[14]);
 	printf("maximal number of non-restarted iterations\n");
 	/*
 	 * DOUBLE parameters:
@@ -430,21 +446,21 @@ static void print_par_info(const int *ipar, const double *dpar)
 	 * dpar[6]:  norm of generated vector
 	 * dpar[7]:  tolerance for zero norm of current vector [1.0D-12]
 	 */
-	printf("dpar[0]   = %.2E  ",dpar[0]);
+	printf("dpar[  0] = %.2E  ",dpar[0]);
 	printf("relative tolerance [1.0D-6]\n");
-	printf("dpar[1]   = %.2E  ",dpar[1]);
+	printf("dpar[  1] = %.2E  ",dpar[1]);
 	printf("absolute tolerance [0.0D-0]\n");
-	printf("dpar[2]   = %.2E  ",dpar[2]);
+	printf("dpar[  2] = %.2E  ",dpar[2]);
 	printf("L2 norm of initial residual\n");
-	printf("dpar[3]   = %.2E  ",dpar[3]);
+	printf("dpar[  3] = %.2E  ",dpar[3]);
 	printf("service variable, dpar[0]*dpar[2]+dpar[1]\n");
-	printf("dpar[4]   = %.2E  ",dpar[4]);
+	printf("dpar[  4] = %.2E  ",dpar[4]);
 	printf("L2 norm of current residual\n");
-	printf("dpar[5]   = %.2E  ",dpar[5]);
+	printf("dpar[  5] = %.2E  ",dpar[5]);
 	printf("L2 norm of previous residual, if applicable\n");
-	printf("dpar[6]   = %.2E  ",dpar[6]);
+	printf("dpar[  6] = %.2E  ",dpar[6]);
 	printf("norm of generated vector\n");
-	printf("dpar[7]   = %.2E  ",dpar[7]);
+	printf("dpar[  7] = %.2E  ",dpar[7]);
 	printf("tolerance for zero norm of current vector [1.0D-12]\n");
 }
 
@@ -456,7 +472,7 @@ void sv1_gen_b0(struct st_solver_v1 *s, const double phis, double _Complex *rest
 	double cs,sn;
 	sincos(phis,&sn,&cs);
 	const double _Complex e = cs - sn*_Complex_I;
-	rhs[s->Nd] = 1.0;
+	rhs[s->Nd] = 1.0 + 0.0*I;
 	for (int i = s->Nd+1; i < 2*s->Nd+1; i++) {
 		rhs[i] = rhs[i-1] * e;
 		rhs[2*s->Nd-i] = conj(rhs[i]);
@@ -476,7 +492,7 @@ void sv1_gen_b0(struct st_solver_v1 *s, const double phis, double _Complex *rest
 void sv1_gen_b1x0(struct st_solver_v1 *s, const double phis, 
 		double _Complex *restrict b1, double _Complex *restrict x0)
 {
-	fprintf(stderr,"sv1_gen_b1x0\n");
+	fprintf(stderr,"sv1_gen_b1x0()\n");
 	assert(s->status==4);
 
 	const int Ns = s->Ns;
@@ -519,17 +535,17 @@ void sv1_gen_b1x0(struct st_solver_v1 *s, const double phis,
 	const double   ga = 0.25*(1.0/s->g_factor-s->g_factor)/M_PI;
 	const double   gb = 0.50*(1.0/s->g_factor+s->g_factor);
 
-	//#pragma omp parallel		\
-	//num_threads(s->num_threads)	\
-	//default(none)			\
-	//shared(nu,nv,Nd,Ns,Ng,Nm,rule1, \
-			//rule2,nn1,nn2,	\
-			//p,ns,area,cntr, \
-			//xy01,wn1,xy02,	\
-			//wn2,xu,wu,xv,wv,\
-			//ci,si,ga,gb,b1,	\
-			//stdout,stdin,stderr)
-	//{
+	#pragma omp parallel		\
+	num_threads(s->num_threads)	\
+	default(none)			\
+	shared(nu,nv,Nd,Ns,Ng,Nm,rule1, \
+			rule2,nn1,nn2,	\
+			p,ns,area,cntr, \
+			xy01,wn1,xy02,	\
+			wn2,xu,wu,xv,wv,\
+			ci,si,ga,gb,b1,	\
+			stdout,stdin,stderr)
+	{
 	// testing
 	double *xyn1=(double*)mkl_malloc(sizeof(double)*2*nn1,64);
 
@@ -554,25 +570,25 @@ void sv1_gen_b1x0(struct st_solver_v1 *s, const double phis,
 	assert(e);
 	assert(wer);
 	assert(work);
-	fprintf(stderr,"xyn1 = %p\n",xyn1);
-	fprintf(stderr,"xyn2 = %p\n",xyn2);
-	fprintf(stderr,"xys  = %p\n",xys);
-	fprintf(stderr,"ws   = %p\n",ws);
-	fprintf(stderr,"b    = %p\n",b);
-	fprintf(stderr,"bb   = %p\n",bb);
-	fprintf(stderr,"e    = %p\n",e);
-	fprintf(stderr,"wer  = %p\n",wer);
-	fprintf(stderr,"work = %p\n",work);
+	//fprintf(stderr,"xyn1 = %p\n",xyn1);
+	//fprintf(stderr,"xyn2 = %p\n",xyn2);
+	//fprintf(stderr,"xys  = %p\n",xys);
+	//fprintf(stderr,"ws   = %p\n",ws);
+	//fprintf(stderr,"b    = %p\n",b);
+	//fprintf(stderr,"bb   = %p\n",bb);
+	//fprintf(stderr,"e    = %p\n",e);
+	//fprintf(stderr,"wer  = %p\n",wer);
+	//fprintf(stderr,"work = %p\n",work);
 
-	//const int num_threads=omp_get_num_threads();
-	//const int tid=omp_get_thread_num();
-	//fprintf(stderr,"[tid %-5d] starts...\n",tid);
-	//const int res=Ns%num_threads;
-	//const int blk=(res==0)?(Ns/num_threads):(Ns/num_threads+1);
-	//const int start=tid*blk;
-	//const int end=(tid!=num_threads-1)?((tid+1)*blk):(Ns);
-	//for (int n = start; n < end; n++) {
-	for (int n = 0; n < Ns; n++) {
+	const int num_threads=omp_get_num_threads();
+	const int tid=omp_get_thread_num();
+	const int res=Ns%num_threads;
+	const int blk=(res==0)?(Ns/num_threads):(Ns/num_threads+1);
+	const int start=tid*blk;
+	const int end=(tid!=num_threads-1)?((tid+1)*blk):(Ns);
+	//fprintf(stderr,"[tid %-3d] starts...\n",tid);
+	for (int n = start; n < end; n++) {
+	//for (int n = 0; n < Ns; n++) {
 		reference_to_physical_t3(nn1,p+6*n,xy01,xyn1);
 		memset(bb,0,sizeof(double _Complex)*(Nd+1));
 		for (int np = 0; np < Ns; np++) {
@@ -595,7 +611,7 @@ void sv1_gen_b1x0(struct st_solver_v1 *s, const double phis,
 						wer[i] = inv*w[i]*area[np]
 							*ga/(gb-dx*ci-dy*si)
 							*exp(-xy[2*i]) // tau
-							*mus;
+							*mus + 0.0*I;
 					}
 				} else {
 					// Singular, near-singular
@@ -613,7 +629,7 @@ void sv1_gen_b1x0(struct st_solver_v1 *s, const double phis,
 						wer[i] = w[i]
 							*ga/(gb-dx*ci-dy*si)
 							*exp(-xy[2*i]) // tau
-							*mus;
+							*mus + 0.0*I;
 					}
 				}
 				// Fill b[0]
@@ -650,7 +666,7 @@ void sv1_gen_b1x0(struct st_solver_v1 *s, const double phis,
 	mkl_free(wer);
 
 	mkl_free(work);
-	//}
+	} // end of #pragma omp parallel
 
 	//fprintf(stderr,"hello1\n");
 	// compute x0_nm = b0_nm * exp(-tau(n))
@@ -679,7 +695,7 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 		const int max_nitr, const int max_nonrestart_nitr, const double retol, 
 		int *restrict nitr, double *restrict eps)
 {
-	//fprintf(stderr,"sv1_solve()\n");
+	fprintf(stderr,"sv1_solve()\n");
 	double *b=(double*)rhs;
 	double *x=(double*)sol;
 	
@@ -731,22 +747,17 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 	dfgmres_check(&size,x,b,&RCI_request,ipar,dpar,tmp);
 	assert(!RCI_request);
 
-	print_par_info(ipar,dpar);
+	print_mkl_fgmres_par_info(ipar,dpar);
 
-	fprintf(stderr,"right hand side b=\n");
-	for (int i = 0; i < 10; i++)
-		printf("[%5d] %.9f + %.9f *I\n",i,b[2*i],b[2*i+1]);
+	print_vector("right hand side b=",10,(double _Complex*)b);
 	printf("...\n");
 
 	for (int i = 0; i < 2*s->Ng; i++)
 		x[i] = 10.0 * rand()/RAND_MAX;
-	fprintf(stderr,"initial guess x=\n");
-	for (int i = 0; i < 10; i++)
-		printf("[%5d] %.9f + %.9f *I\n",i,x[2*i],x[2*i+1]);
-	printf("...\n");
+	//print_vector("initial guess x=",10,(double _Complex*)x);
+	//printf("...\n");
 
 	printf("start iterating!\n");
-	//printf("[nitr,nitr_nonrestart,relative residual]\n");
 	do {
 		dfgmres(&size,x,b,&RCI_request,ipar,dpar,tmp); 
 		switch (RCI_request) {
@@ -767,21 +778,60 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 			//printf("[  %5d,  %5d,  %.2E]\n",
 					//ipar[3],ipar[13],dpar[4]);
 	} while(RCI_request>0);
+	if (RCI_request<0)
+		fprintf(stderr,"\n\nWANRING: solver broke down with RCI_request = %d\n\n\n",RCI_request);
 
 	// Extract xution, print, clear buffers.
 	dfgmres_get(&size,x,b,&RCI_request,ipar,dpar,tmp,nitr);
 	*eps = dpar[4];
-	printf("solver exits after %d iterations!\n",*nitr);
+	printf("solver finished after %d iterations!\n",*nitr);
 	printf("relative residual = %.3E\n",*eps);
 
 	MKL_Free_Buffers(); 
 	mkl_free(tmp);
 
-	printf("approximate solution x=\n");
-	for (int i = 0; i < 10; i++)
-		printf("[%5d] %.9f + %.9f *I\n",i,x[2*i],x[2*i+1]); 
+	print_vector("approximate solution x=",10,(double _Complex*)x);
 	printf("...\n");
 }
+
+static void auto_generate_solfname(struct st_solver_v1 *s, char *fname)
+{
+	//fprintf(stderr, "%07d\n",192);
+	//printf("%s\n",fname);
+	sprintf(fname,"%s/%07d_%07d_%07d_%1d_%03d_%.2f_%.1f_%.1f.rte2dvisv1",
+			fname,
+			s->Ns,
+			s->Nv,
+			s->Ne,
+			s->M,
+			s->Nd,
+			s->g_factor,
+			s->dpar[1],//mua
+			s->dpar[2]//mus
+	       );
+}
+void sv1_save_solution(struct st_solver_v1 *s, const double _Complex *v, char *fname)
+{
+	fprintf(stderr, "sv1_save_solution()\n");
+
+	auto_generate_solfname(s,fname);
+
+	//printf("%s\n",s->mesh->fbase);
+	FILE *fd= fopen(fname,"w");
+
+	fprintf(fd,"BINARY DOUBLE COMPLEX SOLUTION VECTOR\n");
+	fprintf(fd,"%s\n",s->mesh->fbase);
+	fprintf(fd,"x_nm = x[m+n*(2*Nd+1)]\n");
+	fprintf(fd,"how to read this file:\n");
+	fprintf(fd,"fread((void*)v,sizeof(double _Complex),s->Ng,fd)\n");
+	//fprintf(fd,"\n");
+	fwrite((void*)v,sizeof(double _Complex),s->Ng,fd);
+	
+	fclose(fd);
+
+	fprintf(stderr,"saved into %s\n",fname);
+}
+
 void sv1_print_solver(struct st_solver_v1 *s)
 {
 	//fprintf(stderr,"mshio_print_mesh()\n"); 

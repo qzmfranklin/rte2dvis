@@ -8,7 +8,9 @@ QUIET		:=@
 PROJECT_NAME	:=rte2dvis
 VERSION		:=v0.01
 DATE_TIME	:=$(shell date "+%Y-%m-%d")
-PLATFORM	:=$(shell uname)
+OS		:=$(shell uname -s)
+ARCH		:=$(shell uname -m)
+PLATFORM	:=${OS}-${ARCH}
 RELEASE_NAME	:=${PROJECT_NAME}-${PLATFORM}-${VERSION}-${DATE_TIME}
 AUTHOR_NAME	:=Zhongming Qu
 AUTHOR_EMAIL	:=qzmfrank@umich.edu
@@ -46,6 +48,7 @@ CFLAGS 		:=-O3							\
 
 		# 							\
 		-DNDEBUG						\
+		-nostdinc -nostdinc++					\
 		-unroll-aggressive					\
 		-fno-math-errno						\
 		-DDEBUG							\
@@ -81,28 +84,32 @@ ifeq (${PLATFORM},Linux)
 	ML_LIBS		:=-L${ML_DIR} -lML64i3
 	MPREP		:=${ML_DIR}/mprep
 	MCC		:=${ML_DIR}/mcc
-	##	LibraryLink for MacOSX-x86-64
-	MLL_INCS	:=-I${MATH_DIR}/SystemFiles/IncludeFiles/C
-	MLL_LIBS	:=-L${MATH_DIR}/SystemFiles/Libraries/Linux-x86-64 -lWolframRTL
+	###	LibraryLink for MacOSX-x86-64
+	#MLL_INCS	:=-I${MATH_DIR}/SystemFiles/IncludeFiles/C
+	#MLL_LIBS	:=-L${MATH_DIR}/SystemFiles/Libraries/Linux-x86-64 -lWolframRTL
 endif
-ifeq (${PLATFORM},Darwin)
+ifeq (${PLATFORM},Darwin-x86_64)
+	#	FFTW3 Library for MacOSX-x86-64
+	FFTW_DIR	:=/opt/fftw/3.3.3
+	FFTW_INCS	:=-I${FFTW_DIR}/include
+	FFTW_LIBS	:=-L${FFTW_DIR}/lib -lfftw3 -lfftw3_omp
 	#	Intel Math Kernel Library for MacOSX-x86-64
-	MKL_INCS	:=
+	#MKL_INCS	:=-iquote /opt/intel/include
 	MKL_LIBS	:=-mkl
 	#	OpenMP Flags
 	OMP_INCS	:=
 	OMP_LIBS	:=-openmp
 	#	OpenMPI Library
-	#MPI_INCS	:='mpicxx -showme:compile'
-	#MPI_LIBS	:='mpicxx -showme:link'
+	MPI_INCS	:=`mpicxx -showme:compile`
+	MPI_LIBS	:=`mpicxx -showme:link`
 	#	MathLink for MacOSX-x86-64
 	ML_DIR		:=/Applications/Mathematica.app/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/CompilerAdditions/
 	ML_INCS		:=-I${ML_DIR}
 	ML_LIBS		:=-L${ML_DIR} -lMLi3 -lstdc++ -framework Foundation
-	MPREP		:=${ML_DIR}/mprep
+	#MPREP		:=${ML_DIR}/mprep
 	#	LibraryLink for MacOSX-x86-64
-	MLL_INCS	:=-I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C/
-	MLL_LIBS	:=-L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
+	#MLL_INCS	:=-I/Applications/Mathematica.app/SystemFiles/IncludeFiles/C/
+	#MLL_LIBS	:=-L/Applications/Mathematica.app/SystemFiles/Libraries/MacOSX-x86-64/
 endif
 #PROJECT-WIDE DEFAULT LINKING LIBRARIES AND INCLUDE DIRECTORIES
 INCS		:=${FFTW_INCS} ${MKL_INCS} ${OMP_INCS} ${MPI_LIBS} -iquote ${INCLUDE}
