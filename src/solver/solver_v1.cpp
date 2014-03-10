@@ -262,7 +262,7 @@ static void fillK(struct st_solver_v1 *s)
 	mkl_free(wer);
 
 	mkl_free(work);
-	}
+	} // end of #pragma omp parallel
 
 	// FFTW s->work to s->K
 	fftw_execute(plan); // in-place s->K
@@ -286,7 +286,7 @@ static void fillK(struct st_solver_v1 *s)
 
 	mkl_free(Kwork);
 
-	/*Destroy FFTW plan*/
+	// Destroy FFTW plan
 	fftw_destroy_plan(plan);
 
 	s->status=4;
@@ -794,48 +794,68 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 	printf("...\n");
 }
 
-static void auto_generate_solfname(struct st_solver_v1 *s, char *fname)
+static void generate_solfname(struct st_solver_v1 *s, const char *dir, char *fname)
 {
-	//fprintf(stderr, "%07d\n",192);
-	//printf("%s\n",fname);
-	sprintf(fname,"%s/%07d_%07d_%07d_%1d_%03d_%.2f_%.1f_%.1f.rte2dvisv1",
-			fname,
+	sprintf(fname,"%s/%07d_%07d_%07d_%1d_%07d_%03d_%.2f_%.1f_%.1f",
+			dir,
 			s->Ns,
 			s->Nv,
 			s->Ne,
 			s->M,
+			s->Nt,
 			s->Nd,
 			s->g_factor,
 			s->dpar[1],//mua
 			s->dpar[2]//mus
 	       );
 }
-void sv1_save_solution(struct st_solver_v1 *s, const double _Complex *v, char *fname)
+
+void sv1_save_solution(struct st_solver_v1 *s, const double _Complex *v, const char *dir)
 {
-	fprintf(stderr, "sv1_save_solution()\n");
+	//fprintf(stderr,"sv1_plot_solution()\n");
 
-	auto_generate_solfname(s,fname);
+	char fname[FILENAME_MAX];
 
-	//printf("%s\n",s->mesh->fbase);
-	FILE *fd= fopen(fname,"w");
-
-	fprintf(fd,"BINARY DOUBLE COMPLEX SOLUTION VECTOR\n");
-	fprintf(fd,"%s\n",s->mesh->fbase);
-	fprintf(fd,"x_nm = x[m+n*(2*Nd+1)]\n");
-	fprintf(fd,"how to read this file:\n");
-	fprintf(fd,"fread((void*)v,sizeof(double _Complex),s->Ng,fd)\n");
-	//fprintf(fd,"\n");
-	fwrite((void*)v,sizeof(double _Complex),s->Ng,fd);
-	
-	fclose(fd);
-
+	// save v
+	generate_solfname(s,dir,fname);
+	strcat(fname,".rte2dvisv1");
+	FILE *fd0=fopen(fname,"w");
+	assert(fd0);
+	fwrite((void*)v,sizeof(double _Complex),s->Ng,fd0);
+	fclose(fd0);
 	fprintf(stderr,"saved into %s\n",fname);
+
+	//// prepare [X,Y] for matlab plot
+	//generate_solfname(s,dir,fname);
+	//strcat(fname,".xy");
+	//FILE *fd1=fopen(fname,"w");
+	//assert(fd1);
+	//fwrite((void*)s->mesh->c,sizeof(double),s->Ns,fd1);
+	//fclose(fd1);
+
+	//// prepare Z for matlab plot 
+
+	//// plot
+	//FILE *pipe = popen("env matlab -nodesktop -nosplash","w");
+	//assert(pipe);
+
+	//fprintf(pipe,"n=50;\n");
+	//fprintf(pipe,"r=rand(n,1);\n");
+	//fprintf(pipe,"set(gcf,'Visible','off')\n");
+	//fprintf(pipe,"plot(r);\n");
+	//fprintf(pipe,"m=mean(r);\n");
+	//fprintf(pipe,"hold on\n");
+	//fprintf(pipe,"plot([0,n],[m,m])\n");
+	//fprintf(pipe,"hold off\n");
+	//fprintf(pipe,"title('Mean of Random Uniform Data')\n"); 
+	//fprintf(pipe,"hgexport(gcf,'figure1',hgexport('factorystyle'),'Format','eps')\n");
+	//fprintf(pipe,"exit\n");
+
+	//pclose(pipe);
 }
 
-void sv1_print_solver(struct st_solver_v1 *s)
+void sv1_print_solverinfo(struct st_solver_v1 *s)
 {
-	//fprintf(stderr,"mshio_print_mesh()\n"); 
-
 	printf("    status = %d  ", s->status);
 	printf("(0=uninit'd 4=ready)\n");
 

@@ -14,6 +14,7 @@ int main(int argc, char const* argv[])
 	if (argc>1) unlink_stdout(); 
 	return 0;
 }
+
 int test01(void)
 {
 	int err=0; 
@@ -44,7 +45,7 @@ int test01(void)
 	const double dpar[128]={0.7,1.0,2.0};
 
 	struct st_solver_v1 *s=sv1_create_solver(q,ipar,dpar);
-	sv1_print_solver(s);
+	sv1_print_solverinfo(s);
 	//for (int i = 0; i < s->Ns; i++)
 		//printf("[%5d] %.5E\n",i,s->E[i]);
 
@@ -65,11 +66,8 @@ int test01(void)
 	sv1_gen_b1x0(s,0.0,b1,x0);
 	sv1_solve(s,b1,x1,200,12,1.0E-13,&nitr,&eps); 
 
-	char *sol_fname=(char*)mkl_malloc(sizeof(char)*FILENAME_MAX,64);
-	sprintf(sol_fname,"SOL");
-	sv1_save_solution(s,x1,sol_fname);
-
-	//fprintf(stderr,"destroying...\n");
+	char dir[FILENAME_MAX]="SOL";
+	sv1_save_solution(s,x1,dir); 
 
 	sv1_destroy_solver(s); 
 	mshio_destroy_mesh(q);

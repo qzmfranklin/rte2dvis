@@ -100,7 +100,6 @@ void opt_proc(int argc, char *argv[])
 			break;
 		case 'o':
 			strcpy(fname_out,optarg);
-			printf("%s\n",optarg);
 			break;
 		case '?':
 			printf("%s\n",optarg);

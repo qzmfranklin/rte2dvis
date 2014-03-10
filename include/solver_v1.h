@@ -33,7 +33,7 @@ struct st_solver_v1 {
 
 	int Ng; // #total d.o.f.
 
-	int num_threads; // total number of threads
+	int num_threads; // number of threads in any omp session
 
 	struct st_mesh *mesh; // raw mesh
 
@@ -81,9 +81,8 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 		const int max_nitr, const int max_nonrestart_nitr, const double retol, 
 		int *restrict nitr, double *restrict eps);
 void sv1_mul(struct st_solver_v1 *s, const double _Complex *restrict in, double _Complex *restrict out);
-// fname: [in]	output directory, [out] returns full path & file name
-void sv1_save_solution(struct st_solver_v1 *s, const double _Complex *v, char *fname);
-void sv1_print_solver(struct st_solver_v1 *s);
+void sv1_save_solution(struct st_solver_v1 *s, const double _Complex *v, const char *dir);
+void sv1_print_solverinfo(struct st_solver_v1 *s);
 void sv1_destroy_solver(struct st_solver_v1 *s);
 #ifdef __cplusplus
 }

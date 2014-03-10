@@ -32,7 +32,11 @@ ${DIR003}CPPFILES:=solver_v1.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
-${DIR003}BINEXE:=
+${DIR003}BINEXE:=rte2dvisv1.exe
+
+${BIN}/rte2dvisv1.exe: ${OBJ}/rte2dvisv1.o ${OBJ}/solver_v1.o \
+	${OBJ}/utils.o ${OBJ}/mshio.o ${OBJ}/dunavant.o ${OBJ}/wandzura.o \
+	${OBJ}/gauss.o ${OBJ}/arcsinh.o 
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
