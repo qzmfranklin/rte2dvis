@@ -204,7 +204,6 @@ void link_stdout(const char *fname)
 	}
 
 	assrt(___linkstd_state___==0);
-	___linkstd_state___ = 1; 
 
 	FILE *fp = fopen(fname,"w");
 	assrt(fp);
@@ -212,16 +211,20 @@ void link_stdout(const char *fname)
 	___stdout_backup___ = stdout;
 	stdout = fp;
 
+	___linkstd_state___ = 1; 
+
 	fprintf(stderr, "STDOUT => %s\n",fname);
 } 
 
 void unlink_stdout()
 {
 	assrt(___linkstd_state___==1);
-	___linkstd_state___ = 0; 
+
 	fflush(stdout);
 	fclose(stdout);
 	stdout = ___stdout_backup___;
+
+	___linkstd_state___ = 0; 
 }
 
 void box_file(const char* fname, const char*mesg){
@@ -285,13 +288,17 @@ void init_matrix(const int m, const int n, double* a, int lda)
 			a[i+j*lda] = 10.0 * rand()/RAND_MAX;
 }
 
-void print_vector(const char* desc, const int n, double* v, int incx)
+void print_vector(const char* title, const int n, const double _Complex *a)
 {
-	assrt(incx>0);
-	printf("%s = \n",desc);
-	for (int i = 0; i < n; i++)
-		printf("%7.3f ",v[i*incx]);
-	printf("\n");
+	printf("%s\n",title);
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %+.16E %+.16E*I\n",i,creal(a[i]),cimag(a[i]));
+}
+void print_vector(const char* title, const int n, const double *a)
+{
+	printf("%s\n",title);
+	for (int i = 0; i < 10; i++)
+		printf("[%5d] %+.16E\n",i,a[i]);
 }
 
 void print_matrix(const char* desc, const int m, const int n, 

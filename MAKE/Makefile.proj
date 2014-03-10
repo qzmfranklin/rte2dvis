@@ -44,13 +44,13 @@ CFLAGS 		:=-O3							\
 		-fPIC							\
 		-openmp							\
 		-fno-inline-functions					\
+		-unroll-aggressive					\
+		-fno-math-errno						\
 		-Wno-deprecated
 
 		# 							\
 		-DNDEBUG						\
 		-nostdinc -nostdinc++					\
-		-unroll-aggressive					\
-		-fno-math-errno						\
 		-DDEBUG							\
 		-opt-report-phase ipo_inl				\
 		-vec-report=1						\
@@ -60,7 +60,7 @@ ASMFLAGS	:=-S -fsource-asm# Source code commeNted assembly code.
 ###############################################################################
 #				STEP 4
 #PROJECT-WIDE INCLUDE AND LINKAGE OPTIONS
-ifeq (${PLATFORM},Linux)
+ifeq (${PLATFORM},Linux-x86_64)
 	#	FFTW3 Library for Linux
 	#FFTW_INCS	:=-I/opt/intel/mkl/include/fftw
 	#FFTW_LIBS	:=-lfftw3
@@ -74,16 +74,16 @@ ifeq (${PLATFORM},Linux)
 	OMP_INCS	:=
 	OMP_LIBS	:=-openmp
 	#	OpenMPI Library
-	#MPI_INCS	:='mpicxx -showme:compile'
-	#MPI_LIBS	:='mpicxx -showme:link'
+	MPI_INCS	:=`mpicxx -showme:compile`
+	MPI_LIBS	:=`mpicxx -showme:link`
 	#	Install Directory of Mathematica
-	MATH_DIR	:=/opt/Wolfram/Mathematica/9.0
+	#MATH_DIR	:=/opt/Wolfram/Mathematica/9.0
 	#	MathLink for Linux
-	ML_DIR		:=${MATH_DIR}/SystemFiles/Links/MathLink/DeveloperKit/Linux-x86-86/CompilerAdditions
-	ML_INCS		:=-I${ML_DIR}
-	ML_LIBS		:=-L${ML_DIR} -lML64i3
-	MPREP		:=${ML_DIR}/mprep
-	MCC		:=${ML_DIR}/mcc
+	#ML_DIR		:=${MATH_DIR}/SystemFiles/Links/MathLink/DeveloperKit/Linux-x86-86/CompilerAdditions
+	#ML_INCS		:=-I${ML_DIR}
+	#ML_LIBS		:=-L${ML_DIR} -lML64i3
+	#MPREP		:=${ML_DIR}/mprep
+	#MCC		:=${ML_DIR}/mcc
 	###	LibraryLink for MacOSX-x86-64
 	#MLL_INCS	:=-I${MATH_DIR}/SystemFiles/IncludeFiles/C
 	#MLL_LIBS	:=-L${MATH_DIR}/SystemFiles/Libraries/Linux-x86-64 -lWolframRTL

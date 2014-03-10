@@ -9,9 +9,10 @@ int test01(void);
 /*****************************************************************************/
 int main(int argc, char const* argv[])
 { 
-	if (argc>1) link_stdout(argv[1]); 
+	//if (argc>1) link_stdout(argv[1]); 
 	test01(); 
-	if (argc>1) unlink_stdout(); 
+	//if (argc>1) unlink_stdout(); 
+
 	return 0;
 }
 
@@ -49,10 +50,10 @@ int test01(void)
 	//for (int i = 0; i < s->Ns; i++)
 		//printf("[%5d] %.5E\n",i,s->E[i]);
 
-	double _Complex *b0= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
-	double _Complex *x0= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
-	double _Complex *b1= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
-	double _Complex *x1= (double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	double _Complex *b0=(double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	double _Complex *x0=(double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	double _Complex *b1=(double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
+	double _Complex *x1=(double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
 	assert(b0);
 	assert(x0);
 	assert(b1);

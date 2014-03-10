@@ -32,7 +32,9 @@ void box_file(const char* fname, const char*mesg);
 void print_proc_status(const char* mesg); 
 void init_vector(const int n, double* v, int incx=1);
 void init_matrix(const int m, const int n, double* a, int lda=1); 
-void print_vector(const char* desc, const int n, double* v, int incx=1);
+//void print_vector(const char* desc, const int n, double* v, int incx=1);
+void print_vector(const char* title, const int n, const double _Complex *a);
+void print_vector(const char* title, const int n, const double *a);
 void print_matrix(const char* desc, const int m, const int n, double *a, 
 		int lda=0);
 void print_cvector(const char* desc, const int n, 

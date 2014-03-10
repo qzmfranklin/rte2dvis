@@ -13,18 +13,20 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 /******************************************************************************/
-static void print_vector(const char* title, const int n, const double _Complex *a)
-{
-	printf("%s\n",title);
-	for (int i = 0; i < 10; i++)
-		printf("[%5d] %+.16E %+.16E*I\n",i,creal(a[i]),cimag(a[i]));
-}
-static void print_vector(const char* title, const int n, const double *a)
-{
-	printf("%s\n",title);
-	for (int i = 0; i < 10; i++)
-		printf("[%5d] %+.16E\n",i,a[i]);
-}
+/*
+ *static void print_vector(const char* title, const int n, const double _Complex *a)
+ *{
+ *        printf("%s\n",title);
+ *        for (int i = 0; i < 10; i++)
+ *                printf("[%5d] %+.16E %+.16E*I\n",i,creal(a[i]),cimag(a[i]));
+ *}
+ *static void print_vector(const char* title, const int n, const double *a)
+ *{
+ *        printf("%s\n",title);
+ *        for (int i = 0; i < 10; i++)
+ *                printf("[%5d] %+.16E\n",i,a[i]);
+ *}
+ */
 /******************************************************************************/
 static void init(struct st_solver_v1 *s, const int *ipar, const double *dpar)
 {
@@ -396,7 +398,7 @@ static size_t tmp_size(const size_t size, const size_t n)
 	return temp;
 }
 
-static void print_mkl_fgmres_par_info(const int *ipar, const double *dpar)
+static void print_mkl_dfgmres_par_info(const int *ipar, const double *dpar)
 {
 	printf("mkl fgmres solver parameters list (C indexing)\n");
 	/*
@@ -747,8 +749,9 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 	dfgmres_check(&size,x,b,&RCI_request,ipar,dpar,tmp);
 	assert(!RCI_request);
 
-	print_mkl_fgmres_par_info(ipar,dpar);
+	print_mkl_dfgmres_par_info(ipar,dpar);
 
+	//printf("helleoworl = %d\n",293);
 	print_vector("right hand side b=",10,(double _Complex*)b);
 	printf("...\n");
 
@@ -781,7 +784,7 @@ void sv1_solve(struct st_solver_v1 *s, double _Complex *rhs, double _Complex *so
 	if (RCI_request<0)
 		fprintf(stderr,"\n\nWANRING: solver broke down with RCI_request = %d\n\n\n",RCI_request);
 
-	// Extract xution, print, clear buffers.
+	// Extract solution, print, clear buffers.
 	dfgmres_get(&size,x,b,&RCI_request,ipar,dpar,tmp,nitr);
 	*eps = dpar[4];
 	printf("solver finished after %d iterations!\n",*nitr);
@@ -859,23 +862,28 @@ void sv1_print_solverinfo(struct st_solver_v1 *s)
 	printf("    status = %d  ", s->status);
 	printf("(0=uninit'd 4=ready)\n");
 
-	printf("SPA INT  M = %d\n", s->M);
-	printf("ANG    pad = %d\n", s->pad);
-	printf("TRIGS   Ns = %d\n", s->Ns);
-	printf("VERTS   Nv = %d\n", s->Nv);
-	printf("EDGES   Ne = %d\n", s->Ne);
-	printf("SPAT    Nt = %d\n", s->Nt);
-	printf("HARM    Nd = %d\n", s->Nd);
-	printf("ANG     Nm = %d\n", s->Nm);
-	printf("TOTAL   Ng = %d\n", s->Ng);
-	printf("num_threads= %d\n", s->num_threads);
+	printf("TRIGS   Ns = %d\n",s->Ns);
+	printf("VERTS   Nv = %d\n",s->Nv);
+	printf("EDGES   Ne = %d\n",s->Ne);
+	printf("SPAT    Nt = %d\n",s->Nt);
+	printf("ANG     Nm = %d\n",s->Nm);
+	printf("TOTAL   Ng = %d\n",s->Ng);
+
+	printf("SPA INT  M = %d\n",s->M);
+	printf("HARM    Nd = %d\n",s->Nd);
+	printf("ANG    pad = %d\n",s->pad);
+	printf("SRC  rule1 = %d\n",s->ipar[3]);
+	printf("TEST rule2 = %d\n",s->ipar[4]);
+	printf("TEST    nu = %d\n",s->ipar[5]);
+	printf("TEST    nv = %d\n",s->ipar[6]);
+
+	printf("num_threads= %d\n",s->num_threads);
 
 	printf("  g_factor = %.3f\n",s->g_factor);
+	printf("  mua      = %.3f\n",s->dpar[1]);
+	printf("  mus      = %.3f\n",s->dpar[2]);
 
-	printf("RAW   mesh = %p\n", s->mesh);
-
-	printf("IDENTITY E = %p\n", s->E);
-	printf("INTERACT K = %p\n", s->K);
-	//printf("CPLX  work = %p\n", s->work);
-	//printf("REAL   tmp = %p\n", s->tmp);
+	//printf("RAW   mesh = %p\n",s->mesh);
+	//printf("IDENTITY E = %p\n",s->E);
+	//printf("INTERACT K = %p\n",s->K);
 }
