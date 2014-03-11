@@ -195,35 +195,55 @@ void unlink_cout()
 static int ___linkstd_state___ = 0; 
 static FILE *___stdout_backup___;
 
+/*
+ *void link_stdout(const char *fname)
+ *{
+ *        if (fname==NULL) {
+ *                fprintf(stderr,"link_stdout(const char *fname): fname=NULL\n");
+ *                fprintf(stderr, "Use the current stdout.\n");
+ *                return;
+ *        }
+ *
+ *        assrt(___linkstd_state___==0);
+ *
+ *        FILE *fp = fopen(fname,"w");
+ *        assrt(fp);
+ *        fflush(stdout);	// clear stdout buffer
+ *        ___stdout_backup___ = stdout;
+ *        stdout = fp;
+ *
+ *        ___linkstd_state___ = 1; 
+ *
+ *        fprintf(stderr, "STDOUT => %s\n",fname);
+ *} 
+ *
+ *void unlink_stdout()
+ *{
+ *        assrt(___linkstd_state___==1);
+ *
+ *        fflush(stdout);
+ *        fclose(stdout);
+ *        stdout = ___stdout_backup___;
+ *
+ *        ___linkstd_state___ = 0; 
+ *}
+ */
 void link_stdout(const char *fname)
 {
+	assrt(___linkstd_state___==0);
 	if (fname==NULL) {
 		fprintf(stderr,"link_stdout(const char *fname): fname=NULL\n");
 		fprintf(stderr, "Use the current stdout.\n");
 		return;
 	}
-
-	assrt(___linkstd_state___==0);
-
-	FILE *fp = fopen(fname,"w");
-	assrt(fp);
-	fflush(stdout);	// clear stdout buffer
-	___stdout_backup___ = stdout;
-	stdout = fp;
-
-	___linkstd_state___ = 1; 
-
-	fprintf(stderr, "STDOUT => %s\n",fname);
-} 
+	freopen(fname,"a",stdout);
+	___linkstd_state___=1;
+}
 
 void unlink_stdout()
 {
 	assrt(___linkstd_state___==1);
-
-	fflush(stdout);
-	fclose(stdout);
-	stdout = ___stdout_backup___;
-
+	freopen("/dev/tty","a",stdout);
 	___linkstd_state___ = 0; 
 }
 

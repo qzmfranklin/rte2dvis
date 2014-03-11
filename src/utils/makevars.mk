@@ -19,7 +19,7 @@
 #	DIRECTORY NAME FROM THE ROOT DIRECTORY
 DIR001:=${SRC}/utils# Please, NO SPACE 
 # Quiet build for this dirctory. Comment the following line to be verbose.
-#${DIR001}QUIET:=@
+${DIR001}QUIET:=@
 ###############################################################################
 #				STEP 2
 #	DIRECTORY-SPECIFIC COMPILING AND LINKING OPTIONS

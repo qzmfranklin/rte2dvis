@@ -9,9 +9,15 @@ int test01(void);
 /*****************************************************************************/
 int main(int argc, char const* argv[])
 { 
-	if (argc>1) link_stdout(argv[1]); 
-	test01(); 
-	if (argc>1) unlink_stdout(); 
+	//if (argc>1) link_stdout(argv[1]); 
+
+	freopen(argv[1],"w",stdout);
+	printf("printf\n");
+	fprintf(stdout,"fprintf(stdout)\n");
+	fclose(stdout);
+
+	//if (argc>1) unlink_stdout(); 
+	//test01(); 
 
 	return 0;
 }
