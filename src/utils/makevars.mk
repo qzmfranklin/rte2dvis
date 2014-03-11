@@ -29,16 +29,16 @@ ${DIR001}INCS:=${INCS}
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
 ${DIR001}CPPFILES:=utils.cpp StatVector.cpp Table.cpp TimeStamp.cpp \
-	sparse_mat.cpp
+	rmsm.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR001}TSTEXE:=test_sparse_mat.exe
+${DIR001}TSTEXE:=test_rmsm.exe
 
-${BIN}/test_sparse_mat.exe: ${OBJ}/utils.o ${OBJ}/sparse_mat.o
+${BIN}/test_rmsm.exe: ${OBJ}/utils.o ${OBJ}/rmsm.o
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

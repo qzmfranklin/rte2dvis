@@ -311,13 +311,13 @@ void init_matrix(const int m, const int n, double* a, int lda)
 void print_vector(const char* title, const int n, const double _Complex *a)
 {
 	printf("%s\n",title);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < n; i++)
 		printf("[%5d] %+.16E %+.16E*I\n",i,creal(a[i]),cimag(a[i]));
 }
 void print_vector(const char* title, const int n, const double *a)
 {
 	printf("%s\n",title);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < n; i++)
 		printf("[%5d] %+.16E\n",i,a[i]);
 }
 
