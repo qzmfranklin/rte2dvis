@@ -38,6 +38,7 @@ static void init(struct st_solver_v1 *s, const int *ipar, const double *dpar)
 	}
 
 	s->M      = s->ipar[0]; // unused in v1
+	//s->M      = 0; // unused in v1
 	s->Nd     = s->ipar[1];
 	s->pad    = s->ipar[2];
 	s->num_threads = s->ipar[7];

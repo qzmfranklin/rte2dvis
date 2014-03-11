@@ -28,7 +28,7 @@ ${DIR003}INCS:=${INCS}
 ###############################################################################
 #				STEP 3
 #	DIRECTORY-SPECIFIC SOURCE FILES
-${DIR003}CPPFILES:=solver_v1.cpp
+${DIR003}CPPFILES:=solver_v1.cpp solver_v2.cpp
 ###############################################################################
 #				STEP 4
 #	DIRECTORY-SPECIFIC BINARY OUTPUTS: EXECUTABLES and LIBRARIES
@@ -40,9 +40,13 @@ ${BIN}/rte2dvisv1.exe: ${OBJ}/rte2dvisv1.o ${OBJ}/solver_v1.o \
 ###############################################################################
 #				STEP 5
 #	DIRECTORY-SPECIFIC TEST FILES
-${DIR003}TSTEXE:= test_solver_v1.exe
+${DIR003}TSTEXE:= test_solver_v1.exe test_solver_v2.exe
 
 ${BIN}/test_solver_v1.exe: ${OBJ}/test_solver_v1.o ${OBJ}/solver_v1.o \
+	${OBJ}/utils.o ${OBJ}/mshio.o ${OBJ}/dunavant.o ${OBJ}/wandzura.o \
+	${OBJ}/gauss.o ${OBJ}/arcsinh.o
+
+${BIN}/test_solver_v2.exe: ${OBJ}/test_solver_v2.o ${OBJ}/solver_v2.o \
 	${OBJ}/utils.o ${OBJ}/mshio.o ${OBJ}/dunavant.o ${OBJ}/wandzura.o \
 	${OBJ}/gauss.o ${OBJ}/arcsinh.o
 ###############################################################################

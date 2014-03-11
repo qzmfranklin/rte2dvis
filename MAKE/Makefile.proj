@@ -41,15 +41,15 @@ CFLAGS 		:=-O3							\
 		-prec-div -no-ftz					\
 		-MMD -MP						\
 		-restrict						\
-		-fPIC							\
 		-openmp							\
-		-fno-inline-functions					\
-		-unroll-aggressive					\
-		-fno-math-errno						\
 		-Wno-deprecated
 
 		# 							\
 		-DNDEBUG						\
+		-fPIC							\
+		-fno-inline-functions					\
+		-unroll-aggressive					\
+		-fno-math-errno						\
 		-nostdinc -nostdinc++					\
 		-DDEBUG							\
 		-opt-report-phase ipo_inl				\

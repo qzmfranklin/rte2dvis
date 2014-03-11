@@ -280,7 +280,7 @@ void opt_proc(int argc, char *argv[])
 		default:
 			abort();
 		}
-	} 
+	}
 	// The remaining command line arguments is the input mesh files
 	if (optind>=argc) {
 		printf("Requires a base name for the input file as argument!\n");
