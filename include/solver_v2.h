@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <complex.h>
 #include "mesh.h"
+#include "sparse_mat.h"
 /******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
@@ -37,11 +38,7 @@ struct st_solver_v2 {
 
 	struct st_mesh *mesh; // raw mesh
 
-	struct  {
-		int nn;	// dimensnion, i.e., number of nodes
-		int *n;	// n[i] records the number of non-zero elements in a[i]
-		double *a;
-	} *E; // diagonal dominant, sparse matrix
+	struct st_rsparse_mat *E; // row-major diagonal dominant sparse
 	double *K; // K, DFT, row-major, [Ns,Ns,2*Nm]
 	
 	double g_factor; // g factor in HG phase function

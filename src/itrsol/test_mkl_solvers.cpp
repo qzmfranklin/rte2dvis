@@ -12,8 +12,8 @@ int test01(void);
 int main(int argc, char const* argv[])
 { 
 	if (argc>1) link_stdout(argv[1]); 
-	test01(); 
 	if (argc>1) unlink_stdout(); 
+	test01(); 
 	return 0;
 }
 
@@ -120,7 +120,6 @@ int test01(void)
 	double dpar[128],tmp[N*(5*N+11)/2+1];
 	ivar    = N;
 
-	print_mkl_dfgmres_pars(ipar,dpar);
 	dfgmres_init(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp);
 	assert(!RCI_request);
 
@@ -156,21 +155,22 @@ int test01(void)
 	 *   dpar[6]:  norm of generated vector
 	 *   dpar[7]:  tolerance for zero norm of current vector [1.0D-12]
 	 */
-	dpar[0]	 = 1.0E-5;
+	dpar[0]	 = 1.0E-10;
 	// Check consistency of parameters
 	dfgmres_check(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp);
 	assert(!RCI_request);
+
+	print_mkl_dfgmres_pars(ipar,dpar);
 
 	printf("start iterating!\n");
 	/*
 	 * RCI_request:
 	 * 	0	completed
-	 * 	1	go on iterating
+	 * 	1	requests user-defined matrix-vector multiplication
 	 * 	2	requests user-defined stopping check, ipar[9]
-	 * 	3	requests preconditoning, ipar[10]
-	 * 	4	requests zero norm check, ipar[11]
+	 * 	3	requests user-defined preconditoning, ipar[10]
+	 * 	4	requests user-defined zero norm check, ipar[11]
 	 */
-	dfgmres(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp); 
 	do {
 		dfgmres(&ivar,sol,rhs,&RCI_request,ipar,dpar,tmp); 
 		switch (RCI_request) {

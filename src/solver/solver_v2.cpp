@@ -95,7 +95,7 @@ static void fillE(struct st_solver_v2 *s)
 /******************************************************************************/
 struct st_solver_v2 *sv2_create_solver(struct st_mesh *q, const int *ipar, const double *dpar)
 {
-	fprintf(stderr,"sv2_create_solver()\n");
+	//fprintf(stderr,"sv2_create_solver()\n");
 
 	assert(q);
 	assert(q->status==3); // st_mesh is already loaded

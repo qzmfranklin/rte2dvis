@@ -23,7 +23,7 @@ int test01(void)
         printf("	|Test solver_v2 workflow\n");
 
 	struct st_mesh *q=mshio_create_mesh("msh/square162");
-	mshio_print_mesh(q,PRINT_INFO_VERBOSE);
+	//mshio_print_mesh(q,PRINT_INFO_VERBOSE);
 
 	/*
 	 * ipar[0] = M
