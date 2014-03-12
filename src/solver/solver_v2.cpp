@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <omp.h>
 #include <mkl.h>
-#include "complex.h"
+#include <complex.h>
 #include <math.h>
 #include <assert.h>
 #include "solver_v2.h"
@@ -22,8 +22,7 @@ static void init(struct st_solver_v2 *s, const int *ipar, const double *dpar)
 		s->dpar[i] = dpar[i];
 	}
 
-	s->M      = s->ipar[0]; // unused in v1
-	//s->M      = 1; // internally specified by the program
+	s->M      = 1;
 	s->Nd     = s->ipar[1];
 	s->pad    = s->ipar[2];
 	s->num_threads = s->ipar[7];
@@ -42,8 +41,7 @@ static void init(struct st_solver_v2 *s, const int *ipar, const double *dpar)
 	s->Nm     = tmp + s->pad - res;
 	}
 
-	s->Ng     = s->Ns * (2*s->Nd+1);
-	//s->Ng     = s->Nt * (2*Nd+1); // unused in v1 
+	s->Ng     = s->Nt * (2*Nd+1);
 
 	s->g_factor = dpar[0]; 
 

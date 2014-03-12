@@ -7,8 +7,8 @@ int test01(void);
 int main(int argc, char const* argv[])
 {
 	if (argc>1) link_stdout(argv[1]);
-	if (argc>1) unlink_stdout(); 
 	test01(); 
+	if (argc>1) unlink_stdout(); 
 
 	return 0;
 }
@@ -32,18 +32,20 @@ int test01(void)
 	}
 
 	rmsm_pack(m); 
+	rmsm_print_matrixinfo(m); 
 
 	double x[size], y[size];
-	const int row=3, col=0;
+	const int row=3, col=3;
 	memset(x,0,sizeof(double)*size);
 	x[col]=1.0;
 	rmsm_dmul(m,x,y);
+	printf("x is the unit vector at %d\n",col);
 	print_vector("y=m.x=",10,y); 
 
 	printf("row %d\n",row);
 	//for (int i = 0; i < m->rsz[row]; i++)
 	for (int i = 0; i < 10; i++)
-		printf("[%5d] %.16E\n",m->col[i+m->pos[row]],m->data[i+m->pos[row]]);
+		printf("[%5d] %+.16E\n",m->col[i+m->pos[row]],m->data[i+m->pos[row]]);
 
 	rmsm_destroy(m);
 

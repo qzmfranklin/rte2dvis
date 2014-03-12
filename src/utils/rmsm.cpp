@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <complex.h>
 #include <string.h>
 #include <algorithm>
 #include <vector>
@@ -20,8 +21,7 @@
  */
 struct st_rmsm *rmsm_create(const int size)
 {
-	fprintf(stderr,"rmsm_create()\n");
-
+	//fprintf(stderr,"rmsm_create()\n"); 
 
 	struct st_rmsm *m=(struct st_rmsm*)mkl_malloc(sizeof(struct st_rmsm),64);
 	assert(m);
@@ -60,7 +60,7 @@ void rmsm_add(struct st_rmsm *m, const int row, const int col, const double val)
 static bool cmp(const intdbl_t &a, const intdbl_t &b) { return (a.i < b.i); }
 void rmsm_pack(struct st_rmsm *m)
 {
-	fprintf(stderr,"rmsm_pack()\n");
+	//fprintf(stderr,"rmsm_pack()\n");
 	assert(m->status==1);
 
 	//for (int i = 0; i < m->size; i++)
@@ -133,43 +133,32 @@ void rmsm_pack(struct st_rmsm *m)
 }
 void rmsm_print_matrixinfo(const struct st_rmsm *m)
 {
-	assert(m->status>0);
 	//TODO
+	assert(m->status>0);
 	printf("    status = %d  ", m->status);
 	printf("(0=uninit'd 1=init'd 2=packed)\n");
-
-	//printf("TRIGS   Ns = %d\n",m->Ns);
-	//printf("VERTS   Nv = %d\n",m->Nv);
-	//printf("EDGES   Ne = %d\n",m->Ne);
-	//printf("SPAT    Nt = %d\n",m->Nt);
-	//printf("ANG     Nm = %d\n",m->Nm);
-	//printf("TOTAL   Ng = %d\n",m->Ng);
-
-	//printf("SPA INT  M = %d\n",m->M);
-	//printf("HARM    Nd = %d\n",m->Nd);
-	//printf("ANG    pad = %d\n",m->pad);
-	//printf("SRC  rule1 = %d\n",m->ipar[3]);
-	//printf("TEST rule2 = %d\n",m->ipar[4]);
-	//printf("TEST    nu = %d\n",m->ipar[5]);
-	//printf("TEST    nv = %d\n",m->ipar[6]);
-
-	//printf("num_threads= %d\n",m->num_threads);
-
-	//printf("  g_factor = %.3f\n",m->g_factor);
 }
 void rmsm_dmul(const struct st_rmsm *m, const double *restrict in, double *restrict out)
 {
-	assert(m->status==2); // need to be packed in the first place
+	assert(m->status==2);
 
 	memset(out,0,sizeof(double)*(m->size));
 	for (int i = 0; i < m->size; i++)
 		for (int j = 0; j < m->rsz[i]; j++)
 			out[i] += m->data[j+m->pos[i]] * in[m->col[j+m->pos[i]]];
 }
-//void rmsm_zmul(struct st_rmsm *m, const double _Complex *restrict in, double _Complex *restrict out);
+void rmsm_zmul(const struct st_rmsm *m, const double _Complex *restrict in, double _Complex *restrict out)
+{
+	assert(m->status==2);
+
+	memset(out,0,sizeof(double _Complex)*(m->size));
+	for (int i = 0; i < m->size; i++)
+		for (int j = 0; j < m->rsz[i]; j++)
+			out[i] += m->data[j+m->pos[i]] * in[m->col[j+m->pos[i]]];
+}
 void rmsm_destroy(struct st_rmsm *m)
 {
-	fprintf(stderr,"rmsm_destroy()\n");
+	//fprintf(stderr,"rmsm_destroy()\n");
 	assert(m->status==2);
 	mkl_free(m->pos);
 	mkl_free(m->rsz);

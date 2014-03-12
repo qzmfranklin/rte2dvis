@@ -48,7 +48,7 @@ ${BIN}/test_solver_v1.exe: ${OBJ}/test_solver_v1.o ${OBJ}/solver_v1.o \
 
 ${BIN}/test_solver_v2.exe: ${OBJ}/test_solver_v2.o ${OBJ}/solver_v2.o \
 	${OBJ}/utils.o ${OBJ}/mshio.o ${OBJ}/dunavant.o ${OBJ}/wandzura.o \
-	${OBJ}/gauss.o ${OBJ}/arcsinh.o
+	${OBJ}/gauss.o ${OBJ}/arcsinh.o ${OBJ}/rmsm.o
 ###############################################################################
 #	Congratulations! You have completed everything you need to do to build
 #  this directory. You do not need to modify this file unless some C and/or

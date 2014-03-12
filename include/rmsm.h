@@ -2,7 +2,7 @@
 #define _RMSM_H_
 /******************************************************************************/
 /*
- * Row Major Spase Matrix
+ * Row Major Spase Matrix (RMSM)
  * Only be included indirectly through including spmat. through including
  * spmat.h. Not in the user space, i.e., not for direct use.
  */
@@ -34,7 +34,7 @@ void rmsm_pack(struct st_rmsm *m);
 void rmsm_print_matrixinfo(const struct st_rmsm *m);
 void rmsm_destroy(struct st_rmsm *m);
 void rmsm_dmul(const struct st_rmsm *m, const double *restrict in, double *restrict out);
-//void rmsm_zmul(const struct st_rmsm *m, const double _Complex *restrict in, double _Complex *restrict out);
+void rmsm_zmul(const struct st_rmsm *m, const double _Complex *restrict in, double _Complex *restrict out);
 #ifdef __cplusplus
 }
 #endif 

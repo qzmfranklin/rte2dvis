@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <omp.h>
 #include <mkl.h>
-#include "complex.h"
+#include <complex.h>
 #include <math.h>
 #include <assert.h>
 #include "solver_v1.h"

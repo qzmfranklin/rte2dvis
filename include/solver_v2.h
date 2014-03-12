@@ -37,7 +37,7 @@ struct st_solver_v2 {
 
 	struct st_mesh *mesh; // raw mesh
 
-	//struct st_rsparse_mat *E; // row-major diagonal dominant sparse TODO
+	struct st_rmsm *E; // row-major sparse matrix format
 	double *K; // K, DFT, row-major, [Ns,Ns,2*Nm]
 	
 	double g_factor; // g factor in HG phase function
