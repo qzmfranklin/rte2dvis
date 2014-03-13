@@ -77,10 +77,10 @@ struct st_solver_v2 *sv2_create_solver(struct st_mesh *q, const int *ipar, const
 //// A.x1=b1, x=x0+x1
 //void sv2_gen_b1x0(struct st_solver_v2 *s, const double phis, 
 		//double _Complex *restrict b1, double _Complex *restrict x0);
-//void sv2_solve(struct st_solver_v2 *s, double _Complex *rhs, double _Complex *sol, 
-		//const int max_nitr, const int max_nonrestart_nitr, const double retol, 
-		//int *restrict nitr, double *restrict eps);
-//void sv2_mul(struct st_solver_v2 *s, const double _Complex *restrict in, double _Complex *restrict out);
+void sv2_solve(struct st_solver_v2 *s, double _Complex *rhs, double _Complex *sol, 
+		const int max_nitr, const int max_nonrestart_nitr, const double retol, 
+		int *restrict nitr, double *restrict eps);
+void sv2_mul(struct st_solver_v2 *s, const double _Complex *restrict in, double _Complex *restrict out);
 //void sv2_save_solution(struct st_solver_v2 *s, const double _Complex *v, const char *dir);
 void sv2_print_solverinfo(struct st_solver_v2 *s);
 void sv2_destroy_solver(struct st_solver_v2 *s);

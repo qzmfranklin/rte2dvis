@@ -35,6 +35,7 @@ void rmsm_print_matrixinfo(const struct st_rmsm *m);
 void rmsm_destroy(struct st_rmsm *m);
 void rmsm_dmul(const struct st_rmsm *m, const double *restrict in, double *restrict out);
 void rmsm_zmul(const struct st_rmsm *m, const double _Complex *restrict in, double _Complex *restrict out);
+void rmsm_print_row(const struct st_rmsm *m, const int row);
 #ifdef __cplusplus
 }
 #endif 

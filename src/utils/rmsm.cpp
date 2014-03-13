@@ -156,6 +156,17 @@ void rmsm_zmul(const struct st_rmsm *m, const double _Complex *restrict in, doub
 		for (int j = 0; j < m->rsz[i]; j++)
 			out[i] += m->data[j+m->pos[i]] * in[m->col[j+m->pos[i]]];
 }
+void rmsm_print_row(const struct st_rmsm *m, const int row)
+{
+	assert(m->status==2);
+
+	printf("row %-5d ",row);
+	for (int i = 0; i < m->rsz[row]; i++) {
+		const int col = m->col[i+m->pos[row]];
+		printf("%5d %+.2E ",col,m->data[col]);
+	}
+	printf("\n");
+}
 void rmsm_destroy(struct st_rmsm *m)
 {
 	//fprintf(stderr,"rmsm_destroy()\n");

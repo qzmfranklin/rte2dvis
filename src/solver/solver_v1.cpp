@@ -337,6 +337,7 @@ void sv1_destroy_solver(struct st_solver_v1 *s)
 void sv1_mul(struct st_solver_v1 *s, const double _Complex *restrict in, double _Complex *restrict out)
 {
 	//fprintf(stderr,"sv1_mul()\n");
+	assert(s->status==4);
 	/*
 	 * dpar[0] = g factor
 	 * dpar[1] = mua (absorption coefficient)
