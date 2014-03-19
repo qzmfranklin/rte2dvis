@@ -67,9 +67,26 @@ The interaction term $K$
 \end{equation*}
 
 The integral $\int d\v{r}\,B_{ns}(\v{r})B_{n^\p s^\p}(\v{r})$ can be evaluated
-either analytically or numerically. We emphasis on the fact that the $I$ is a
-nearly diagonal sparse matrix.
+either analytically or numerically. 
+
+The identity term, $I$, is a nearly diagonal sparse matrix.  
 
 The integral in the interaction term can only be computed numerically [appendix].  
+
+The \textit{r.h.s.} can be computed through a chain in the order of
+\begin{equation*}
+	q(\v{r},\phi) \to \psi^I(\v{r},\phi) \to V_{nm},
+\end{equation*}
+where $\psi^I(\v{r},\phi)=\int d\v{r}^\p d\phi^\p g(\v{r},\phi;\v{r}^\p,\phi^\p)
+q(\v{r}^\p,\phi^\p)$ is the incident specific intensity. In general $\psi^I$ can
+be computed given the source $q$. In this paper, however, we only deal with the
+simpler case of planewave incidence. In case of planewave incidence, $q$ is 
+infinite, but $\psi^I$ is finite. Normalize to $\psi^I(\v{r},\phi) = 
+\delta(\phi-\phi^I)$. Then the \textit{r.h.s.} is just
+\begin{equation*}
+	V_{nm} = \int d\v{r}d\phi\,\xi_n(\v{r})e^{-i\,m\,\phi}\psi^I(\v{r},\phi) =
+	e^{-i\,m\phi^I} \int d\v{r}\,\xi_n(\v{r})
+\end{equation*}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \end{document}

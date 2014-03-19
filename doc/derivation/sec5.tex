@@ -3,29 +3,97 @@
 \section{Singularity Extraction}
 \label{sec:singularity extraction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Assuming planewave incidence, numerically compute the right hand side 
-(\textit{r.h.s.}), i.e., the input vector:
-\begin{equation*} 
-	V_{nm} = \sum\limits_{n^\p}^{N_s} D(n,n^\p,m)
-\end{equation*}
-where $D$ is a rank-3 tensor:
-\begin{equation*} \begin{split} 
-	D(n,n^\p,m) =& \sum\limits_{j_n=1}^{M_n}
-	\sum\limits_{j_{n^\p}=1}^{M_{n^\p}}
-	w_{j_n}w_{j_{j^\p}}\mu_s(\v{r}_{j_{n^\p}}) 
-	\frac{e^{-i m\phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}}}
-	{\abs{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}} \\ \times&
-	f(\phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}})
-	e^{-\tau(\v{r}_{j_{n^\p}},-\uv{s}^I)}
-\end{split} \end{equation*}
+\subsection{First Order}
+\label{sub:first order}
+Let $\psi(\v{r},\phi)=\psi_b(\v{r},\phi)+\psi_{sc}(\v{r},\phi)$, plug it
+into \eqref{rte}, the resulting equation is equivalent to the sum of the
+following equations:
+\begin{align*}
+	\uv{s}\cdot\psi_b(\v{r},\phi)+\mu_t(\v{r})\psi_b(\v{r},\phi)
+	=&q(\v{r},\phi) \\
+	\uv{s}\cdot\psi_{sc}(\v{r},\phi)+\mu_t(\v{r})\psi_{sc}(\v{r},\phi)
+	=&\mu_s(\v{r})\int d\phi^\p f(\phi-\phi^\p)\psi_{sc}(\v{r},\phi^\p)
+	+q_b(\v{r},\phi) \\
+	q_b(\v{r},\phi)=&\mu_s(\v{r})\int d\phi^\p f(\phi-\phi^\p)\psi_b(\v{r},\phi^\p)
+\end{align*}
 
-$\tau(\v{r},-\uv{s}^I)\equiv\int_{C_{\v{r},-\uv{s}^I}}\mu_t dl$, where the
+The subscript \textit{b} stands for \textit{\bf ballistic}.
+The subscript \textit{sc} stands for \textit{\bf scattering}.
+Before advancing, let's introduce some useful notations.
+
+Optical length. $\tau(\v{r},-\uv{s}^I)\equiv\int_{C_{\v{r},-\uv{s}^I}}\mu_t dl$, where the
 integral path $C_{\v{r},-\uv{s}^I}$ is the ray that starts from $\v{r}$ and in
 the direction pointed by $-\uv{s}^I$. For later use,
 $\tau(\v{r}^\p\to\v{r}) \equiv \int_{C_{\v{r}^\p\to\v{r}}}$, where
 $C_{\v{r}^\p\to\v{r}}$ is the line segment from $\v{r}^\p$ to $\v{r}$.
+And the Green's function in non-scattering media:
+\begin{equation*}
+	g_a(\v{r},\phi;\v{r}^\p,\phi^\p) =
+	\frac{e^{-\tau(\v{r}^\p\to\v{r})}}{\abs{\v{r}-\v{r}^\p}}
+	\delta(\phi-\phi_{\v{r}-\v{r}^\p})
+	\delta(\phi^\p-\phi_{\v{r}-\v{r}^\p})
+\end{equation*}
 
-In principle, computing $\tau$ requires ray tracing. Done with a tree-structure
-[TODO].
+Expand $\psi_b$ and $\psi_{sc}$ in terms of $\xi_n(\v{r})e^{i m \phi}$, denote
+the expansion coefficients as $X^b_{nm}$ and $X^{sc}_{nm}$, respectively.
+$\psi_b$ can be computed analytically
+\begin{equation*} 
+	\begin{split}
+		\psi_b(\v{r},\phi) = \int d\v{r}^\p d\phi^\p
+		g_a(\v{r},\phi;\v{r}^\p,\phi^\p) q(\v{r}^\p,\phi^\p) 
+		= e^{-\tau(\v{r},-\uv{s}^I)} \delta(\phi-\phi^I)
+	\end{split}
+\end{equation*}
+
+To get $X^b_{nm}$, we need to invert a system of linear equations. Start with
+$\psi_b(\v{r},\phi)=\sum\nolimits_{n^\p m^\p}X^b_{n^\p m^\p}
+\xi_{n^\p}(\v{r})e^{i\,m^\p\phi}$, multiply $\xi_n(\v{r})e^{-i\,m\,\phi}$ 
+to it, integrate over $d\v{r}d\phi$, we get the following set of linear equations:
+\begin{equation*}
+	\sum\limits_{n^\p m^\p} I_{(nm)(n^\p m^\p)} X^b_{n^\p m^\p} =
+	%\int d\v{r}d\phi \xi_n(\v{r})e^{-i\,m\,\phi} \psi_b(\v{r},\phi) =
+	e^{-i\,m\,\phi^I}\int d\v{r}\,\xi_n(\v{r}) e^{-\tau(\v{r},-\uv{s}^I)}
+\end{equation*}
+
+To get $X^{sc}_{nm}$, we need to compute the corresponding \textit{r.h.s.},
+namely, $V^{sc}_{nm}$. Compute in the following order:
+\begin{equation*}
+	\psi_b(\v{r},\phi) \to q_b(\v{r},\phi) \to \psi^I_{sc}(\v{r},\phi) \to
+	V^{sc}_{nm}
+\end{equation*}
+
+After some computation [appendix][TODO], the \textit{r.h.s.} is
+\begin{equation*}
+	V^{sc}_{nm}=\int d\v{r}\,d\v{r}^\p\xi_n(\v{r}) 
+	\frac{e^{-im\phi_{\v{r}-\v{r}^\p}}}{\abs{\v{r}-\v{r}^\p}}
+	f(\phi_{\v{r}-\v{r}^\p}-\phi^I) e^{-\tau(\v{r}^\p,-\uv{s}^I)}
+\end{equation*}
+
+A final note that $X_{nm}=X^{b}_{nm}+X^{sc}_{nm}$ are the total expansion
+coefficients.
+
+\subsection{Higher Orders}
+\label{sub:higher orders} 
+[TODO]
+%\subsection{Others}
+%\label{sub:others}
+%Assuming planewave incidence, numerically compute the right hand side 
+%(\textit{r.h.s.}), i.e., the input vector:
+%\begin{equation*} 
+	%V_{nm} = \sum\limits_{n^\p}^{N_s} D(n,n^\p,m)
+%\end{equation*}
+%where $D$ is a rank-3 tensor:
+%\begin{equation*} \begin{split} 
+	%D(n,n^\p,m) =& \sum\limits_{j_n=1}^{M_n}
+	%\sum\limits_{j_{n^\p}=1}^{M_{n^\p}}
+	%w_{j_n}w_{j_{j^\p}}\mu_s(\v{r}_{j_{n^\p}}) 
+	%\frac{e^{-i m\phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}}}
+	%{\abs{\v{r}_{j_n}-\v{r}_{j_{n^\p}}}} \\ \times&
+	%f(\phi_{\v{r}_{j_n}-\v{r}_{j_{n^\p}}})
+	%e^{-\tau(\v{r}_{j_{n^\p}},-\uv{s}^I)}
+%\end{split} \end{equation*}
+
+%In principle, computing $\tau$ requires ray tracing. Done with a tree-structure
+%[TODO].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

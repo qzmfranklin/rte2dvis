@@ -22,7 +22,7 @@ int test01(void)
         printf("TEST01\n");
         printf("	|Test solver_v1 workflow\n");
 
-	struct st_mesh *q=mshio_create_mesh("msh/square162");
+	struct st_mesh *q=mshio_create_mesh("msh/0344/0344");
 	//mshio_print_mesh(q,PRINT_INFO_VERBOSE);
 
 	/*

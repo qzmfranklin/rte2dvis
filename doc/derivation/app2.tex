@@ -12,6 +12,15 @@ position in space.
 	e_{ijk}B_{ijk}(L_1,L_2,L_3)
 \end{equation*}
 
+$B_{ijk}$ can be expressed in terms of the auxiliary polynomials $R_s$
+\begin{align*}
+	R_s(M,L)&=\frac{1}{s!}\prod\limits_{k=0}^{s-1}(M\,L-k)\,\,\,\,\,(s>0) \\
+	R_0(M,L)&=1
+\end{align*}
+\begin{equation*}
+	B_{ijk}=R_i(M,L_1)R_j(M,L_2)R_k(M,L_3)
+\end{equation*}
+
 The simplex coordinates are related to Euclidean coordinates by
 \begin{equation*}
 	\begin{pmatrix}
@@ -27,5 +36,12 @@ The simplex coordinates are related to Euclidean coordinates by
 		x \\ y \\ 1
 	\end{pmatrix}
 \end{equation*}
+
+The Jacobian is $\pd{(x,y)}{(L_1,L_2)}=2\abs{A}$, where $A$ is the area of the
+triangular domain being integrated. Also, a useful integral identity is
+\begin{equation*}
+	\int L_1^a L_2^b L_3^c dL_1 dL_2=\frac{a!b!c!}{(a+b+c+2)!}
+\end{equation*}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

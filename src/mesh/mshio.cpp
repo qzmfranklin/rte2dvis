@@ -49,14 +49,14 @@ static void alloc_mesh(struct st_mesh *q)
 	assert(q->status==1);
 
 	q->v =(double*)mkl_malloc(sizeof(double)*2*(q->num_verts),64);
-	q->e =(int*)   mkl_malloc(sizeof(int)   *2*(q->num_edges),64);
+	//q->e =(int*)   mkl_malloc(sizeof(int)   *2*(q->num_edges),64);
 	q->t =(int*)   mkl_malloc(sizeof(int)   *3*(q->num_trigs),64);
 	q->te=(int*)   mkl_malloc(sizeof(int)   *2*(q->num_trigs),64);
 	q->p =(double*)mkl_malloc(sizeof(double)*6*(q->num_trigs),64);
 	q->a =(double*)mkl_malloc(sizeof(double)*1*(q->num_trigs),64);
 	q->c =(double*)mkl_malloc(sizeof(double)*2*(q->num_trigs),64);
 	assert(q->v);
-	assert(q->e);
+	//assert(q->e);
 	assert(q->t);
 	assert(q->te);
 	assert(q->p);
@@ -112,10 +112,10 @@ static void read_mesh(struct st_mesh *q)
 	FILE *fin_verts,*fin_trigs,*fin_edges;
 	fin_verts=fopen(filename_verts,"r");
 	fin_trigs=fopen(filename_trigs,"r");
-	fin_edges=fopen(filename_edges,"r");
+	//fin_edges=fopen(filename_edges,"r");
 	assert(fin_verts);
 	assert(fin_trigs);
-	assert(fin_edges);
+	//assert(fin_edges);
 
 	switch (q->format) {
 	case 1: // 1=ASCII
@@ -125,14 +125,14 @@ static void read_mesh(struct st_mesh *q)
 		for (int i = 0; i < q->num_trigs; i++)
 			fscanf(fin_trigs,"%d %d %d\n",
 					q->t+3*i,q->t+3*i+1,q->t+3*i+2);
-		for (int i = 0; i < q->num_edges; i++)
-			fscanf(fin_edges,"%d %d\n",
-					q->e+2*i,q->e+2*i+1);
+		//for (int i = 0; i < q->num_edges; i++)
+			//fscanf(fin_edges,"%d %d\n",
+					//q->e+2*i,q->e+2*i+1);
 		break;
 	case 2: // 2=BINARY
 		fread(q->v,sizeof(double),2*q->num_verts,fin_verts);
 		fread(q->t,sizeof(int)   ,3*q->num_trigs,fin_trigs);
-		fread(q->e,sizeof(int)   ,3*q->num_edges,fin_edges);
+		//fread(q->e,sizeof(int)   ,3*q->num_edges,fin_edges);
 		break;
 	}
 	fclose(fin_verts);
@@ -194,7 +194,7 @@ void mshio_destroy_mesh(struct st_mesh *q)
 	assert(q->status>=2);
 
 	mkl_free(q->v);
-	mkl_free(q->e);
+	//mkl_free(q->e);
 	mkl_free(q->t);
 	mkl_free(q->te);
 	mkl_free(q->p);
@@ -214,7 +214,7 @@ void mshio_print_mesh(struct st_mesh *q, int flag)
 	printf("(0=uninit'd 3=ready)\n");
 	printf(" num_verts = %d\n", q->num_verts);
 	printf(" num_trigs = %d\n", q->num_trigs);
-	printf(" num_edges = %d\n", q->num_edges);
+	//printf(" num_edges = %d\n", q->num_edges);
 	printf("V->COORD v = %p\n", q->v);
 	printf("T->V     t = %p\n", q->t);
 	printf("T->E    te = %p\n", q->te);
@@ -230,10 +230,10 @@ void mshio_print_mesh(struct st_mesh *q, int flag)
 				i,
 				q->v[2*i  ],q->v[2*i+1]);
 	printf("edges:\n");
-	for (int i = 0; i < MIN(20,q->num_edges); i++)
-		printf("[%6d] (%6d,%6d)\n",
-				i,
-				q->e[2*i  ],q->e[2*i+1]);
+	//for (int i = 0; i < MIN(20,q->num_edges); i++)
+		//printf("[%6d] (%6d,%6d)\n",
+				//i,
+				//q->e[2*i  ],q->e[2*i+1]);
 	printf("trigs:\n");
 	for (int i = 0; i < MIN(20,q->num_trigs); i++)
 		printf("[%6d] %7.2E (%6d,%6d,%6d) (%7.2E,%7.2E) (%7.2E,%7.2E) (%7.2E,%7.2E)\n",

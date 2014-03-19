@@ -23,7 +23,8 @@ int test01(void)
         printf("TEST01\n");
         printf("	|Test solver_v2 workflow\n");
 
-	struct st_mesh *q=mshio_create_mesh("msh/square162");
+	//struct st_mesh *q=mshio_create_mesh("msh/0344/0344");
+	struct st_mesh *q=mshio_create_mesh("msh/0616/0616");
 	//mshio_print_mesh(q,PRINT_INFO_VERBOSE);
 
 	/*
@@ -46,8 +47,8 @@ int test01(void)
 
 	struct st_solver_v2 *s=sv2_create_solver(q,ipar,dpar);
 	sv2_print_solverinfo(s);
-	for (int i = 0; i < s->Nt; i++)
-		rmsm_print_row(s->E,i);
+	//for (int i = 0; i < s->Nt; i++)
+		//rmsm_print_row(s->E,i);
 
 	double _Complex *b0=(double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
 	double _Complex *x0=(double _Complex*)mkl_malloc(sizeof(double _Complex)*s->Ng,64);
@@ -63,10 +64,10 @@ int test01(void)
 	//sv2_gen_b0(s,0.0,b0);
 	for (int i = 0; i < s->Ng; i++)
 		x0[i] = 1.0;
-	//print_vector("x=",5,x0);
+	print_vector("x=",5,x0);
 	sv2_mul(s,x0,b0);
-	//print_vector("b=A.x=",100,b0);
-	//sv2_solve(s,b0,x0,200,12,1.0E-13,&nitr,&eps); 
+	print_vector("b=A.x=",5,b0);
+	sv2_solve(s,b0,x0,200,12,1.0E-13,&nitr,&eps); 
 
 	//sv2_gen_b1x0(s,0.0,b1,x0);
 	//sv2_solve(s,b1,x1,200,12,1.0E-13,&nitr,&eps); 

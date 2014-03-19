@@ -1,8 +1,10 @@
 \contentsline {section}{\numberline {1}Volume Integral Equation}{2}{section.1}
 \contentsline {section}{\numberline {2}Discretization}{2}{section.2}
-\contentsline {section}{\numberline {3}Angular Acceleration}{3}{section.3}
+\contentsline {section}{\numberline {3}Angular Acceleration}{4}{section.3}
 \contentsline {section}{\numberline {4}Spatial Acceleration}{4}{section.4}
 \contentsline {section}{\numberline {5}Singularity Extraction}{4}{section.5}
-\contentsline {section}{Appendices}{4}{section*.2}
-\contentsline {section}{\numberline {A}Numerical Integration of Singular Integrand}{4}{Appendix.1.A}
-\contentsline {section}{\numberline {B}Simplex Coordinates and Interpolation Polynomials}{5}{Appendix.1.B}
+\contentsline {subsection}{\numberline {5.1}First Order}{4}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Higher Orders}{5}{subsection.5.2}
+\contentsline {section}{Appendices}{5}{section*.2}
+\contentsline {section}{\numberline {A}Numerical Integration of Singular Integrand}{5}{Appendix.1.A}
+\contentsline {section}{\numberline {B}Simplex Coordinates and Interpolation Polynomials}{6}{Appendix.1.B}

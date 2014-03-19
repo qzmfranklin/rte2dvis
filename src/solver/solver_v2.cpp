@@ -97,7 +97,7 @@ static void fillE(struct st_solver_v2 *s)
 		1.0/12*2,	1.0/24*2,	1.0/24*2,
 		1.0/24*2,	1.0/12*2,	1.0/24*2,
 		1.0/24*2,	1.0/24*2,	1.0/12*2};
-	for (int n = 0; n < s->Nt; n++)
+	for (int n = 0; n < s->Ns; n++)
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++) {
 				const int row = s->mesh->t[i+3*n];
